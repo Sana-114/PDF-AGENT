@@ -63,6 +63,12 @@ services:
       PARSED_DIR: /app/data/parsed
       CELERY_TASK_ALWAYS_EAGER: "false"
       FRONTEND_ORIGIN: http://localhost:3000
+      LLM_PROVIDER: ${LLM_PROVIDER:-mock}
+      LLM_MODEL: ${LLM_MODEL:-}
+      LLM_API_KEY: ${LLM_API_KEY:-}
+      LLM_BASE_URL: ${LLM_BASE_URL:-https://api.openai.com/v1}
+      LLM_TIMEOUT_SECONDS: ${LLM_TIMEOUT_SECONDS:-60}
+      RAG_MIN_SCORE: ${RAG_MIN_SCORE:-0.18}
     volumes:
       - ./backend:/app
       - app_data:/app/data
@@ -115,4 +121,3 @@ volumes:
   minio_data:
   app_data:
   frontend_node_modules:
-
