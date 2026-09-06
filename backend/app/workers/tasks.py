@@ -85,8 +85,9 @@ def parse_document(document_id: str) -> dict[str, str]:
         session.commit()
 
         try:
-            parser = get_parser()
-            parsed = parser.parse(str(storage.document_path(document.storage_key)))
+            source_path = str(storage.document_path(document.storage_key))
+            parser = get_parser(source_path)
+            parsed = parser.parse(source_path)
             signature = bottom_k_signature(parsed.full_text)
             arxiv_id, arxiv_version = extract_arxiv_identity(parsed.full_text)
 
@@ -103,6 +104,9 @@ def parse_document(document_id: str) -> dict[str, str]:
             output["arxiv_id"] = arxiv_id
             output["arxiv_version"] = arxiv_version
             output["parser"] = {"name": parser.name, "version": parser.version}
+            diagnostics = getattr(parser, "diagnostics", None)
+            if diagnostics is not None:
+                output["pdf_diagnostics"] = diagnostics.to_dict()
             Path(storage.parsed_path(document.id)).write_text(
                 json.dumps(output, ensure_ascii=False), encoding="utf-8"
             )
