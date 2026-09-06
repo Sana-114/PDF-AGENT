@@ -24,6 +24,8 @@ class Settings(BaseSettings):
     llm_provider: str = "mock"
     llm_model: str = ""
     llm_api_key: str = ""
+    llm_base_url: str = "https://api.openai.com/v1"
+    llm_timeout_seconds: float = 60.0
     embedding_model: str = "BAAI/bge-m3"
     reranker_model: str = "BAAI/bge-reranker-v2-m3"
 
@@ -48,4 +50,3 @@ def get_settings() -> Settings:
 
 
 settings = get_settings()
-
