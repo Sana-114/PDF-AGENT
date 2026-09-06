@@ -41,6 +41,9 @@ class SkillRegistry:
     def list(self) -> list[SkillDefinition]:
         return sorted(self._skills.values(), key=lambda item: item.name)
 
+    def __contains__(self, name: str) -> bool:
+        return name in self._skills
+
     async def execute(self, name: str, arguments: dict[str, Any], context: SkillContext) -> Any:
         try:
             definition = self._skills[name]
@@ -54,4 +57,3 @@ class SkillRegistry:
 
 
 skill_registry = SkillRegistry()
-

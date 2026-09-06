@@ -86,10 +86,13 @@ class OpenAIResponsesProvider:
             },
         }
         headers = {"Authorization": f"Bearer {self.api_key}"}
-        async with httpx.AsyncClient(timeout=self.timeout_seconds) as client:
-            response = await client.post(
-                f"{self.base_url}/responses", json=payload, headers=headers
-            )
+        try:
+            async with httpx.AsyncClient(timeout=self.timeout_seconds) as client:
+                response = await client.post(
+                    f"{self.base_url}/responses", json=payload, headers=headers
+                )
+        except httpx.HTTPError as exc:
+            raise LLMResponseError(f"OpenAI Responses API 网络请求失败：{exc}") from exc
         if response.is_error:
             raise LLMResponseError(
                 f"OpenAI Responses API 返回 HTTP {response.status_code}: "
@@ -121,4 +124,3 @@ class OpenAIResponsesProvider:
                 if content.get("type") == "output_text" and content.get("text"):
                     return str(content["text"])
         raise LLMResponseError("Responses API 响应中没有 output_text。")
-

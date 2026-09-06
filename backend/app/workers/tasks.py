@@ -8,6 +8,7 @@ from app.core.config import settings
 from app.core.database import SessionLocal, init_db
 from app.models.document import Document, DocumentStatus
 from app.parsers import get_parser
+from app.services.chunking import replace_document_chunks
 from app.services.fingerprints import (
     bottom_k_signature,
     extract_arxiv_identity,
@@ -68,7 +69,9 @@ def _find_semantic_duplicate(session, current: Document) -> None:
         current.duplicate_recommendation = _recommend_version(current, candidate)
 
 
-@celery_app.task(name="documents.parse", autoretry_for=(OSError,), retry_backoff=True, max_retries=3)
+@celery_app.task(
+    name="documents.parse", autoretry_for=(OSError,), retry_backoff=True, max_retries=3
+)
 def parse_document(document_id: str) -> dict[str, str]:
     init_db()
     settings.ensure_directories()
@@ -103,6 +106,7 @@ def parse_document(document_id: str) -> dict[str, str]:
             Path(storage.parsed_path(document.id)).write_text(
                 json.dumps(output, ensure_ascii=False), encoding="utf-8"
             )
+            replace_document_chunks(session, document.id, output)
 
             document.status = DocumentStatus.READY
             _find_semantic_duplicate(session, document)
@@ -114,4 +118,3 @@ def parse_document(document_id: str) -> dict[str, str]:
             document.error_message = str(exc)[:2000]
             session.commit()
             raise
-

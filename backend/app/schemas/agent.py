@@ -58,3 +58,9 @@ class SkillRead(BaseModel):
     input_schema: dict[str, Any]
     requires_llm: bool
 
+
+class AgentStatus(BaseModel):
+    provider: str
+    model: str | None
+    llm_configured: bool
+    skills: list[str]
