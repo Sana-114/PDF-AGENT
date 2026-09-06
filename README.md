@@ -111,4 +111,3 @@ npm run build
 5. 使用 `1706.03762v7.pdf`、`v1.pdf` 和扫描版建立自动回归集。
 
 更完整的边界说明见 [docs/architecture.md](docs/architecture.md)。
-
