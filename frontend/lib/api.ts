@@ -35,6 +35,35 @@ interface UploadResponse {
   message: string;
 }
 
+export interface EvidenceAnchor {
+  evidence_id: string;
+  document_id: string;
+  document_title: string | null;
+  page_number: number;
+  block_ids: string[];
+  bbox: number[] | null;
+  section: string | null;
+  quote: string;
+  score: number;
+}
+
+export interface AgentAskResponse {
+  answer: string;
+  claims: Array<{ text: string; evidence_ids: string[] }>;
+  evidence: EvidenceAnchor[];
+  insufficient_evidence: boolean;
+  provider: string;
+  model: string | null;
+  trace: Array<{ skill: string; status: string; summary: string; duration_ms: number }>;
+}
+
+export interface AgentStatus {
+  provider: string;
+  model: string | null;
+  llm_configured: boolean;
+  skills: string[];
+}
+
 async function assertResponse(response: Response): Promise<Response> {
   if (response.ok) return response;
   let message = `请求失败 (${response.status})`;
@@ -67,7 +96,28 @@ export async function deleteDocument(documentId: string): Promise<void> {
   );
 }
 
-export function documentFileUrl(documentId: string): string {
-  return `${API_BASE_URL}/documents/${documentId}/file`;
+export async function askAgent(
+  question: string,
+  documentIds?: string[],
+): Promise<AgentAskResponse> {
+  const response = await assertResponse(
+    await fetch(`${API_BASE_URL}/agent/ask`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ question, document_ids: documentIds, top_k: 6 }),
+    }),
+  );
+  return response.json();
 }
 
+export async function getAgentStatus(): Promise<AgentStatus> {
+  const response = await assertResponse(
+    await fetch(`${API_BASE_URL}/agent/status`, { cache: "no-store" }),
+  );
+  return response.json();
+}
+
+export function documentFileUrl(documentId: string, pageNumber?: number): string {
+  const pageAnchor = pageNumber ? `#page=${pageNumber}` : "";
+  return `${API_BASE_URL}/documents/${documentId}/file${pageAnchor}`;
+}
