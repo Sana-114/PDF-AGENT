@@ -251,7 +251,17 @@ export default function Home() {
                   >
                     <div>
                       <strong>{evidence.evidence_id}</strong>
-                      <span>第 {evidence.page_number} 页 · {Math.round(evidence.score * 100)}%</span>
+                      <span>
+                        {({
+                          text: "正文",
+                          abstract: "摘要",
+                          table: "表格",
+                          figure: "图表",
+                          formula: "公式",
+                          reference: "参考文献",
+                        } as const)[evidence.source_type] || "正文"}
+                        {" · "}第 {evidence.page_number} 页 · {Math.round(evidence.score * 100)}%
+                      </span>
                     </div>
                     <h4>{evidence.section || evidence.document_title || "未命名章节"}</h4>
                     <p>{evidence.quote}</p>

@@ -15,15 +15,17 @@ PaperPilot 是一个以原文证据为核心的科研助手 Agent 系统。本�
 - 从正文识别 arXiv ID/版本并生成紧凑语义指纹；
 - 对同一 arXiv 或高相似标题文献生成版本提醒；
 - 自动把页面块切分为不跨页的检索 Chunk，保留章节、页码、块 ID 和 BBox；
+- 将摘要、表格、图注、公式候选和参考文献建立为独立证据 Chunk，旧索引可按需自动升级；
 - 中英混合 BM25 风格检索，可限定单篇文献或跨文献查询；
+- 根据问题中的表格、公式、摘要或引用意图进行结构类型加权；
 - Claim/Evidence 问答响应、证据门控、有效引用 ID 校验和执行轨迹；
 - 内置 `search_evidence`、`get_document_outline`、`get_document_structure`、`get_document_table` Skills 和可扩展注册表；
 - 可切换 LLM Provider：默认抽取式零密钥模式，或 OpenAI Responses API；
-- Web 端证据问答、相关度展示和原文页码跳转；
+- Web 端证据问答、正文/表格/公式/引用来源标签、相关度展示和原文页码跳转；
 - 文献列表、原文访问、结构化结果读取、重解析和删除；
 - Docker Compose 编排 PostgreSQL、Redis、Qdrant、MinIO、API、Worker 和 Web。
 
-> 当前版本的语义指纹用于候选预警，不等于最终语义去重模型。当前 OCR 使用 Tesseract 中英文基线，检索为无需模型的词法基线。公式节点是带位置锚点的文本候选，并非可靠的 LaTeX 反演；扫描页表格结构恢复、Docling/GROBID、Embedding、Qdrant 混合检索和重排器仍待接入。
+> 当前版本的语义指纹用于候选预警，不等于最终语义去重模型。当前 OCR 使用 Tesseract 中英文基线，检索为无需模型、结构感知的 BM25 基线。公式节点是带位置锚点的文本候选，并非可靠的 LaTeX 反演；扫描页表格结构恢复、Docling/GROBID、Embedding、Qdrant 混合检索和重排器仍待接入。
 
 ## 目录结构
 

@@ -1,4 +1,4 @@
-from typing import Any
+from typing import Any, Literal
 
 from pydantic import BaseModel, Field, field_validator
 
@@ -13,6 +13,9 @@ class EvidenceAnchor(BaseModel):
     block_ids: list[str] = Field(default_factory=list)
     bbox: list[float] | None = None
     section: str | None = None
+    source_type: Literal["text", "abstract", "table", "figure", "formula", "reference"] = (
+        "text"
+    )
     quote: str
     score: float = Field(ge=0.0, le=1.0)
 

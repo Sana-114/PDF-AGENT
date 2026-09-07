@@ -22,7 +22,18 @@ QUERY_EXPANSIONS = {
     "参数量": ["parameters"],
     "学习率": ["learning", "rate"],
     "数据集": ["dataset"],
-    "引用": ["reference", "references"],
+    "引用": ["reference", "references", "citation"],
+    "参考文献": ["reference", "references", "bibliography"],
+    "表格": ["table", "score", "result"],
+    "公式": ["formula", "equation"],
+    "摘要": ["abstract", "summary"],
+}
+SOURCE_INTENTS = {
+    "abstract": ("摘要", "abstract", "summary"),
+    "table": ("表格", "表中", "table", "score", "分数", "准确率", "bleu"),
+    "figure": ("图中", "图片", "figure", "fig."),
+    "formula": ("公式", "方程", "等式", "formula", "equation", "β", "beta"),
+    "reference": ("参考文献", "引用", "文献", "reference", "citation", "doi"),
 }
 
 
@@ -50,17 +61,30 @@ class LexicalRetriever:
         query_terms = _tokenize(_expand_query(question))
         if not query_terms:
             return []
-        documents = [_tokenize(row.DocumentChunk.text) for row in rows]
+        documents = [
+            _tokenize(f"{row.DocumentChunk.section or ''} {row.DocumentChunk.text}")
+            for row in rows
+        ]
         document_frequency = Counter(
             term for terms in documents for term in set(terms) if term in query_terms
         )
         average_length = sum(len(terms) for terms in documents) / max(len(documents), 1)
-        raw_scores = [
-            _bm25_score(query_terms, terms, document_frequency, len(documents), average_length)
-            for terms in documents
-        ]
+        source_types = [_infer_source_type(row.DocumentChunk) for row in rows]
+        intents = _query_source_intents(question)
+        raw_scores = []
+        for terms, source_type in zip(documents, source_types, strict=True):
+            score = _bm25_score(
+                query_terms, terms, document_frequency, len(documents), average_length
+            )
+            if source_type in intents:
+                score *= 1.6
+            raw_scores.append(score)
         ranked = sorted(
-            ((score, row) for score, row in zip(raw_scores, rows, strict=True) if score > 0),
+            (
+                (score, row, terms)
+                for score, row, terms in zip(raw_scores, rows, documents, strict=True)
+                if score > 0
+            ),
             key=lambda item: item[0],
             reverse=True,
         )[:top_k]
@@ -70,11 +94,9 @@ class LexicalRetriever:
         max_score = ranked[0][0]
         unique_query_terms = set(query_terms)
         evidence: list[EvidenceAnchor] = []
-        for index, (raw_score, row) in enumerate(ranked, start=1):
+        for index, (raw_score, row, terms) in enumerate(ranked, start=1):
             chunk = row.DocumentChunk
-            coverage = len(unique_query_terms & set(_tokenize(chunk.text))) / len(
-                unique_query_terms
-            )
+            coverage = len(unique_query_terms & set(terms)) / len(unique_query_terms)
             score = min(1.0, 0.65 * coverage + 0.35 * (raw_score / max_score))
             evidence.append(
                 EvidenceAnchor(
@@ -85,6 +107,7 @@ class LexicalRetriever:
                     block_ids=json.loads(chunk.block_ids_json),
                     bbox=json.loads(chunk.bbox_json) if chunk.bbox_json else None,
                     section=chunk.section,
+                    source_type=_infer_source_type(chunk),
                     quote=chunk.text,
                     score=round(score, 4),
                 )
@@ -100,6 +123,32 @@ def _expand_query(question: str) -> str:
         for term in values
     ]
     return " ".join([question, *additions])
+
+
+def _query_source_intents(question: str) -> set[str]:
+    normalized = question.casefold()
+    return {
+        source_type
+        for source_type, hints in SOURCE_INTENTS.items()
+        if any(hint in normalized for hint in hints)
+    }
+
+
+def _infer_source_type(chunk: DocumentChunk) -> str:
+    section = (chunk.section or "").casefold()
+    block_ids = json.loads(chunk.block_ids_json)
+    first_id = str(block_ids[0]).casefold() if block_ids else ""
+    if first_id.startswith("ref-") or section.startswith("参考文献"):
+        return "reference"
+    if "table-" in first_id or section.startswith("表格"):
+        return "table"
+    if "figure-" in first_id or section.startswith("图表"):
+        return "figure"
+    if first_id.startswith("formula-") or section.startswith("公式"):
+        return "formula"
+    if section.strip(" .·0123456789").casefold() in {"abstract", "摘要"}:
+        return "abstract"
+    return "text"
 
 
 def _tokenize(text: str) -> list[str]:

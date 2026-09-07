@@ -54,14 +54,16 @@ Question
    ↓
 ResearchAgent Harness
    ↓ calls
-search_evidence Skill → page-local DocumentChunk → ranked EvidenceAnchor
+search_evidence Skill → page-local + structured DocumentChunk → ranked EvidenceAnchor
    ↓ evidence score gate
 Extractive Provider / OpenAI Responses API
    ↓ citation allow-list validation
 Answer + Claims + Evidence + Trace
 ```
 
-`EvidenceAnchor` 同时保存 `document_id`、`page_number`、`block_ids`、`bbox`、`section` 和原文摘录。LLM 只能引用本次检索生成的 `E1...En`，Harness 会在响应前再次校验引用白名单。默认抽取式 Provider 完全不调用外部模型，可用于无密钥演示和离线回归测试。
+`DocumentChunk` 同时包含普通页面块和摘要、表格、图注、公式、参考文献等结构化节点。检索器会把章节名一并用于 BM25，并依据问题中的结构意图做类型加权。例如“表格中的分数”和“完整参考文献”会优先命中独立表格或引用节点，而不是大段正文。
+
+`EvidenceAnchor` 同时保存 `document_id`、`page_number`、`block_ids`、`bbox`、`section`、`source_type` 和原文摘录。LLM 只能引用本次检索生成的 `E1...En`，Harness 会在响应前再次校验引用白名单。默认抽取式 Provider 完全不调用外部模型，可用于无密钥演示和离线回归测试。
 
 ## 下一阶段边界
 

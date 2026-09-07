@@ -45,6 +45,7 @@ export interface EvidenceAnchor {
   block_ids: string[];
   bbox: number[] | null;
   section: string | null;
+  source_type: "text" | "abstract" | "table" | "figure" | "formula" | "reference";
   quote: string;
   score: number;
 }

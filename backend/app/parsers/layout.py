@@ -30,6 +30,7 @@ AFFILIATION_HINT = re.compile(
     re.IGNORECASE,
 )
 MATH_HINT = re.compile(r"[=∑∫√≈≤≥±×÷∞∂∇α-ωΑ-Ω]|\b(?:argmax|argmin|softmax)\b")
+FORMULA_CORE = re.compile(r"[=∑∫√≈≤≥±∞∂∇]|\b(?:argmax|argmin|softmax)\b")
 
 
 @dataclass(slots=True)
@@ -264,7 +265,11 @@ def extract_formulas(pages: list[Any]) -> list[FormulaNode]:
     formulas: list[FormulaNode] = []
     for page in pages:
         for block in page.blocks:
-            if block.type != "text" or len(block.text) > 240 or not MATH_HINT.search(block.text):
+            if (
+                block.type != "text"
+                or len(block.text) > 180
+                or not FORMULA_CORE.search(block.text)
+            ):
                 continue
             block.type = "formula"
             formulas.append(
