@@ -79,6 +79,7 @@ services:
       UPLOAD_DIR: /app/data/uploads
       PARSED_DIR: /app/data/parsed
       CELERY_TASK_ALWAYS_EAGER: "false"
+      PARSE_BATCH_PAGES: ${PARSE_BATCH_PAGES:-25}
       FRONTEND_ORIGIN: http://localhost:3000
       OCR_ENABLED: ${OCR_ENABLED:-true}
       OCR_LANGUAGES: ${OCR_LANGUAGES:-chi_sim+eng}
@@ -131,6 +132,7 @@ services:
       UPLOAD_DIR: /app/data/uploads
       PARSED_DIR: /app/data/parsed
       CELERY_TASK_ALWAYS_EAGER: "false"
+      PARSE_BATCH_PAGES: ${PARSE_BATCH_PAGES:-25}
       OCR_ENABLED: ${OCR_ENABLED:-true}
       OCR_LANGUAGES: ${OCR_LANGUAGES:-chi_sim+eng}
       OCR_DPI: ${OCR_DPI:-300}

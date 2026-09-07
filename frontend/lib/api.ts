@@ -24,6 +24,16 @@ export interface DocumentRecord {
   updated_at: string;
 }
 
+export interface DocumentProgress {
+  document_id: string;
+  status: DocumentStatus;
+  completed_pages: number;
+  page_count: number | null;
+  percentage: number;
+  resumable: boolean;
+  updated_at: string | null;
+}
+
 interface DocumentListResponse {
   items: DocumentRecord[];
   total: number;
@@ -104,6 +114,13 @@ export async function deleteDocument(documentId: string): Promise<void> {
   await assertResponse(
     await fetch(`${API_BASE_URL}/documents/${documentId}`, { method: "DELETE" }),
   );
+}
+
+export async function getDocumentProgress(documentId: string): Promise<DocumentProgress> {
+  const response = await assertResponse(
+    await fetch(`${API_BASE_URL}/documents/${documentId}/progress`, { cache: "no-store" }),
+  );
+  return response.json();
 }
 
 export async function askAgent(

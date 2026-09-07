@@ -6,8 +6,10 @@ import {
   askAgent,
   deleteDocument,
   documentFileUrl,
+  DocumentProgress,
   DocumentRecord,
   getAgentStatus,
+  getDocumentProgress,
   listDocuments,
   uploadDocument,
 } from "../lib/api";
@@ -26,6 +28,7 @@ function formatBytes(bytes: number): string {
 
 export default function Home() {
   const [documents, setDocuments] = useState<DocumentRecord[]>([]);
+  const [documentProgress, setDocumentProgress] = useState<Record<string, DocumentProgress>>({});
   const [loading, setLoading] = useState(true);
   const [uploading, setUploading] = useState(false);
   const [dragging, setDragging] = useState(false);
@@ -42,6 +45,20 @@ export default function Home() {
     try {
       const response = await listDocuments();
       setDocuments(response.items);
+      const progressEntries = await Promise.all(
+        response.items
+          .filter((document) => document.status !== "ready")
+          .map(async (document) => {
+            try {
+              return [document.id, await getDocumentProgress(document.id)] as const;
+            } catch {
+              return null;
+            }
+          }),
+      );
+      setDocumentProgress(
+        Object.fromEntries(progressEntries.filter((entry): entry is NonNullable<typeof entry> => Boolean(entry))),
+      );
       if (!quiet) setError(null);
     } catch (requestError) {
       if (!quiet) setError(requestError instanceof Error ? requestError.message : "文献列表加载失败");
@@ -290,33 +307,43 @@ export default function Home() {
           {!loading && documents.length === 0 && (
             <div className="empty"><strong>文献库还是空的</strong><span>从上方上传比赛测试 PDF，建立第一条解析记录。</span></div>
           )}
-          {documents.map((document) => (
-            <article className="document-card" key={document.id}>
-              <div className="pdf-badge">PDF</div>
-              <div className="document-main">
-                <div className="document-title-row">
-                  <h3>{document.title || document.original_filename}</h3>
-                  <span className={`status ${document.status}`}>{STATUS_LABEL[document.status]}</span>
-                </div>
-                <p className="meta">
-                  {document.arxiv_id ? `arXiv:${document.arxiv_id}${document.arxiv_version ? `v${document.arxiv_version}` : ""}` : "等待识别论文标识"}
-                  <span>·</span>{document.page_count ? `${document.page_count} 页` : formatBytes(document.size_bytes)}
-                  {document.parser_name && (
-                    <><span>·</span>{document.parser_name.includes("tesseract") ? "OCR" : document.parser_name}</>
+          {documents.map((document) => {
+            const progress = documentProgress[document.id];
+            return (
+              <article className="document-card" key={document.id}>
+                <div className="pdf-badge">PDF</div>
+                <div className="document-main">
+                  <div className="document-title-row">
+                    <h3>{document.title || document.original_filename}</h3>
+                    <span className={`status ${document.status}`}>{STATUS_LABEL[document.status]}</span>
+                  </div>
+                  <p className="meta">
+                    {document.arxiv_id ? `arXiv:${document.arxiv_id}${document.arxiv_version ? `v${document.arxiv_version}` : ""}` : "等待识别论文标识"}
+                    <span>·</span>{document.page_count ? `${document.page_count} 页` : formatBytes(document.size_bytes)}
+                    {document.parser_name && (
+                      <><span>·</span>{document.parser_name.includes("tesseract") ? "OCR" : document.parser_name}</>
+                    )}
+                    <span>·</span>{new Date(document.created_at).toLocaleString("zh-CN")}
+                  </p>
+                  {document.duplicate_recommendation && (
+                    <div className="version-warning"><strong>版本提醒</strong>{document.duplicate_recommendation}</div>
                   )}
-                  <span>·</span>{new Date(document.created_at).toLocaleString("zh-CN")}
-                </p>
-                {document.duplicate_recommendation && (
-                  <div className="version-warning"><strong>版本提醒</strong>{document.duplicate_recommendation}</div>
-                )}
-                {document.error_message && <div className="failure">{document.error_message}</div>}
-              </div>
-              <div className="actions">
-                <a href={documentFileUrl(document.id)} target="_blank" rel="noreferrer">打开原文</a>
-                <button onClick={() => void remove(document)}>删除</button>
-              </div>
-            </article>
-          ))}
+                  {progress?.page_count && document.status !== "ready" && (
+                    <div className="parse-progress" aria-label={`解析进度 ${progress.percentage}%`}>
+                      <div><span>已处理 {progress.completed_pages} / {progress.page_count} 页</span><strong>{progress.percentage.toFixed(0)}%</strong></div>
+                      <progress max="100" value={progress.percentage} />
+                      {progress.resumable && <small>任务中断后可从当前检查点继续</small>}
+                    </div>
+                  )}
+                  {document.error_message && <div className="failure">{document.error_message}</div>}
+                </div>
+                <div className="actions">
+                  <a href={documentFileUrl(document.id)} target="_blank" rel="noreferrer">打开原文</a>
+                  <button onClick={() => void remove(document)}>删除</button>
+                </div>
+              </article>
+            );
+          })}
         </div>
       </section>
 

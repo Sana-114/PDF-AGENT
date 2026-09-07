@@ -7,6 +7,7 @@ PaperPilot 是一个以原文证据为核心的科研助手 Agent 系统。本�
 - 单篇或批量 PDF 上传，校验真实 PDF 内容和大小限制；
 - 基于 SHA-256 的完全重复检测；
 - Celery 后台解析和状态跟踪；
+- 长文档按默认 25 页分批解析，页面分片与进度 manifest 原子落盘，失败后从最近完整批次恢复；
 - PyMuPDF 版式感知解析，输出页码、文本块、字体、坐标、栏位和稳定阅读顺序；
 - 抽取标题、作者、机构、摘要和一/二/三级层级目录；
 - 抽取矢量表格的行、单元格、Markdown、图表题注及其页码/BBox 锚点；
@@ -27,6 +28,7 @@ PaperPilot 是一个以原文证据为核心的科研助手 Agent 系统。本�
 - 可切换 LLM Provider：默认抽取式零密钥模式，或 OpenAI Responses API；
 - Web 端证据问答、正文/表格/公式/引用来源标签、相关度展示和原文页码跳转；
 - 文献列表、原文访问、结构化结果读取、重解析和删除；
+- Web 端展示长文档已处理页数、百分比和断点可恢复状态；
 - Docker Compose 编排 PostgreSQL、Redis、Qdrant、MinIO、API、Worker 和 Web。
 
 > 当前版本的语义指纹用于候选预警，不等于最终语义去重模型。当前 OCR 使用 Tesseract 中英文基线。默认 Embedding 仍是零密钥的确定性 Hash-Ngram 工程基线；真实语义向量和 Cross-Encoder 已提供远程兼容接口，但仓库不会自动下载或捆绑模型权重。公式节点是带位置锚点的文本候选，并非可靠的 LaTeX 反演；扫描页表格结构恢复和 Docling/GROBID 仍待接入。
@@ -76,6 +78,8 @@ docker compose up --build
 开发环境中的 MinIO 默认密码只用于本地启动，上线前必须修改。
 
 Docker 镜像已经安装 `eng` 和 `chi_sim` Tesseract 语言数据。默认使用 `chi_sim+eng`，避免中文大字号标题被英文模型优先误判；可通过 `OCR_LANGUAGES` 覆盖。非 Docker 启动时，需要自行安装对应语言包并设置 `OCR_TESSDATA`；原生文本 PDF 不依赖 OCR 环境。
+
+解析任务默认每完成 25 页就在 `PARSED_DIR` 写入一个独立页面分片，并原子更新 manifest。可通过 `PARSE_BATCH_PAGES` 调整批次大小；批次越小，故障后重跑页数越少，但磁盘写入次数越多。最终 AST、Chunk 和向量索引提交成功后，临时检查点会自动清理。
 
 Docker Compose 默认启用 Qdrant 混合检索。本地无 Docker 启动默认保持 `VECTOR_SEARCH_ENABLED=false`，使用 BM25；如已有 Qdrant，可在 `.env` 中开启：
 
@@ -166,6 +170,7 @@ npm run dev
 | POST | `/api/v1/documents` | 上传 PDF，字段名为 `file` |
 | GET | `/api/v1/documents` | 文献列表 |
 | GET | `/api/v1/documents/{id}` | 文献详情 |
+| GET | `/api/v1/documents/{id}/progress` | 已完成页数、百分比和断点恢复状态 |
 | GET | `/api/v1/documents/{id}/file` | 原始 PDF |
 | GET | `/api/v1/documents/{id}/content` | Document AST |
 | POST | `/api/v1/documents/{id}/reparse` | 重新解析 |
@@ -222,6 +227,7 @@ docker compose exec backend python scripts/evaluate_pdf_corpus.py `
   /tmp/regression-corpus `
   --manifest /tmp/pdf-regression-corpus.json `
   --output /tmp/regression-corpus/report.json `
+  --batch-pages 25 `
   --strict
 ```
 
@@ -230,9 +236,8 @@ docker compose exec backend python scripts/evaluate_pdf_corpus.py `
 ## 下一里程碑
 
 1. 用标准测试 PDF 评估当前版式基线，并按失败样本接入 Docling、GROBID 和 PaddleOCR；
-2. 为 541 页教材实现逐页落盘和断点恢复；
-3. 建立离线检索评测集并补充可选的本地 BGE-M3 / Reranker 推理编排；
-4. 接入 PDF.js，利用现有 BBox 证据实现页内高亮；
-5. 使用 `1706.03762v7.pdf`、`v1.pdf` 和扫描版建立自动回归集。
+2. 建立离线检索评测集并补充可选的本地 BGE-M3 / Reranker 推理编排；
+3. 接入 PDF.js，利用现有 BBox 证据实现页内高亮；
+4. 使用 `1706.03762v7.pdf`、`v1.pdf` 和扫描版建立自动回归集。
 
 更完整的边界说明见 [docs/architecture.md](docs/architecture.md)。

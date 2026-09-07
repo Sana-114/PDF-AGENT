@@ -1,6 +1,7 @@
 from functools import lru_cache
 from pathlib import Path
 
+from pydantic import Field
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
@@ -25,6 +26,7 @@ class Settings(BaseSettings):
     parsed_dir: Path = Path("./data/parsed")
     max_upload_mb: int = 200
     celery_task_always_eager: bool = True
+    parse_batch_pages: int = Field(default=25, ge=1, le=200)
 
     ocr_enabled: bool = True
     ocr_languages: str = "chi_sim+eng"

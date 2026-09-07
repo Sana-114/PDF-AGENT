@@ -39,6 +39,16 @@ class DocumentList(BaseModel):
     offset: int
 
 
+class DocumentProgressRead(BaseModel):
+    document_id: str
+    status: str
+    completed_pages: int
+    page_count: int | None
+    percentage: float
+    resumable: bool
+    updated_at: str | None = None
+
+
 class HealthRead(BaseModel):
     status: str
     service: str

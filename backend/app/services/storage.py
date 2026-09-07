@@ -1,4 +1,5 @@
 import hashlib
+import shutil
 from dataclasses import dataclass
 from pathlib import Path
 from uuid import uuid4
@@ -86,10 +87,23 @@ class LocalDocumentStorage:
     def parsed_path(self, document_id: str) -> Path:
         return settings.parsed_dir / f"{document_id}.json"
 
+    def checkpoint_dir(self, document_id: str) -> Path:
+        if not document_id or any(value in document_id for value in ("/", "\\", "..")):
+            raise ValueError("Invalid document id")
+        path = (settings.parsed_dir / f".{document_id}.checkpoint").resolve()
+        if path.parent != settings.parsed_dir.resolve():
+            raise ValueError("Invalid document id")
+        return path
+
+    def clear_checkpoint(self, document_id: str) -> None:
+        path = self.checkpoint_dir(document_id)
+        if path.exists():
+            shutil.rmtree(path)
+
     def delete(self, storage_key: str, document_id: str) -> None:
         self.document_path(storage_key).unlink(missing_ok=True)
         self.parsed_path(document_id).unlink(missing_ok=True)
+        self.clear_checkpoint(document_id)
 
 
 storage = LocalDocumentStorage()
-

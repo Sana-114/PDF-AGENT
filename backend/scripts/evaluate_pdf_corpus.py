@@ -1,6 +1,7 @@
 import argparse
 import json
 import sys
+import tempfile
 import time
 import tracemalloc
 from pathlib import Path
@@ -16,16 +17,36 @@ from app.parsers.diagnostics import inspect_pdf  # noqa: E402
 from app.parsers.registry import get_parser  # noqa: E402
 
 
-def evaluate_pdf(path: Path, expectation: dict[str, Any] | None = None) -> dict[str, Any]:
+def evaluate_pdf(
+    path: Path,
+    expectation: dict[str, Any] | None = None,
+    *,
+    batch_pages: int | None = None,
+) -> dict[str, Any]:
     expectation = expectation or {}
     with fitz.open(path) as document:
         page_count = len(document)
         native_text_chars = sum(len(page.get_text("text")) for page in document)
     diagnostics = inspect_pdf(str(path))
     parser = get_parser(str(path))
+    progress_events: list[tuple[int, int]] = []
+    checkpoint_batches = 0
     tracemalloc.start()
     started = time.perf_counter()
-    parsed = parser.parse(str(path))
+    if batch_pages:
+        with tempfile.TemporaryDirectory(prefix="paperpilot-checkpoint-") as directory:
+            checkpoint_dir = Path(directory)
+            parsed = parser.parse(
+                str(path),
+                checkpoint_dir=checkpoint_dir,
+                batch_size=batch_pages,
+                progress_callback=lambda complete, total: progress_events.append(
+                    (complete, total)
+                ),
+            )
+            checkpoint_batches = len(list(checkpoint_dir.glob("batch-*.json")))
+    else:
+        parsed = parser.parse(str(path))
     elapsed = time.perf_counter() - started
     _, peak = tracemalloc.get_traced_memory()
     tracemalloc.stop()
@@ -39,6 +60,9 @@ def evaluate_pdf(path: Path, expectation: dict[str, Any] | None = None) -> dict[
         "parser": parser.name,
         "elapsed_seconds": round(elapsed, 3),
         "python_peak_memory_mb": round(peak / 1024 / 1024, 2),
+        "batch_size_pages": batch_pages,
+        "checkpoint_batches": checkpoint_batches,
+        "checkpoint_progress_events": len(progress_events),
         "title": parsed.title,
         "authors": len(parsed.authors),
         "outline_nodes": _count_outline(parsed.outline),
@@ -98,10 +122,13 @@ def load_expectations(manifest_path: Path | None) -> dict[str, dict[str, Any]]:
 
 
 def evaluate_pdf_safely(
-    path: Path, expectation: dict[str, Any] | None = None
+    path: Path,
+    expectation: dict[str, Any] | None = None,
+    *,
+    batch_pages: int | None = None,
 ) -> dict[str, Any]:
     try:
-        return evaluate_pdf(path, expectation)
+        return evaluate_pdf(path, expectation, batch_pages=batch_pages)
     except Exception as exc:
         return {
             "filename": path.name,
@@ -115,13 +142,21 @@ def main() -> None:
     parser.add_argument("corpus_dir", type=Path)
     parser.add_argument("--manifest", type=Path)
     parser.add_argument("--output", type=Path)
+    parser.add_argument("--batch-pages", type=int, default=25)
     parser.add_argument("--strict", action="store_true")
     args = parser.parse_args()
     expectations = load_expectations(args.manifest)
     pdfs = sorted(args.corpus_dir.glob("*.pdf"))
     if not pdfs:
         raise SystemExit(f"No PDF files found in {args.corpus_dir}")
-    results = [evaluate_pdf_safely(path, expectations.get(path.name)) for path in pdfs]
+    results = [
+        evaluate_pdf_safely(
+            path,
+            expectations.get(path.name),
+            batch_pages=max(1, args.batch_pages),
+        )
+        for path in pdfs
+    ]
     report = {
         "schema_version": "1.0",
         "generated_at_unix": int(time.time()),

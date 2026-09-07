@@ -1,4 +1,6 @@
+from collections.abc import Callable
 from dataclasses import asdict, dataclass, field
+from pathlib import Path
 from typing import Protocol
 
 
@@ -110,4 +112,12 @@ class DocumentParser(Protocol):
     name: str
     version: str
 
-    def parse(self, path: str) -> ParsedDocument: ...
+    def parse(
+        self,
+        path: str,
+        *,
+        checkpoint_dir: Path | None = None,
+        batch_size: int | None = None,
+        source_fingerprint: str | None = None,
+        progress_callback: Callable[[int, int], None] | None = None,
+    ) -> ParsedDocument: ...

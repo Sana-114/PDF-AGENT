@@ -31,9 +31,9 @@ class SelectiveOcrParser(PyMuPDFParser):
         self.tessdata = tessdata or None
         self.ocr_pages: list[int] = []
 
-    def parse(self, path: str):
+    def parse(self, path: str, **kwargs):
         self.ocr_pages = []
-        parsed = super().parse(path)
+        parsed = super().parse(path, **kwargs)
         if self.ocr_pages:
             parsed.warnings.append(
                 f"已使用 Tesseract OCR 识别 {len(self.ocr_pages)} 页："
@@ -70,6 +70,14 @@ class SelectiveOcrParser(PyMuPDFParser):
             "ocr_page_count": len(self.ocr_pages),
         }
 
+    def _checkpoint_metadata(self) -> dict:
+        return {"ocr_pages": self.ocr_pages}
+
+    def _restore_checkpoint_metadata(self, metadata: dict) -> None:
+        values = metadata.get("ocr_pages", [])
+        if isinstance(values, list):
+            self.ocr_pages = [int(value) for value in values]
+
 
 def validate_tessdata(tessdata: str | None, languages: str) -> list[str]:
     directory = Path(tessdata or fitz.get_tessdata())
@@ -79,4 +87,3 @@ def validate_tessdata(tessdata: str | None, languages: str) -> list[str]:
         if not (directory / f"{language}.traineddata").exists()
     ]
     return missing
-

@@ -49,6 +49,10 @@ Document
 
 解析前先对最多 12 个均匀分布的页面进行有界诊断，将文档标记为 `native_text`、`scanned_image`、`hybrid` 或 `empty`。扫描和混合文档由 `SelectiveOcrParser` 逐页检查文本密度，只对低文本页调用 PyMuPDF 集成的 Tesseract TextPage；Docker 镜像提供中英文语言数据，并默认用 `chi_sim+eng` 防止中文标题被英文模型优先误判。文本块归一化只移除连续汉字之间的 OCR Span 空隙，不改变拉丁词、代码或公式间距。OCR 结果沿用相同的页面块、BBox、Chunk 和 Evidence 数据结构。
 
+长文档解析使用页面批次检查点。Worker 默认每 25 页生成一个只包含原始文本块、页面尺寸、表格快照和图片锚点的 JSON 分片，分片写入成功后再原子替换 `manifest.json`。Manifest 绑定源文件 SHA-256、解析器名称/版本、总页数和批次大小；任一条件变化都会从第一页重建，避免错误复用旧结果。任务重试时只重跑最后一个未完整提交的批次，全部分片合并后仍输出统一的 `schema_version=0.2.0` Document AST。最终 JSON 也采用原子替换，数据库 Chunk 和向量索引提交后才清理检查点。
+
+`GET /documents/{id}/progress` 直接读取共享存储中的 manifest，因此无需为每一批页面写数据库。API 和 Worker 通过 Compose 的 `app_data` 共享同一检查点目录，前端每三秒刷新已完成页数；失败任务保留分片，删除文献时一并清理。
+
 ## 抗幻觉问答链路
 
 ```text

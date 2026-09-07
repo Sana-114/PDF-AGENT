@@ -14,8 +14,8 @@ class RoutedParser:
         self.name = parser.name
         self.version = parser.version
 
-    def parse(self, path: str):
-        parsed = self.parser.parse(path)
+    def parse(self, path: str, **kwargs):
+        parsed = self.parser.parse(path, **kwargs)
         if self.diagnostics.content_kind == PdfContentKind.SCANNED_IMAGE:
             parsed.warnings.append(
                 "检测到扫描图像型 PDF；当前使用原生文本兜底，后续需要 OCR 识别。"

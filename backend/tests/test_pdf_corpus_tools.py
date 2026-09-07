@@ -26,6 +26,9 @@ def test_builds_scanned_and_exact_length_stress_fixtures(tmp_path) -> None:
     result = evaluate_pdf(
         outputs["native"],
         {"min_pages": 2, "min_text_chars": 20, "min_extracted_text_chars": 20},
+        batch_pages=1,
     )
     assert result["status"] == "passed"
     assert result["page_count"] == 2
+    assert result["checkpoint_batches"] == 2
+    assert result["checkpoint_progress_events"] == 2

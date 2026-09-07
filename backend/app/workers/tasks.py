@@ -1,4 +1,3 @@
-import json
 import logging
 from pathlib import Path
 
@@ -8,6 +7,7 @@ from app.core.config import settings
 from app.core.database import SessionLocal, init_db
 from app.models.document import Document, DocumentStatus
 from app.parsers import get_parser
+from app.parsers.checkpoint import write_json_atomic
 from app.services.chunking import replace_document_chunks
 from app.services.fingerprints import (
     bottom_k_signature,
@@ -88,7 +88,25 @@ def parse_document(document_id: str) -> dict[str, str]:
         try:
             source_path = str(storage.document_path(document.storage_key))
             parser = get_parser(source_path)
-            parsed = parser.parse(source_path)
+            checkpoint_dir = storage.checkpoint_dir(document.id)
+
+            def record_progress(completed_pages: int, page_count: int) -> None:
+                logger.info(
+                    "Document parse checkpoint saved",
+                    extra={
+                        "document_id": document.id,
+                        "completed_pages": completed_pages,
+                        "page_count": page_count,
+                    },
+                )
+
+            parsed = parser.parse(
+                source_path,
+                checkpoint_dir=checkpoint_dir,
+                batch_size=settings.parse_batch_pages,
+                source_fingerprint=document.sha256,
+                progress_callback=record_progress,
+            )
             signature = bottom_k_signature(parsed.full_text)
             arxiv_id, arxiv_version = extract_arxiv_identity(parsed.full_text)
 
@@ -105,15 +123,17 @@ def parse_document(document_id: str) -> dict[str, str]:
             output["arxiv_id"] = arxiv_id
             output["arxiv_version"] = arxiv_version
             output["parser"] = {"name": parser.name, "version": parser.version}
+            output["processing"] = {
+                "mode": "checkpointed_page_batches",
+                "batch_size_pages": settings.parse_batch_pages,
+            }
             diagnostics = getattr(parser, "diagnostics", None)
             if diagnostics is not None:
                 output["pdf_diagnostics"] = diagnostics.to_dict()
             processing_metadata = getattr(parser, "processing_metadata", None)
             if processing_metadata is not None:
                 output["ocr"] = processing_metadata()
-            Path(storage.parsed_path(document.id)).write_text(
-                json.dumps(output, ensure_ascii=False), encoding="utf-8"
-            )
+            write_json_atomic(Path(storage.parsed_path(document.id)), output)
             replace_document_chunks(session, document.id, output)
             session.flush()
             index_document_safely(session, document.id)
@@ -121,6 +141,14 @@ def parse_document(document_id: str) -> dict[str, str]:
             document.status = DocumentStatus.READY
             _find_semantic_duplicate(session, document)
             session.commit()
+            try:
+                storage.clear_checkpoint(document.id)
+            except OSError:
+                logger.warning(
+                    "Completed parse checkpoint cleanup failed",
+                    exc_info=True,
+                    extra={"document_id": document.id},
+                )
             return {"document_id": document_id, "status": "ready"}
         except Exception as exc:
             logger.exception("Document parsing failed", extra={"document_id": document_id})
