@@ -19,6 +19,16 @@ class DocumentOutlineInput(BaseModel):
     document_id: str
 
 
+class DocumentStructureInput(BaseModel):
+    document_id: str
+    include_references: bool = False
+
+
+class DocumentTableInput(BaseModel):
+    document_id: str
+    table_id: str | None = None
+
+
 def search_evidence(
     payload: SearchEvidenceInput, context: SkillContext
 ) -> list[EvidenceAnchor]:
@@ -30,22 +40,75 @@ def search_evidence(
 
 
 def get_document_outline(payload: DocumentOutlineInput, _: SkillContext) -> dict:
-    path = Path(storage.parsed_path(payload.document_id))
-    if not path.exists():
+    parsed = _read_parsed_document(payload.document_id)
+    if parsed is None:
         return {"document_id": payload.document_id, "items": [], "available": False}
-    parsed = json.loads(path.read_text(encoding="utf-8"))
-    items = [
+    items = parsed.get("outline") or _legacy_outline(parsed)
+    return {"document_id": payload.document_id, "items": items, "available": True}
+
+
+def get_document_structure(payload: DocumentStructureInput, _: SkillContext) -> dict:
+    parsed = _read_parsed_document(payload.document_id)
+    if parsed is None:
+        return {"document_id": payload.document_id, "available": False}
+    result = {
+        "document_id": payload.document_id,
+        "available": True,
+        "schema_version": parsed.get("schema_version"),
+        "title": parsed.get("title"),
+        "authors": parsed.get("authors", []),
+        "affiliations": parsed.get("affiliations", []),
+        "abstract": parsed.get("abstract"),
+        "outline": parsed.get("outline") or _legacy_outline(parsed),
+        "counts": {
+            "pages": len(parsed.get("pages", [])),
+            "tables": len(parsed.get("tables", [])),
+            "figures": len(parsed.get("figures", [])),
+            "formulas": len(parsed.get("formulas", [])),
+            "references": len(parsed.get("references", [])),
+            "appendices": len(parsed.get("appendices", [])),
+        },
+    }
+    if payload.include_references:
+        result["references"] = parsed.get("references", [])
+    return result
+
+
+def get_document_table(payload: DocumentTableInput, _: SkillContext) -> dict:
+    parsed = _read_parsed_document(payload.document_id)
+    if parsed is None:
+        return {"document_id": payload.document_id, "available": False, "tables": []}
+    tables = parsed.get("tables", [])
+    if payload.table_id:
+        tables = [table for table in tables if table.get("table_id") == payload.table_id]
+    return {
+        "document_id": payload.document_id,
+        "available": True,
+        "tables": tables,
+    }
+
+
+def _read_parsed_document(document_id: str) -> dict | None:
+    path = Path(storage.parsed_path(document_id))
+    if not path.exists():
+        return None
+    return json.loads(path.read_text(encoding="utf-8"))
+
+
+def _legacy_outline(parsed: dict) -> list[dict]:
+    return [
         {
             "text": block["text"],
             "level": block.get("level") or 1,
             "page_number": page["page_number"],
             "block_id": block["block_id"],
+            "bbox": block.get("bbox"),
+            "children": [],
         }
         for page in parsed.get("pages", [])
         for block in page.get("blocks", [])
         if block.get("type") == "heading"
     ]
-    return {"document_id": payload.document_id, "items": items, "available": True}
 
 
 def register_builtin_skills() -> None:
@@ -65,6 +128,23 @@ def register_builtin_skills() -> None:
             input_model=DocumentOutlineInput,
             handler=get_document_outline,
         ),
+        SkillDefinition(
+            name="get_document_structure",
+            description=(
+                "Return academic metadata, abstract, hierarchical outline, structure counts, "
+                "and optionally anchored references for one parsed document."
+            ),
+            input_model=DocumentStructureInput,
+            handler=get_document_structure,
+        ),
+        SkillDefinition(
+            name="get_document_table",
+            description=(
+                "Return extracted table rows, cells, Markdown, captions, and page/BBox anchors."
+            ),
+            input_model=DocumentTableInput,
+            handler=get_document_table,
+        ),
     ]
     for definition in definitions:
         if definition.name not in skill_registry:
@@ -72,4 +152,3 @@ def register_builtin_skills() -> None:
 
 
 register_builtin_skills()
-

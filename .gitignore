@@ -12,5 +12,6 @@ frontend/node_modules/
 frontend/npm-debug.log*
 *.tsbuildinfo
 coverage.xml
+tmp/
 .DS_Store
 Thumbs.db

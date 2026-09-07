@@ -13,6 +13,7 @@ def test_agent_status_and_skills_are_exposed() -> None:
     assert skills_response.status_code == 200
     assert {item["name"] for item in skills_response.json()} == {
         "get_document_outline",
+        "get_document_structure",
+        "get_document_table",
         "search_evidence",
     }
-
