@@ -1,0 +1,57 @@
+{
+  "schema_version": "1.0",
+  "downloads": [
+    {
+      "id": "transformer-v1",
+      "filename": "1706.03762v1.pdf",
+      "source": "https://arxiv.org/pdf/1706.03762v1.pdf",
+      "purpose": ["two-column", "tables", "formulas", "references", "version-dedup"],
+      "expect": {"min_pages": 12, "min_text_chars": 20000, "title_contains": "Attention"}
+    },
+    {
+      "id": "transformer-v7",
+      "filename": "1706.03762v7.pdf",
+      "source": "https://arxiv.org/pdf/1706.03762v7.pdf",
+      "purpose": ["version-dedup", "revision-diff"],
+      "expect": {"min_pages": 12, "min_text_chars": 20000, "title_contains": "Attention"}
+    },
+    {
+      "id": "bert-v2",
+      "filename": "1810.04805v2.pdf",
+      "source": "https://arxiv.org/pdf/1810.04805v2.pdf",
+      "purpose": ["cross-document-rag", "tables", "references"],
+      "expect": {"min_pages": 10, "min_text_chars": 18000, "title_contains": "BERT"}
+    },
+    {
+      "id": "rag-v4",
+      "filename": "2005.11401v4.pdf",
+      "source": "https://arxiv.org/pdf/2005.11401v4.pdf",
+      "purpose": ["cross-document-rag", "figures", "references"],
+      "expect": {"min_pages": 15, "min_text_chars": 25000, "title_contains": "Retrieval"}
+    },
+    {
+      "id": "understanding-deep-learning-2026",
+      "filename": "UnderstandingDeepLearning_02_09_26_C.pdf",
+      "source": "https://github.com/udlbook/udlbook/releases/download/v5.0.3/UnderstandingDeepLearning_02_09_26_C.pdf",
+      "purpose": ["long-document", "hierarchical-loading", "memory"],
+      "expect": {"min_pages": 500, "min_text_chars": 500000, "title_contains": "Understanding Deep Learning"}
+    }
+  ],
+  "local_fixtures": [
+    {
+      "filename": "local_chinese_thesis_native.pdf",
+      "purpose": ["chinese", "tables", "figures", "formulas", "references"],
+      "expect": {"min_pages": 20, "min_text_chars": 20000, "min_extracted_text_chars": 20000, "min_tables": 10, "min_references": 5, "max_elapsed_seconds": 30, "max_python_peak_memory_mb": 128}
+    },
+    {
+      "filename": "local_chinese_thesis_scan_6p.pdf",
+      "purpose": ["scanned-image", "ocr"],
+      "expect": {"min_pages": 6, "content_kind": "scanned_image", "min_extracted_text_chars": 3000, "title_contains": "校园安防", "max_elapsed_seconds": 120, "max_python_peak_memory_mb": 256}
+    },
+    {
+      "filename": "local_chinese_thesis_long_541p.pdf",
+      "purpose": ["long-document", "memory", "full-parser"],
+      "expect": {"min_pages": 541, "min_text_chars": 300000, "min_extracted_text_chars": 300000, "max_elapsed_seconds": 180, "max_python_peak_memory_mb": 256}
+    }
+  ]
+}

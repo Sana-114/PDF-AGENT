@@ -198,6 +198,35 @@ npm run typecheck
 npm run build
 ```
 
+### PDF 回归语料
+
+公开测试文件不提交到 Git。网络可用时，在根目录运行以下命令下载固定版本的 Transformer v1/v7、BERT、RAG 和 500 页以上的 Understanding Deep Learning：
+
+```powershell
+.\scripts\fetch_pdf_corpus.ps1
+# 需要显式代理时：
+.\scripts\fetch_pdf_corpus.ps1 -Proxy http://127.0.0.1:7890
+```
+
+语料默认保存在 `output/pdf/regression-corpus/`。若已有一篇真实 PDF，可在 backend 容器内派生无文本层扫描版和精确 541 页压力版：
+
+```powershell
+docker compose exec backend python scripts/build_pdf_fixtures.py `
+  /app/data/uploads/<source.pdf> /tmp/regression-corpus
+```
+
+执行完整解析并输出机器可读报告：
+
+```powershell
+docker compose exec backend python scripts/evaluate_pdf_corpus.py `
+  /tmp/regression-corpus `
+  --manifest /tmp/pdf-regression-corpus.json `
+  --output /tmp/regression-corpus/report.json `
+  --strict
+```
+
+验收清单位于 `docs/pdf-regression-corpus.json`，覆盖页数、文本层、OCR 输出量、标题、结构节点、耗时和 Python 峰值内存。下载 URL 均固定到论文版本；二进制 PDF 和动态报告由 `.gitignore` 排除。
+
 ## 下一里程碑
 
 1. 用标准测试 PDF 评估当前版式基线，并按失败样本接入 Docling、GROBID 和 PaddleOCR；
