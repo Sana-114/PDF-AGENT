@@ -15,6 +15,8 @@ export interface DocumentRecord {
   page_count: number | null;
   arxiv_id: string | null;
   arxiv_version: number | null;
+  parser_name: string | null;
+  parser_version: string | null;
   duplicate_of_id: string | null;
   duplicate_score: number | null;
   duplicate_recommendation: string | null;

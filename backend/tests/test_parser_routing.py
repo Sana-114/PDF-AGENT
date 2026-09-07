@@ -1,6 +1,6 @@
 import fitz
 
-from app.parsers import PdfContentKind, get_parser, inspect_pdf
+from app.parsers import PdfContentKind, SelectiveOcrParser, get_parser, inspect_pdf
 
 
 def _save_native_pdf(path, page_count: int = 2) -> None:
@@ -53,7 +53,12 @@ def test_inspect_pdf_detects_scanned_images(tmp_path) -> None:
 
     assert diagnostics.content_kind == PdfContentKind.SCANNED_IMAGE
     assert diagnostics.image_pages == [1, 2]
-    assert any("OCR" in warning for warning in parsed.warnings)
+    assert isinstance(parser, SelectiveOcrParser)
+    assert parser.name == "pymupdf+tesseract"
+    assert "rasterized" in parsed.full_text.casefold()
+    assert any("Tesseract OCR" in warning for warning in parsed.warnings)
+    assert parser.ocr_pages == [1, 2]
+    assert parsed.pages[0].blocks[0].bbox
 
 
 def test_inspect_pdf_detects_hybrid_documents(tmp_path) -> None:
@@ -72,8 +77,13 @@ def test_inspect_pdf_detects_hybrid_documents(tmp_path) -> None:
     hybrid.close()
 
     diagnostics = inspect_pdf(str(hybrid_path))
+    parser = get_parser(str(hybrid_path))
+    parsed = parser.parse(str(hybrid_path))
 
     assert diagnostics.content_kind == PdfContentKind.HYBRID
     assert diagnostics.text_pages == [1]
     assert diagnostics.low_text_pages == [2]
-
+    assert isinstance(parser, SelectiveOcrParser)
+    assert parser.ocr_pages == [2]
+    assert "native PDF page" in parsed.full_text
+    assert "rasterized" in parsed.full_text.casefold()

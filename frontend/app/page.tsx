@@ -284,6 +284,9 @@ export default function Home() {
                 <p className="meta">
                   {document.arxiv_id ? `arXiv:${document.arxiv_id}${document.arxiv_version ? `v${document.arxiv_version}` : ""}` : "等待识别论文标识"}
                   <span>·</span>{document.page_count ? `${document.page_count} 页` : formatBytes(document.size_bytes)}
+                  {document.parser_name && (
+                    <><span>·</span>{document.parser_name.includes("tesseract") ? "OCR" : document.parser_name}</>
+                  )}
                   <span>·</span>{new Date(document.created_at).toLocaleString("zh-CN")}
                 </p>
                 {document.duplicate_recommendation && (

@@ -19,9 +19,11 @@ class PyMuPDFParser:
         try:
             pages: list[Page] = []
             text_parts: list[str] = []
+            first_page_title_guess: str | None = None
             for page_index, pdf_page in enumerate(document):
                 page_blocks: list[Block] = []
-                raw_blocks = pdf_page.get_text("blocks", sort=True)
+                textpage = self._get_textpage(pdf_page, page_index + 1)
+                raw_blocks = pdf_page.get_text("blocks", sort=True, textpage=textpage)
                 for order, raw in enumerate(raw_blocks):
                     x0, y0, x1, y1, text = raw[:5]
                     clean_text = " ".join(str(text).split())
@@ -40,6 +42,9 @@ class PyMuPDFParser:
                     )
                     text_parts.append(clean_text)
 
+                if page_index == 0:
+                    first_page_title_guess = self._guess_title(pdf_page, textpage)
+
                 pages.append(
                     Page(
                         page_number=page_index + 1,
@@ -51,8 +56,8 @@ class PyMuPDFParser:
 
             metadata_title = (document.metadata or {}).get("title")
             title = self._clean_metadata_title(metadata_title, path)
-            if not title and pages:
-                title = self._guess_title(document[0])
+            if not title:
+                title = first_page_title_guess
 
             warnings: list[str] = []
             if not text_parts:
@@ -68,6 +73,10 @@ class PyMuPDFParser:
             )
         finally:
             document.close()
+
+    def _get_textpage(self, page: fitz.Page, page_number: int) -> fitz.TextPage | None:
+        del page, page_number
+        return None
 
     @staticmethod
     def _classify_block(text: str) -> tuple[str, int | None]:
@@ -87,9 +96,11 @@ class PyMuPDFParser:
         return cleaned
 
     @staticmethod
-    def _guess_title(first_page: fitz.Page) -> str | None:
+    def _guess_title(
+        first_page: fitz.Page, textpage: fitz.TextPage | None = None
+    ) -> str | None:
         candidates: list[tuple[float, str]] = []
-        page_dict = first_page.get_text("dict")
+        page_dict = first_page.get_text("dict", textpage=textpage)
         for block in page_dict.get("blocks", []):
             for line in block.get("lines", []):
                 spans = line.get("spans", [])
@@ -100,4 +111,3 @@ class PyMuPDFParser:
         if not candidates:
             return None
         return max(candidates, key=lambda item: (item[0], len(item[1])))[1]
-

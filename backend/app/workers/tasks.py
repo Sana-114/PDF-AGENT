@@ -107,6 +107,9 @@ def parse_document(document_id: str) -> dict[str, str]:
             diagnostics = getattr(parser, "diagnostics", None)
             if diagnostics is not None:
                 output["pdf_diagnostics"] = diagnostics.to_dict()
+            processing_metadata = getattr(parser, "processing_metadata", None)
+            if processing_metadata is not None:
+                output["ocr"] = processing_metadata()
             Path(storage.parsed_path(document.id)).write_text(
                 json.dumps(output, ensure_ascii=False), encoding="utf-8"
             )

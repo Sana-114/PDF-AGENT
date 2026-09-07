@@ -8,6 +8,7 @@ PaperPilot 是一个以原文证据为核心的科研助手 Agent 系统。本�
 - 基于 SHA-256 的完全重复检测；
 - Celery 后台解析和状态跟踪；
 - PyMuPDF 基线解析，输出页码、文本块、坐标和阅读顺序；
+- 自动区分原生文本、扫描图像和混合 PDF，并对低文本页执行中英文 OCR；
 - 从正文识别 arXiv ID/版本并生成紧凑语义指纹；
 - 对同一 arXiv 或高相似标题文献生成版本提醒；
 - 自动把页面块切分为不跨页的检索 Chunk，保留章节、页码、块 ID 和 BBox；
@@ -19,7 +20,7 @@ PaperPilot 是一个以原文证据为核心的科研助手 Agent 系统。本�
 - 文献列表、原文访问、结构化结果读取、重解析和删除；
 - Docker Compose 编排 PostgreSQL、Redis、Qdrant、MinIO、API、Worker 和 Web。
 
-> 当前版本的语义指纹用于候选预警，不等于最终语义去重模型。当前检索为无需模型的词法基线；OCR、Docling/GROBID、Embedding、Qdrant 混合检索和重排器仍待接入。
+> 当前版本的语义指纹用于候选预警，不等于最终语义去重模型。当前 OCR 使用 Tesseract 中英文基线，检索为无需模型的词法基线；Docling/GROBID、Embedding、Qdrant 混合检索和重排器仍待接入。
 
 ## 目录结构
 
@@ -64,6 +65,8 @@ docker compose up --build
 - MinIO Console：http://localhost:9001
 
 开发环境中的 MinIO 默认密码只用于本地启动，上线前必须修改。
+
+Docker 镜像已经安装 `eng` 和 `chi_sim` Tesseract 语言数据。非 Docker 启动时，需要自行安装对应语言包并设置 `OCR_TESSDATA`；原生文本 PDF 不依赖 OCR 环境。
 
 ## LLM 配置
 
@@ -144,7 +147,7 @@ npm run build
 
 ## 下一里程碑
 
-1. 增加 Docling、GROBID、PaddleOCR 解析路由；
+1. 增加 Docling、GROBID 布局解析并评估 PaddleOCR 中文识别适配器；
 2. 为 541 页教材实现逐页落盘和断点恢复；
 3. 建立 Qdrant Dense/Sparse 混合检索与 Cross-Encoder 重排；
 4. 接入 PDF.js，利用现有 BBox 证据实现页内高亮；

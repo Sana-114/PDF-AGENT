@@ -17,6 +17,8 @@ class DocumentRead(BaseModel):
     page_count: int | None
     arxiv_id: str | None
     arxiv_version: int | None
+    parser_name: str | None
+    parser_version: str | None
     duplicate_of_id: str | None
     duplicate_score: float | None
     duplicate_recommendation: str | None
@@ -41,4 +43,3 @@ class HealthRead(BaseModel):
     status: str
     service: str
     version: str
-

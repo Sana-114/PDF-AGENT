@@ -1,5 +1,7 @@
+from app.core.config import settings
 from app.parsers.base import DocumentParser
 from app.parsers.diagnostics import PdfContentKind, PdfDiagnostics, inspect_pdf
+from app.parsers.ocr_parser import SelectiveOcrParser
 from app.parsers.pymupdf_parser import PyMuPDFParser
 
 
@@ -30,4 +32,16 @@ def get_parser(path: str | None = None) -> DocumentParser:
     parser = PyMuPDFParser()
     if path is None:
         return parser
-    return RoutedParser(parser, inspect_pdf(path))
+    diagnostics = inspect_pdf(path)
+    if settings.ocr_enabled and diagnostics.content_kind in {
+        PdfContentKind.SCANNED_IMAGE,
+        PdfContentKind.HYBRID,
+    }:
+        return SelectiveOcrParser(
+            diagnostics,
+            languages=settings.ocr_languages,
+            dpi=settings.ocr_dpi,
+            min_text_chars=settings.ocr_min_text_chars,
+            tessdata=settings.ocr_tessdata or None,
+        )
+    return RoutedParser(parser, diagnostics)
