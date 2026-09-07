@@ -11,6 +11,7 @@ class HashEmbeddingProvider:
 
     name = "hash"
     model = "hash-ngram-v1"
+    index_namespace = "hash"
 
     def __init__(self, dimensions: int = 384) -> None:
         if dimensions < 32:

@@ -14,6 +14,7 @@
 | Agent Harness | 检索、证据门控、Provider 调用、引用校验和 Trace |
 | Skill Registry | 带 Pydantic 输入 Schema 的本地工具发现与执行 |
 | LLM Provider | 默认抽取式兜底；可选 OpenAI Responses API |
+| Embedding Provider | 默认离线 Hash 基线；可选 OpenAI-compatible BGE-M3 等语义服务 |
 | PostgreSQL | 文献元数据、任务状态、版本关系和 Chunk 索引 |
 | 文件卷 | MVP 的 PDF 与 Document AST 存储 |
 | Qdrant | Dense/Sparse 命名向量、Payload 过滤和 RRF 混合召回 |
@@ -63,7 +64,9 @@ Answer + Claims + Evidence + Trace
 
 `DocumentChunk` 同时包含普通页面块和摘要、表格、图注、公式、参考文献等结构化节点。检索器会把章节名一并用于 BM25，并依据问题中的结构意图做类型加权。例如“表格中的分数”和“完整参考文献”会优先命中独立表格或引用节点，而不是大段正文。
 
-每个 Chunk 同步为一个 Qdrant Point，使用 `dense` 和 `sparse` 两个命名向量。Qdrant 先对两路候选执行 RRF，再与原有 BM25 排名做一次偏重精确匹配的应用层 RRF。当前默认的 `HashEmbeddingProvider` 无需下载模型，便于离线回归和故障演示；它是向量基础设施基线而非真正的语义模型。`EmbeddingProvider` 边界可继续增加 BGE-M3 或远程 Embedding 适配器。
+每个 Chunk 同步为一个 Qdrant Point，使用 `dense` 和 `sparse` 两个命名向量。Qdrant 先对两路候选执行 RRF，再与原有 BM25 排名做一次偏重精确匹配的应用层 RRF。当前默认的 `HashEmbeddingProvider` 无需下载模型，便于离线回归和故障演示；它是向量基础设施基线而非真正的语义模型。`OpenAICompatibleEmbeddingProvider` 可连接 BGE-M3 等学习型模型的 `/v1/embeddings` 推理服务，负责批量请求和严格响应校验，同时继续使用 Hash Sparse 保留关键词召回。
+
+向量集合按 Provider、模型签名和维度隔离。切换语义模型时创建新的 Collection，并由现有按需回填机制补建索引，从而避免模型或维度不兼容污染旧向量。远程推理异常不会使解析任务失败，查询会回退至 BM25；仓库默认不捆绑大模型权重，部署方可按 CPU/GPU 环境选择推理服务。
 
 Qdrant 不可达、索引失败或本地开发关闭向量检索时，`HybridRetriever` 会返回 BM25 结果。解析任务不会因向量服务故障而失败；后续查询会根据数据库 Chunk 数量自动补建缺失索引。
 
@@ -71,7 +74,7 @@ Qdrant 不可达、索引失败或本地开发关闭向量检索时，`HybridRet
 
 ## 下一阶段边界
 
-1. 接入 BGE-M3 Embedding 和 Cross-Encoder 重排并用标注问答集校准证据阈值。
+1. 接入 Cross-Encoder 重排并用标注问答集校准证据阈值。
 2. 为向量模型升级增加蓝绿 Collection 和断点批量重建。
 3. 接入 PDF.js，通过现有 block 坐标实现答案高亮与引用跳转。
 4. 为复杂扫描表格和公式增加专用识别适配器。

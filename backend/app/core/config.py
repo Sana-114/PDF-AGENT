@@ -41,6 +41,9 @@ class Settings(BaseSettings):
     embedding_provider: str = "hash"
     embedding_model: str = "hash-ngram-v1"
     embedding_dimensions: int = 384
+    embedding_base_url: str = "http://localhost:8001/v1"
+    embedding_api_key: str = ""
+    embedding_timeout_seconds: float = 60.0
     reranker_model: str = "BAAI/bge-reranker-v2-m3"
 
     model_config = SettingsConfigDict(

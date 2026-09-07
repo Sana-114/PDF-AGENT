@@ -12,6 +12,7 @@ class EmbeddingProvider(Protocol):
     name: str
     model: str
     dimensions: int
+    index_namespace: str
 
     def embed_dense(self, texts: list[str]) -> list[list[float]]: ...
 

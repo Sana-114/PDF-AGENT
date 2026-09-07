@@ -34,7 +34,8 @@ class QdrantVectorIndex:
         self.enabled = config.vector_search_enabled
         self.embedder = embedder or get_embedding_provider(config)
         self.collection_name = (
-            f"{config.vector_collection}_{self.embedder.name}_{self.embedder.dimensions}"
+            f"{config.vector_collection}_{self.embedder.index_namespace}_"
+            f"{self.embedder.dimensions}"
         )
         self.client = client or QdrantClient(
             url=config.qdrant_url,

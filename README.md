@@ -20,6 +20,7 @@ PaperPilot 是一个以原文证据为核心的科研助手 Agent 系统。本�
 - 根据问题中的表格、公式、摘要或引用意图进行结构类型加权；
 - 将每个证据 Chunk 写入 Qdrant `dense` / `sparse` 命名向量并用 RRF 融合召回；
 - 将 Qdrant 结果与本地 BM25 再次进行 RRF 融合，向量服务异常时自动降级；
+- 可切换 OpenAI-compatible Embedding 服务，接入 BGE-M3 等真实学习型语义向量；
 - Claim/Evidence 问答响应、证据门控、有效引用 ID 校验和执行轨迹；
 - 内置 `search_evidence`、`get_document_outline`、`get_document_structure`、`get_document_table` Skills 和可扩展注册表；
 - 可切换 LLM Provider：默认抽取式零密钥模式，或 OpenAI Responses API；
@@ -27,7 +28,7 @@ PaperPilot 是一个以原文证据为核心的科研助手 Agent 系统。本�
 - 文献列表、原文访问、结构化结果读取、重解析和删除；
 - Docker Compose 编排 PostgreSQL、Redis、Qdrant、MinIO、API、Worker 和 Web。
 
-> 当前版本的语义指纹用于候选预警，不等于最终语义去重模型。当前 OCR 使用 Tesseract 中英文基线。默认 Embedding 是零密钥的确定性 Hash-Ngram 工程基线，用于验证完整 Qdrant 混合链路，不等同于 BGE 等学习型语义模型。公式节点是带位置锚点的文本候选，并非可靠的 LaTeX 反演；扫描页表格结构恢复、Docling/GROBID、BGE-M3 和 Cross-Encoder 重排器仍待接入。
+> 当前版本的语义指纹用于候选预警，不等于最终语义去重模型。当前 OCR 使用 Tesseract 中英文基线。默认 Embedding 仍是零密钥的确定性 Hash-Ngram 工程基线；真实语义向量已提供远程兼容接口，但仓库不会自动下载或捆绑 BGE-M3 权重。公式节点是带位置锚点的文本候选，并非可靠的 LaTeX 反演；扫描页表格结构恢复、Docling/GROBID 和 Cross-Encoder 重排器仍待接入。
 
 ## 目录结构
 
@@ -86,6 +87,21 @@ EMBEDDING_DIMENSIONS=384
 
 向量索引以 Chunk UUID 为 Point ID，Payload 保存文献、页码、BBox、节点类型和原文。上传、重解析、删除以及首次查询旧文献时都会自动同步索引。
 Compose 固定 Qdrant Server `v1.19.1`，Python 客户端固定 `1.19.0`，避免 `latest` 漂移造成 API 兼容问题。
+
+### 真实语义 Embedding 配置
+
+若已有实现 OpenAI-compatible `POST /v1/embeddings` 的本地或远程推理服务，可在 `.env` 中切换到 BGE-M3 等学习型模型：
+
+```dotenv
+EMBEDDING_PROVIDER=openai-compatible
+EMBEDDING_MODEL=BAAI/bge-m3
+EMBEDDING_DIMENSIONS=1024
+EMBEDDING_BASE_URL=http://host.docker.internal:8001/v1
+EMBEDDING_API_KEY=
+EMBEDDING_TIMEOUT_SECONDS=60
+```
+
+`EMBEDDING_DIMENSIONS` 必须与服务实际返回维度一致。模型响应会校验数量、顺序、维度和有限数值；服务不可用时查询自动降级到 BM25。不同模型使用独立的 Qdrant Collection 命名空间，首次查询会补建该模型的索引，不会把不同维度的向量写入同一集合。直接运行后端而不是 Docker 时，应把 `host.docker.internal` 改成推理服务的实际地址（本机通常为 `localhost`）。
 
 ## LLM 配置
 
@@ -170,7 +186,7 @@ npm run build
 
 1. 用标准测试 PDF 评估当前版式基线，并按失败样本接入 Docling、GROBID 和 PaddleOCR；
 2. 为 541 页教材实现逐页落盘和断点恢复；
-3. 将 Hash-Ngram 替换为 BGE-M3，并接入 Cross-Encoder 重排与离线评测集；
+3. 接入 Cross-Encoder 重排与离线评测集，并补充可选的本地 BGE-M3 推理编排；
 4. 接入 PDF.js，利用现有 BBox 证据实现页内高亮；
 5. 使用 `1706.03762v7.pdf`、`v1.pdf` 和扫描版建立自动回归集。
 
