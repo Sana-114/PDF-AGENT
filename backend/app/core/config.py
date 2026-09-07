@@ -15,6 +15,10 @@ class Settings(BaseSettings):
     database_url: str = "sqlite:///./data/pdfagent.db"
     redis_url: str = "redis://localhost:6379/0"
     qdrant_url: str = "http://localhost:6333"
+    vector_search_enabled: bool = False
+    vector_collection: str = "paperpilot_chunks_v1"
+    vector_prefetch_k: int = 24
+    vector_timeout_seconds: float = 3.0
 
     data_dir: Path = Path("./data")
     upload_dir: Path = Path("./data/uploads")
@@ -34,7 +38,9 @@ class Settings(BaseSettings):
     llm_base_url: str = "https://api.openai.com/v1"
     llm_timeout_seconds: float = 60.0
     rag_min_score: float = 0.18
-    embedding_model: str = "BAAI/bge-m3"
+    embedding_provider: str = "hash"
+    embedding_model: str = "hash-ngram-v1"
+    embedding_dimensions: int = 384
     reranker_model: str = "BAAI/bge-reranker-v2-m3"
 
     model_config = SettingsConfigDict(

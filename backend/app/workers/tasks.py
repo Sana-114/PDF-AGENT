@@ -18,6 +18,7 @@ from app.services.fingerprints import (
     title_similarity,
 )
 from app.services.storage import storage
+from app.services.vector_index import index_document_safely
 from app.workers.celery_app import celery_app
 
 logger = logging.getLogger(__name__)
@@ -114,6 +115,8 @@ def parse_document(document_id: str) -> dict[str, str]:
                 json.dumps(output, ensure_ascii=False), encoding="utf-8"
             )
             replace_document_chunks(session, document.id, output)
+            session.flush()
+            index_document_safely(session, document.id)
 
             document.status = DocumentStatus.READY
             _find_semantic_duplicate(session, document)

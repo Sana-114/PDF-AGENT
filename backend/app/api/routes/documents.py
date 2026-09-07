@@ -10,6 +10,7 @@ from app.core.database import get_db
 from app.models.document import Document, DocumentStatus
 from app.schemas.document import DocumentList, DocumentRead, UploadResult
 from app.services.storage import storage
+from app.services.vector_index import delete_document_index_safely
 from app.workers.tasks import parse_document
 
 router = APIRouter()
@@ -133,7 +134,7 @@ def reparse_document(document_id: str, db: Session = Depends(get_db)) -> Documen
 @router.delete("/{document_id}", status_code=status.HTTP_204_NO_CONTENT)
 def delete_document(document_id: str, db: Session = Depends(get_db)) -> None:
     document = _get_document(document_id, db)
+    delete_document_index_safely(document.id)
     storage.delete(document.storage_key, document.id)
     db.delete(document)
     db.commit()
-

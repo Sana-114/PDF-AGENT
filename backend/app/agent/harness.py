@@ -47,7 +47,10 @@ class ResearchAgent:
             AgentTraceStep(
                 skill="search_evidence",
                 status="ok",
-                summary=f"检索到 {len(evidence)} 条候选证据。",
+                summary=(
+                    f"检索到 {len(evidence)} 条候选证据；"
+                    f"模式：{evidence[0].retrieval_mode if evidence else 'none'}。"
+                ),
                 duration_ms=_elapsed_ms(started),
             )
         )

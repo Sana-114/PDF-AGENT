@@ -7,6 +7,7 @@ class EvidenceAnchor(BaseModel):
     """A stable pointer back to text extracted from a PDF."""
 
     evidence_id: str
+    chunk_id: str | None = None
     document_id: str
     document_title: str | None = None
     page_number: int = Field(ge=1)
@@ -16,6 +17,7 @@ class EvidenceAnchor(BaseModel):
     source_type: Literal["text", "abstract", "table", "figure", "formula", "reference"] = (
         "text"
     )
+    retrieval_mode: Literal["lexical", "vector", "hybrid"] = "lexical"
     quote: str
     score: float = Field(ge=0.0, le=1.0)
 
@@ -66,4 +68,7 @@ class AgentStatus(BaseModel):
     provider: str
     model: str | None
     llm_configured: bool
+    retrieval_mode: str
+    embedding_provider: str
+    embedding_model: str
     skills: list[str]

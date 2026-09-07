@@ -260,6 +260,7 @@ export default function Home() {
                           formula: "公式",
                           reference: "参考文献",
                         } as const)[evidence.source_type] || "正文"}
+                        {" · "}{evidence.retrieval_mode === "hybrid" ? "混合检索" : "词法检索"}
                         {" · "}第 {evidence.page_number} 页 · {Math.round(evidence.score * 100)}%
                       </span>
                     </div>

@@ -31,7 +31,7 @@ services:
       - "6379:6379"
 
   qdrant:
-    image: qdrant/qdrant:latest
+    image: qdrant/qdrant:v1.19.1
     volumes:
       - qdrant_data:/qdrant/storage
     ports:
@@ -58,6 +58,13 @@ services:
       DATABASE_URL: postgresql+psycopg://pdfagent:pdfagent@postgres:5432/pdfagent
       REDIS_URL: redis://redis:6379/0
       QDRANT_URL: http://qdrant:6333
+      VECTOR_SEARCH_ENABLED: ${VECTOR_SEARCH_ENABLED:-true}
+      VECTOR_COLLECTION: ${VECTOR_COLLECTION:-paperpilot_chunks_v1}
+      VECTOR_PREFETCH_K: ${VECTOR_PREFETCH_K:-24}
+      VECTOR_TIMEOUT_SECONDS: ${VECTOR_TIMEOUT_SECONDS:-3}
+      EMBEDDING_PROVIDER: ${EMBEDDING_PROVIDER:-hash}
+      EMBEDDING_MODEL: ${EMBEDDING_MODEL:-hash-ngram-v1}
+      EMBEDDING_DIMENSIONS: ${EMBEDDING_DIMENSIONS:-384}
       DATA_DIR: /app/data
       UPLOAD_DIR: /app/data/uploads
       PARSED_DIR: /app/data/parsed
@@ -93,6 +100,13 @@ services:
       DATABASE_URL: postgresql+psycopg://pdfagent:pdfagent@postgres:5432/pdfagent
       REDIS_URL: redis://redis:6379/0
       QDRANT_URL: http://qdrant:6333
+      VECTOR_SEARCH_ENABLED: ${VECTOR_SEARCH_ENABLED:-true}
+      VECTOR_COLLECTION: ${VECTOR_COLLECTION:-paperpilot_chunks_v1}
+      VECTOR_PREFETCH_K: ${VECTOR_PREFETCH_K:-24}
+      VECTOR_TIMEOUT_SECONDS: ${VECTOR_TIMEOUT_SECONDS:-3}
+      EMBEDDING_PROVIDER: ${EMBEDDING_PROVIDER:-hash}
+      EMBEDDING_MODEL: ${EMBEDDING_MODEL:-hash-ngram-v1}
+      EMBEDDING_DIMENSIONS: ${EMBEDDING_DIMENSIONS:-384}
       DATA_DIR: /app/data
       UPLOAD_DIR: /app/data/uploads
       PARSED_DIR: /app/data/parsed

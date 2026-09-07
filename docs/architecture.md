@@ -16,7 +16,7 @@
 | LLM Provider | 默认抽取式兜底；可选 OpenAI Responses API |
 | PostgreSQL | 文献元数据、任务状态、版本关系和 Chunk 索引 |
 | 文件卷 | MVP 的 PDF 与 Document AST 存储 |
-| Qdrant | 后续混合检索和证据 Chunk 索引 |
+| Qdrant | Dense/Sparse 命名向量、Payload 过滤和 RRF 混合召回 |
 | MinIO | 后续替换本地文件卷的对象存储 |
 
 ## 解析器边界
@@ -54,7 +54,7 @@ Question
    ↓
 ResearchAgent Harness
    ↓ calls
-search_evidence Skill → page-local + structured DocumentChunk → ranked EvidenceAnchor
+search_evidence Skill → BM25 + Qdrant Dense/Sparse → RRF → ranked EvidenceAnchor
    ↓ evidence score gate
 Extractive Provider / OpenAI Responses API
    ↓ citation allow-list validation
@@ -63,12 +63,16 @@ Answer + Claims + Evidence + Trace
 
 `DocumentChunk` 同时包含普通页面块和摘要、表格、图注、公式、参考文献等结构化节点。检索器会把章节名一并用于 BM25，并依据问题中的结构意图做类型加权。例如“表格中的分数”和“完整参考文献”会优先命中独立表格或引用节点，而不是大段正文。
 
+每个 Chunk 同步为一个 Qdrant Point，使用 `dense` 和 `sparse` 两个命名向量。Qdrant 先对两路候选执行 RRF，再与原有 BM25 排名做一次偏重精确匹配的应用层 RRF。当前默认的 `HashEmbeddingProvider` 无需下载模型，便于离线回归和故障演示；它是向量基础设施基线而非真正的语义模型。`EmbeddingProvider` 边界可继续增加 BGE-M3 或远程 Embedding 适配器。
+
+Qdrant 不可达、索引失败或本地开发关闭向量检索时，`HybridRetriever` 会返回 BM25 结果。解析任务不会因向量服务故障而失败；后续查询会根据数据库 Chunk 数量自动补建缺失索引。
+
 `EvidenceAnchor` 同时保存 `document_id`、`page_number`、`block_ids`、`bbox`、`section`、`source_type` 和原文摘录。LLM 只能引用本次检索生成的 `E1...En`，Harness 会在响应前再次校验引用白名单。默认抽取式 Provider 完全不调用外部模型，可用于无密钥演示和离线回归测试。
 
 ## 下一阶段边界
 
-1. 将现有 page-local Chunk 写入 Qdrant dense/sparse named vectors。
-2. 接入 Cross-Encoder 重排并用标注问答集校准证据阈值。
+1. 接入 BGE-M3 Embedding 和 Cross-Encoder 重排并用标注问答集校准证据阈值。
+2. 为向量模型升级增加蓝绿 Collection 和断点批量重建。
 3. 接入 PDF.js，通过现有 block 坐标实现答案高亮与引用跳转。
 4. 为复杂扫描表格和公式增加专用识别适配器。
 5. 将本地存储实现替换为 S3/MinIO 实现，保持 API 不变。

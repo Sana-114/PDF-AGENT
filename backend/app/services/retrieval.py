@@ -1,7 +1,8 @@
 import json
+import logging
 import math
-import re
 from collections import Counter
+from typing import Protocol
 
 from sqlalchemy import select
 from sqlalchemy.orm import Session
@@ -10,9 +11,9 @@ from app.models.chunk import DocumentChunk
 from app.models.document import Document
 from app.schemas.agent import EvidenceAnchor
 from app.services.chunking import ensure_document_chunks
+from app.services.text_features import infer_source_type, tokenize
 
-WORD_PATTERN = re.compile(r"[a-zA-Z]+(?:[_-]?\d+)?|\d+(?:\.\d+)?|[α-ωΑ-Ωβ₁₂]+")
-CJK_PATTERN = re.compile(r"[\u3400-\u9fff]+")
+logger = logging.getLogger(__name__)
 QUERY_EXPANSIONS = {
     "作者": ["author", "authors"],
     "机构": ["institution", "affiliation", "university"],
@@ -58,18 +59,23 @@ class LexicalRetriever:
         if not rows:
             return []
 
-        query_terms = _tokenize(_expand_query(question))
+        query_terms = tokenize(_expand_query(question))
         if not query_terms:
             return []
         documents = [
-            _tokenize(f"{row.DocumentChunk.section or ''} {row.DocumentChunk.text}")
+            tokenize(f"{row.DocumentChunk.section or ''} {row.DocumentChunk.text}")
             for row in rows
         ]
         document_frequency = Counter(
             term for terms in documents for term in set(terms) if term in query_terms
         )
         average_length = sum(len(terms) for terms in documents) / max(len(documents), 1)
-        source_types = [_infer_source_type(row.DocumentChunk) for row in rows]
+        source_types = [
+            infer_source_type(
+                row.DocumentChunk.section, json.loads(row.DocumentChunk.block_ids_json)
+            )
+            for row in rows
+        ]
         intents = _query_source_intents(question)
         raw_scores = []
         for terms, source_type in zip(documents, source_types, strict=True):
@@ -101,13 +107,17 @@ class LexicalRetriever:
             evidence.append(
                 EvidenceAnchor(
                     evidence_id=f"E{index}",
+                    chunk_id=chunk.id,
                     document_id=chunk.document_id,
                     document_title=row.title,
                     page_number=chunk.page_number,
                     block_ids=json.loads(chunk.block_ids_json),
                     bbox=json.loads(chunk.bbox_json) if chunk.bbox_json else None,
                     section=chunk.section,
-                    source_type=_infer_source_type(chunk),
+                    source_type=infer_source_type(
+                        chunk.section, json.loads(chunk.block_ids_json)
+                    ),
+                    retrieval_mode="lexical",
                     quote=chunk.text,
                     score=round(score, 4),
                 )
@@ -134,31 +144,94 @@ def _query_source_intents(question: str) -> set[str]:
     }
 
 
-def _infer_source_type(chunk: DocumentChunk) -> str:
-    section = (chunk.section or "").casefold()
-    block_ids = json.loads(chunk.block_ids_json)
-    first_id = str(block_ids[0]).casefold() if block_ids else ""
-    if first_id.startswith("ref-") or section.startswith("参考文献"):
-        return "reference"
-    if "table-" in first_id or section.startswith("表格"):
-        return "table"
-    if "figure-" in first_id or section.startswith("图表"):
-        return "figure"
-    if first_id.startswith("formula-") or section.startswith("公式"):
-        return "formula"
-    if section.strip(" .·0123456789").casefold() in {"abstract", "摘要"}:
-        return "abstract"
-    return "text"
+class VectorIndex(Protocol):
+    enabled: bool
+
+    def search(
+        self,
+        session: Session,
+        question: str,
+        document_ids: list[str] | None,
+        limit: int,
+    ) -> list[EvidenceAnchor]: ...
 
 
-def _tokenize(text: str) -> list[str]:
-    normalized = text.casefold().replace("β₁", "beta_1").replace("β₂", "beta_2")
-    tokens = [match.group(0) for match in WORD_PATTERN.finditer(normalized)]
-    for match in CJK_PATTERN.finditer(normalized):
-        sequence = match.group(0)
-        tokens.extend(sequence)
-        tokens.extend(sequence[index : index + 2] for index in range(len(sequence) - 1))
-    return tokens
+class HybridRetriever:
+    """Fuse the proven BM25 rank with Qdrant dense+sparse RRF candidates."""
+
+    def __init__(self, session: Session, vector_index: VectorIndex | None = None) -> None:
+        self.session = session
+        self.lexical = LexicalRetriever(session)
+        if vector_index is None:
+            from app.services.vector_index import get_vector_index
+
+            vector_index = get_vector_index()
+        self.vector_index = vector_index
+
+    def search(
+        self, question: str, document_ids: list[str] | None = None, top_k: int = 6
+    ) -> list[EvidenceAnchor]:
+        candidate_k = max(20, top_k * 3)
+        lexical = self.lexical.search(question, document_ids, candidate_k)
+        if not self.vector_index.enabled:
+            return _renumber(lexical[:top_k], "lexical")
+        try:
+            vector = self.vector_index.search(
+                self.session, question, document_ids, candidate_k
+            )
+        except Exception as exc:
+            logger.warning("Vector retrieval unavailable, using BM25 fallback: %s", exc)
+            return _renumber(lexical[:top_k], "lexical")
+        if not vector:
+            return _renumber(lexical[:top_k], "lexical")
+        return _reciprocal_rank_fusion(lexical, vector, top_k)
+
+
+def _reciprocal_rank_fusion(
+    lexical: list[EvidenceAnchor], vector: list[EvidenceAnchor], top_k: int
+) -> list[EvidenceAnchor]:
+    anchors: dict[str, EvidenceAnchor] = {}
+    scores: Counter[str] = Counter()
+    original_scores: dict[str, float] = {}
+    for ranking, weight in ((lexical, 2.0), (vector, 1.0)):
+        for rank, anchor in enumerate(ranking, start=1):
+            key = anchor.chunk_id or _anchor_key(anchor)
+            scores[key] += weight / (60 + rank)
+            original_scores[key] = max(original_scores.get(key, 0.0), anchor.score)
+            if key not in anchors or anchor.retrieval_mode == "vector":
+                anchors[key] = anchor
+    if not scores:
+        return []
+    max_fused = max(scores.values())
+    final_scores = {
+        key: min(1.0, 0.7 * score / max_fused + 0.3 * original_scores[key])
+        for key, score in scores.items()
+    }
+    ranked_keys = sorted(final_scores, key=final_scores.get, reverse=True)[:top_k]
+    results = []
+    for index, key in enumerate(ranked_keys, start=1):
+        anchor = anchors[key].model_copy(deep=True)
+        anchor.evidence_id = f"E{index}"
+        anchor.retrieval_mode = "hybrid"
+        anchor.score = round(final_scores[key], 4)
+        results.append(anchor)
+    return results
+
+
+def _renumber(evidence: list[EvidenceAnchor], mode: str) -> list[EvidenceAnchor]:
+    results = []
+    for index, item in enumerate(evidence, start=1):
+        copy = item.model_copy(deep=True)
+        copy.evidence_id = f"E{index}"
+        copy.retrieval_mode = mode
+        results.append(copy)
+    return results
+
+
+def _anchor_key(anchor: EvidenceAnchor) -> str:
+    return "|".join(
+        [anchor.document_id, str(anchor.page_number), *anchor.block_ids, anchor.quote]
+    )
 
 
 def _bm25_score(

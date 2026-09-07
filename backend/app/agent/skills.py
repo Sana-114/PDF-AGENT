@@ -5,7 +5,7 @@ from pydantic import BaseModel, Field
 
 from app.agent.registry import SkillContext, SkillDefinition, skill_registry
 from app.schemas.agent import EvidenceAnchor
-from app.services.retrieval import LexicalRetriever
+from app.services.retrieval import HybridRetriever
 from app.services.storage import storage
 
 
@@ -32,7 +32,7 @@ class DocumentTableInput(BaseModel):
 def search_evidence(
     payload: SearchEvidenceInput, context: SkillContext
 ) -> list[EvidenceAnchor]:
-    return LexicalRetriever(context.db).search(
+    return HybridRetriever(context.db).search(
         question=payload.question,
         document_ids=payload.document_ids,
         top_k=payload.top_k,

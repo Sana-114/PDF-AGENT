@@ -18,6 +18,8 @@ PaperPilot 是一个以原文证据为核心的科研助手 Agent 系统。本�
 - 将摘要、表格、图注、公式候选和参考文献建立为独立证据 Chunk，旧索引可按需自动升级；
 - 中英混合 BM25 风格检索，可限定单篇文献或跨文献查询；
 - 根据问题中的表格、公式、摘要或引用意图进行结构类型加权；
+- 将每个证据 Chunk 写入 Qdrant `dense` / `sparse` 命名向量并用 RRF 融合召回；
+- 将 Qdrant 结果与本地 BM25 再次进行 RRF 融合，向量服务异常时自动降级；
 - Claim/Evidence 问答响应、证据门控、有效引用 ID 校验和执行轨迹；
 - 内置 `search_evidence`、`get_document_outline`、`get_document_structure`、`get_document_table` Skills 和可扩展注册表；
 - 可切换 LLM Provider：默认抽取式零密钥模式，或 OpenAI Responses API；
@@ -25,7 +27,7 @@ PaperPilot 是一个以原文证据为核心的科研助手 Agent 系统。本�
 - 文献列表、原文访问、结构化结果读取、重解析和删除；
 - Docker Compose 编排 PostgreSQL、Redis、Qdrant、MinIO、API、Worker 和 Web。
 
-> 当前版本的语义指纹用于候选预警，不等于最终语义去重模型。当前 OCR 使用 Tesseract 中英文基线，检索为无需模型、结构感知的 BM25 基线。公式节点是带位置锚点的文本候选，并非可靠的 LaTeX 反演；扫描页表格结构恢复、Docling/GROBID、Embedding、Qdrant 混合检索和重排器仍待接入。
+> 当前版本的语义指纹用于候选预警，不等于最终语义去重模型。当前 OCR 使用 Tesseract 中英文基线。默认 Embedding 是零密钥的确定性 Hash-Ngram 工程基线，用于验证完整 Qdrant 混合链路，不等同于 BGE 等学习型语义模型。公式节点是带位置锚点的文本候选，并非可靠的 LaTeX 反演；扫描页表格结构恢复、Docling/GROBID、BGE-M3 和 Cross-Encoder 重排器仍待接入。
 
 ## 目录结构
 
@@ -72,6 +74,18 @@ docker compose up --build
 开发环境中的 MinIO 默认密码只用于本地启动，上线前必须修改。
 
 Docker 镜像已经安装 `eng` 和 `chi_sim` Tesseract 语言数据。非 Docker 启动时，需要自行安装对应语言包并设置 `OCR_TESSDATA`；原生文本 PDF 不依赖 OCR 环境。
+
+Docker Compose 默认启用 Qdrant 混合检索。本地无 Docker 启动默认保持 `VECTOR_SEARCH_ENABLED=false`，使用 BM25；如已有 Qdrant，可在 `.env` 中开启：
+
+```dotenv
+VECTOR_SEARCH_ENABLED=true
+QDRANT_URL=http://localhost:6333
+EMBEDDING_PROVIDER=hash
+EMBEDDING_DIMENSIONS=384
+```
+
+向量索引以 Chunk UUID 为 Point ID，Payload 保存文献、页码、BBox、节点类型和原文。上传、重解析、删除以及首次查询旧文献时都会自动同步索引。
+Compose 固定 Qdrant Server `v1.19.1`，Python 客户端固定 `1.19.0`，避免 `latest` 漂移造成 API 兼容问题。
 
 ## LLM 配置
 
@@ -156,7 +170,7 @@ npm run build
 
 1. 用标准测试 PDF 评估当前版式基线，并按失败样本接入 Docling、GROBID 和 PaddleOCR；
 2. 为 541 页教材实现逐页落盘和断点恢复；
-3. 建立 Qdrant Dense/Sparse 混合检索与 Cross-Encoder 重排；
+3. 将 Hash-Ngram 替换为 BGE-M3，并接入 Cross-Encoder 重排与离线评测集；
 4. 接入 PDF.js，利用现有 BBox 证据实现页内高亮；
 5. 使用 `1706.03762v7.pdf`、`v1.pdf` 和扫描版建立自动回归集。
 

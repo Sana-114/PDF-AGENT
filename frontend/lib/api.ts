@@ -39,6 +39,7 @@ interface UploadResponse {
 
 export interface EvidenceAnchor {
   evidence_id: string;
+  chunk_id: string | null;
   document_id: string;
   document_title: string | null;
   page_number: number;
@@ -46,6 +47,7 @@ export interface EvidenceAnchor {
   bbox: number[] | null;
   section: string | null;
   source_type: "text" | "abstract" | "table" | "figure" | "formula" | "reference";
+  retrieval_mode: "lexical" | "vector" | "hybrid";
   quote: string;
   score: number;
 }
@@ -64,6 +66,9 @@ export interface AgentStatus {
   provider: string;
   model: string | null;
   llm_configured: boolean;
+  retrieval_mode: string;
+  embedding_provider: string;
+  embedding_model: string;
   skills: string[];
 }
 
