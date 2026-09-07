@@ -62,7 +62,7 @@ def extract_text_blocks(page_dict: dict[str, Any], page_number: int) -> list[Raw
             " ".join(str(span.get("text", "")).strip() for span in line.get("spans", []))
             for line in lines
         ]
-        text = " ".join(" ".join(line_texts).split())
+        text = _normalize_text_spacing(" ".join(" ".join(line_texts).split()))
         if not text:
             continue
         sizes = [float(span.get("size", 0.0)) for span in spans if span.get("text", "").strip()]
@@ -78,6 +78,12 @@ def extract_text_blocks(page_dict: dict[str, Any], page_number: int) -> list[Raw
             )
         )
     return blocks
+
+
+def _normalize_text_spacing(text: str) -> str:
+    """Remove OCR span gaps between Han characters without touching Latin words."""
+
+    return re.sub(r"(?<=[\u3400-\u9fff])\s+(?=[\u3400-\u9fff])", "", text)
 
 
 def body_font_size(blocks: list[RawTextBlock]) -> float:

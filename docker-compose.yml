@@ -81,7 +81,7 @@ services:
       CELERY_TASK_ALWAYS_EAGER: "false"
       FRONTEND_ORIGIN: http://localhost:3000
       OCR_ENABLED: ${OCR_ENABLED:-true}
-      OCR_LANGUAGES: ${OCR_LANGUAGES:-eng+chi_sim}
+      OCR_LANGUAGES: ${OCR_LANGUAGES:-chi_sim+eng}
       OCR_DPI: ${OCR_DPI:-300}
       OCR_MIN_TEXT_CHARS: ${OCR_MIN_TEXT_CHARS:-32}
       OCR_TESSDATA: ${OCR_TESSDATA:-/usr/share/tesseract-ocr/5/tessdata}
@@ -132,7 +132,7 @@ services:
       PARSED_DIR: /app/data/parsed
       CELERY_TASK_ALWAYS_EAGER: "false"
       OCR_ENABLED: ${OCR_ENABLED:-true}
-      OCR_LANGUAGES: ${OCR_LANGUAGES:-eng+chi_sim}
+      OCR_LANGUAGES: ${OCR_LANGUAGES:-chi_sim+eng}
       OCR_DPI: ${OCR_DPI:-300}
       OCR_MIN_TEXT_CHARS: ${OCR_MIN_TEXT_CHARS:-32}
       OCR_TESSDATA: ${OCR_TESSDATA:-/usr/share/tesseract-ocr/5/tessdata}

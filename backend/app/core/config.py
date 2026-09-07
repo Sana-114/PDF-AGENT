@@ -27,7 +27,7 @@ class Settings(BaseSettings):
     celery_task_always_eager: bool = True
 
     ocr_enabled: bool = True
-    ocr_languages: str = "eng+chi_sim"
+    ocr_languages: str = "chi_sim+eng"
     ocr_dpi: int = 300
     ocr_min_text_chars: int = 32
     ocr_tessdata: str = ""

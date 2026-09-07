@@ -47,7 +47,7 @@ Document
 
 表格检测仅在原生文本页执行，避免对 OCR TextPage 重复做不可靠的网格推断；全页扫描图不会被误当成论文插图。公式节点明确标记为 `text_candidate`，在接入公式识别模型前不声称能够无损还原 LaTeX。
 
-解析前先对最多 12 个均匀分布的页面进行有界诊断，将文档标记为 `native_text`、`scanned_image`、`hybrid` 或 `empty`。扫描和混合文档由 `SelectiveOcrParser` 逐页检查文本密度，只对低文本页调用 PyMuPDF 集成的 Tesseract TextPage；Docker 镜像提供 `eng+chi_sim` 语言数据。OCR 结果沿用相同的页面块、BBox、Chunk 和 Evidence 数据结构。
+解析前先对最多 12 个均匀分布的页面进行有界诊断，将文档标记为 `native_text`、`scanned_image`、`hybrid` 或 `empty`。扫描和混合文档由 `SelectiveOcrParser` 逐页检查文本密度，只对低文本页调用 PyMuPDF 集成的 Tesseract TextPage；Docker 镜像提供中英文语言数据，并默认用 `chi_sim+eng` 防止中文标题被英文模型优先误判。文本块归一化只移除连续汉字之间的 OCR Span 空隙，不改变拉丁词、代码或公式间距。OCR 结果沿用相同的页面块、BBox、Chunk 和 Evidence 数据结构。
 
 ## 抗幻觉问答链路
 
