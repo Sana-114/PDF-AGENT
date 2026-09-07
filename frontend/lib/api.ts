@@ -47,7 +47,7 @@ export interface EvidenceAnchor {
   bbox: number[] | null;
   section: string | null;
   source_type: "text" | "abstract" | "table" | "figure" | "formula" | "reference";
-  retrieval_mode: "lexical" | "vector" | "hybrid";
+  retrieval_mode: "lexical" | "vector" | "hybrid" | "reranked";
   quote: string;
   score: number;
 }
@@ -69,6 +69,8 @@ export interface AgentStatus {
   retrieval_mode: string;
   embedding_provider: string;
   embedding_model: string;
+  reranker_provider: string;
+  reranker_model: string | null;
   skills: string[];
 }
 

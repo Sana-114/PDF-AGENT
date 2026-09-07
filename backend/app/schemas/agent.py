@@ -17,7 +17,7 @@ class EvidenceAnchor(BaseModel):
     source_type: Literal["text", "abstract", "table", "figure", "formula", "reference"] = (
         "text"
     )
-    retrieval_mode: Literal["lexical", "vector", "hybrid"] = "lexical"
+    retrieval_mode: Literal["lexical", "vector", "hybrid", "reranked"] = "lexical"
     quote: str
     score: float = Field(ge=0.0, le=1.0)
 
@@ -71,4 +71,6 @@ class AgentStatus(BaseModel):
     retrieval_mode: str
     embedding_provider: str
     embedding_model: str
+    reranker_provider: str
+    reranker_model: str | None
     skills: list[str]

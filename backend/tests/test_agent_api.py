@@ -12,6 +12,8 @@ def test_agent_status_and_skills_are_exposed() -> None:
     assert status_response.json()["provider"] == "extractive"
     assert status_response.json()["retrieval_mode"] in {"lexical", "hybrid_qdrant_rrf"}
     assert status_response.json()["embedding_provider"] == "hash"
+    assert status_response.json()["reranker_provider"] == "disabled"
+    assert status_response.json()["reranker_model"] is None
     assert skills_response.status_code == 200
     assert {item["name"] for item in skills_response.json()} == {
         "get_document_outline",

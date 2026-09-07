@@ -9,6 +9,7 @@ from sqlalchemy.orm import Session
 
 from app.models.chunk import DocumentChunk
 from app.models.document import Document
+from app.rerankers.base import Reranker
 from app.schemas.agent import EvidenceAnchor
 from app.services.chunking import ensure_document_chunks
 from app.services.text_features import infer_source_type, tokenize
@@ -159,7 +160,12 @@ class VectorIndex(Protocol):
 class HybridRetriever:
     """Fuse the proven BM25 rank with Qdrant dense+sparse RRF candidates."""
 
-    def __init__(self, session: Session, vector_index: VectorIndex | None = None) -> None:
+    def __init__(
+        self,
+        session: Session,
+        vector_index: VectorIndex | None = None,
+        reranker: Reranker | None = None,
+    ) -> None:
         self.session = session
         self.lexical = LexicalRetriever(session)
         if vector_index is None:
@@ -167,24 +173,47 @@ class HybridRetriever:
 
             vector_index = get_vector_index()
         self.vector_index = vector_index
+        if reranker is None:
+            from app.rerankers import get_reranker
+
+            reranker = get_reranker()
+        self.reranker = reranker
 
     def search(
         self, question: str, document_ids: list[str] | None = None, top_k: int = 6
     ) -> list[EvidenceAnchor]:
         candidate_k = max(20, top_k * 3)
+        if self.reranker.enabled:
+            candidate_k = max(candidate_k, self.reranker.candidate_k)
         lexical = self.lexical.search(question, document_ids, candidate_k)
         if not self.vector_index.enabled:
-            return _renumber(lexical[:top_k], "lexical")
+            return self._rerank(question, lexical, top_k, "lexical")
         try:
             vector = self.vector_index.search(
                 self.session, question, document_ids, candidate_k
             )
         except Exception as exc:
             logger.warning("Vector retrieval unavailable, using BM25 fallback: %s", exc)
-            return _renumber(lexical[:top_k], "lexical")
+            return self._rerank(question, lexical, top_k, "lexical")
         if not vector:
-            return _renumber(lexical[:top_k], "lexical")
-        return _reciprocal_rank_fusion(lexical, vector, top_k)
+            return self._rerank(question, lexical, top_k, "lexical")
+        fused = _reciprocal_rank_fusion(lexical, vector, candidate_k)
+        return self._rerank(question, fused, top_k, "hybrid")
+
+    def _rerank(
+        self,
+        question: str,
+        evidence: list[EvidenceAnchor],
+        top_k: int,
+        fallback_mode: str,
+    ) -> list[EvidenceAnchor]:
+        if not self.reranker.enabled:
+            return _renumber(evidence[:top_k], fallback_mode)
+        try:
+            return self.reranker.rerank(question, evidence, top_k)
+        except Exception as exc:
+            logger.warning("Reranker unavailable, preserving first-stage rank: %s", exc)
+            return _renumber(evidence[:top_k], fallback_mode)
 
 
 def _reciprocal_rank_fusion(

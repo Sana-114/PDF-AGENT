@@ -11,6 +11,7 @@ from app.core.database import get_db
 from app.embeddings import get_embedding_provider
 from app.llm import get_llm_provider
 from app.llm.base import LLMConfigurationError
+from app.rerankers import get_reranker
 from app.schemas.agent import AgentStatus, AskRequest, AskResponse, SkillRead
 
 router = APIRouter()
@@ -20,6 +21,7 @@ router = APIRouter()
 def get_agent_status() -> AgentStatus:
     register_builtin_skills()
     embedding = get_embedding_provider()
+    reranker = get_reranker()
     try:
         provider = get_llm_provider()
         configured = provider.name == "extractive" or bool(provider.model)
@@ -29,13 +31,18 @@ def get_agent_status() -> AgentStatus:
         configured = False
         provider_name = settings.llm_provider
         model = settings.llm_model or None
+    retrieval_mode = "hybrid_qdrant_rrf" if settings.vector_search_enabled else "lexical"
+    if reranker.enabled:
+        retrieval_mode = f"{retrieval_mode}+cross_encoder"
     return AgentStatus(
         provider=provider_name,
         model=model,
         llm_configured=configured,
-        retrieval_mode="hybrid_qdrant_rrf" if settings.vector_search_enabled else "lexical",
+        retrieval_mode=retrieval_mode,
         embedding_provider=embedding.name,
         embedding_model=embedding.model,
+        reranker_provider=reranker.name,
+        reranker_model=reranker.model or None,
         skills=[item.name for item in skill_registry.list()],
     )
 

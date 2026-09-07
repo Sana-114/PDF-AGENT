@@ -44,7 +44,13 @@ class Settings(BaseSettings):
     embedding_base_url: str = "http://localhost:8001/v1"
     embedding_api_key: str = ""
     embedding_timeout_seconds: float = 60.0
+    reranker_provider: str = "none"
     reranker_model: str = "BAAI/bge-reranker-v2-m3"
+    reranker_base_url: str = "http://localhost:8002/v1"
+    reranker_api_key: str = ""
+    reranker_timeout_seconds: float = 60.0
+    reranker_candidate_k: int = 12
+    reranker_retrieval_weight: float = 0.25
 
     model_config = SettingsConfigDict(
         env_file=("../.env", ".env"),
