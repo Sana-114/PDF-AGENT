@@ -72,6 +72,7 @@ docker compose --env-file .env.bge exec backend python scripts/evaluate_retrieva
 - 长时间处于 `starting`：首次下载或 CPU 加载较慢，查看 `docker compose --profile local-bge logs -f bge-embedding bge-reranker`。
 - 下载失败：检查代理是否传递给 Docker Desktop；公开模型无需 `HF_TOKEN`。
 - 请求超时：增大 `.env.bge` 中的 `EMBEDDING_TIMEOUT_SECONDS` 与 `RERANKER_TIMEOUT_SECONDS`，或减小 `TEI_MAX_CLIENT_BATCH_SIZE`。
+- Embedding 返回 HTTP 422：确认 `EMBEDDING_BATCH_SIZE` 不大于 `TEI_MAX_CLIENT_BATCH_SIZE`；模板默认都设为 32。
 - 内存不足：优先只启动其中一个模型服务进行诊断，或使用 GPU 模式；不要删除缓存卷，避免重新下载。
 - 停止模型：运行 `docker compose --profile local-bge stop bge-embedding bge-reranker`，不会删除缓存。
 

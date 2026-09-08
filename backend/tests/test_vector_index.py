@@ -126,6 +126,49 @@ def test_qdrant_indexes_and_queries_named_dense_sparse_vectors() -> None:
         assert vector_index._document_point_count(document.id) == 0
 
 
+def test_vector_index_respects_configured_embedding_batch_size() -> None:
+    class RecordingEmbedder(HashEmbeddingProvider):
+        def __init__(self) -> None:
+            super().__init__(dimensions=64)
+            self.batch_sizes: list[int] = []
+
+        def embed_dense(self, texts: list[str]) -> list[list[float]]:
+            self.batch_sizes.append(len(texts))
+            return super().embed_dense(texts)
+
+    engine = create_engine("sqlite://")
+    Base.metadata.create_all(engine)
+    config = Settings(
+        vector_search_enabled=True,
+        vector_collection="test_embedding_batches",
+        embedding_dimensions=64,
+        embedding_batch_size=1,
+    )
+    embedder = RecordingEmbedder()
+    vector_index = QdrantVectorIndex(
+        config,
+        client=QdrantClient(location=":memory:"),
+        embedder=embedder,
+    )
+    with Session(engine) as session:
+        document = Document(
+            original_filename="batches.pdf",
+            storage_key="batches.pdf",
+            size_bytes=100,
+            sha256="f" * 64,
+            status=DocumentStatus.READY,
+            title="Batch Paper",
+        )
+        session.add(document)
+        session.flush()
+        replace_document_chunks(session, document.id, _parsed_document())
+        session.commit()
+
+        assert vector_index.index_document(session, document.id) == 2
+
+    assert embedder.batch_sizes == [1, 1]
+
+
 def test_hybrid_retriever_falls_back_when_vector_store_fails() -> None:
     class FailingVectorIndex:
         enabled = True

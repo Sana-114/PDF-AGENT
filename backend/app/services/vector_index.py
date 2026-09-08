@@ -92,7 +92,7 @@ class QdrantVectorIndex:
         if not chunks:
             return 0
 
-        batch_size = 64
+        batch_size = self.config.embedding_batch_size
         for offset in range(0, len(chunks), batch_size):
             batch = chunks[offset : offset + batch_size]
             texts = [_index_text(chunk) for chunk in batch]

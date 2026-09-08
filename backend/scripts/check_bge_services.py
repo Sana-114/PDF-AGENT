@@ -2,6 +2,7 @@
 
 import argparse
 import json
+import os
 from typing import Any
 
 import httpx
@@ -9,11 +10,23 @@ import httpx
 
 def _parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--embedding-url", default="http://localhost:8001")
-    parser.add_argument("--reranker-url", default="http://localhost:8002")
-    parser.add_argument("--embedding-model", default="BAAI/bge-m3")
-    parser.add_argument("--dimensions", type=int, default=1024)
-    parser.add_argument("--timeout", type=float, default=120.0)
+    parser.add_argument(
+        "--embedding-url",
+        default=os.getenv("EMBEDDING_BASE_URL", "http://localhost:8001/v1"),
+    )
+    parser.add_argument(
+        "--reranker-url",
+        default=os.getenv("RERANKER_BASE_URL", "http://localhost:8002"),
+    )
+    parser.add_argument(
+        "--embedding-model", default=os.getenv("EMBEDDING_MODEL", "BAAI/bge-m3")
+    )
+    parser.add_argument(
+        "--dimensions", type=int, default=int(os.getenv("EMBEDDING_DIMENSIONS", "1024"))
+    )
+    parser.add_argument(
+        "--timeout", type=float, default=float(os.getenv("EMBEDDING_TIMEOUT_SECONDS", "120"))
+    )
     return parser.parse_args()
 
 
@@ -29,7 +42,7 @@ def _rank_items(body: Any) -> list[dict[str, Any]]:
 
 def main() -> None:
     args = _parse_args()
-    embedding_url = args.embedding_url.rstrip("/")
+    embedding_url = args.embedding_url.rstrip("/").removesuffix("/v1")
     reranker_url = args.reranker_url.rstrip("/")
 
     with httpx.Client(timeout=args.timeout) as client:
@@ -57,10 +70,10 @@ def main() -> None:
         reranker_response = client.post(
             f"{reranker_url}/rerank",
             json={
-                "query": "系统如何减少幻觉？",
+                "query": "训练使用了什么 GPU？",
                 "texts": [
-                    "回答必须提供页码与原文坐标锚点。",
-                    "系统界面使用蓝色主题。",
+                    "实验使用 8 张 NVIDIA P100 GPU 训练模型。",
+                    "该论文提出了一种新的注意力机制。",
                 ],
                 "truncate": True,
                 "raw_scores": False,

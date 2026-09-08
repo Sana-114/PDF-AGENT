@@ -106,9 +106,10 @@ EMBEDDING_DIMENSIONS=1024
 EMBEDDING_BASE_URL=http://host.docker.internal:8001/v1
 EMBEDDING_API_KEY=
 EMBEDDING_TIMEOUT_SECONDS=60
+EMBEDDING_BATCH_SIZE=32
 ```
 
-`EMBEDDING_DIMENSIONS` 必须与服务实际返回维度一致。模型响应会校验数量、顺序、维度和有限数值；服务不可用时查询自动降级到 BM25。不同模型使用独立的 Qdrant Collection 命名空间，首次查询会补建该模型的索引，不会把不同维度的向量写入同一集合。直接运行后端而不是 Docker 时，应把 `host.docker.internal` 改成推理服务的实际地址（本机通常为 `localhost`）。
+`EMBEDDING_DIMENSIONS` 必须与服务实际返回维度一致，`EMBEDDING_BATCH_SIZE` 不得超过推理服务的客户端批量上限（本地 TEI 默认均为 32）。模型响应会校验数量、顺序、维度和有限数值；服务不可用时查询自动降级到 BM25。不同模型使用独立的 Qdrant Collection 命名空间，首次查询会补建该模型的索引，不会把不同维度的向量写入同一集合。直接运行后端而不是 Docker 时，应把 `host.docker.internal` 改成推理服务的实际地址（本机通常为 `localhost`）。
 
 ### Cross-Encoder 重排序配置
 
