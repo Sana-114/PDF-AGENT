@@ -1,0 +1,45 @@
+{
+  "schema_version": "1.0",
+  "dataset_id": "attention-is-all-you-need-v1",
+  "description": "比赛指定 1706.03762v1.pdf 的细粒度检索用例；PDF 入库后可直接执行。",
+  "thresholds": {
+    "min_case_pass_rate": 0.8,
+    "min_evidence_recall": 0.8,
+    "min_mean_reciprocal_rank": 0.6,
+    "min_anchor_valid_rate": 1.0,
+    "require_bbox": true
+  },
+  "cases": [
+    {
+      "case_id": "adam-hyperparameters",
+      "question": "What beta_1 and beta_2 values were used for Adam?",
+      "documents": [{"arxiv_id": "1706.03762", "arxiv_version": 1}],
+      "top_k": 6,
+      "expectations": [
+        {"text_contains_any": ["beta1 = 0.9", "β1 = 0.9", "β1=0.9"]},
+        {"text_contains_any": ["beta2 = 0.98", "β2 = 0.98", "β2=0.98"]}
+      ]
+    },
+    {
+      "case_id": "training-gpus",
+      "question": "What GPU model and how many GPUs were used for training?",
+      "documents": [{"arxiv_id": "1706.03762", "arxiv_version": 1}],
+      "top_k": 6,
+      "expectations": [{"text_contains_any": ["8 NVIDIA P100 GPUs", "eight NVIDIA P100"]}]
+    },
+    {
+      "case_id": "english-german-bleu",
+      "question": "What BLEU score did the big Transformer achieve on English-to-German?",
+      "documents": [{"arxiv_id": "1706.03762", "arxiv_version": 1}],
+      "top_k": 6,
+      "expectations": [{"text_contains_any": ["28.4 BLEU"], "source_types": ["text", "table"]}]
+    },
+    {
+      "case_id": "english-french-bleu",
+      "question": "What BLEU score did the big Transformer achieve on English-to-French?",
+      "documents": [{"arxiv_id": "1706.03762", "arxiv_version": 1}],
+      "top_k": 6,
+      "expectations": [{"text_contains_any": ["41.8 BLEU", "41.8"], "source_types": ["text", "table"]}]
+    }
+  ]
+}

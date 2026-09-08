@@ -79,9 +79,11 @@ Qdrant 不可达、索引失败或本地开发关闭向量检索时，`HybridRet
 
 `EvidenceAnchor` 同时保存 `document_id`、`page_number`、`block_ids`、`bbox`、`section`、`source_type` 和原文摘录。LLM 只能引用本次检索生成的 `E1...En`，Harness 会在响应前再次校验引用白名单。默认抽取式 Provider 完全不调用外部模型，可用于无密钥演示和离线回归测试。
 
+离线评测器绕过 LLM，直接对 `LexicalRetriever` 或当前配置的 `HybridRetriever` 执行版本化 JSON 用例。文献通过 ID、文件名、标题或 arXiv ID/版本解析；证据按短文本特征、合法页码和结构类型匹配。聚合报告包含 Case Pass Rate、Evidence Recall、MRR、锚点有效率及 P50/P95 延迟，缺失文献作为显式失败。由此可以在更换 Embedding、Reranker 或融合权重时进行同一数据集对照。
+
 ## 下一阶段边界
 
-1. 用标注问答集校准召回、重排权重和证据阈值。
+1. 扩充官方 PDF 标注用例，并据此校准召回、重排权重和证据阈值。
 2. 为向量模型升级增加蓝绿 Collection 和断点批量重建。
 3. 接入 PDF.js，通过现有 block 坐标实现答案高亮与引用跳转。
 4. 为复杂扫描表格和公式增加专用识别适配器。
