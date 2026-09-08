@@ -22,7 +22,8 @@ PaperPilot 是一个以原文证据为核心的科研助手 Agent 系统。本�
 - 将每个证据 Chunk 写入 Qdrant `dense` / `sparse` 命名向量并用 RRF 融合召回；
 - 将 Qdrant 结果与本地 BM25 再次进行 RRF 融合，向量服务异常时自动降级；
 - 可切换 OpenAI-compatible Embedding 服务，接入 BGE-M3 等真实学习型语义向量；
-- 可切换 Cohere-compatible Cross-Encoder 服务，对有限候选集重排并保留召回分数；
+- 可切换 Cohere-compatible 或 Hugging Face TEI Cross-Encoder 服务，对有限候选集重排并保留召回分数；
+- 可选 `local-bge` Docker Profile，一条命令编排 BGE-M3、BGE Reranker、模型缓存和健康检查；
 - Claim/Evidence 问答响应、证据门控、有效引用 ID 校验和执行轨迹；
 - 版本化离线 RAG 评测集，输出 Case Pass Rate、Evidence Recall、MRR、锚点有效率和 P50/P95 延迟；
 - 内置 `search_evidence`、`get_document_outline`、`get_document_structure`、`get_document_table` Skills 和可扩展注册表；
@@ -32,7 +33,7 @@ PaperPilot 是一个以原文证据为核心的科研助手 Agent 系统。本�
 - Web 端展示长文档已处理页数、百分比和断点可恢复状态；
 - Docker Compose 编排 PostgreSQL、Redis、Qdrant、MinIO、API、Worker 和 Web。
 
-> 当前版本的语义指纹用于候选预警，不等于最终语义去重模型。当前 OCR 使用 Tesseract 中英文基线。默认 Embedding 仍是零密钥的确定性 Hash-Ngram 工程基线；真实语义向量和 Cross-Encoder 已提供远程兼容接口，但仓库不会自动下载或捆绑模型权重。公式节点是带位置锚点的文本候选，并非可靠的 LaTeX 反演；扫描页表格结构恢复和 Docling/GROBID 仍待接入。
+> 当前版本的语义指纹用于候选预警，不等于最终语义去重模型。当前 OCR 使用 Tesseract 中英文基线。默认 Embedding 仍是零密钥的确定性 Hash-Ngram 工程基线；真实语义向量和 Cross-Encoder 已提供兼容接口及可选本地编排，但普通启动不会下载模型权重。公式节点是带位置锚点的文本候选，并非可靠的 LaTeX 反演；扫描页表格结构恢复和 Docling/GROBID 仍待接入。
 
 ## 目录结构
 
@@ -123,6 +124,32 @@ RERANKER_RETRIEVAL_WEIGHT=0.25
 ```
 
 重排分数占最终分数的 75%，第一阶段召回分数占 25%，避免重排器完全覆盖强精确匹配。API 会校验返回索引、重复项和有限数值；重排服务异常时保留原候选顺序，问答仍可继续。默认 `RERANKER_PROVIDER=none`，因此初次启动不下载模型、不需要密钥。
+
+### 一键启用本地 BGE
+
+仓库提供可选的 Hugging Face Text Embeddings Inference（TEI）编排。默认快速启动不会创建模型容器；只有显式指定 `local-bge` Profile 才会下载 BGE-M3 与 BGE Reranker 权重：
+
+```powershell
+Copy-Item .env.bge.example .env.bge
+docker compose --env-file .env.bge --profile local-bge up --build -d
+docker compose --env-file .env.bge --profile local-bge ps
+```
+
+CPU 是默认模式，首次启动需要下载并缓存两个模型，耗时取决于网络和磁盘。若 Docker Desktop 已配置 NVIDIA GPU，可叠加 GPU Override：
+
+```powershell
+docker compose -f docker-compose.yml -f docker-compose.bge-gpu.yml `
+  --env-file .env.bge --profile local-bge up --build -d
+```
+
+容器健康后运行端到端烟雾检查，验证 1024 维 Embedding 和中文重排结果：
+
+```powershell
+docker compose --env-file .env.bge exec backend python scripts/check_bge_services.py `
+  --embedding-url http://bge-embedding --reranker-url http://bge-reranker
+```
+
+模型保存在 `bge_embedding_cache` 与 `bge_reranker_cache` 命名卷中，重启无需重复下载。`HF_TOKEN` 对这两个公开模型不是必需的；如需配置，只写入被 Git 忽略的 `.env.bge`。详细排障和资源说明见 [`docs/local-bge.md`](docs/local-bge.md)。
 
 ## LLM 配置
 
@@ -252,7 +279,7 @@ docker compose exec backend python scripts/evaluate_pdf_corpus.py `
 ## 下一里程碑
 
 1. 用标准测试 PDF 评估当前版式基线，并按失败样本接入 Docling、GROBID 和 PaddleOCR；
-2. 补充可选的本地 BGE-M3 / Reranker 推理编排，并用现有离线评测量化收益；
+2. 用本地 BGE-M3 / Reranker 跑完官方 PDF 离线评测，并据此校准融合权重；
 3. 接入 PDF.js，利用现有 BBox 证据实现页内高亮；
 4. 使用 `1706.03762v7.pdf`、`v1.pdf` 和扫描版建立自动回归集。
 

@@ -50,6 +50,54 @@ services:
       - "9000:9000"
       - "9001:9001"
 
+  bge-embedding:
+    profiles: ["local-bge"]
+    image: ${TEI_IMAGE:-ghcr.io/huggingface/text-embeddings-inference:cpu-1.9}
+    command:
+      - --model-id
+      - ${BGE_EMBEDDING_MODEL:-BAAI/bge-m3}
+      - --auto-truncate
+      - --max-client-batch-size
+      - ${TEI_MAX_CLIENT_BATCH_SIZE:-32}
+    environment:
+      HF_TOKEN: ${HF_TOKEN:-}
+      RAYON_NUM_THREADS: ${TEI_CPU_THREADS:-8}
+    volumes:
+      - bge_embedding_cache:/data
+    ports:
+      - "${BGE_EMBEDDING_PORT:-8001}:80"
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost/info"]
+      interval: 15s
+      timeout: 5s
+      retries: 60
+      start_period: 10m
+    restart: unless-stopped
+
+  bge-reranker:
+    profiles: ["local-bge"]
+    image: ${TEI_IMAGE:-ghcr.io/huggingface/text-embeddings-inference:cpu-1.9}
+    command:
+      - --model-id
+      - ${BGE_RERANKER_MODEL:-BAAI/bge-reranker-v2-m3}
+      - --auto-truncate
+      - --max-client-batch-size
+      - ${TEI_MAX_CLIENT_BATCH_SIZE:-32}
+    environment:
+      HF_TOKEN: ${HF_TOKEN:-}
+      RAYON_NUM_THREADS: ${TEI_CPU_THREADS:-8}
+    volumes:
+      - bge_reranker_cache:/data
+    ports:
+      - "${BGE_RERANKER_PORT:-8002}:80"
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost/info"]
+      interval: 15s
+      timeout: 5s
+      retries: 60
+      start_period: 10m
+    restart: unless-stopped
+
   backend:
     build:
       context: ./backend
@@ -167,3 +215,5 @@ volumes:
   minio_data:
   app_data:
   frontend_node_modules:
+  bge_embedding_cache:
+  bge_reranker_cache:

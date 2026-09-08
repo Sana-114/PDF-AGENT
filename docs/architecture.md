@@ -15,7 +15,8 @@
 | Skill Registry | 带 Pydantic 输入 Schema 的本地工具发现与执行 |
 | LLM Provider | 默认抽取式兜底；可选 OpenAI Responses API |
 | Embedding Provider | 默认离线 Hash 基线；可选 OpenAI-compatible BGE-M3 等语义服务 |
-| Reranker | 默认关闭；可选 Cohere-compatible Cross-Encoder 候选重排 |
+| Reranker | 默认关闭；可选 Cohere-compatible 或 TEI Cross-Encoder 候选重排 |
+| BGE Runtime | 可选 TEI Docker Profile，独立运行 BGE-M3 与 BGE Reranker |
 | PostgreSQL | 文献元数据、任务状态、版本关系和 Chunk 索引 |
 | 文件卷 | MVP 的 PDF 与 Document AST 存储 |
 | Qdrant | Dense/Sparse 命名向量、Payload 过滤和 RRF 混合召回 |
@@ -73,7 +74,9 @@ Answer + Claims + Evidence + Trace
 
 向量集合按 Provider、模型签名和维度隔离。切换语义模型时创建新的 Collection，并由现有按需回填机制补建索引，从而避免模型或维度不兼容污染旧向量。远程推理异常不会使解析任务失败，查询会回退至 BM25；仓库默认不捆绑大模型权重，部署方可按 CPU/GPU 环境选择推理服务。
 
-可选的 `HttpReranker` 只接收第一阶段的有限候选，调用 Cohere-compatible `/v1/rerank` Cross-Encoder 服务。最终排序融合 75% 归一化重排分数和 25% 原召回分数，并完整保留 Evidence 的文献、页码、BBox 和块 ID。响应索引无效、数值异常、超时或服务离线时，检索器保留 BM25/RRF 顺序降级，不中断问答链路。
+可选的 `HttpReranker` 只接收第一阶段的有限候选，调用 Cohere-compatible `/v1/rerank` Cross-Encoder 服务；`TeiReranker` 则调用 Hugging Face TEI 原生 `/rerank`，并兼容列表或 `ranks` 包装响应。最终排序融合 75% 归一化重排分数和 25% 原召回分数，并完整保留 Evidence 的文献、页码、BBox 和块 ID。响应索引无效、数值异常、超时或服务离线时，检索器保留 BM25/RRF 顺序降级，不中断问答链路。
+
+Compose 中的 `local-bge` Profile 将 BGE-M3 Embedding 与 BGE Reranker 部署为两个独立 TEI 服务。两者具有独立模型缓存卷和 `/info` 健康检查；CPU 镜像为默认值，GPU Override 只改变运行镜像和设备请求。API 与 Worker 通过内部服务名访问模型，因此无需依赖宿主机端口；未启用 Profile 时现有 Hash/BM25 零模型路径完全不变。
 
 Qdrant 不可达、索引失败或本地开发关闭向量检索时，`HybridRetriever` 会返回 BM25 结果。解析任务不会因向量服务故障而失败；后续查询会根据数据库 Chunk 数量自动补建缺失索引。
 

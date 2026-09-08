@@ -2,6 +2,7 @@ from app.core.config import Settings, settings
 from app.rerankers.base import Reranker
 from app.rerankers.disabled import DisabledReranker
 from app.rerankers.http import HttpReranker, RerankerServiceError
+from app.rerankers.tei import TeiReranker
 
 
 def get_reranker(config: Settings = settings) -> Reranker:
@@ -10,6 +11,15 @@ def get_reranker(config: Settings = settings) -> Reranker:
         return DisabledReranker()
     if provider in {"cohere-compatible", "http"}:
         return HttpReranker(
+            model=config.reranker_model,
+            base_url=config.reranker_base_url,
+            api_key=config.reranker_api_key,
+            timeout_seconds=config.reranker_timeout_seconds,
+            candidate_k=config.reranker_candidate_k,
+            retrieval_weight=config.reranker_retrieval_weight,
+        )
+    if provider in {"tei", "text-embeddings-inference"}:
+        return TeiReranker(
             model=config.reranker_model,
             base_url=config.reranker_base_url,
             api_key=config.reranker_api_key,
