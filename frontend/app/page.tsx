@@ -1,5 +1,6 @@
 "use client";
 
+import dynamic from "next/dynamic";
 import { ChangeEvent, DragEvent, useCallback, useEffect, useMemo, useRef, useState } from "react";
 import {
   AgentAskResponse,
@@ -13,6 +14,17 @@ import {
   listDocuments,
   uploadDocument,
 } from "../lib/api";
+
+const PdfReader = dynamic(() => import("../components/PdfReader"), {
+  ssr: false,
+  loading: () => <div className="pdf-reader-loading">正在准备 PDF 阅读器…</div>,
+});
+
+interface ReaderState {
+  documentId: string;
+  title: string;
+  pageNumber: number;
+}
 
 const STATUS_LABEL: Record<DocumentRecord["status"], string> = {
   queued: "等待解析",
@@ -39,6 +51,7 @@ export default function Home() {
   const [answer, setAnswer] = useState<AgentAskResponse | null>(null);
   const [asking, setAsking] = useState(false);
   const [agentLabel, setAgentLabel] = useState("正在检测 Agent");
+  const [reader, setReader] = useState<ReaderState | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const refresh = useCallback(async (quiet = false) => {
@@ -145,6 +158,10 @@ export default function Home() {
     } finally {
       setAsking(false);
     }
+  }
+
+  function openReader(documentId: string, title: string, pageNumber = 1) {
+    setReader({ documentId, title, pageNumber });
   }
 
   return (
@@ -259,12 +276,15 @@ export default function Home() {
               <aside className="evidence-list">
                 <h3>原文证据 · {answer.evidence.length}</h3>
                 {answer.evidence.map((evidence) => (
-                  <a
+                  <button
                     className="evidence-card"
-                    href={documentFileUrl(evidence.document_id, evidence.page_number)}
-                    target="_blank"
-                    rel="noreferrer"
                     key={evidence.evidence_id}
+                    onClick={() => openReader(
+                      evidence.document_id,
+                      evidence.document_title || "未命名文献",
+                      evidence.page_number,
+                    )}
+                    type="button"
                   >
                     <div>
                       <strong>{evidence.evidence_id}</strong>
@@ -289,8 +309,8 @@ export default function Home() {
                     </div>
                     <h4>{evidence.section || evidence.document_title || "未命名章节"}</h4>
                     <p>{evidence.quote}</p>
-                    <small>打开原文定位 ↗</small>
-                  </a>
+                    <small>在阅读器中定位 →</small>
+                  </button>
                 ))}
               </aside>
             </div>
@@ -338,7 +358,15 @@ export default function Home() {
                   {document.error_message && <div className="failure">{document.error_message}</div>}
                 </div>
                 <div className="actions">
-                  <a href={documentFileUrl(document.id)} target="_blank" rel="noreferrer">打开原文</a>
+                  <button
+                    onClick={() => openReader(
+                      document.id,
+                      document.title || document.original_filename,
+                    )}
+                    type="button"
+                  >
+                    在线阅读
+                  </button>
                   <button onClick={() => void remove(document)}>删除</button>
                 </div>
               </article>
@@ -348,6 +376,15 @@ export default function Home() {
       </section>
 
       <footer>PaperPilot MVP · 所有答案都将绑定可验证的原文证据</footer>
+      {reader && (
+        <PdfReader
+          fileUrl={documentFileUrl(reader.documentId)}
+          initialPage={reader.pageNumber}
+          key={`${reader.documentId}-${reader.pageNumber}`}
+          onClose={() => setReader(null)}
+          title={reader.title}
+        />
+      )}
     </main>
   );
 }

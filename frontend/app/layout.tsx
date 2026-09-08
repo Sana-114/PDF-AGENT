@@ -1,4 +1,6 @@
 import type { Metadata } from "next";
+import "react-pdf/dist/Page/AnnotationLayer.css";
+import "react-pdf/dist/Page/TextLayer.css";
 import "./globals.css";
 
 export const metadata: Metadata = {
@@ -13,4 +15,3 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
     </html>
   );
 }
-
