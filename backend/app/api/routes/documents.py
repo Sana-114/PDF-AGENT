@@ -15,9 +15,14 @@ from app.schemas.document import (
     DocumentOutlineRead,
     DocumentProgressRead,
     DocumentRead,
+    DocumentReferencesRead,
     UploadResult,
 )
-from app.services.document_content import outline_items, read_parsed_document
+from app.services.document_content import (
+    outline_items,
+    read_parsed_document,
+    reference_links,
+)
 from app.services.storage import storage
 from app.services.vector_index import delete_document_index_safely
 from app.workers.tasks import parse_document
@@ -174,6 +179,24 @@ def get_document_outline(
     if parsed is None:
         raise HTTPException(status_code=404, detail="结构化解析结果不存在。")
     return DocumentOutlineRead(document_id=document_id, items=outline_items(parsed))
+
+
+@router.get("/{document_id}/references", response_model=DocumentReferencesRead)
+def get_document_references(
+    document_id: str, db: Annotated[Session, Depends(get_db)]
+) -> DocumentReferencesRead:
+    document = _get_document(document_id, db)
+    if document.status != DocumentStatus.READY:
+        raise HTTPException(status_code=409, detail="文献尚未解析完成。")
+    parsed = read_parsed_document(document_id)
+    if parsed is None:
+        raise HTTPException(status_code=404, detail="结构化解析结果不存在。")
+    references, mentions = reference_links(parsed)
+    return DocumentReferencesRead(
+        document_id=document_id,
+        items=references,
+        mentions=mentions,
+    )
 
 
 @router.post("/{document_id}/reparse", response_model=DocumentRead, status_code=202)

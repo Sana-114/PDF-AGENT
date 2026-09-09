@@ -1,4 +1,4 @@
-from app.services.document_content import outline_items
+from app.services.document_content import outline_items, reference_links
 
 
 def test_outline_items_preserves_nested_document_ast() -> None:
@@ -55,3 +55,58 @@ def test_outline_items_builds_flat_legacy_fallback() -> None:
             "children": [],
         }
     ]
+
+
+def test_reference_links_match_numeric_citations_and_skip_reference_blocks() -> None:
+    parsed = {
+        "references": [
+            {
+                "reference_id": "ref-1",
+                "label": "1",
+                "text": "First paper.",
+                "page_number": 8,
+                "bbox": [60, 100, 500, 130],
+                "block_ids": ["p8-b2"],
+            },
+            {
+                "reference_id": "ref-2",
+                "label": "2",
+                "text": "Second paper.",
+                "page_number": 8,
+                "bbox": [60, 140, 500, 170],
+                "block_ids": ["p8-b3"],
+            },
+        ],
+        "pages": [
+            {
+                "page_number": 2,
+                "blocks": [
+                    {
+                        "block_id": "p2-b4",
+                        "text": "Prior work [1] and related methods [1–3] are compared.",
+                        "bbox": [60, 200, 500, 250],
+                    }
+                ],
+            },
+            {
+                "page_number": 8,
+                "blocks": [
+                    {
+                        "block_id": "p8-b2",
+                        "text": "First paper cites [2].",
+                        "bbox": [60, 100, 500, 130],
+                    }
+                ],
+            },
+        ],
+    }
+
+    references, mentions = reference_links(parsed)
+
+    assert [item["label"] for item in references] == ["1", "2"]
+    assert [(item["label"], item["page_number"]) for item in mentions] == [
+        ("1", 2),
+        ("1", 2),
+        ("2", 2),
+    ]
+    assert all(item["block_id"] == "p2-b4" for item in mentions)

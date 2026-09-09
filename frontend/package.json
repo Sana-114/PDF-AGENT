@@ -6,7 +6,7 @@
     "dev": "next dev --hostname 0.0.0.0",
     "build": "next build",
     "start": "next start",
-    "test": "node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON --test lib/pdfGeometry.test.mjs",
+    "test": "node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON --test lib/pdfGeometry.test.mjs lib/referenceMarkup.test.mjs",
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {

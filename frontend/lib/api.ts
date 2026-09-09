@@ -48,6 +48,30 @@ interface DocumentOutlineResponse {
   items: DocumentOutlineNode[];
 }
 
+export interface DocumentReference {
+  reference_id: string;
+  label: string;
+  text: string;
+  page_number: number;
+  bbox: number[] | null;
+  block_ids: string[];
+}
+
+export interface CitationMention {
+  citation_id: string;
+  label: string;
+  page_number: number;
+  block_id: string;
+  bbox: number[] | null;
+  context: string;
+}
+
+interface DocumentReferencesResponse {
+  document_id: string;
+  items: DocumentReference[];
+  mentions: CitationMention[];
+}
+
 interface DocumentListResponse {
   items: DocumentRecord[];
   total: number;
@@ -140,6 +164,13 @@ export async function getDocumentProgress(documentId: string): Promise<DocumentP
 export async function getDocumentOutline(documentId: string): Promise<DocumentOutlineResponse> {
   const response = await assertResponse(
     await fetch(`${API_BASE_URL}/documents/${documentId}/outline`, { cache: "no-store" }),
+  );
+  return response.json();
+}
+
+export async function getDocumentReferences(documentId: string): Promise<DocumentReferencesResponse> {
+  const response = await assertResponse(
+    await fetch(`${API_BASE_URL}/documents/${documentId}/references`, { cache: "no-store" }),
   );
   return response.json();
 }

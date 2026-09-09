@@ -1,9 +1,25 @@
 "use client";
 
-import { FormEvent, useEffect, useMemo, useRef, useState } from "react";
+import {
+  FormEvent,
+  MouseEvent as ReactMouseEvent,
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 import { Document, Page, pdfjs } from "react-pdf";
-import { DocumentOutlineNode, EvidenceAnchor, getDocumentOutline } from "../lib/api";
+import {
+  CitationMention,
+  DocumentOutlineNode,
+  DocumentReference,
+  EvidenceAnchor,
+  getDocumentOutline,
+  getDocumentReferences,
+} from "../lib/api";
 import { bboxToPercentRect } from "../lib/pdfGeometry";
+import { linkifyNumericCitations } from "../lib/referenceMarkup";
 
 pdfjs.GlobalWorkerOptions.workerSrc = new URL(
   "pdfjs-dist/build/pdf.worker.min.mjs",
@@ -35,6 +51,80 @@ interface OutlineTreeProps {
   activeBlockId?: string;
   items: DocumentOutlineNode[];
   onSelect: (item: DocumentOutlineNode) => void;
+}
+
+type SidebarTab = "outline" | "references";
+type ReferenceTargetKind = "reference" | "citation";
+type HighlightTarget = ReferenceTarget | {
+  kind: "evidence";
+  label: string;
+  pageNumber: number;
+  bbox: number[] | null;
+  context: string;
+};
+
+interface ReferenceTarget {
+  kind: ReferenceTargetKind;
+  label: string;
+  pageNumber: number;
+  bbox: number[] | null;
+  context: string;
+}
+
+interface ReferencePanelProps {
+  activeTarget: ReferenceTarget | null;
+  items: DocumentReference[];
+  mentions: CitationMention[];
+  onSelectMention: (mention: CitationMention) => void;
+  onSelectReference: (reference: DocumentReference) => void;
+}
+
+function ReferencePanel({
+  activeTarget,
+  items,
+  mentions,
+  onSelectMention,
+  onSelectReference,
+}: ReferencePanelProps) {
+  return (
+    <div className="pdf-reference-list">
+      {items.map((reference) => {
+        const locations = mentions.filter((item) => item.label === reference.label);
+        const referenceActive = activeTarget?.kind === "reference"
+          && activeTarget.label === reference.label;
+        return (
+          <article className={referenceActive ? "active" : ""} key={reference.reference_id}>
+            <button
+              className="pdf-reference-entry"
+              onClick={() => onSelectReference(reference)}
+              title={reference.text}
+              type="button"
+            >
+              <span><strong>[{reference.label}]</strong><small>第 {reference.page_number} 页</small></span>
+              <p>{reference.text}</p>
+            </button>
+            <div className="pdf-citation-locations">
+              {locations.slice(0, 8).map((mention, index) => (
+                <button
+                  className={activeTarget?.kind === "citation"
+                    && activeTarget.label === mention.label
+                    && activeTarget.pageNumber === mention.page_number ? "active" : ""}
+                  key={mention.citation_id}
+                  onClick={() => onSelectMention(mention)}
+                  title={mention.context}
+                  type="button"
+                >
+                  正文 {index + 1} · p.{mention.page_number}
+                </button>
+              ))}
+              {locations.length === 0 && <span>正文未检测到编号标记</span>}
+              {locations.length > 8 && <span>另有 {locations.length - 8} 处</span>}
+            </div>
+          </article>
+        );
+      })}
+    </div>
+  );
 }
 
 function OutlineTree({ activeBlockId, items, onSelect }: OutlineTreeProps) {
@@ -76,6 +166,12 @@ export default function PdfReader({
   const [outline, setOutline] = useState<DocumentOutlineNode[]>([]);
   const [outlineLoading, setOutlineLoading] = useState(true);
   const [outlineError, setOutlineError] = useState<string | null>(null);
+  const [references, setReferences] = useState<DocumentReference[]>([]);
+  const [mentions, setMentions] = useState<CitationMention[]>([]);
+  const [referencesLoading, setReferencesLoading] = useState(true);
+  const [referencesError, setReferencesError] = useState<string | null>(null);
+  const [sidebarTab, setSidebarTab] = useState<SidebarTab>("outline");
+  const [referenceTarget, setReferenceTarget] = useState<ReferenceTarget | null>(null);
   const [outlineOpen, setOutlineOpen] = useState(
     () => typeof window === "undefined" || window.innerWidth > 760,
   );
@@ -91,11 +187,32 @@ export default function PdfReader({
     ),
     [flatOutline, pageNumber],
   );
+  const referenceLabels = useMemo(
+    () => new Set(references.map((reference) => reference.label)),
+    [references],
+  );
+  const activePageTarget = useMemo<HighlightTarget | null>(() => {
+    if (referenceTarget?.pageNumber === pageNumber) return referenceTarget;
+    if (evidence?.page_number === pageNumber) {
+      return {
+        kind: "evidence",
+        label: evidence.evidence_id,
+        pageNumber: evidence.page_number,
+        bbox: evidence.bbox,
+        context: evidence.quote,
+      };
+    }
+    return null;
+  }, [evidence, pageNumber, referenceTarget]);
   const highlightRect = useMemo(
-    () => evidence?.page_number === pageNumber && pageSize
-      ? bboxToPercentRect(evidence.bbox, pageSize.width, pageSize.height)
+    () => activePageTarget && pageSize
+      ? bboxToPercentRect(activePageTarget.bbox, pageSize.width, pageSize.height)
       : null,
-    [evidence, pageNumber, pageSize],
+    [activePageTarget, pageSize],
+  );
+  const renderCitationText = useCallback(
+    ({ str }: { str: string }) => linkifyNumericCitations(str, referenceLabels),
+    [referenceLabels],
   );
 
   useEffect(() => {
@@ -112,6 +229,28 @@ export default function PdfReader({
       })
       .finally(() => {
         if (active) setOutlineLoading(false);
+      });
+    return () => {
+      active = false;
+    };
+  }, [documentId]);
+
+  useEffect(() => {
+    let active = true;
+    setReferencesLoading(true);
+    setReferencesError(null);
+    void getDocumentReferences(documentId)
+      .then((response) => {
+        if (!active) return;
+        setReferences(response.items);
+        setMentions(response.mentions);
+      })
+      .catch((error: unknown) => {
+        if (!active) return;
+        setReferencesError(error instanceof Error ? error.message : "参考文献加载失败");
+      })
+      .finally(() => {
+        if (active) setReferencesLoading(false);
       });
     return () => {
       active = false;
@@ -173,6 +312,44 @@ export default function PdfReader({
     if (window.innerWidth <= 760) setOutlineOpen(false);
   }
 
+  function showReferenceTarget(target: ReferenceTarget) {
+    setReferenceTarget(target);
+    setSidebarTab("references");
+    goToPage(target.pageNumber);
+    if (window.innerWidth <= 760) setOutlineOpen(false);
+  }
+
+  function selectReference(reference: DocumentReference) {
+    showReferenceTarget({
+      kind: "reference",
+      label: reference.label,
+      pageNumber: reference.page_number,
+      bbox: reference.bbox,
+      context: reference.text,
+    });
+  }
+
+  function selectMention(mention: CitationMention) {
+    showReferenceTarget({
+      kind: "citation",
+      label: mention.label,
+      pageNumber: mention.page_number,
+      bbox: mention.bbox,
+      context: mention.context,
+    });
+  }
+
+  function handlePageClick(event: ReactMouseEvent<HTMLDivElement>) {
+    if (!(event.target instanceof Element)) return;
+    const marker = event.target.closest<HTMLElement>("[data-reference-label]");
+    const label = marker?.dataset.referenceLabel;
+    if (!label) return;
+    const reference = references.find((item) => item.label === label);
+    if (!reference) return;
+    event.preventDefault();
+    selectReference(reference);
+  }
+
   return (
     <div className="pdf-reader-backdrop" role="presentation" onMouseDown={onClose}>
       <section
@@ -195,7 +372,7 @@ export default function PdfReader({
               onClick={() => setOutlineOpen((current) => !current)}
               type="button"
             >
-              ☰ <span>目录</span>
+              ☰ <span>导航</span>
             </button>
             <span className="pdf-control-divider" />
             <button
@@ -252,23 +429,68 @@ export default function PdfReader({
 
         <div className={`pdf-reader-body ${outlineOpen ? "" : "outline-collapsed"}`}>
           <aside className="pdf-outline" id="pdf-document-outline" ref={outlineRef}>
-            <div className="pdf-outline-heading">
-              <div><span>DOCUMENT MAP</span><strong>文档目录</strong></div>
-              <small>{flatOutline.length} 个标题</small>
+            <div className="pdf-sidebar-tabs" role="tablist" aria-label="文档导航类型">
+              <button
+                aria-selected={sidebarTab === "outline"}
+                className={sidebarTab === "outline" ? "active" : ""}
+                onClick={() => setSidebarTab("outline")}
+                role="tab"
+                type="button"
+              >
+                目录 <span>{flatOutline.length}</span>
+              </button>
+              <button
+                aria-selected={sidebarTab === "references"}
+                className={sidebarTab === "references" ? "active" : ""}
+                onClick={() => setSidebarTab("references")}
+                role="tab"
+                type="button"
+              >
+                引用 <span>{references.length}</span>
+              </button>
             </div>
-            {outlineLoading && <div className="pdf-outline-message">正在读取标题树…</div>}
-            {outlineError && <div className="pdf-outline-message error">{outlineError}</div>}
-            {!outlineLoading && !outlineError && outline.length === 0 && (
-              <div className="pdf-outline-message">这篇文献暂未解析出标题。</div>
-            )}
-            {outline.length > 0 && (
-              <nav aria-label="论文标题导航">
-                <OutlineTree
-                  activeBlockId={activeOutline?.block_id}
-                  items={outline}
-                  onSelect={selectOutline}
-                />
-              </nav>
+            {sidebarTab === "outline" ? (
+              <>
+                <div className="pdf-outline-heading">
+                  <div><span>DOCUMENT MAP</span><strong>文档目录</strong></div>
+                  <small>{flatOutline.length} 个标题</small>
+                </div>
+                {outlineLoading && <div className="pdf-outline-message">正在读取标题树…</div>}
+                {outlineError && <div className="pdf-outline-message error">{outlineError}</div>}
+                {!outlineLoading && !outlineError && outline.length === 0 && (
+                  <div className="pdf-outline-message">这篇文献暂未解析出标题。</div>
+                )}
+                {outline.length > 0 && (
+                  <nav aria-label="论文标题导航">
+                    <OutlineTree
+                      activeBlockId={activeOutline?.block_id}
+                      items={outline}
+                      onSelect={selectOutline}
+                    />
+                  </nav>
+                )}
+              </>
+            ) : (
+              <>
+                <div className="pdf-outline-heading">
+                  <div><span>CITATION MAP</span><strong>参考文献</strong></div>
+                  <small>{mentions.length} 处正文引用</small>
+                </div>
+                {referencesLoading && <div className="pdf-outline-message">正在建立引用链接…</div>}
+                {referencesError && <div className="pdf-outline-message error">{referencesError}</div>}
+                {!referencesLoading && !referencesError && references.length === 0 && (
+                  <div className="pdf-outline-message">这篇文献暂未解析出编号参考文献。</div>
+                )}
+                {references.length > 0 && (
+                  <ReferencePanel
+                    activeTarget={referenceTarget}
+                    items={references}
+                    mentions={mentions}
+                    onSelectMention={selectMention}
+                    onSelectReference={selectReference}
+                  />
+                )}
+              </>
             )}
           </aside>
           <div className="pdf-reader-viewport" ref={viewportRef}>
@@ -284,8 +506,9 @@ export default function PdfReader({
                 setPageInput(String(targetPage));
               }}
             >
-              <div className="pdf-page-shell">
+              <div className="pdf-page-shell" onClick={handlePageClick}>
                 <Page
+                  customTextRenderer={renderCitationText}
                   loading={<div className="pdf-page-loading">正在渲染第 {pageNumber} 页…</div>}
                   onLoadSuccess={(page) => setPageSize({
                     width: page.originalWidth,
@@ -298,17 +521,19 @@ export default function PdfReader({
                 />
                 {highlightRect && (
                   <div
-                    aria-label={`证据 ${evidence?.evidence_id} 的原文位置`}
-                    className="pdf-evidence-highlight"
+                    aria-label={`${activePageTarget?.kind === "evidence" ? "证据" : "引用"} ${activePageTarget?.label} 的原文位置`}
+                    className={`pdf-evidence-highlight ${activePageTarget?.kind ?? ""}`}
                     style={{
                       left: `${highlightRect.left}%`,
                       top: `${highlightRect.top}%`,
                       width: `${highlightRect.width}%`,
                       height: `${highlightRect.height}%`,
                     }}
-                    title={evidence?.quote}
+                    title={activePageTarget?.context}
                   >
-                    <span>{evidence?.evidence_id}</span>
+                    <span>{activePageTarget?.kind === "evidence"
+                      ? activePageTarget.label
+                      : `[${activePageTarget?.label}]`}</span>
                   </div>
                 )}
               </div>
@@ -318,8 +543,19 @@ export default function PdfReader({
 
         <footer className="pdf-reader-footer">
           <div className="pdf-reader-location">
-            {evidence && evidence.page_number === pageNumber ? (
-              <><strong>{evidence.evidence_id}</strong><span className="pdf-evidence-status">{highlightRect ? "已高亮原文证据" : "已定位证据页，暂无可用坐标"}</span></>
+            {activePageTarget ? (
+              <>
+                <strong className={activePageTarget.kind}>{activePageTarget.kind === "evidence"
+                  ? activePageTarget.label
+                  : `[${activePageTarget.label}]`}</strong>
+                <span className="pdf-evidence-status">{highlightRect
+                  ? activePageTarget.kind === "evidence"
+                    ? "已高亮原文证据"
+                    : activePageTarget.kind === "reference"
+                      ? "已定位参考文献条目"
+                      : "已定位正文引用"
+                  : "已定位目标页，暂无可用坐标"}</span>
+              </>
             ) : (
               <span className="pdf-reader-section" title={activeOutline?.text}>
                 {activeOutline ? `当前章节：${activeOutline.text}` : "方向键翻页 · Esc 关闭"}

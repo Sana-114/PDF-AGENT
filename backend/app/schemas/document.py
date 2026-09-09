@@ -63,6 +63,30 @@ class DocumentOutlineRead(BaseModel):
     items: list[OutlineNodeRead]
 
 
+class ReferenceRead(BaseModel):
+    reference_id: str
+    label: str
+    text: str
+    page_number: int = Field(ge=1)
+    bbox: list[float] | None = None
+    block_ids: list[str] = Field(default_factory=list)
+
+
+class CitationMentionRead(BaseModel):
+    citation_id: str
+    label: str
+    page_number: int = Field(ge=1)
+    block_id: str
+    bbox: list[float] | None = None
+    context: str
+
+
+class DocumentReferencesRead(BaseModel):
+    document_id: str
+    items: list[ReferenceRead]
+    mentions: list[CitationMentionRead]
+
+
 class HealthRead(BaseModel):
     status: str
     service: str
