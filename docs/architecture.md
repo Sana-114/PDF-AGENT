@@ -13,7 +13,7 @@
 | Celery + Redis | 长时 PDF 解析任务、重试和状态更新 |
 | Agent Harness | 检索、证据门控、Provider 调用、引用校验和 Trace |
 | Skill Registry | 带 Pydantic 输入 Schema 的本地工具发现与执行 |
-| LLM Provider | 默认抽取式兜底；可选 OpenAI Responses API |
+| LLM Provider | 默认抽取式兜底；可选 OpenAI Responses API 问答与学术翻译 |
 | Embedding Provider | 默认离线 Hash 基线；可选 OpenAI-compatible BGE-M3 等语义服务 |
 | Reranker | 默认关闭；可选 Cohere-compatible 或 TEI Cross-Encoder 候选重排 |
 | BGE Runtime | 可选 TEI Docker Profile，独立运行 BGE-M3 与 BGE Reranker |
@@ -40,6 +40,8 @@
 问答证据携带的 PyMuPDF `bbox` 使用页面点坐标。前端以 PDF.js 报告的原始页面宽高将其裁剪并转换为百分比矩形，再作为独立覆盖层叠加到页面上；因此切换缩放比例不会改变高亮与原文的相对位置。无坐标证据仍保留页码定位，并在阅读器状态栏明确提示未高亮，避免伪造位置精度。
 
 参考文献导航通过轻量级 `GET /documents/{id}/references` 同时返回结构化 References 和正文编号引用位置。后端只接受 AST 中真实存在的数字标签，并跳过参考文献条目自身，支持逗号分组与有界范围；前端仅对已知标签生成经过 HTML 转义的可点击文本层标记。点击正文 `[N]` 可跳到对应条目并高亮 BBox，侧栏则按条目聚合正文出现位置，用于反向跳回原文。未知编号不会生成链接，避免把公式编号误认为引用。
+
+阅读器文本层支持浏览器原生选区。选中中英文段落后，前端自动推断目标语言并调用 `POST /agent/translate`；翻译面板同时保留原文与译文。翻译复用已配置的 LLM Provider，但使用独立 Structured Output Schema 和“只翻译、不补充”的学术翻译指令。抽取式零密钥 Provider 会显式返回不可用错误，因此界面不会展示未经模型翻译的占位结果。本阶段不持久化译文，后续整篇翻译将以块 ID 建立可恢复任务和段落对齐表。
 
 当前 AST 的顶层结构为：
 
@@ -96,6 +98,6 @@ Qdrant 不可达、索引失败或本地开发关闭向量检索时，`HybridRet
 
 1. 扩充官方 PDF 标注用例，并据此校准召回、重排权重和证据阈值。
 2. 为向量模型升级增加蓝绿 Collection 和断点批量重建。
-3. 增加局部划词翻译和中英双栏段落对齐数据接口。
+3. 建立整篇翻译任务、段落对齐数据和中英双栏同步滚动。
 4. 为复杂扫描表格和公式增加专用识别适配器。
 5. 将本地存储实现替换为 S3/MinIO 实现，保持 API 不变。

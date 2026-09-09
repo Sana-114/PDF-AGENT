@@ -1,4 +1,9 @@
-from app.llm.base import GeneratedAnswer, GeneratedClaim
+from app.llm.base import (
+    GeneratedAnswer,
+    GeneratedClaim,
+    GeneratedTranslation,
+    LLMConfigurationError,
+)
 from app.schemas.agent import EvidenceAnchor
 
 
@@ -27,3 +32,10 @@ class ExtractiveProvider:
         )
         return GeneratedAnswer(answer=answer, claims=claims)
 
+    async def translate_text(
+        self, text: str, source_language: str, target_language: str
+    ) -> GeneratedTranslation:
+        del text, source_language, target_language
+        raise LLMConfigurationError(
+            "划词翻译需要生成式 LLM；请在 .env 中配置 LLM_PROVIDER、LLM_MODEL 和 LLM_API_KEY。"
+        )

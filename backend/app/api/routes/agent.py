@@ -1,6 +1,6 @@
 from typing import Annotated
 
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 
 from app.agent.harness import ResearchAgent
@@ -10,9 +10,16 @@ from app.core.config import settings
 from app.core.database import get_db
 from app.embeddings import get_embedding_provider
 from app.llm import get_llm_provider
-from app.llm.base import LLMConfigurationError
+from app.llm.base import LLMConfigurationError, LLMResponseError
 from app.rerankers import get_reranker
-from app.schemas.agent import AgentStatus, AskRequest, AskResponse, SkillRead
+from app.schemas.agent import (
+    AgentStatus,
+    AskRequest,
+    AskResponse,
+    SkillRead,
+    TranslateRequest,
+    TranslateResponse,
+)
 
 router = APIRouter()
 
@@ -59,3 +66,25 @@ async def ask_agent(
 ) -> AskResponse:
     agent = ResearchAgent(db)
     return await agent.ask(request)
+
+
+@router.post("/translate", response_model=TranslateResponse)
+async def translate_selection(request: TranslateRequest) -> TranslateResponse:
+    try:
+        provider = get_llm_provider()
+        result = await provider.translate_text(
+            request.text,
+            request.source_language,
+            request.target_language,
+        )
+    except LLMConfigurationError as exc:
+        raise HTTPException(status_code=503, detail=str(exc)) from exc
+    except LLMResponseError as exc:
+        raise HTTPException(status_code=502, detail=str(exc)) from exc
+    return TranslateResponse(
+        translation=result.text,
+        source_language=request.source_language,
+        target_language=request.target_language,
+        provider=provider.name,
+        model=provider.model,
+    )

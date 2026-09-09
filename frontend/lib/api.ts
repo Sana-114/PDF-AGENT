@@ -122,6 +122,14 @@ export interface AgentStatus {
   skills: string[];
 }
 
+export interface TranslationResponse {
+  translation: string;
+  source_language: "auto" | "zh" | "en";
+  target_language: "zh" | "en";
+  provider: string;
+  model: string | null;
+}
+
 async function assertResponse(response: Response): Promise<Response> {
   if (response.ok) return response;
   let message = `请求失败 (${response.status})`;
@@ -192,6 +200,24 @@ export async function askAgent(
 export async function getAgentStatus(): Promise<AgentStatus> {
   const response = await assertResponse(
     await fetch(`${API_BASE_URL}/agent/status`, { cache: "no-store" }),
+  );
+  return response.json();
+}
+
+export async function translateSelection(
+  sourceText: string,
+  targetLanguage: "zh" | "en",
+): Promise<TranslationResponse> {
+  const response = await assertResponse(
+    await fetch(`${API_BASE_URL}/agent/translate`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        text: sourceText,
+        source_language: "auto",
+        target_language: targetLanguage,
+      }),
+    }),
   );
   return response.json();
 }

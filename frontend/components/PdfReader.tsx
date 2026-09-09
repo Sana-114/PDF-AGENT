@@ -17,9 +17,12 @@ import {
   EvidenceAnchor,
   getDocumentOutline,
   getDocumentReferences,
+  translateSelection,
+  TranslationResponse,
 } from "../lib/api";
 import { bboxToPercentRect } from "../lib/pdfGeometry";
 import { linkifyNumericCitations } from "../lib/referenceMarkup";
+import { inferTranslationTarget, MAX_TRANSLATION_CHARS } from "../lib/translation";
 
 pdfjs.GlobalWorkerOptions.workerSrc = new URL(
   "pdfjs-dist/build/pdf.worker.min.mjs",
@@ -69,6 +72,12 @@ interface ReferenceTarget {
   pageNumber: number;
   bbox: number[] | null;
   context: string;
+}
+
+interface SelectionDraft {
+  text: string;
+  x: number;
+  y: number;
 }
 
 interface ReferencePanelProps {
@@ -172,11 +181,16 @@ export default function PdfReader({
   const [referencesError, setReferencesError] = useState<string | null>(null);
   const [sidebarTab, setSidebarTab] = useState<SidebarTab>("outline");
   const [referenceTarget, setReferenceTarget] = useState<ReferenceTarget | null>(null);
+  const [selectionDraft, setSelectionDraft] = useState<SelectionDraft | null>(null);
+  const [translation, setTranslation] = useState<TranslationResponse | null>(null);
+  const [translationLoading, setTranslationLoading] = useState(false);
+  const [translationError, setTranslationError] = useState<string | null>(null);
   const [outlineOpen, setOutlineOpen] = useState(
     () => typeof window === "undefined" || window.innerWidth > 760,
   );
   const [pageSize, setPageSize] = useState<{ width: number; height: number } | null>(null);
   const outlineRef = useRef<HTMLElement>(null);
+  const pageShellRef = useRef<HTMLDivElement>(null);
   const viewportRef = useRef<HTMLDivElement>(null);
 
   const flatOutline = useMemo(() => flattenOutline(outline), [outline]);
@@ -284,6 +298,9 @@ export default function PdfReader({
   useEffect(() => {
     setPageInput(String(pageNumber));
     setPageSize(null);
+    setSelectionDraft(null);
+    setTranslation(null);
+    setTranslationError(null);
     viewportRef.current?.scrollTo({ top: 0, left: 0 });
   }, [pageNumber]);
 
@@ -348,6 +365,45 @@ export default function PdfReader({
     if (!reference) return;
     event.preventDefault();
     selectReference(reference);
+  }
+
+  function captureTextSelection() {
+    const selection = window.getSelection();
+    if (!selection || selection.isCollapsed || selection.rangeCount === 0) return;
+    const range = selection.getRangeAt(0);
+    if (!pageShellRef.current?.contains(range.commonAncestorContainer)) return;
+    const text = selection.toString().trim();
+    if (text.length < 2) return;
+    const rect = range.getBoundingClientRect();
+    setSelectionDraft({
+      text: text.slice(0, MAX_TRANSLATION_CHARS),
+      x: clamp(rect.left, 16, window.innerWidth - 150),
+      y: Math.max(16, rect.top - 44),
+    });
+    setTranslation(null);
+    setTranslationError(null);
+  }
+
+  async function translateSelectedText() {
+    if (!selectionDraft || translationLoading) return;
+    const targetLanguage = inferTranslationTarget(selectionDraft.text);
+    setTranslationLoading(true);
+    setTranslation(null);
+    setTranslationError(null);
+    try {
+      setTranslation(await translateSelection(selectionDraft.text, targetLanguage));
+    } catch (error) {
+      setTranslationError(error instanceof Error ? error.message : "翻译请求失败");
+    } finally {
+      setTranslationLoading(false);
+    }
+  }
+
+  function closeTranslation() {
+    setSelectionDraft(null);
+    setTranslation(null);
+    setTranslationError(null);
+    window.getSelection()?.removeAllRanges();
   }
 
   return (
@@ -506,7 +562,12 @@ export default function PdfReader({
                 setPageInput(String(targetPage));
               }}
             >
-              <div className="pdf-page-shell" onClick={handlePageClick}>
+              <div
+                className="pdf-page-shell"
+                onClick={handlePageClick}
+                onMouseUp={captureTextSelection}
+                ref={pageShellRef}
+              >
                 <Page
                   customTextRenderer={renderCitationText}
                   loading={<div className="pdf-page-loading">正在渲染第 {pageNumber} 页…</div>}
@@ -541,6 +602,35 @@ export default function PdfReader({
           </div>
         </div>
 
+        {selectionDraft && !translationLoading && !translation && !translationError && (
+          <button
+            className="pdf-translate-action"
+            onClick={() => void translateSelectedText()}
+            onMouseDown={(event) => event.preventDefault()}
+            style={{ left: selectionDraft.x, top: selectionDraft.y }}
+            type="button"
+          >
+            译为 {inferTranslationTarget(selectionDraft.text) === "en" ? "English" : "中文"}
+          </button>
+        )}
+        {selectionDraft && (translationLoading || translation || translationError) && (
+          <aside className="pdf-translation-panel" aria-live="polite">
+            <header>
+              <div><span>ACADEMIC TRANSLATION</span><strong>选区翻译</strong></div>
+              <button aria-label="关闭翻译" onClick={closeTranslation} type="button">×</button>
+            </header>
+            <blockquote>{selectionDraft.text}</blockquote>
+            {translationLoading && <p className="pdf-translation-state">正在保持术语和公式格式进行翻译…</p>}
+            {translationError && <p className="pdf-translation-state error">{translationError}</p>}
+            {translation && (
+              <div className="pdf-translation-result">
+                <p>{translation.translation}</p>
+                <small>{translation.model || translation.provider} · {translation.target_language === "zh" ? "译为中文" : "Translated to English"}</small>
+              </div>
+            )}
+          </aside>
+        )}
+
         <footer className="pdf-reader-footer">
           <div className="pdf-reader-location">
             {activePageTarget ? (
@@ -558,7 +648,7 @@ export default function PdfReader({
               </>
             ) : (
               <span className="pdf-reader-section" title={activeOutline?.text}>
-                {activeOutline ? `当前章节：${activeOutline.text}` : "方向键翻页 · Esc 关闭"}
+                {activeOutline ? `当前章节：${activeOutline.text}` : "拖拽选中文字可翻译 · 方向键翻页 · Esc 关闭"}
               </span>
             )}
           </div>

@@ -5,6 +5,7 @@ import httpx
 from app.llm.base import (
     GeneratedAnswer,
     GeneratedClaim,
+    GeneratedTranslation,
     LLMConfigurationError,
     LLMResponseError,
 )
@@ -114,6 +115,61 @@ class OpenAIResponsesProvider:
         if parsed.get("claims") and not claims:
             raise LLMResponseError("模型答案未引用任何有效证据锚点。")
         return GeneratedAnswer(answer=str(parsed.get("answer", "")), claims=claims)
+
+    async def translate_text(
+        self, text: str, source_language: str, target_language: str
+    ) -> GeneratedTranslation:
+        language_names = {"auto": "automatically detected", "zh": "Chinese", "en": "English"}
+        schema = {
+            "type": "object",
+            "additionalProperties": False,
+            "properties": {"translation": {"type": "string"}},
+            "required": ["translation"],
+        }
+        payload = {
+            "model": self.model,
+            "store": False,
+            "instructions": (
+                "You are an academic translator. Translate faithfully without adding facts, "
+                "explanations, or citations. Preserve equations, citation markers, code, model "
+                "names, numbers, and paragraph structure. Use precise academic terminology."
+            ),
+            "input": (
+                f"Source language: {language_names[source_language]}\n"
+                f"Target language: {language_names[target_language]}\n\n"
+                f"Text:\n{text}"
+            ),
+            "text": {
+                "format": {
+                    "type": "json_schema",
+                    "name": "academic_translation",
+                    "strict": True,
+                    "schema": schema,
+                }
+            },
+        }
+        headers = {"Authorization": f"Bearer {self.api_key}"}
+        try:
+            async with httpx.AsyncClient(timeout=self.timeout_seconds) as client:
+                response = await client.post(
+                    f"{self.base_url}/responses", json=payload, headers=headers
+                )
+        except httpx.HTTPError as exc:
+            raise LLMResponseError(f"OpenAI Responses API 网络请求失败：{exc}") from exc
+        if response.is_error:
+            raise LLMResponseError(
+                f"OpenAI Responses API 返回 HTTP {response.status_code}: "
+                f"{response.text[:500]}"
+            )
+
+        try:
+            parsed = json.loads(self._extract_output_text(response.json()))
+        except json.JSONDecodeError as exc:
+            raise LLMResponseError("翻译模型未返回有效的结构化 JSON。") from exc
+        translation = str(parsed.get("translation", "")).strip()
+        if not translation:
+            raise LLMResponseError("翻译模型返回了空结果。")
+        return GeneratedTranslation(text=translation)
 
     @staticmethod
     def _extract_output_text(response: dict) -> str:

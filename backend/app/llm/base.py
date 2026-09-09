@@ -24,6 +24,11 @@ class GeneratedAnswer:
     claims: list[GeneratedClaim]
 
 
+@dataclass(slots=True)
+class GeneratedTranslation:
+    text: str
+
+
 class LLMProvider(Protocol):
     name: str
     model: str | None
@@ -32,3 +37,6 @@ class LLMProvider(Protocol):
         self, question: str, evidence: list[EvidenceAnchor]
     ) -> GeneratedAnswer: ...
 
+    async def translate_text(
+        self, text: str, source_language: str, target_language: str
+    ) -> GeneratedTranslation: ...

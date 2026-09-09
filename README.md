@@ -32,6 +32,7 @@ PaperPilot 是一个以原文证据为核心的科研助手 Agent 系统。本�
 - 内置 PDF.js 阅读器，支持站内阅读、翻页、缩放、三级标题树导航和当前章节联动；
 - 点击问答证据后按页码和 BBox 定位原文，高亮区域随阅读器缩放保持对齐；
 - 正文编号引用与 References 条目双向跳转，侧栏汇总每条文献的正文引用位置；
+- 阅读器支持中英文划词/选段翻译，保留公式、代码、引用和数字，零密钥模式明确拒绝伪翻译；
 - 文献列表、原文访问、结构化结果读取、重解析和删除；
 - Web 端展示长文档已处理页数、百分比和断点可恢复状态；
 - Docker Compose 编排 PostgreSQL、Redis、Qdrant、MinIO、API、Worker 和 Web。
@@ -174,6 +175,8 @@ LLM_BASE_URL=https://api.openai.com/v1
 
 适配器使用 Responses API 的 Structured Outputs，并在返回前剔除不存在的证据 ID。请勿把 `.env` 或密钥提交到 Git；仓库只保留 `.env.example`。
 
+同一 Provider 也用于阅读器划词翻译。翻译请求使用独立的结构化输出约束，要求只翻译用户选中的原文并保留公式、代码、引用标记、模型名称、数字和段落结构。默认 `mock`/抽取式模式没有可靠的翻译能力，接口会返回可解释的 `503`，不会把原文或模板文本冒充译文。
+
 ## 不使用 Docker 的本地启动
 
 后端默认使用 SQLite，并以内联模式运行 Celery 任务，因此无需先启动 Redis：
@@ -212,6 +215,7 @@ npm run dev
 | GET | `/api/v1/agent/status` | 当前 Provider、模型和 Skills 状态 |
 | GET | `/api/v1/agent/skills` | 可供 Harness 调用的 Skill 清单与输入 Schema |
 | POST | `/api/v1/agent/ask` | 文献问答，返回 Claim、Evidence 和执行轨迹 |
+| POST | `/api/v1/agent/translate` | 中英学术选段翻译，需配置生成式 LLM |
 
 `GET /documents/{id}/content` 返回 `schema_version=0.2.0` 的 Document AST。除逐页 `blocks` 外，顶层包含 `authors`、`affiliations`、`abstract`、`outline`、`tables`、`figures`、`formulas`、`references` 和 `appendices`；所有可跳转节点均保留页码、块 ID 或 BBox。
 
@@ -286,7 +290,7 @@ docker compose exec backend python scripts/evaluate_pdf_corpus.py `
 
 1. 用标准测试 PDF 评估当前版式基线，并按失败样本接入 Docling、GROBID 和 PaddleOCR；
 2. 用本地 BGE-M3 / Reranker 跑完官方 PDF 离线评测，并据此校准融合权重；
-3. 增加局部划词翻译和中英双栏段落对齐数据接口；
+3. 建立整篇翻译任务、段落对齐数据和中英双栏同步滚动；
 4. 使用 `1706.03762v7.pdf`、`v1.pdf` 和扫描版建立自动回归集。
 
 更完整的边界说明见 [docs/architecture.md](docs/architecture.md)。

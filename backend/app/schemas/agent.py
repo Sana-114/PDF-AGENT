@@ -1,6 +1,6 @@
 from typing import Any, Literal
 
-from pydantic import BaseModel, Field, field_validator
+from pydantic import BaseModel, Field, field_validator, model_validator
 
 
 class EvidenceAnchor(BaseModel):
@@ -55,6 +55,34 @@ class AskResponse(BaseModel):
     provider: str
     model: str | None = None
     trace: list[AgentTraceStep] = Field(default_factory=list)
+
+
+class TranslateRequest(BaseModel):
+    text: str = Field(min_length=1, max_length=12000)
+    source_language: Literal["auto", "zh", "en"] = "auto"
+    target_language: Literal["zh", "en"]
+
+    @field_validator("text")
+    @classmethod
+    def reject_blank_text(cls, value: str) -> str:
+        cleaned = value.strip()
+        if not cleaned:
+            raise ValueError("待翻译文本不能为空。")
+        return cleaned
+
+    @model_validator(mode="after")
+    def reject_same_language(self) -> "TranslateRequest":
+        if self.source_language != "auto" and self.source_language == self.target_language:
+            raise ValueError("源语言与目标语言不能相同。")
+        return self
+
+
+class TranslateResponse(BaseModel):
+    translation: str
+    source_language: Literal["auto", "zh", "en"]
+    target_language: Literal["zh", "en"]
+    provider: str
+    model: str | None = None
 
 
 class SkillRead(BaseModel):
