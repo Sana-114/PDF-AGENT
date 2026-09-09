@@ -30,6 +30,7 @@ PaperPilot 是一个以原文证据为核心的科研助手 Agent 系统。本�
 - 可切换 LLM Provider：默认抽取式零密钥模式，或 OpenAI Responses API；
 - Web 端证据问答、正文/表格/公式/引用来源标签和相关度展示；
 - 内置 PDF.js 阅读器，支持站内阅读、翻页、缩放、三级标题树导航和当前章节联动；
+- 点击问答证据后按页码和 BBox 定位原文，高亮区域随阅读器缩放保持对齐；
 - 文献列表、原文访问、结构化结果读取、重解析和删除；
 - Web 端展示长文档已处理页数、百分比和断点可恢复状态；
 - Docker Compose 编排 PostgreSQL、Redis、Qdrant、MinIO、API、Worker 和 Web。
@@ -283,7 +284,7 @@ docker compose exec backend python scripts/evaluate_pdf_corpus.py `
 
 1. 用标准测试 PDF 评估当前版式基线，并按失败样本接入 Docling、GROBID 和 PaddleOCR；
 2. 用本地 BGE-M3 / Reranker 跑完官方 PDF 离线评测，并据此校准融合权重；
-3. 在现有 PDF.js 阅读器中叠加 BBox 证据高亮；
+3. 建立正文引用标记与 References 条目的双向跳转；
 4. 使用 `1706.03762v7.pdf`、`v1.pdf` 和扫描版建立自动回归集。
 
 更完整的边界说明见 [docs/architecture.md](docs/architecture.md)。

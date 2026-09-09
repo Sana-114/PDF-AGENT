@@ -9,6 +9,7 @@ import {
   documentFileUrl,
   DocumentProgress,
   DocumentRecord,
+  EvidenceAnchor,
   getAgentStatus,
   getDocumentProgress,
   listDocuments,
@@ -24,6 +25,7 @@ interface ReaderState {
   documentId: string;
   title: string;
   pageNumber: number;
+  evidence: EvidenceAnchor | null;
 }
 
 const STATUS_LABEL: Record<DocumentRecord["status"], string> = {
@@ -160,8 +162,13 @@ export default function Home() {
     }
   }
 
-  function openReader(documentId: string, title: string, pageNumber = 1) {
-    setReader({ documentId, title, pageNumber });
+  function openReader(
+    documentId: string,
+    title: string,
+    pageNumber = 1,
+    evidence: EvidenceAnchor | null = null,
+  ) {
+    setReader({ documentId, title, pageNumber, evidence });
   }
 
   return (
@@ -283,6 +290,7 @@ export default function Home() {
                       evidence.document_id,
                       evidence.document_title || "未命名文献",
                       evidence.page_number,
+                      evidence,
                     )}
                     type="button"
                   >
@@ -379,9 +387,10 @@ export default function Home() {
       {reader && (
         <PdfReader
           documentId={reader.documentId}
+          evidence={reader.evidence}
           fileUrl={documentFileUrl(reader.documentId)}
           initialPage={reader.pageNumber}
-          key={`${reader.documentId}-${reader.pageNumber}`}
+          key={`${reader.documentId}-${reader.pageNumber}-${reader.evidence?.evidence_id || "document"}`}
           onClose={() => setReader(null)}
           title={reader.title}
         />

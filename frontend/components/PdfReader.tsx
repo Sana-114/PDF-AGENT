@@ -2,7 +2,8 @@
 
 import { FormEvent, useEffect, useMemo, useRef, useState } from "react";
 import { Document, Page, pdfjs } from "react-pdf";
-import { DocumentOutlineNode, getDocumentOutline } from "../lib/api";
+import { DocumentOutlineNode, EvidenceAnchor, getDocumentOutline } from "../lib/api";
+import { bboxToPercentRect } from "../lib/pdfGeometry";
 
 pdfjs.GlobalWorkerOptions.workerSrc = new URL(
   "pdfjs-dist/build/pdf.worker.min.mjs",
@@ -11,6 +12,7 @@ pdfjs.GlobalWorkerOptions.workerSrc = new URL(
 
 interface PdfReaderProps {
   documentId: string;
+  evidence?: EvidenceAnchor | null;
   fileUrl: string;
   title: string;
   initialPage?: number;
@@ -61,6 +63,7 @@ function OutlineTree({ activeBlockId, items, onSelect }: OutlineTreeProps) {
 
 export default function PdfReader({
   documentId,
+  evidence,
   fileUrl,
   title,
   initialPage = 1,
@@ -76,6 +79,7 @@ export default function PdfReader({
   const [outlineOpen, setOutlineOpen] = useState(
     () => typeof window === "undefined" || window.innerWidth > 760,
   );
+  const [pageSize, setPageSize] = useState<{ width: number; height: number } | null>(null);
   const outlineRef = useRef<HTMLElement>(null);
   const viewportRef = useRef<HTMLDivElement>(null);
 
@@ -86,6 +90,12 @@ export default function PdfReader({
       undefined,
     ),
     [flatOutline, pageNumber],
+  );
+  const highlightRect = useMemo(
+    () => evidence?.page_number === pageNumber && pageSize
+      ? bboxToPercentRect(evidence.bbox, pageSize.width, pageSize.height)
+      : null,
+    [evidence, pageNumber, pageSize],
   );
 
   useEffect(() => {
@@ -134,6 +144,7 @@ export default function PdfReader({
 
   useEffect(() => {
     setPageInput(String(pageNumber));
+    setPageSize(null);
     viewportRef.current?.scrollTo({ top: 0, left: 0 });
   }, [pageNumber]);
 
@@ -273,24 +284,58 @@ export default function PdfReader({
                 setPageInput(String(targetPage));
               }}
             >
-              <Page
-                loading={<div className="pdf-page-loading">正在渲染第 {pageNumber} 页…</div>}
-                pageNumber={pageNumber}
-                renderAnnotationLayer
-                renderTextLayer
-                scale={scale}
-              />
+              <div className="pdf-page-shell">
+                <Page
+                  loading={<div className="pdf-page-loading">正在渲染第 {pageNumber} 页…</div>}
+                  onLoadSuccess={(page) => setPageSize({
+                    width: page.originalWidth,
+                    height: page.originalHeight,
+                  })}
+                  pageNumber={pageNumber}
+                  renderAnnotationLayer
+                  renderTextLayer
+                  scale={scale}
+                />
+                {highlightRect && (
+                  <div
+                    aria-label={`证据 ${evidence?.evidence_id} 的原文位置`}
+                    className="pdf-evidence-highlight"
+                    style={{
+                      left: `${highlightRect.left}%`,
+                      top: `${highlightRect.top}%`,
+                      width: `${highlightRect.width}%`,
+                      height: `${highlightRect.height}%`,
+                    }}
+                    title={evidence?.quote}
+                  >
+                    <span>{evidence?.evidence_id}</span>
+                  </div>
+                )}
+              </div>
             </Document>
           </div>
         </div>
 
         <footer className="pdf-reader-footer">
-          <span title={activeOutline?.text}>
-            {activeOutline ? `当前章节：${activeOutline.text}` : "方向键翻页 · Esc 关闭"}
-          </span>
-          <a href={`${fileUrl}#page=${pageNumber}`} rel="noreferrer" target="_blank">
-            在浏览器新标签打开 ↗
-          </a>
+          <div className="pdf-reader-location">
+            {evidence && evidence.page_number === pageNumber ? (
+              <><strong>{evidence.evidence_id}</strong><span className="pdf-evidence-status">{highlightRect ? "已高亮原文证据" : "已定位证据页，暂无可用坐标"}</span></>
+            ) : (
+              <span className="pdf-reader-section" title={activeOutline?.text}>
+                {activeOutline ? `当前章节：${activeOutline.text}` : "方向键翻页 · Esc 关闭"}
+              </span>
+            )}
+          </div>
+          <div className="pdf-reader-footer-actions">
+            {evidence && evidence.page_number !== pageNumber && (
+              <button onClick={() => goToPage(evidence.page_number)} type="button">
+                返回证据 {evidence.evidence_id}
+              </button>
+            )}
+            <a href={`${fileUrl}#page=${pageNumber}`} rel="noreferrer" target="_blank">
+              在浏览器新标签打开 ↗
+            </a>
+          </div>
         </footer>
       </section>
     </div>
