@@ -12,17 +12,23 @@ import {
 import { Document, Page, pdfjs } from "react-pdf";
 import {
   CitationMention,
+  DocumentPageTranslation,
   DocumentOutlineNode,
   DocumentReference,
   EvidenceAnchor,
   getDocumentOutline,
   getDocumentReferences,
+  translateDocumentPage,
   translateSelection,
   TranslationResponse,
 } from "../lib/api";
 import { bboxToPercentRect } from "../lib/pdfGeometry";
 import { linkifyNumericCitations } from "../lib/referenceMarkup";
-import { inferTranslationTarget, MAX_TRANSLATION_CHARS } from "../lib/translation";
+import {
+  inferTranslationTarget,
+  mapSynchronizedScroll,
+  MAX_TRANSLATION_CHARS,
+} from "../lib/translation";
 
 pdfjs.GlobalWorkerOptions.workerSrc = new URL(
   "pdfjs-dist/build/pdf.worker.min.mjs",
@@ -185,11 +191,19 @@ export default function PdfReader({
   const [translation, setTranslation] = useState<TranslationResponse | null>(null);
   const [translationLoading, setTranslationLoading] = useState(false);
   const [translationError, setTranslationError] = useState<string | null>(null);
+  const [bilingualOpen, setBilingualOpen] = useState(false);
+  const [bilingualTarget, setBilingualTarget] = useState<"zh" | "en">("zh");
+  const [pageTranslation, setPageTranslation] = useState<DocumentPageTranslation | null>(null);
+  const [pageTranslationLoading, setPageTranslationLoading] = useState(false);
+  const [pageTranslationError, setPageTranslationError] = useState<string | null>(null);
   const [outlineOpen, setOutlineOpen] = useState(
     () => typeof window === "undefined" || window.innerWidth > 760,
   );
   const [pageSize, setPageSize] = useState<{ width: number; height: number } | null>(null);
   const outlineRef = useRef<HTMLElement>(null);
+  const bilingualRef = useRef<HTMLElement>(null);
+  const translationCacheRef = useRef(new Map<string, DocumentPageTranslation>());
+  const translationRequestRef = useRef<string | null>(null);
   const pageShellRef = useRef<HTMLDivElement>(null);
   const viewportRef = useRef<HTMLDivElement>(null);
 
@@ -228,6 +242,34 @@ export default function PdfReader({
     ({ str }: { str: string }) => linkifyNumericCitations(str, referenceLabels),
     [referenceLabels],
   );
+  const loadPageTranslation = useCallback(async (
+    targetPage: number,
+    targetLanguage: "zh" | "en",
+  ) => {
+    const cacheKey = `${targetPage}:${targetLanguage}`;
+    translationRequestRef.current = cacheKey;
+    const cached = translationCacheRef.current.get(cacheKey);
+    if (cached) {
+      setPageTranslation(cached);
+      setPageTranslationError(null);
+      setPageTranslationLoading(false);
+      return;
+    }
+    setPageTranslation(null);
+    setPageTranslationError(null);
+    setPageTranslationLoading(true);
+    try {
+      const result = await translateDocumentPage(documentId, targetPage, targetLanguage);
+      translationCacheRef.current.set(cacheKey, result);
+      if (translationRequestRef.current === cacheKey) setPageTranslation(result);
+    } catch (error) {
+      if (translationRequestRef.current === cacheKey) {
+        setPageTranslationError(error instanceof Error ? error.message : "当前页翻译失败");
+      }
+    } finally {
+      if (translationRequestRef.current === cacheKey) setPageTranslationLoading(false);
+    }
+  }, [documentId]);
 
   useEffect(() => {
     let active = true;
@@ -309,6 +351,46 @@ export default function PdfReader({
       ?.querySelector<HTMLElement>('[aria-current="location"]')
       ?.scrollIntoView({ block: "nearest" });
   }, [activeOutline?.block_id]);
+
+  useEffect(() => {
+    if (bilingualOpen) void loadPageTranslation(pageNumber, bilingualTarget);
+  }, [bilingualOpen, bilingualTarget, loadPageTranslation, pageNumber]);
+
+  useEffect(() => {
+    const source = viewportRef.current;
+    const target = bilingualRef.current;
+    if (!bilingualOpen || !source || !target) return;
+    let locked = false;
+    let animationFrame = 0;
+
+    function synchronize(from: HTMLElement, to: HTMLElement) {
+      if (locked) return;
+      const targetTop = mapSynchronizedScroll(
+        from.scrollTop,
+        from.scrollHeight,
+        from.clientHeight,
+        to.scrollHeight,
+        to.clientHeight,
+      );
+      if (targetTop === null) return;
+      locked = true;
+      to.scrollTop = targetTop;
+      window.cancelAnimationFrame(animationFrame);
+      animationFrame = window.requestAnimationFrame(() => {
+        locked = false;
+      });
+    }
+
+    const fromPdf = () => synchronize(source, target);
+    const fromTranslation = () => synchronize(target, source);
+    source.addEventListener("scroll", fromPdf, { passive: true });
+    target.addEventListener("scroll", fromTranslation, { passive: true });
+    return () => {
+      window.cancelAnimationFrame(animationFrame);
+      source.removeEventListener("scroll", fromPdf);
+      target.removeEventListener("scroll", fromTranslation);
+    };
+  }, [bilingualOpen, pageTranslation]);
 
   function goToPage(target: number) {
     const roundedTarget = Math.max(1, Math.round(target));
@@ -406,6 +488,15 @@ export default function PdfReader({
     window.getSelection()?.removeAllRanges();
   }
 
+  function toggleBilingualReader() {
+    setBilingualOpen((current) => !current);
+  }
+
+  function changeBilingualTarget(targetLanguage: "zh" | "en") {
+    setBilingualTarget(targetLanguage);
+    setBilingualOpen(true);
+  }
+
   return (
     <div className="pdf-reader-backdrop" role="presentation" onMouseDown={onClose}>
       <section
@@ -429,6 +520,15 @@ export default function PdfReader({
               type="button"
             >
               ☰ <span>导航</span>
+            </button>
+            <button
+              aria-pressed={bilingualOpen}
+              className={`pdf-bilingual-toggle ${bilingualOpen ? "active" : ""}`}
+              onClick={toggleBilingualReader}
+              title="按当前页生成段落对齐译文"
+              type="button"
+            >
+              中英
             </button>
             <span className="pdf-control-divider" />
             <button
@@ -483,7 +583,7 @@ export default function PdfReader({
           </div>
         </header>
 
-        <div className={`pdf-reader-body ${outlineOpen ? "" : "outline-collapsed"}`}>
+        <div className={`pdf-reader-body ${outlineOpen ? "" : "outline-collapsed"} ${bilingualOpen ? "bilingual-open" : ""}`}>
           <aside className="pdf-outline" id="pdf-document-outline" ref={outlineRef}>
             <div className="pdf-sidebar-tabs" role="tablist" aria-label="文档导航类型">
               <button
@@ -600,6 +700,51 @@ export default function PdfReader({
               </div>
             </Document>
           </div>
+          <aside className="pdf-bilingual-pane" ref={bilingualRef}>
+            <header>
+              <div>
+                <span>ALIGNED READING</span>
+                <strong>第 {pageNumber} 页译文</strong>
+              </div>
+              <div className="pdf-bilingual-actions">
+                <button
+                  className={bilingualTarget === "zh" ? "active" : ""}
+                  onClick={() => changeBilingualTarget("zh")}
+                  type="button"
+                >中</button>
+                <button
+                  className={bilingualTarget === "en" ? "active" : ""}
+                  onClick={() => changeBilingualTarget("en")}
+                  type="button"
+                >EN</button>
+                <button aria-label="关闭双语对照" onClick={() => setBilingualOpen(false)} type="button">×</button>
+              </div>
+            </header>
+            {pageTranslationLoading && (
+              <div className="pdf-bilingual-state">正在按段落翻译当前页…</div>
+            )}
+            {pageTranslationError && (
+              <div className="pdf-bilingual-state error">{pageTranslationError}</div>
+            )}
+            {pageTranslation && (
+              <div className="pdf-bilingual-segments">
+                {pageTranslation.segments.map((segment, index) => (
+                  <article data-block-id={segment.block_id} key={segment.block_id}>
+                    <small>{String(index + 1).padStart(2, "0")} · {segment.block_id}</small>
+                    <p>{segment.translation}</p>
+                    <details>
+                      <summary>查看原文</summary>
+                      <blockquote>{segment.source_text}</blockquote>
+                    </details>
+                  </article>
+                ))}
+                {pageTranslation.truncated && (
+                  <div className="pdf-bilingual-warning">当前页文本超过单次翻译上限，仅显示已处理段落。</div>
+                )}
+                <footer>{pageTranslation.model || pageTranslation.provider} · 滚动位置与原文联动</footer>
+              </div>
+            )}
+          </aside>
         </div>
 
         {selectionDraft && !translationLoading && !translation && !translationError && (

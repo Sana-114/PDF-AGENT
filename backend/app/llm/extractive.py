@@ -1,6 +1,7 @@
 from app.llm.base import (
     GeneratedAnswer,
     GeneratedClaim,
+    GeneratedSegmentTranslations,
     GeneratedTranslation,
     LLMConfigurationError,
 )
@@ -38,4 +39,15 @@ class ExtractiveProvider:
         del text, source_language, target_language
         raise LLMConfigurationError(
             "划词翻译需要生成式 LLM；请在 .env 中配置 LLM_PROVIDER、LLM_MODEL 和 LLM_API_KEY。"
+        )
+
+    async def translate_segments(
+        self,
+        segments: list[tuple[str, str]],
+        source_language: str,
+        target_language: str,
+    ) -> GeneratedSegmentTranslations:
+        del segments, source_language, target_language
+        raise LLMConfigurationError(
+            "双语阅读需要生成式 LLM；请在 .env 中配置 LLM_PROVIDER、LLM_MODEL 和 LLM_API_KEY。"
         )

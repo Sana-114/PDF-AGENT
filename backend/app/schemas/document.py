@@ -1,4 +1,5 @@
 from datetime import datetime
+from typing import Literal
 
 from pydantic import BaseModel, ConfigDict, Field
 
@@ -85,6 +86,28 @@ class DocumentReferencesRead(BaseModel):
     document_id: str
     items: list[ReferenceRead]
     mentions: list[CitationMentionRead]
+
+
+class PageTranslationRequest(BaseModel):
+    target_language: Literal["zh", "en"]
+
+
+class PageTranslationSegmentRead(BaseModel):
+    block_id: str
+    bbox: list[float] | None = None
+    source_text: str
+    translation: str
+
+
+class DocumentPageTranslationRead(BaseModel):
+    document_id: str
+    page_number: int = Field(ge=1)
+    source_language: Literal["auto"]
+    target_language: Literal["zh", "en"]
+    provider: str
+    model: str | None = None
+    truncated: bool = False
+    segments: list[PageTranslationSegmentRead]
 
 
 class HealthRead(BaseModel):

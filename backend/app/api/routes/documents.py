@@ -8,18 +8,23 @@ from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm import Session
 
 from app.core.database import get_db
+from app.llm import get_llm_provider
+from app.llm.base import LLMConfigurationError, LLMResponseError
 from app.models.document import Document, DocumentStatus
 from app.parsers.checkpoint import checkpoint_progress
 from app.schemas.document import (
     DocumentList,
     DocumentOutlineRead,
+    DocumentPageTranslationRead,
     DocumentProgressRead,
     DocumentRead,
     DocumentReferencesRead,
+    PageTranslationRequest,
     UploadResult,
 )
 from app.services.document_content import (
     outline_items,
+    page_text_segments,
     read_parsed_document,
     reference_links,
 )
@@ -196,6 +201,53 @@ def get_document_references(
         document_id=document_id,
         items=references,
         mentions=mentions,
+    )
+
+
+@router.post(
+    "/{document_id}/translations/pages/{page_number}",
+    response_model=DocumentPageTranslationRead,
+)
+async def translate_document_page(
+    document_id: str,
+    page_number: int,
+    request: PageTranslationRequest,
+    db: Annotated[Session, Depends(get_db)],
+) -> DocumentPageTranslationRead:
+    if page_number < 1:
+        raise HTTPException(status_code=422, detail="页码必须大于或等于 1。")
+    document = _get_document(document_id, db)
+    if document.status != DocumentStatus.READY:
+        raise HTTPException(status_code=409, detail="文献尚未解析完成。")
+    parsed = read_parsed_document(document_id)
+    if parsed is None:
+        raise HTTPException(status_code=404, detail="结构化解析结果不存在。")
+    segments, truncated = page_text_segments(parsed, page_number)
+    if not segments:
+        raise HTTPException(status_code=404, detail="目标页面没有可翻译的文本块。")
+    try:
+        provider = get_llm_provider()
+        translated = await provider.translate_segments(
+            [(item["block_id"], item["source_text"]) for item in segments],
+            "auto",
+            request.target_language,
+        )
+    except LLMConfigurationError as exc:
+        raise HTTPException(status_code=503, detail=str(exc)) from exc
+    except LLMResponseError as exc:
+        raise HTTPException(status_code=502, detail=str(exc)) from exc
+    return DocumentPageTranslationRead(
+        document_id=document_id,
+        page_number=page_number,
+        source_language="auto",
+        target_language=request.target_language,
+        provider=provider.name,
+        model=provider.model,
+        truncated=truncated,
+        segments=[
+            {**item, "translation": translated.items[item["block_id"]]}
+            for item in segments
+        ],
     )
 
 

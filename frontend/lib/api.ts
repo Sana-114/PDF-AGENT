@@ -130,6 +130,24 @@ export interface TranslationResponse {
   model: string | null;
 }
 
+export interface PageTranslationSegment {
+  block_id: string;
+  bbox: number[] | null;
+  source_text: string;
+  translation: string;
+}
+
+export interface DocumentPageTranslation {
+  document_id: string;
+  page_number: number;
+  source_language: "auto";
+  target_language: "zh" | "en";
+  provider: string;
+  model: string | null;
+  truncated: boolean;
+  segments: PageTranslationSegment[];
+}
+
 async function assertResponse(response: Response): Promise<Response> {
   if (response.ok) return response;
   let message = `请求失败 (${response.status})`;
@@ -217,6 +235,21 @@ export async function translateSelection(
         source_language: "auto",
         target_language: targetLanguage,
       }),
+    }),
+  );
+  return response.json();
+}
+
+export async function translateDocumentPage(
+  documentId: string,
+  pageNumber: number,
+  targetLanguage: "zh" | "en",
+): Promise<DocumentPageTranslation> {
+  const response = await assertResponse(
+    await fetch(`${API_BASE_URL}/documents/${documentId}/translations/pages/${pageNumber}`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ target_language: targetLanguage }),
     }),
   );
   return response.json();

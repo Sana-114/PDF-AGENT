@@ -68,6 +68,46 @@ def reference_links(
     return references, mentions
 
 
+def page_text_segments(
+    parsed: dict[str, Any],
+    page_number: int,
+    *,
+    max_segments: int = 80,
+    max_characters: int = 24000,
+) -> tuple[list[dict[str, Any]], bool]:
+    page = next(
+        (
+            item
+            for item in parsed.get("pages", [])
+            if int(item.get("page_number", 0)) == page_number
+        ),
+        None,
+    )
+    if page is None:
+        return [], False
+
+    segments: list[dict[str, Any]] = []
+    character_count = 0
+    truncated = False
+    for block in page.get("blocks", []):
+        block_id = str(block.get("block_id", ""))
+        text = str(block.get("text", "")).strip()
+        if not block_id or not text:
+            continue
+        if len(segments) >= max_segments or character_count + len(text) > max_characters:
+            truncated = True
+            break
+        segments.append(
+            {
+                "block_id": block_id,
+                "bbox": block.get("bbox"),
+                "source_text": text,
+            }
+        )
+        character_count += len(text)
+    return segments, truncated
+
+
 def _citation_labels(group: str) -> list[str]:
     labels: list[str] = []
     for part in re.split(r"\s*[,;]\s*", group):

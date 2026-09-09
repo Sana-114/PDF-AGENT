@@ -29,6 +29,11 @@ class GeneratedTranslation:
     text: str
 
 
+@dataclass(slots=True)
+class GeneratedSegmentTranslations:
+    items: dict[str, str]
+
+
 class LLMProvider(Protocol):
     name: str
     model: str | None
@@ -40,3 +45,10 @@ class LLMProvider(Protocol):
     async def translate_text(
         self, text: str, source_language: str, target_language: str
     ) -> GeneratedTranslation: ...
+
+    async def translate_segments(
+        self,
+        segments: list[tuple[str, str]],
+        source_language: str,
+        target_language: str,
+    ) -> GeneratedSegmentTranslations: ...

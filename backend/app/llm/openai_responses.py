@@ -5,6 +5,7 @@ import httpx
 from app.llm.base import (
     GeneratedAnswer,
     GeneratedClaim,
+    GeneratedSegmentTranslations,
     GeneratedTranslation,
     LLMConfigurationError,
     LLMResponseError,
@@ -170,6 +171,92 @@ class OpenAIResponsesProvider:
         if not translation:
             raise LLMResponseError("翻译模型返回了空结果。")
         return GeneratedTranslation(text=translation)
+
+    async def translate_segments(
+        self,
+        segments: list[tuple[str, str]],
+        source_language: str,
+        target_language: str,
+    ) -> GeneratedSegmentTranslations:
+        if not segments:
+            return GeneratedSegmentTranslations(items={})
+        language_names = {"auto": "automatically detected", "zh": "Chinese", "en": "English"}
+        block_ids = [block_id for block_id, _ in segments]
+        schema = {
+            "type": "object",
+            "additionalProperties": False,
+            "properties": {
+                "translations": {
+                    "type": "array",
+                    "items": {
+                        "type": "object",
+                        "additionalProperties": False,
+                        "properties": {
+                            "block_id": {"type": "string", "enum": block_ids},
+                            "translation": {"type": "string"},
+                        },
+                        "required": ["block_id", "translation"],
+                    },
+                }
+            },
+            "required": ["translations"],
+        }
+        source_payload = json.dumps(
+            [{"block_id": block_id, "text": text} for block_id, text in segments],
+            ensure_ascii=False,
+        )
+        payload = {
+            "model": self.model,
+            "store": False,
+            "instructions": (
+                "You are an academic translator. Translate every supplied segment independently "
+                "and return each original block_id exactly once. Do not merge, omit, or reorder "
+                "segments. Do not add facts or explanations. Preserve equations, citation markers, "
+                "code, model names, and numbers."
+            ),
+            "input": (
+                f"Source language: {language_names[source_language]}\n"
+                f"Target language: {language_names[target_language]}\n\n"
+                f"Segments JSON:\n{source_payload}"
+            ),
+            "text": {
+                "format": {
+                    "type": "json_schema",
+                    "name": "aligned_academic_translation",
+                    "strict": True,
+                    "schema": schema,
+                }
+            },
+        }
+        headers = {"Authorization": f"Bearer {self.api_key}"}
+        try:
+            async with httpx.AsyncClient(timeout=self.timeout_seconds) as client:
+                response = await client.post(
+                    f"{self.base_url}/responses", json=payload, headers=headers
+                )
+        except httpx.HTTPError as exc:
+            raise LLMResponseError(f"OpenAI Responses API 网络请求失败：{exc}") from exc
+        if response.is_error:
+            raise LLMResponseError(
+                f"OpenAI Responses API 返回 HTTP {response.status_code}: "
+                f"{response.text[:500]}"
+            )
+        try:
+            parsed = json.loads(self._extract_output_text(response.json()))
+        except json.JSONDecodeError as exc:
+            raise LLMResponseError("分段翻译模型未返回有效的结构化 JSON。") from exc
+
+        translated: dict[str, str] = {}
+        allowed_ids = set(block_ids)
+        for item in parsed.get("translations", []):
+            block_id = str(item.get("block_id", ""))
+            translation = str(item.get("translation", "")).strip()
+            if block_id not in allowed_ids or block_id in translated or not translation:
+                raise LLMResponseError("分段翻译返回了无效、重复或空的块。")
+            translated[block_id] = translation
+        if set(translated) != allowed_ids:
+            raise LLMResponseError("分段翻译未完整保留全部段落 ID。")
+        return GeneratedSegmentTranslations(items=translated)
 
     @staticmethod
     def _extract_output_text(response: dict) -> str:

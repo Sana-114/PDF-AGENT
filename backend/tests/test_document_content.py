@@ -1,4 +1,4 @@
-from app.services.document_content import outline_items, reference_links
+from app.services.document_content import outline_items, page_text_segments, reference_links
 
 
 def test_outline_items_preserves_nested_document_ast() -> None:
@@ -110,3 +110,26 @@ def test_reference_links_match_numeric_citations_and_skip_reference_blocks() -> 
         ("2", 2),
     ]
     assert all(item["block_id"] == "p2-b4" for item in mentions)
+
+
+def test_page_text_segments_preserve_block_alignment_and_enforce_budget() -> None:
+    parsed = {
+        "pages": [
+            {
+                "page_number": 3,
+                "blocks": [
+                    {"block_id": "p3-b1", "text": "  Heading  ", "bbox": [1, 2, 3, 4]},
+                    {"block_id": "p3-empty", "text": "  ", "bbox": None},
+                    {"block_id": "p3-b2", "text": "Long paragraph", "bbox": [5, 6, 7, 8]},
+                ],
+            }
+        ]
+    }
+
+    segments, truncated = page_text_segments(parsed, 3, max_characters=10)
+
+    assert segments == [
+        {"block_id": "p3-b1", "bbox": [1, 2, 3, 4], "source_text": "Heading"}
+    ]
+    assert truncated is True
+    assert page_text_segments(parsed, 9) == ([], False)
