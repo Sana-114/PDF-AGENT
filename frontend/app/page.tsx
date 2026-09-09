@@ -378,6 +378,7 @@ export default function Home() {
       <footer>PaperPilot MVP · 所有答案都将绑定可验证的原文证据</footer>
       {reader && (
         <PdfReader
+          documentId={reader.documentId}
           fileUrl={documentFileUrl(reader.documentId)}
           initialPage={reader.pageNumber}
           key={`${reader.documentId}-${reader.pageNumber}`}

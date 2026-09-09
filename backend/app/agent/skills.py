@@ -1,12 +1,9 @@
-import json
-from pathlib import Path
-
 from pydantic import BaseModel, Field
 
 from app.agent.registry import SkillContext, SkillDefinition, skill_registry
 from app.schemas.agent import EvidenceAnchor
+from app.services.document_content import outline_items, read_parsed_document
 from app.services.retrieval import HybridRetriever
-from app.services.storage import storage
 
 
 class SearchEvidenceInput(BaseModel):
@@ -40,15 +37,15 @@ def search_evidence(
 
 
 def get_document_outline(payload: DocumentOutlineInput, _: SkillContext) -> dict:
-    parsed = _read_parsed_document(payload.document_id)
+    parsed = read_parsed_document(payload.document_id)
     if parsed is None:
         return {"document_id": payload.document_id, "items": [], "available": False}
-    items = parsed.get("outline") or _legacy_outline(parsed)
+    items = outline_items(parsed)
     return {"document_id": payload.document_id, "items": items, "available": True}
 
 
 def get_document_structure(payload: DocumentStructureInput, _: SkillContext) -> dict:
-    parsed = _read_parsed_document(payload.document_id)
+    parsed = read_parsed_document(payload.document_id)
     if parsed is None:
         return {"document_id": payload.document_id, "available": False}
     result = {
@@ -59,7 +56,7 @@ def get_document_structure(payload: DocumentStructureInput, _: SkillContext) -> 
         "authors": parsed.get("authors", []),
         "affiliations": parsed.get("affiliations", []),
         "abstract": parsed.get("abstract"),
-        "outline": parsed.get("outline") or _legacy_outline(parsed),
+        "outline": outline_items(parsed),
         "counts": {
             "pages": len(parsed.get("pages", [])),
             "tables": len(parsed.get("tables", [])),
@@ -75,7 +72,7 @@ def get_document_structure(payload: DocumentStructureInput, _: SkillContext) -> 
 
 
 def get_document_table(payload: DocumentTableInput, _: SkillContext) -> dict:
-    parsed = _read_parsed_document(payload.document_id)
+    parsed = read_parsed_document(payload.document_id)
     if parsed is None:
         return {"document_id": payload.document_id, "available": False, "tables": []}
     tables = parsed.get("tables", [])
@@ -86,29 +83,6 @@ def get_document_table(payload: DocumentTableInput, _: SkillContext) -> dict:
         "available": True,
         "tables": tables,
     }
-
-
-def _read_parsed_document(document_id: str) -> dict | None:
-    path = Path(storage.parsed_path(document_id))
-    if not path.exists():
-        return None
-    return json.loads(path.read_text(encoding="utf-8"))
-
-
-def _legacy_outline(parsed: dict) -> list[dict]:
-    return [
-        {
-            "text": block["text"],
-            "level": block.get("level") or 1,
-            "page_number": page["page_number"],
-            "block_id": block["block_id"],
-            "bbox": block.get("bbox"),
-            "children": [],
-        }
-        for page in parsed.get("pages", [])
-        for block in page.get("blocks", [])
-        if block.get("type") == "heading"
-    ]
 
 
 def register_builtin_skills() -> None:

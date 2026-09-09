@@ -29,7 +29,7 @@ PaperPilot 是一个以原文证据为核心的科研助手 Agent 系统。本�
 - 内置 `search_evidence`、`get_document_outline`、`get_document_structure`、`get_document_table` Skills 和可扩展注册表；
 - 可切换 LLM Provider：默认抽取式零密钥模式，或 OpenAI Responses API；
 - Web 端证据问答、正文/表格/公式/引用来源标签和相关度展示；
-- 内置 PDF.js 阅读器，支持站内打开原文、翻页、页码跳转、缩放和键盘操作；
+- 内置 PDF.js 阅读器，支持站内阅读、翻页、缩放、三级标题树导航和当前章节联动；
 - 文献列表、原文访问、结构化结果读取、重解析和删除；
 - Web 端展示长文档已处理页数、百分比和断点可恢复状态；
 - Docker Compose 编排 PostgreSQL、Redis、Qdrant、MinIO、API、Worker 和 Web。
@@ -203,6 +203,7 @@ npm run dev
 | GET | `/api/v1/documents/{id}/progress` | 已完成页数、百分比和断点恢复状态 |
 | GET | `/api/v1/documents/{id}/file` | 原始 PDF |
 | GET | `/api/v1/documents/{id}/content` | Document AST |
+| GET | `/api/v1/documents/{id}/outline` | 轻量级一/二/三级标题树与跳转锚点 |
 | POST | `/api/v1/documents/{id}/reparse` | 重新解析 |
 | DELETE | `/api/v1/documents/{id}` | 删除文献及本地文件 |
 | GET | `/api/v1/agent/status` | 当前 Provider、模型和 Skills 状态 |
@@ -282,7 +283,7 @@ docker compose exec backend python scripts/evaluate_pdf_corpus.py `
 
 1. 用标准测试 PDF 评估当前版式基线，并按失败样本接入 Docling、GROBID 和 PaddleOCR；
 2. 用本地 BGE-M3 / Reranker 跑完官方 PDF 离线评测，并据此校准融合权重；
-3. 在现有 PDF.js 阅读器中叠加 BBox 证据高亮和标题树导航；
+3. 在现有 PDF.js 阅读器中叠加 BBox 证据高亮；
 4. 使用 `1706.03762v7.pdf`、`v1.pdf` 和扫描版建立自动回归集。
 
 更完整的边界说明见 [docs/architecture.md](docs/architecture.md)。

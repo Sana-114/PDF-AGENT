@@ -12,10 +12,12 @@ from app.models.document import Document, DocumentStatus
 from app.parsers.checkpoint import checkpoint_progress
 from app.schemas.document import (
     DocumentList,
+    DocumentOutlineRead,
     DocumentProgressRead,
     DocumentRead,
     UploadResult,
 )
+from app.services.document_content import outline_items, read_parsed_document
 from app.services.storage import storage
 from app.services.vector_index import delete_document_index_safely
 from app.workers.tasks import parse_document
@@ -159,6 +161,19 @@ def get_parsed_content(
     if not path.exists():
         raise HTTPException(status_code=404, detail="结构化解析结果不存在。")
     return json.loads(path.read_text(encoding="utf-8"))
+
+
+@router.get("/{document_id}/outline", response_model=DocumentOutlineRead)
+def get_document_outline(
+    document_id: str, db: Annotated[Session, Depends(get_db)]
+) -> DocumentOutlineRead:
+    document = _get_document(document_id, db)
+    if document.status != DocumentStatus.READY:
+        raise HTTPException(status_code=409, detail="文献尚未解析完成。")
+    parsed = read_parsed_document(document_id)
+    if parsed is None:
+        raise HTTPException(status_code=404, detail="结构化解析结果不存在。")
+    return DocumentOutlineRead(document_id=document_id, items=outline_items(parsed))
 
 
 @router.post("/{document_id}/reparse", response_model=DocumentRead, status_code=202)

@@ -1,6 +1,6 @@
 from datetime import datetime
 
-from pydantic import BaseModel, ConfigDict
+from pydantic import BaseModel, ConfigDict, Field
 
 
 class DocumentRead(BaseModel):
@@ -47,6 +47,20 @@ class DocumentProgressRead(BaseModel):
     percentage: float
     resumable: bool
     updated_at: str | None = None
+
+
+class OutlineNodeRead(BaseModel):
+    text: str
+    level: int = Field(ge=1, le=3)
+    page_number: int = Field(ge=1)
+    block_id: str
+    bbox: list[float] | None = None
+    children: list["OutlineNodeRead"] = Field(default_factory=list)
+
+
+class DocumentOutlineRead(BaseModel):
+    document_id: str
+    items: list[OutlineNodeRead]
 
 
 class HealthRead(BaseModel):

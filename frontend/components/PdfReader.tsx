@@ -1,7 +1,8 @@
 "use client";
 
-import { FormEvent, useEffect, useState } from "react";
+import { FormEvent, useEffect, useMemo, useRef, useState } from "react";
 import { Document, Page, pdfjs } from "react-pdf";
+import { DocumentOutlineNode, getDocumentOutline } from "../lib/api";
 
 pdfjs.GlobalWorkerOptions.workerSrc = new URL(
   "pdfjs-dist/build/pdf.worker.min.mjs",
@@ -9,6 +10,7 @@ pdfjs.GlobalWorkerOptions.workerSrc = new URL(
 ).toString();
 
 interface PdfReaderProps {
+  documentId: string;
   fileUrl: string;
   title: string;
   initialPage?: number;
@@ -23,15 +25,96 @@ function clamp(value: number, minimum: number, maximum: number): number {
   return Math.min(Math.max(value, minimum), maximum);
 }
 
-export default function PdfReader({ fileUrl, title, initialPage = 1, onClose }: PdfReaderProps) {
+function flattenOutline(items: DocumentOutlineNode[]): DocumentOutlineNode[] {
+  return items.flatMap((item) => [item, ...flattenOutline(item.children)]);
+}
+
+interface OutlineTreeProps {
+  activeBlockId?: string;
+  items: DocumentOutlineNode[];
+  onSelect: (item: DocumentOutlineNode) => void;
+}
+
+function OutlineTree({ activeBlockId, items, onSelect }: OutlineTreeProps) {
+  return (
+    <ul className="pdf-outline-list">
+      {items.map((item) => (
+        <li key={item.block_id}>
+          <button
+            aria-current={item.block_id === activeBlockId ? "location" : undefined}
+            className={item.block_id === activeBlockId ? "active" : ""}
+            onClick={() => onSelect(item)}
+            title={item.text}
+            type="button"
+          >
+            <span>{item.text}</span>
+            <small>{item.page_number}</small>
+          </button>
+          {item.children.length > 0 && (
+            <OutlineTree activeBlockId={activeBlockId} items={item.children} onSelect={onSelect} />
+          )}
+        </li>
+      ))}
+    </ul>
+  );
+}
+
+export default function PdfReader({
+  documentId,
+  fileUrl,
+  title,
+  initialPage = 1,
+  onClose,
+}: PdfReaderProps) {
   const [numPages, setNumPages] = useState(0);
   const [pageNumber, setPageNumber] = useState(Math.max(1, initialPage));
   const [pageInput, setPageInput] = useState(String(Math.max(1, initialPage)));
   const [scale, setScale] = useState(1);
+  const [outline, setOutline] = useState<DocumentOutlineNode[]>([]);
+  const [outlineLoading, setOutlineLoading] = useState(true);
+  const [outlineError, setOutlineError] = useState<string | null>(null);
+  const [outlineOpen, setOutlineOpen] = useState(
+    () => typeof window === "undefined" || window.innerWidth > 760,
+  );
+  const outlineRef = useRef<HTMLElement>(null);
+  const viewportRef = useRef<HTMLDivElement>(null);
+
+  const flatOutline = useMemo(() => flattenOutline(outline), [outline]);
+  const activeOutline = useMemo(
+    () => flatOutline.reduce<DocumentOutlineNode | undefined>(
+      (active, item) => item.page_number <= pageNumber ? item : active,
+      undefined,
+    ),
+    [flatOutline, pageNumber],
+  );
+
+  useEffect(() => {
+    let active = true;
+    setOutlineLoading(true);
+    setOutlineError(null);
+    void getDocumentOutline(documentId)
+      .then((response) => {
+        if (active) setOutline(response.items);
+      })
+      .catch((error: unknown) => {
+        if (!active) return;
+        setOutlineError(error instanceof Error ? error.message : "目录加载失败");
+      })
+      .finally(() => {
+        if (active) setOutlineLoading(false);
+      });
+    return () => {
+      active = false;
+    };
+  }, [documentId]);
 
   useEffect(() => {
     function handleKeyDown(event: KeyboardEvent) {
-      if (event.key === "Escape") onClose();
+      if (event.key === "Escape") {
+        onClose();
+        return;
+      }
+      if (event.target instanceof HTMLInputElement) return;
       if (event.key === "ArrowLeft") {
         setPageNumber((current) => Math.max(1, current - 1));
       }
@@ -51,10 +134,18 @@ export default function PdfReader({ fileUrl, title, initialPage = 1, onClose }: 
 
   useEffect(() => {
     setPageInput(String(pageNumber));
+    viewportRef.current?.scrollTo({ top: 0, left: 0 });
   }, [pageNumber]);
 
+  useEffect(() => {
+    outlineRef.current
+      ?.querySelector<HTMLElement>('[aria-current="location"]')
+      ?.scrollIntoView({ block: "nearest" });
+  }, [activeOutline?.block_id]);
+
   function goToPage(target: number) {
-    const finalPage = clamp(Math.round(target), 1, Math.max(1, numPages));
+    const roundedTarget = Math.max(1, Math.round(target));
+    const finalPage = numPages ? Math.min(roundedTarget, numPages) : roundedTarget;
     setPageNumber(finalPage);
     setPageInput(String(finalPage));
   }
@@ -64,6 +155,11 @@ export default function PdfReader({ fileUrl, title, initialPage = 1, onClose }: 
     const target = Number(pageInput);
     if (Number.isFinite(target)) goToPage(target);
     else setPageInput(String(pageNumber));
+  }
+
+  function selectOutline(item: DocumentOutlineNode) {
+    goToPage(item.page_number);
+    if (window.innerWidth <= 760) setOutlineOpen(false);
   }
 
   return (
@@ -81,6 +177,16 @@ export default function PdfReader({ fileUrl, title, initialPage = 1, onClose }: 
             <h2 title={title}>{title}</h2>
           </div>
           <div className="pdf-reader-controls" aria-label="PDF 阅读控制">
+            <button
+              aria-controls="pdf-document-outline"
+              aria-expanded={outlineOpen}
+              className={`pdf-outline-toggle ${outlineOpen ? "active" : ""}`}
+              onClick={() => setOutlineOpen((current) => !current)}
+              type="button"
+            >
+              ☰ <span>目录</span>
+            </button>
+            <span className="pdf-control-divider" />
             <button
               aria-label="上一页"
               disabled={pageNumber <= 1}
@@ -133,31 +239,55 @@ export default function PdfReader({ fileUrl, title, initialPage = 1, onClose }: 
           </div>
         </header>
 
-        <div className="pdf-reader-viewport">
-          <Document
-            error={<div className="pdf-reader-state error">PDF 加载失败，请确认后端服务可用。</div>}
-            file={fileUrl}
-            loading={<div className="pdf-reader-state">正在加载 PDF…</div>}
-            noData={<div className="pdf-reader-state">没有可读取的 PDF 文件。</div>}
-            onLoadSuccess={({ numPages: loadedPages }) => {
-              const targetPage = clamp(initialPage, 1, loadedPages);
-              setNumPages(loadedPages);
-              setPageNumber(targetPage);
-              setPageInput(String(targetPage));
-            }}
-          >
-            <Page
-              loading={<div className="pdf-page-loading">正在渲染第 {pageNumber} 页…</div>}
-              pageNumber={pageNumber}
-              renderAnnotationLayer
-              renderTextLayer
-              scale={scale}
-            />
-          </Document>
+        <div className={`pdf-reader-body ${outlineOpen ? "" : "outline-collapsed"}`}>
+          <aside className="pdf-outline" id="pdf-document-outline" ref={outlineRef}>
+            <div className="pdf-outline-heading">
+              <div><span>DOCUMENT MAP</span><strong>文档目录</strong></div>
+              <small>{flatOutline.length} 个标题</small>
+            </div>
+            {outlineLoading && <div className="pdf-outline-message">正在读取标题树…</div>}
+            {outlineError && <div className="pdf-outline-message error">{outlineError}</div>}
+            {!outlineLoading && !outlineError && outline.length === 0 && (
+              <div className="pdf-outline-message">这篇文献暂未解析出标题。</div>
+            )}
+            {outline.length > 0 && (
+              <nav aria-label="论文标题导航">
+                <OutlineTree
+                  activeBlockId={activeOutline?.block_id}
+                  items={outline}
+                  onSelect={selectOutline}
+                />
+              </nav>
+            )}
+          </aside>
+          <div className="pdf-reader-viewport" ref={viewportRef}>
+            <Document
+              error={<div className="pdf-reader-state error">PDF 加载失败，请确认后端服务可用。</div>}
+              file={fileUrl}
+              loading={<div className="pdf-reader-state">正在加载 PDF…</div>}
+              noData={<div className="pdf-reader-state">没有可读取的 PDF 文件。</div>}
+              onLoadSuccess={({ numPages: loadedPages }) => {
+                const targetPage = clamp(initialPage, 1, loadedPages);
+                setNumPages(loadedPages);
+                setPageNumber(targetPage);
+                setPageInput(String(targetPage));
+              }}
+            >
+              <Page
+                loading={<div className="pdf-page-loading">正在渲染第 {pageNumber} 页…</div>}
+                pageNumber={pageNumber}
+                renderAnnotationLayer
+                renderTextLayer
+                scale={scale}
+              />
+            </Document>
+          </div>
         </div>
 
         <footer className="pdf-reader-footer">
-          <span>方向键翻页 · Esc 关闭</span>
+          <span title={activeOutline?.text}>
+            {activeOutline ? `当前章节：${activeOutline.text}` : "方向键翻页 · Esc 关闭"}
+          </span>
           <a href={`${fileUrl}#page=${pageNumber}`} rel="noreferrer" target="_blank">
             在浏览器新标签打开 ↗
           </a>

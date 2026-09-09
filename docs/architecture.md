@@ -8,7 +8,7 @@
 
 | 组件 | 职责 |
 | --- | --- |
-| Next.js Web | 上传、文献列表、证据问答、页码跳转、版本提醒 |
+| Next.js Web | 上传、文献列表、证据问答、PDF.js 阅读、标题树导航、版本提醒 |
 | FastAPI | 文献 CRUD、Agent 状态、Skills 和问答 API |
 | Celery + Redis | 长时 PDF 解析任务、重试和状态更新 |
 | Agent Harness | 检索、证据门控、Provider 调用、引用校验和 Trace |
@@ -32,6 +32,10 @@
 - `ParserRouter`：按文本密度和页面类型选择解析链路。
 
 所有解析器输出同一个 Document AST，并保留 `page_number`、`bbox`、`block_id` 和 `reading_order`，供 RAG 引用和阅读器跳转复用。
+
+## 阅读器联动
+
+前端通过轻量级 `GET /documents/{id}/outline` 获取递归标题树，不下载包含所有页面块的完整 AST。阅读器将标题按原始层级渲染，点击节点后切换到对应页；翻页或从问答证据进入时，以当前页之前最近出现的标题作为活动章节。目录可折叠，移动端以抽屉形式覆盖画布。PDF 文件接口支持 Range 请求并暴露 `Accept-Ranges`、`Content-Length` 与 `Content-Range`，为超长文档保留按需加载能力。
 
 当前 AST 的顶层结构为：
 
@@ -88,6 +92,6 @@ Qdrant 不可达、索引失败或本地开发关闭向量检索时，`HybridRet
 
 1. 扩充官方 PDF 标注用例，并据此校准召回、重排权重和证据阈值。
 2. 为向量模型升级增加蓝绿 Collection 和断点批量重建。
-3. 在现有 PDF.js 阅读器中通过 block 坐标实现答案高亮，并接入标题树导航。
+3. 在现有 PDF.js 阅读器中通过 block 坐标实现答案高亮。
 4. 为复杂扫描表格和公式增加专用识别适配器。
 5. 将本地存储实现替换为 S3/MinIO 实现，保持 API 不变。

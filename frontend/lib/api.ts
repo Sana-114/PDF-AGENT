@@ -34,6 +34,20 @@ export interface DocumentProgress {
   updated_at: string | null;
 }
 
+export interface DocumentOutlineNode {
+  text: string;
+  level: 1 | 2 | 3;
+  page_number: number;
+  block_id: string;
+  bbox: number[] | null;
+  children: DocumentOutlineNode[];
+}
+
+interface DocumentOutlineResponse {
+  document_id: string;
+  items: DocumentOutlineNode[];
+}
+
 interface DocumentListResponse {
   items: DocumentRecord[];
   total: number;
@@ -119,6 +133,13 @@ export async function deleteDocument(documentId: string): Promise<void> {
 export async function getDocumentProgress(documentId: string): Promise<DocumentProgress> {
   const response = await assertResponse(
     await fetch(`${API_BASE_URL}/documents/${documentId}/progress`, { cache: "no-store" }),
+  );
+  return response.json();
+}
+
+export async function getDocumentOutline(documentId: string): Promise<DocumentOutlineResponse> {
+  const response = await assertResponse(
+    await fetch(`${API_BASE_URL}/documents/${documentId}/outline`, { cache: "no-store" }),
   );
   return response.json();
 }
