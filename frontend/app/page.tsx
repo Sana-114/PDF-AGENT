@@ -12,7 +12,10 @@ import {
   EvidenceAnchor,
   getAgentStatus,
   getDocumentProgress,
+  importPaper,
   listDocuments,
+  PaperCandidate,
+  searchPapers,
   uploadDocument,
 } from "../lib/api";
 
@@ -45,6 +48,11 @@ export default function Home() {
   const [documentProgress, setDocumentProgress] = useState<Record<string, DocumentProgress>>({});
   const [loading, setLoading] = useState(true);
   const [uploading, setUploading] = useState(false);
+  const [paperQuery, setPaperQuery] = useState("");
+  const [paperResults, setPaperResults] = useState<PaperCandidate[]>([]);
+  const [paperWarnings, setPaperWarnings] = useState<string[]>([]);
+  const [searchingPapers, setSearchingPapers] = useState(false);
+  const [importingPaper, setImportingPaper] = useState<string | null>(null);
   const [dragging, setDragging] = useState(false);
   const [notice, setNotice] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
@@ -133,6 +141,42 @@ export default function Home() {
     void handleFiles(event.dataTransfer.files);
   }
 
+  async function submitPaperSearch(event: React.FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+    const cleanQuery = paperQuery.trim();
+    if (!cleanQuery) return;
+    setSearchingPapers(true);
+    setError(null);
+    setNotice(null);
+    try {
+      const response = await searchPapers(cleanQuery);
+      setPaperResults(response.items);
+      setPaperWarnings(response.warnings);
+      if (!response.items.length) setNotice("没有找到匹配论文，可以换用完整题名、DOI 或 arXiv ID。");
+    } catch (searchError) {
+      setPaperResults([]);
+      setPaperWarnings([]);
+      setError(searchError instanceof Error ? searchError.message : "论文检索失败");
+    } finally {
+      setSearchingPapers(false);
+    }
+  }
+
+  async function addDiscoveredPaper(candidate: PaperCandidate) {
+    setImportingPaper(`${candidate.source}:${candidate.source_id}`);
+    setError(null);
+    setNotice(null);
+    try {
+      const result = await importPaper(candidate);
+      setNotice(result.message);
+      await refresh(true);
+    } catch (importError) {
+      setError(importError instanceof Error ? importError.message : "论文导入失败");
+    } finally {
+      setImportingPaper(null);
+    }
+  }
+
   async function remove(document: DocumentRecord) {
     if (!window.confirm(`确定删除“${document.title || document.original_filename}”吗？`)) return;
     try {
@@ -218,6 +262,68 @@ export default function Home() {
           </button>
           <input ref={fileInputRef} type="file" accept="application/pdf,.pdf" multiple hidden onChange={onFileChange} />
         </div>
+
+        <section className="paper-discovery" aria-labelledby="paper-discovery-title">
+          <div className="discovery-intro">
+            <div>
+              <p className="eyebrow">SCHOLARLY DISCOVERY</p>
+              <h2 id="paper-discovery-title">从学术索引直接入库</h2>
+            </div>
+            <p>输入完整题名、DOI 或 arXiv ID。服务端只下载可信来源的开放 PDF。</p>
+          </div>
+          <form className="discovery-search" onSubmit={submitPaperSearch}>
+            <input
+              aria-label="论文题名、DOI 或 arXiv ID"
+              onChange={(event) => setPaperQuery(event.target.value)}
+              placeholder="例如：Attention Is All You Need / 1706.03762v7"
+              value={paperQuery}
+            />
+            <button disabled={searchingPapers || !paperQuery.trim()} type="submit">
+              {searchingPapers ? "检索中…" : "检索论文"}
+            </button>
+          </form>
+          {paperWarnings.map((warning) => (
+            <p className="discovery-warning" key={warning}>{warning}</p>
+          ))}
+          {paperResults.length > 0 && (
+            <div className="discovery-results">
+              {paperResults.map((candidate) => {
+                const importKey = `${candidate.source}:${candidate.source_id}`;
+                return (
+                  <article className="discovery-card" key={importKey}>
+                    <div className="discovery-source">
+                      <span>{candidate.source.replace("_", " ")}</span>
+                      {candidate.year && <small>{candidate.year}</small>}
+                    </div>
+                    <div>
+                      <h3>{candidate.title}</h3>
+                      <p className="discovery-authors">
+                        {candidate.authors.slice(0, 5).join(" · ") || "作者信息暂缺"}
+                        {candidate.authors.length > 5 ? " 等" : ""}
+                      </p>
+                      <p className="discovery-meta">
+                        {candidate.venue || "来源未注明"}
+                        {candidate.arxiv_id && ` · arXiv:${candidate.arxiv_id}${candidate.arxiv_version ? `v${candidate.arxiv_version}` : ""}`}
+                        {candidate.citation_count !== null && ` · ${candidate.citation_count} 次引用`}
+                      </p>
+                      {candidate.abstract && <p className="discovery-abstract">{candidate.abstract}</p>}
+                    </div>
+                    <div className="discovery-action">
+                      <button
+                        disabled={!candidate.importable || importingPaper !== null}
+                        onClick={() => void addDiscoveredPaper(candidate)}
+                        type="button"
+                      >
+                        {importingPaper === importKey ? "下载入库中…" : "下载并解析"}
+                      </button>
+                      {!candidate.importable && <small>{candidate.import_reason}</small>}
+                    </div>
+                  </article>
+                );
+              })}
+            </div>
+          )}
+        </section>
 
         {notice && <div className="notice success">{notice}</div>}
         {error && <div className="notice error">{error}</div>}

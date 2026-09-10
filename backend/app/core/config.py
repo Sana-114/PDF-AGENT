@@ -26,6 +26,13 @@ class Settings(BaseSettings):
     parsed_dir: Path = Path("./data/parsed")
     translation_dir: Path = Path("./data/translations")
     max_upload_mb: int = 200
+    scholarly_api_timeout_seconds: float = 20.0
+    semantic_scholar_base_url: str = "https://api.semanticscholar.org/graph/v1"
+    semantic_scholar_api_key: str = ""
+    arxiv_api_base_url: str = "https://export.arxiv.org/api"
+    crossref_base_url: str = "https://api.crossref.org"
+    scholarly_contact_email: str = ""
+    scholarly_pdf_hosts: str = "arxiv.org,export.arxiv.org,pdfs.semanticscholar.org"
     celery_task_always_eager: bool = True
     parse_batch_pages: int = Field(default=25, ge=1, le=200)
 

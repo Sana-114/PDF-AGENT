@@ -85,6 +85,40 @@ interface UploadResponse {
   message: string;
 }
 
+export type PaperProvider = "semantic_scholar" | "arxiv" | "crossref";
+
+export interface PaperCandidate {
+  source: PaperProvider;
+  source_id: string;
+  title: string;
+  authors: string[];
+  abstract: string | null;
+  year: number | null;
+  published_at: string | null;
+  venue: string | null;
+  doi: string | null;
+  arxiv_id: string | null;
+  arxiv_version: number | null;
+  citation_count: number | null;
+  influential_citation_count: number | null;
+  landing_url: string | null;
+  pdf_url: string | null;
+  license: string | null;
+  importable: boolean;
+  import_reason: string | null;
+}
+
+export interface PaperSearchResponse {
+  query: string;
+  query_kind: "title" | "doi" | "arxiv";
+  items: PaperCandidate[];
+  warnings: string[];
+}
+
+interface PaperImportResponse extends UploadResponse {
+  source: PaperCandidate;
+}
+
 export interface EvidenceAnchor {
   evidence_id: string;
   chunk_id: string | null;
@@ -186,6 +220,25 @@ export async function uploadDocument(file: File): Promise<UploadResponse> {
   form.append("file", file);
   const response = await assertResponse(
     await fetch(`${API_BASE_URL}/documents`, { method: "POST", body: form }),
+  );
+  return response.json();
+}
+
+export async function searchPapers(query: string): Promise<PaperSearchResponse> {
+  const params = new URLSearchParams({ q: query });
+  const response = await assertResponse(
+    await fetch(`${API_BASE_URL}/discovery/papers?${params}`, { cache: "no-store" }),
+  );
+  return response.json();
+}
+
+export async function importPaper(candidate: PaperCandidate): Promise<PaperImportResponse> {
+  const response = await assertResponse(
+    await fetch(`${API_BASE_URL}/discovery/import`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ source: candidate.source, source_id: candidate.source_id }),
+    }),
   );
   return response.json();
 }

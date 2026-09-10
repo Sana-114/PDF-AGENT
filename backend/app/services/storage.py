@@ -1,5 +1,6 @@
 import hashlib
 import shutil
+from collections.abc import AsyncIterable
 from dataclasses import dataclass
 from pathlib import Path
 from uuid import uuid4
@@ -23,6 +24,7 @@ class StagedUpload:
 
     def discard(self) -> None:
         self.temporary_path.unlink(missing_ok=True)
+        (settings.upload_dir / self.storage_key).unlink(missing_ok=True)
 
 
 class LocalDocumentStorage:
@@ -70,6 +72,51 @@ class LocalDocumentStorage:
         if size_bytes == 0:
             temporary_path.unlink(missing_ok=True)
             raise HTTPException(status_code=400, detail="上传的 PDF 为空。")
+
+        return StagedUpload(
+            temporary_path=temporary_path,
+            sha256=digest.hexdigest(),
+            size_bytes=size_bytes,
+            storage_key=storage_key,
+        )
+
+    async def stage_pdf_stream(self, chunks: AsyncIterable[bytes]) -> StagedUpload:
+        """Stage a remotely fetched PDF while enforcing the upload safety limits."""
+        settings.ensure_directories()
+        storage_key = f"{uuid4()}.pdf"
+        temporary_path = settings.upload_dir / f".{storage_key}.part"
+        digest = hashlib.sha256()
+        size_bytes = 0
+        header = bytearray()
+
+        try:
+            with temporary_path.open("wb") as target:
+                async for chunk in chunks:
+                    if not chunk:
+                        continue
+                    if len(header) < 1024:
+                        header.extend(chunk[: 1024 - len(header)])
+                    size_bytes += len(chunk)
+                    if size_bytes > settings.max_upload_bytes:
+                        raise HTTPException(
+                            status_code=status.HTTP_413_REQUEST_ENTITY_TOO_LARGE,
+                            detail=f"远程 PDF 超过 {settings.max_upload_mb} MB 限制。",
+                        )
+                    digest.update(chunk)
+                    target.write(chunk)
+        except Exception:
+            temporary_path.unlink(missing_ok=True)
+            raise
+
+        if size_bytes == 0:
+            temporary_path.unlink(missing_ok=True)
+            raise HTTPException(status_code=400, detail="远程 PDF 为空。")
+        if not bytes(header).lstrip().startswith(b"%PDF-"):
+            temporary_path.unlink(missing_ok=True)
+            raise HTTPException(
+                status_code=status.HTTP_415_UNSUPPORTED_MEDIA_TYPE,
+                detail="远程资源不是有效的 PDF。",
+            )
 
         return StagedUpload(
             temporary_path=temporary_path,

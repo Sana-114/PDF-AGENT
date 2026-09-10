@@ -5,6 +5,9 @@ PaperPilot 是一个以原文证据为核心的科研助手 Agent 系统。本�
 ## 当前能力
 
 - 单篇或批量 PDF 上传，校验真实 PDF 内容和大小限制；
+- 按完整题名、DOI 或 arXiv ID 检索 Semantic Scholar、arXiv 和 Crossref，并一键导入开放 PDF；
+- 远程导入仅接受“来源 + 论文 ID”，由服务端重新解析可信 HTTPS 地址、校验跳转、大小和 PDF 文件头；
+- 保存外部索引、DOI、arXiv ID、落地页、许可证和检索元数据，导入仍复用 SHA-256 去重；
 - 基于 SHA-256 的完全重复检测；
 - Celery 后台解析和状态跟踪；
 - 长文档按默认 25 页分批解析，页面分片与进度 manifest 原子落盘，失败后从最近完整批次恢复；
@@ -183,6 +186,12 @@ LLM_BASE_URL=https://api.openai.com/v1
 
 “整篇”翻译由 Celery 后台逐页执行，每页译文独立原子落盘，manifest 保存源文件指纹、Provider/模型签名、目标语言、完成页和错误状态。任务失败后再次启动会跳过已经完成的页面；源 PDF 或翻译模型发生变化时旧缓存自动失效。删除文献时对应译文缓存也会一并清理。
 
+## 在线论文检索与导入
+
+首页可直接输入论文完整题名、DOI 或 arXiv ID。题名检索优先使用 Semantic Scholar，DOI 在需要时回退到 Crossref，arXiv ID 使用官方 API 精确查询。三个元数据接口在基础模式下均无需密钥；如配置 `SEMANTIC_SCHOLAR_API_KEY` 可获得更稳定的调用额度，`SCHOLARLY_CONTACT_EMAIL` 用于标识 Crossref polite 请求。
+
+一键导入不会接受浏览器传来的任意下载 URL。API 根据 `source` 和 `source_id` 重新查询来源，并仅允许 `SCHOLARLY_PDF_HOSTS` 中的 HTTPS 域名；下载时再次校验重定向链、文件大小和 `%PDF-` 文件头。默认白名单只包含 arXiv 与 Semantic Scholar PDF 域名，部署者可通过环境变量谨慎扩展。只有开放 PDF 可安全解析时按钮才可用，Crossref 兜底结果可能仅展示元数据。
+
 ## 不使用 Docker 的本地启动
 
 后端默认使用 SQLite，并以内联模式运行 Celery 任务，因此无需先启动 Redis：
@@ -208,6 +217,8 @@ npm run dev
 | 方法 | 路径 | 说明 |
 | --- | --- | --- |
 | GET | `/api/v1/health` | 服务健康检查 |
+| GET | `/api/v1/discovery/papers?q=...` | 按题名、DOI 或 arXiv ID 检索论文 |
+| POST | `/api/v1/discovery/import` | 从可信开放来源下载、去重并创建解析任务 |
 | POST | `/api/v1/documents` | 上传 PDF，字段名为 `file` |
 | GET | `/api/v1/documents` | 文献列表 |
 | GET | `/api/v1/documents/{id}` | 文献详情 |

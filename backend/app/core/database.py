@@ -24,5 +24,6 @@ def init_db() -> None:
     # Import models here so SQLAlchemy has registered their tables.
     from app.models.chunk import DocumentChunk  # noqa: F401
     from app.models.document import Document  # noqa: F401
+    from app.models.paper_source import PaperSource  # noqa: F401
 
     Base.metadata.create_all(bind=engine)

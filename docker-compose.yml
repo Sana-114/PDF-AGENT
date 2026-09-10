@@ -142,6 +142,13 @@ services:
       LLM_BASE_URL: ${LLM_BASE_URL:-https://api.openai.com/v1}
       LLM_TIMEOUT_SECONDS: ${LLM_TIMEOUT_SECONDS:-60}
       RAG_MIN_SCORE: ${RAG_MIN_SCORE:-0.18}
+      SCHOLARLY_API_TIMEOUT_SECONDS: ${SCHOLARLY_API_TIMEOUT_SECONDS:-20}
+      SEMANTIC_SCHOLAR_BASE_URL: ${SEMANTIC_SCHOLAR_BASE_URL:-https://api.semanticscholar.org/graph/v1}
+      SEMANTIC_SCHOLAR_API_KEY: ${SEMANTIC_SCHOLAR_API_KEY:-}
+      ARXIV_API_BASE_URL: ${ARXIV_API_BASE_URL:-https://export.arxiv.org/api}
+      CROSSREF_BASE_URL: ${CROSSREF_BASE_URL:-https://api.crossref.org}
+      SCHOLARLY_CONTACT_EMAIL: ${SCHOLARLY_CONTACT_EMAIL:-}
+      SCHOLARLY_PDF_HOSTS: ${SCHOLARLY_PDF_HOSTS:-arxiv.org,export.arxiv.org,pdfs.semanticscholar.org}
     volumes:
       - ./backend:/app
       - app_data:/app/data

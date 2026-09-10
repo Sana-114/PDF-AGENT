@@ -3,14 +3,15 @@ from typing import Annotated, Literal
 
 from fastapi import APIRouter, Depends, File, HTTPException, Query, UploadFile, status
 from fastapi.responses import FileResponse
+from sqlalchemy import delete as sql_delete
 from sqlalchemy import func, select
-from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm import Session
 
 from app.core.database import get_db
 from app.llm import get_llm_provider
 from app.llm.base import LLMConfigurationError, LLMResponseError
 from app.models.document import Document, DocumentStatus
+from app.models.paper_source import PaperSource
 from app.parsers.checkpoint import checkpoint_progress
 from app.schemas.document import (
     DocumentList,
@@ -30,6 +31,7 @@ from app.services.document_content import (
     read_parsed_document,
     reference_links,
 )
+from app.services.document_ingestion import dispatch_document_parse, persist_staged_document
 from app.services.document_translation import page_translation_payload
 from app.services.storage import storage
 from app.services.translation_store import translation_store
@@ -45,51 +47,19 @@ async def upload_document(
     db: Annotated[Session, Depends(get_db)],
 ) -> UploadResult:
     staged = await storage.stage_pdf(file)
-    existing = db.scalar(select(Document).where(Document.sha256 == staged.sha256))
-    if existing:
-        staged.discard()
-        return UploadResult(
-            document=DocumentRead.model_validate(existing),
-            exact_duplicate=True,
-            message="检测到内容完全相同的 PDF，未重复入库。",
-        )
-
-    document = Document(
+    result = persist_staged_document(
+        db,
+        staged,
         original_filename=file.filename or "document.pdf",
-        storage_key=staged.storage_key,
         content_type=file.content_type or "application/pdf",
-        size_bytes=staged.size_bytes,
-        sha256=staged.sha256,
-        status=DocumentStatus.QUEUED,
     )
-    try:
-        staged.commit()
-        db.add(document)
-        db.commit()
-        db.refresh(document)
-    except IntegrityError:
-        db.rollback()
-        staged.discard()
-        existing = db.scalar(select(Document).where(Document.sha256 == staged.sha256))
-        if existing is None:
-            raise
-        return UploadResult(
-            document=DocumentRead.model_validate(existing),
-            exact_duplicate=True,
-            message="检测到并发上传的相同 PDF，未重复入库。",
-        )
-
-    try:
-        parse_document.delay(document.id)
-        db.refresh(document)
-    except Exception as exc:
-        document.status = DocumentStatus.FAILED
-        document.error_message = f"任务投递失败：{exc}"
-        db.commit()
+    if not result.exact_duplicate:
+        dispatch_document_parse(db, result.document)
 
     return UploadResult(
-        document=DocumentRead.model_validate(document),
-        message="PDF 已入库，解析任务已创建。",
+        document=DocumentRead.model_validate(result.document),
+        exact_duplicate=result.exact_duplicate,
+        message=result.message,
     )
 
 
@@ -404,5 +374,6 @@ def delete_document(
     document = _get_document(document_id, db)
     delete_document_index_safely(document.id)
     storage.delete(document.storage_key, document.id)
+    db.execute(sql_delete(PaperSource).where(PaperSource.document_id == document.id))
     db.delete(document)
     db.commit()
