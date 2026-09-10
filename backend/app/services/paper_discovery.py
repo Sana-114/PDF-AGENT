@@ -73,7 +73,7 @@ def detect_query_kind(query: str) -> tuple[QueryKind, str]:
     doi = _extract_doi(clean)
     if doi:
         return "doi", doi
-    explicit_arxiv = clean.lower().startswith("arxiv:") or "arxiv.org/" in clean.lower()
+    explicit_arxiv = "arxiv:" in clean.lower() or "arxiv.org/" in clean.lower()
     arxiv = _extract_arxiv_id(clean) if explicit_arxiv else None
     if not explicit_arxiv:
         bare_match = ARXIV_BARE_PATTERN.fullmatch(clean)

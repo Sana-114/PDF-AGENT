@@ -8,6 +8,8 @@ PaperPilot 是一个以原文证据为核心的科研助手 Agent 系统。本�
 - 按完整题名、DOI 或 arXiv ID 检索 Semantic Scholar、arXiv 和 Crossref，并一键导入开放 PDF；
 - 远程导入仅接受“来源 + 论文 ID”，由服务端重新解析可信 HTTPS 地址、校验跳转、大小和 PDF 文件头；
 - 保存外部索引、DOI、arXiv ID、落地页、许可证和检索元数据，导入仍复用 SHA-256 去重；
+- 从已解析 References 批量下钻被引论文，按 DOI/arXiv 精确标识或题名、作者、年份匹配候选；
+- Web 端展示可解释匹配分，默认勾选可信开放论文并去重后批量下载入库；
 - 基于 SHA-256 的完全重复检测；
 - Celery 后台解析和状态跟踪；
 - 长文档按默认 25 页分批解析，页面分片与进度 manifest 原子落盘，失败后从最近完整批次恢复；
@@ -192,6 +194,8 @@ LLM_BASE_URL=https://api.openai.com/v1
 
 一键导入不会接受浏览器传来的任意下载 URL。API 根据 `source` 和 `source_id` 重新查询来源，并仅允许 `SCHOLARLY_PDF_HOSTS` 中的 HTTPS 域名；下载时再次校验重定向链、文件大小和 `%PDF-` 文件头。默认白名单只包含 arXiv 与 Semantic Scholar PDF 域名，部署者可通过环境变量谨慎扩展。只有开放 PDF 可安全解析时按钮才可用，Crossref 兜底结果可能仅展示元数据。
 
+文献解析完成后，可在文献卡片点击“下钻引用”。系统默认分析前 12 条 References，每次最多支持 20 条，并把公共 API 并发限制为 2。DOI 和 arXiv ID 使用精确匹配；普通条目按候选题名词覆盖率、作者姓氏和年份给出可解释分数，默认阈值为 `0.55`。只有达到阈值且具有可信开放 PDF 的首选项会自动勾选，用户仍可检查候选后再批量入库。可通过 `REFERENCE_DISCOVERY_CONCURRENCY` 与 `REFERENCE_MATCH_THRESHOLD` 调整并发和阈值。
+
 ## 不使用 Docker 的本地启动
 
 后端默认使用 SQLite，并以内联模式运行 Celery 任务，因此无需先启动 Redis：
@@ -219,6 +223,7 @@ npm run dev
 | GET | `/api/v1/health` | 服务健康检查 |
 | GET | `/api/v1/discovery/papers?q=...` | 按题名、DOI 或 arXiv ID 检索论文 |
 | POST | `/api/v1/discovery/import` | 从可信开放来源下载、去重并创建解析任务 |
+| POST | `/api/v1/discovery/references/resolve` | 批量识别 References 中的被引论文及候选匹配分 |
 | POST | `/api/v1/documents` | 上传 PDF，字段名为 `file` |
 | GET | `/api/v1/documents` | 文献列表 |
 | GET | `/api/v1/documents/{id}` | 文献详情 |

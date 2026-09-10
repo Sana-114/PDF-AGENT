@@ -46,3 +46,36 @@ class PaperImportResponse(BaseModel):
     source: PaperCandidate
     exact_duplicate: bool = False
     message: str
+
+
+class ReferenceResolveRequest(BaseModel):
+    document_id: str = Field(min_length=1, max_length=36)
+    reference_ids: list[str] = Field(default_factory=list, max_length=20)
+    limit: int = Field(default=8, ge=1, le=20)
+    candidates_per_reference: int = Field(default=3, ge=1, le=5)
+
+
+class ReferenceCandidateMatch(BaseModel):
+    paper: PaperCandidate
+    match_score: float = Field(ge=0.0, le=1.0)
+    match_reason: str
+
+
+class ReferenceResolution(BaseModel):
+    reference_id: str
+    label: str
+    text: str
+    page_number: int = Field(ge=1)
+    status: Literal["matched", "uncertain", "not_found", "error"]
+    query_kind: QueryKind | None = None
+    candidates: list[ReferenceCandidateMatch] = Field(default_factory=list)
+    warnings: list[str] = Field(default_factory=list)
+
+
+class ReferenceResolveResponse(BaseModel):
+    document_id: str
+    total_references: int
+    attempted: int
+    matched: int
+    importable: int
+    items: list[ReferenceResolution]

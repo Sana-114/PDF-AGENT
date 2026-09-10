@@ -115,6 +115,32 @@ export interface PaperSearchResponse {
   warnings: string[];
 }
 
+export interface ReferenceCandidateMatch {
+  paper: PaperCandidate;
+  match_score: number;
+  match_reason: string;
+}
+
+export interface ReferenceResolution {
+  reference_id: string;
+  label: string;
+  text: string;
+  page_number: number;
+  status: "matched" | "uncertain" | "not_found" | "error";
+  query_kind: "title" | "doi" | "arxiv" | null;
+  candidates: ReferenceCandidateMatch[];
+  warnings: string[];
+}
+
+export interface ReferenceResolveResponse {
+  document_id: string;
+  total_references: number;
+  attempted: number;
+  matched: number;
+  importable: number;
+  items: ReferenceResolution[];
+}
+
 interface PaperImportResponse extends UploadResponse {
   source: PaperCandidate;
 }
@@ -238,6 +264,24 @@ export async function importPaper(candidate: PaperCandidate): Promise<PaperImpor
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ source: candidate.source, source_id: candidate.source_id }),
+    }),
+  );
+  return response.json();
+}
+
+export async function resolveDocumentReferences(
+  documentId: string,
+  limit = 12,
+): Promise<ReferenceResolveResponse> {
+  const response = await assertResponse(
+    await fetch(`${API_BASE_URL}/discovery/references/resolve`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        document_id: documentId,
+        limit,
+        candidates_per_reference: 3,
+      }),
     }),
   );
   return response.json();

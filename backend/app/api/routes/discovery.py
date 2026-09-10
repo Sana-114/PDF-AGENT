@@ -5,13 +5,17 @@ from fastapi import APIRouter, Depends, HTTPException, Query, status
 from sqlalchemy.orm import Session
 
 from app.core.database import get_db
+from app.models.document import Document, DocumentStatus
 from app.models.paper_source import PaperSource
 from app.schemas.discovery import (
     PaperImportRequest,
     PaperImportResponse,
     PaperSearchResponse,
+    ReferenceResolveRequest,
+    ReferenceResolveResponse,
 )
 from app.schemas.document import DocumentRead
+from app.services.document_content import read_parsed_document, reference_links
 from app.services.document_ingestion import dispatch_document_parse, persist_staged_document
 from app.services.paper_discovery import (
     PaperDiscoveryError,
@@ -19,12 +23,17 @@ from app.services.paper_discovery import (
     candidate_filename,
     paper_discovery,
 )
+from app.services.reference_discovery import ReferenceDiscoveryService, reference_discovery
 
 router = APIRouter()
 
 
 def get_paper_discovery_service() -> PaperDiscoveryService:
     return paper_discovery
+
+
+def get_reference_discovery_service() -> ReferenceDiscoveryService:
+    return reference_discovery
 
 
 @router.get("/papers", response_model=PaperSearchResponse)
@@ -38,6 +47,44 @@ async def search_papers(
     except PaperDiscoveryError as exc:
         raise HTTPException(status_code=exc.status_code, detail=str(exc)) from exc
     return PaperSearchResponse(query=q, query_kind=query_kind, items=items, warnings=warnings)
+
+
+@router.post("/references/resolve", response_model=ReferenceResolveResponse)
+async def resolve_document_references(
+    request: ReferenceResolveRequest,
+    db: Annotated[Session, Depends(get_db)],
+    service: Annotated[
+        ReferenceDiscoveryService, Depends(get_reference_discovery_service)
+    ],
+) -> ReferenceResolveResponse:
+    document = db.get(Document, request.document_id)
+    if document is None:
+        raise HTTPException(status_code=404, detail="文献不存在。")
+    if document.status != DocumentStatus.READY:
+        raise HTTPException(status_code=409, detail="文献尚未解析完成。")
+    parsed = read_parsed_document(document.id)
+    if parsed is None:
+        raise HTTPException(status_code=404, detail="结构化解析结果不存在。")
+    references, _ = reference_links(parsed)
+    total_references = len(references)
+    if request.reference_ids:
+        requested = set(request.reference_ids)
+        references = [item for item in references if item.get("reference_id") in requested]
+    references = references[: request.limit]
+    items = await service.resolve_many(
+        references,
+        candidates_per_reference=request.candidates_per_reference,
+    )
+    return ReferenceResolveResponse(
+        document_id=document.id,
+        total_references=total_references,
+        attempted=len(items),
+        matched=sum(item.status == "matched" for item in items),
+        importable=sum(
+            any(match.paper.importable for match in item.candidates) for item in items
+        ),
+        items=items,
+    )
 
 
 @router.post(

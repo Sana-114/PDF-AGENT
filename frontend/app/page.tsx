@@ -15,9 +15,17 @@ import {
   importPaper,
   listDocuments,
   PaperCandidate,
+  ReferenceResolveResponse,
+  resolveDocumentReferences,
   searchPapers,
   uploadDocument,
 } from "../lib/api";
+import {
+  defaultReferenceSelections,
+  paperCandidateKey,
+  ReferenceSelections,
+  uniqueSelectedPapers,
+} from "../lib/referenceDiscovery";
 
 const PdfReader = dynamic(() => import("../components/PdfReader"), {
   ssr: false,
@@ -29,6 +37,11 @@ interface ReaderState {
   title: string;
   pageNumber: number;
   evidence: EvidenceAnchor | null;
+}
+
+interface ReferenceExplorerDocument {
+  documentId: string;
+  title: string;
 }
 
 const STATUS_LABEL: Record<DocumentRecord["status"], string> = {
@@ -62,6 +75,12 @@ export default function Home() {
   const [asking, setAsking] = useState(false);
   const [agentLabel, setAgentLabel] = useState("正在检测 Agent");
   const [reader, setReader] = useState<ReaderState | null>(null);
+  const [referenceExplorer, setReferenceExplorer] = useState<ReferenceExplorerDocument | null>(null);
+  const [referenceResults, setReferenceResults] = useState<ReferenceResolveResponse | null>(null);
+  const [referenceSelections, setReferenceSelections] = useState<ReferenceSelections>({});
+  const [resolvingReferences, setResolvingReferences] = useState(false);
+  const [importingReferences, setImportingReferences] = useState(false);
+  const [referenceImportProgress, setReferenceImportProgress] = useState("");
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const refresh = useCallback(async (quiet = false) => {
@@ -102,6 +121,10 @@ export default function Home() {
   const processingCount = useMemo(
     () => documents.filter((document) => ["queued", "processing"].includes(document.status)).length,
     [documents],
+  );
+  const selectedReferencePapers = useMemo(
+    () => uniqueSelectedPapers(referenceSelections),
+    [referenceSelections],
   );
 
   async function handleFiles(files: FileList | File[]) {
@@ -175,6 +198,66 @@ export default function Home() {
     } finally {
       setImportingPaper(null);
     }
+  }
+
+  async function openReferenceExplorer(document: DocumentRecord) {
+    setReferenceExplorer({
+      documentId: document.id,
+      title: document.title || document.original_filename,
+    });
+    setReferenceResults(null);
+    setReferenceSelections({});
+    setReferenceImportProgress("");
+    setResolvingReferences(true);
+    setError(null);
+    try {
+      const response = await resolveDocumentReferences(document.id);
+      setReferenceResults(response);
+      setReferenceSelections(defaultReferenceSelections(response.items));
+    } catch (resolveError) {
+      setError(resolveError instanceof Error ? resolveError.message : "参考文献解析失败");
+    } finally {
+      setResolvingReferences(false);
+    }
+  }
+
+  function selectReferenceCandidate(referenceId: string, candidate: PaperCandidate) {
+    setReferenceSelections((current) => {
+      const existing = current[referenceId];
+      if (existing && paperCandidateKey(existing) === paperCandidateKey(candidate)) {
+        const next = { ...current };
+        delete next[referenceId];
+        return next;
+      }
+      return { ...current, [referenceId]: candidate };
+    });
+  }
+
+  async function importSelectedReferences() {
+    if (!selectedReferencePapers.length) return;
+    setImportingReferences(true);
+    setError(null);
+    let imported = 0;
+    let duplicates = 0;
+    let failed = 0;
+    for (let index = 0; index < selectedReferencePapers.length; index += 1) {
+      const candidate = selectedReferencePapers[index];
+      setReferenceImportProgress(`正在导入 ${index + 1} / ${selectedReferencePapers.length}`);
+      try {
+        const result = await importPaper(candidate);
+        if (result.exact_duplicate) duplicates += 1;
+        else imported += 1;
+      } catch {
+        failed += 1;
+      }
+    }
+    setNotice(`引用下钻完成：新增 ${imported} 篇，已存在 ${duplicates} 篇，失败 ${failed} 篇。`);
+    if (failed) setError("部分论文可能没有稳定的开放 PDF，可稍后单独重试。");
+    setReferenceSelections({});
+    setReferenceImportProgress("");
+    setImportingReferences(false);
+    setReferenceExplorer(null);
+    await refresh(true);
   }
 
   async function remove(document: DocumentRecord) {
@@ -481,6 +564,13 @@ export default function Home() {
                   >
                     在线阅读
                   </button>
+                  <button
+                    disabled={document.status !== "ready"}
+                    onClick={() => void openReferenceExplorer(document)}
+                    type="button"
+                  >
+                    下钻引用
+                  </button>
                   <button onClick={() => void remove(document)}>删除</button>
                 </div>
               </article>
@@ -490,6 +580,122 @@ export default function Home() {
       </section>
 
       <footer>PaperPilot MVP · 所有答案都将绑定可验证的原文证据</footer>
+      {referenceExplorer && (
+        <div
+          className="reference-explorer-backdrop"
+          onMouseDown={(event) => {
+            if (event.currentTarget === event.target && !importingReferences) {
+              setReferenceExplorer(null);
+            }
+          }}
+        >
+          <section
+            aria-labelledby="reference-explorer-title"
+            aria-modal="true"
+            className="reference-explorer"
+            role="dialog"
+          >
+            <header>
+              <div>
+                <p className="eyebrow">REFERENCE DRILL-DOWN</p>
+                <h2 id="reference-explorer-title">被引论文批量下钻</h2>
+                <span>{referenceExplorer.title}</span>
+              </div>
+              <button
+                aria-label="关闭引用下钻"
+                disabled={importingReferences}
+                onClick={() => setReferenceExplorer(null)}
+                type="button"
+              >
+                ×
+              </button>
+            </header>
+            {resolvingReferences && (
+              <div className="reference-explorer-state">正在分析前 12 条参考文献并匹配论文…</div>
+            )}
+            {!resolvingReferences && referenceResults && (
+              <>
+                <div className="reference-summary">
+                  <span>共提取 <strong>{referenceResults.total_references}</strong> 条</span>
+                  <span>本次分析 <strong>{referenceResults.attempted}</strong> 条</span>
+                  <span>可信匹配 <strong>{referenceResults.matched}</strong> 条</span>
+                  <span>可下载 <strong>{referenceResults.importable}</strong> 条</span>
+                </div>
+                <div className="reference-resolution-list">
+                  {referenceResults.items.map((resolution) => (
+                    <article className="reference-resolution" key={resolution.reference_id}>
+                      <div className="reference-original">
+                        <span>[{resolution.label}] · 第 {resolution.page_number} 页</span>
+                        <p>{resolution.text}</p>
+                      </div>
+                      <div className="reference-candidates">
+                        {resolution.candidates.length === 0 && (
+                          <p className="reference-no-match">
+                            {resolution.status === "error" ? "检索源暂时不可用" : "未找到候选论文"}
+                          </p>
+                        )}
+                        {resolution.candidates.map((match) => {
+                          const selected = referenceSelections[resolution.reference_id];
+                          const active = selected
+                            && paperCandidateKey(selected) === paperCandidateKey(match.paper);
+                          return (
+                            <button
+                              aria-pressed={Boolean(active)}
+                              className={active ? "selected" : ""}
+                              disabled={!match.paper.importable || importingReferences}
+                              key={paperCandidateKey(match.paper)}
+                              onClick={() => selectReferenceCandidate(
+                                resolution.reference_id,
+                                match.paper,
+                              )}
+                              type="button"
+                            >
+                              <span className="candidate-check">{active ? "✓" : ""}</span>
+                              <span>
+                                <strong>{match.paper.title}</strong>
+                                <small>
+                                  匹配 {Math.round(match.match_score * 100)}% · {match.match_reason}
+                                </small>
+                                <small>
+                                  {match.paper.year || "年份未知"} · {match.paper.source.replace("_", " ")}
+                                  {match.paper.importable ? " · 开放 PDF" : " · 仅元数据"}
+                                </small>
+                              </span>
+                            </button>
+                          );
+                        })}
+                        {resolution.warnings.map((warning) => (
+                          <small className="reference-warning" key={warning}>{warning}</small>
+                        ))}
+                      </div>
+                    </article>
+                  ))}
+                </div>
+              </>
+            )}
+            <footer>
+              <span>{referenceImportProgress || `已选择 ${selectedReferencePapers.length} 篇不重复论文`}</span>
+              <div>
+                <button
+                  disabled={importingReferences}
+                  onClick={() => setReferenceExplorer(null)}
+                  type="button"
+                >
+                  取消
+                </button>
+                <button
+                  className="primary"
+                  disabled={!selectedReferencePapers.length || importingReferences}
+                  onClick={() => void importSelectedReferences()}
+                  type="button"
+                >
+                  {importingReferences ? "批量导入中…" : `导入选中 ${selectedReferencePapers.length} 篇`}
+                </button>
+              </div>
+            </footer>
+          </section>
+        </div>
+      )}
       {reader && (
         <PdfReader
           documentId={reader.documentId}

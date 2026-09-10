@@ -149,6 +149,8 @@ services:
       CROSSREF_BASE_URL: ${CROSSREF_BASE_URL:-https://api.crossref.org}
       SCHOLARLY_CONTACT_EMAIL: ${SCHOLARLY_CONTACT_EMAIL:-}
       SCHOLARLY_PDF_HOSTS: ${SCHOLARLY_PDF_HOSTS:-arxiv.org,export.arxiv.org,pdfs.semanticscholar.org}
+      REFERENCE_DISCOVERY_CONCURRENCY: ${REFERENCE_DISCOVERY_CONCURRENCY:-2}
+      REFERENCE_MATCH_THRESHOLD: ${REFERENCE_MATCH_THRESHOLD:-0.55}
     volumes:
       - ./backend:/app
       - app_data:/app/data

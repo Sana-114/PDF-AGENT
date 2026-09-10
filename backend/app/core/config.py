@@ -33,6 +33,8 @@ class Settings(BaseSettings):
     crossref_base_url: str = "https://api.crossref.org"
     scholarly_contact_email: str = ""
     scholarly_pdf_hosts: str = "arxiv.org,export.arxiv.org,pdfs.semanticscholar.org"
+    reference_discovery_concurrency: int = Field(default=2, ge=1, le=5)
+    reference_match_threshold: float = Field(default=0.55, ge=0.0, le=1.0)
     celery_task_always_eager: bool = True
     parse_batch_pages: int = Field(default=25, ge=1, le=200)
 
