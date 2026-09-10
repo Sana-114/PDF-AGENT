@@ -10,6 +10,7 @@ def test_agent_status_and_skills_are_exposed() -> None:
 
     assert status_response.status_code == 200
     assert status_response.json()["provider"] == "extractive"
+    assert status_response.json()["translation_configured"] is False
     assert status_response.json()["retrieval_mode"] in {"lexical", "hybrid_qdrant_rrf"}
     assert status_response.json()["embedding_provider"] == "hash"
     assert status_response.json()["reranker_provider"] == "disabled"

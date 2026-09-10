@@ -127,6 +127,7 @@ services:
       DATA_DIR: /app/data
       UPLOAD_DIR: /app/data/uploads
       PARSED_DIR: /app/data/parsed
+      TRANSLATION_DIR: /app/data/translations
       CELERY_TASK_ALWAYS_EAGER: "false"
       PARSE_BATCH_PAGES: ${PARSE_BATCH_PAGES:-25}
       FRONTEND_ORIGIN: http://localhost:3000
@@ -181,6 +182,7 @@ services:
       DATA_DIR: /app/data
       UPLOAD_DIR: /app/data/uploads
       PARSED_DIR: /app/data/parsed
+      TRANSLATION_DIR: /app/data/translations
       CELERY_TASK_ALWAYS_EAGER: "false"
       PARSE_BATCH_PAGES: ${PARSE_BATCH_PAGES:-25}
       OCR_ENABLED: ${OCR_ENABLED:-true}

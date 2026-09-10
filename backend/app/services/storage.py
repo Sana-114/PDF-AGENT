@@ -95,6 +95,14 @@ class LocalDocumentStorage:
             raise ValueError("Invalid document id")
         return path
 
+    def translation_document_dir(self, document_id: str) -> Path:
+        if not document_id or any(value in document_id for value in ("/", "\\", "..")):
+            raise ValueError("Invalid document id")
+        path = (settings.translation_dir / document_id).resolve()
+        if path.parent != settings.translation_dir.resolve():
+            raise ValueError("Invalid document id")
+        return path
+
     def clear_checkpoint(self, document_id: str) -> None:
         path = self.checkpoint_dir(document_id)
         if path.exists():
@@ -104,6 +112,9 @@ class LocalDocumentStorage:
         self.document_path(storage_key).unlink(missing_ok=True)
         self.parsed_path(document_id).unlink(missing_ok=True)
         self.clear_checkpoint(document_id)
+        translation_path = self.translation_document_dir(document_id)
+        if translation_path.exists():
+            shutil.rmtree(translation_path)
 
 
 storage = LocalDocumentStorage()

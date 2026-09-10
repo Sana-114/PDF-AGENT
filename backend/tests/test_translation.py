@@ -13,11 +13,13 @@ from app.llm.base import (
 from app.llm.extractive import ExtractiveProvider
 from app.main import app
 from app.models.document import DocumentStatus
+from app.services.translation_store import TranslationStore
 
 
 class StubTranslationProvider:
     name = "stub"
     model = "academic-translator"
+    supports_translation = True
 
     async def translate_text(
         self, text: str, source_language: str, target_language: str
@@ -83,11 +85,16 @@ async def test_extractive_provider_explicitly_rejects_translation() -> None:
         await ExtractiveProvider().translate_text("text", "auto", "zh")
 
 
-def test_page_translation_endpoint_preserves_block_ids_and_bbox(monkeypatch) -> None:
+def test_page_translation_endpoint_preserves_block_ids_and_bbox(monkeypatch, tmp_path) -> None:
     monkeypatch.setattr(
         document_routes,
         "_get_document",
-        lambda document_id, db: SimpleNamespace(id=document_id, status=DocumentStatus.READY),
+        lambda document_id, db: SimpleNamespace(
+            id=document_id,
+            status=DocumentStatus.READY,
+            sha256="a" * 64,
+            page_count=2,
+        ),
     )
     monkeypatch.setattr(
         document_routes,
@@ -108,6 +115,11 @@ def test_page_translation_endpoint_preserves_block_ids_and_bbox(monkeypatch) -> 
         document_routes,
         "get_llm_provider",
         lambda: StubTranslationProvider(),
+    )
+    monkeypatch.setattr(
+        document_routes,
+        "translation_store",
+        TranslationStore(tmp_path / "translations"),
     )
 
     with TestClient(app) as client:
@@ -134,3 +146,64 @@ def test_page_translation_endpoint_preserves_block_ids_and_bbox(monkeypatch) -> 
             "translation": "译文：Results",
         },
     ]
+
+    monkeypatch.setattr(
+        document_routes,
+        "get_llm_provider",
+        lambda: pytest.fail("cached page should not call the provider"),
+    )
+    with TestClient(app) as client:
+        cached_response = client.post(
+            "/api/v1/documents/doc-1/translations/pages/2",
+            json={"target_language": "zh"},
+        )
+    assert cached_response.status_code == 200
+    assert cached_response.json() == payload
+
+
+def test_full_translation_endpoint_queues_resumable_job(monkeypatch, tmp_path) -> None:
+    class TaskRecorder:
+        def __init__(self) -> None:
+            self.calls: list[tuple[str, str, bool]] = []
+
+        def delay(self, document_id: str, target_language: str, force: bool) -> None:
+            self.calls.append((document_id, target_language, force))
+
+    task = TaskRecorder()
+    store = TranslationStore(tmp_path / "translations")
+    monkeypatch.setattr(
+        document_routes,
+        "_get_document",
+        lambda document_id, db: SimpleNamespace(
+            id=document_id,
+            status=DocumentStatus.READY,
+            sha256="b" * 64,
+            page_count=2,
+        ),
+    )
+    monkeypatch.setattr(
+        document_routes,
+        "read_parsed_document",
+        lambda _: {"pages": [{"page_number": 1}, {"page_number": 2}]},
+    )
+    monkeypatch.setattr(document_routes, "translation_store", store)
+    monkeypatch.setattr(
+        document_routes,
+        "get_llm_provider",
+        lambda: StubTranslationProvider(),
+    )
+    monkeypatch.setattr(document_routes, "translate_document", task)
+
+    with TestClient(app) as client:
+        created = client.post(
+            "/api/v1/documents/doc-job/translations",
+            json={"target_language": "zh"},
+        )
+        status = client.get("/api/v1/documents/doc-job/translations/zh")
+
+    assert created.status_code == 202
+    assert created.json()["status"] == "queued"
+    assert created.json()["completed_pages"] == 0
+    assert status.status_code == 200
+    assert status.json()["resumable"] is False
+    assert task.calls == [("doc-job", "zh", False)]

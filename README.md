@@ -34,6 +34,7 @@ PaperPilot 是一个以原文证据为核心的科研助手 Agent 系统。本�
 - 正文编号引用与 References 条目双向跳转，侧栏汇总每条文献的正文引用位置；
 - 阅读器支持中英文划词/选段翻译，保留公式、代码、引用和数字，零密钥模式明确拒绝伪翻译；
 - 支持当前页段落对齐翻译、中英目标语言切换、双栏双向同步滚动和会话内页级缓存；
+- 支持整篇后台翻译、逐页原子缓存、实时进度展示和失败后的断点续跑；
 - 文献列表、原文访问、结构化结果读取、重解析和删除；
 - Web 端展示长文档已处理页数、百分比和断点可恢复状态；
 - Docker Compose 编排 PostgreSQL、Redis、Qdrant、MinIO、API、Worker 和 Web。
@@ -178,7 +179,9 @@ LLM_BASE_URL=https://api.openai.com/v1
 
 同一 Provider 也用于阅读器划词翻译。翻译请求使用独立的结构化输出约束，要求只翻译用户选中的原文并保留公式、代码、引用标记、模型名称、数字和段落结构。默认 `mock`/抽取式模式没有可靠的翻译能力，接口会返回可解释的 `503`，不会把原文或模板文本冒充译文。
 
-双语阅读按当前页懒加载翻译，后端从 Document AST 提取有界文本块并要求模型按 `block_id` 一一返回。漏段、重复 ID、未知 ID 或空译文会被拒绝，避免中英段落错位；前端按页码和目标语言缓存本次阅读会话的结果。超长页面最多提交 80 个文本块或 24000 个字符，并显式标记截断状态。
+双语阅读按当前页懒加载翻译，后端从 Document AST 提取有界文本块并要求模型按 `block_id` 一一返回。漏段、重复 ID、未知 ID 或空译文会被拒绝，避免中英段落错位；页级结果同时写入服务端持久缓存。超长页面最多提交 80 个文本块或 24000 个字符，并显式标记截断状态。
+
+“整篇”翻译由 Celery 后台逐页执行，每页译文独立原子落盘，manifest 保存源文件指纹、Provider/模型签名、目标语言、完成页和错误状态。任务失败后再次启动会跳过已经完成的页面；源 PDF 或翻译模型发生变化时旧缓存自动失效。删除文献时对应译文缓存也会一并清理。
 
 ## 不使用 Docker 的本地启动
 
@@ -214,6 +217,9 @@ npm run dev
 | GET | `/api/v1/documents/{id}/outline` | 轻量级一/二/三级标题树与跳转锚点 |
 | GET | `/api/v1/documents/{id}/references` | 参考文献条目、正文引用位置与 BBox 锚点 |
 | POST | `/api/v1/documents/{id}/translations/pages/{page}` | 当前页段落对齐翻译，用于双语阅读 |
+| POST | `/api/v1/documents/{id}/translations` | 创建或续跑整篇后台翻译任务 |
+| GET | `/api/v1/documents/{id}/translations/{language}` | 查询整篇翻译进度与错误状态 |
+| GET | `/api/v1/documents/{id}/translations/{language}/pages/{page}` | 读取已持久化的页级译文 |
 | POST | `/api/v1/documents/{id}/reparse` | 重新解析 |
 | DELETE | `/api/v1/documents/{id}` | 删除文献及本地文件 |
 | GET | `/api/v1/agent/status` | 当前 Provider、模型和 Skills 状态 |
@@ -294,7 +300,7 @@ docker compose exec backend python scripts/evaluate_pdf_corpus.py `
 
 1. 用标准测试 PDF 评估当前版式基线，并按失败样本接入 Docling、GROBID 和 PaddleOCR；
 2. 用本地 BGE-M3 / Reranker 跑完官方 PDF 离线评测，并据此校准融合权重；
-3. 建立可恢复的整篇异步翻译任务与服务端持久缓存；
+3. 接入论文题名/DOI/arXiv ID 自动检索下载，并保留来源与许可证元数据；
 4. 使用 `1706.03762v7.pdf`、`v1.pdf` 和扫描版建立自动回归集。
 
 更完整的边界说明见 [docs/architecture.md](docs/architecture.md)。

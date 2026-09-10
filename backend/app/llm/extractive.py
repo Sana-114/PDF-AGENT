@@ -13,6 +13,7 @@ class ExtractiveProvider:
 
     name = "extractive"
     model = None
+    supports_translation = False
 
     async def generate_grounded_answer(
         self, question: str, evidence: list[EvidenceAnchor]

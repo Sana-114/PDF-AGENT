@@ -37,6 +37,7 @@ class GeneratedSegmentTranslations:
 class LLMProvider(Protocol):
     name: str
     model: str | None
+    supports_translation: bool
 
     async def generate_grounded_answer(
         self, question: str, evidence: list[EvidenceAnchor]

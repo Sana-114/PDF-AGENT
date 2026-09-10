@@ -114,6 +114,7 @@ export interface AgentStatus {
   provider: string;
   model: string | null;
   llm_configured: boolean;
+  translation_configured: boolean;
   retrieval_mode: string;
   embedding_provider: string;
   embedding_model: string;
@@ -146,6 +147,21 @@ export interface DocumentPageTranslation {
   model: string | null;
   truncated: boolean;
   segments: PageTranslationSegment[];
+}
+
+export interface DocumentTranslationJob {
+  document_id: string;
+  source_language: "auto";
+  target_language: "zh" | "en";
+  provider: string;
+  model: string | null;
+  status: "partial" | "queued" | "processing" | "completed" | "failed";
+  page_count: number;
+  completed_pages: number;
+  percentage: number;
+  resumable: boolean;
+  error: string | null;
+  updated_at: string | null;
 }
 
 async function assertResponse(response: Response): Promise<Response> {
@@ -250,6 +266,33 @@ export async function translateDocumentPage(
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ target_language: targetLanguage }),
+    }),
+  );
+  return response.json();
+}
+
+export async function startDocumentTranslation(
+  documentId: string,
+  targetLanguage: "zh" | "en",
+  force = false,
+): Promise<DocumentTranslationJob> {
+  const response = await assertResponse(
+    await fetch(`${API_BASE_URL}/documents/${documentId}/translations`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ target_language: targetLanguage, force }),
+    }),
+  );
+  return response.json();
+}
+
+export async function getDocumentTranslationStatus(
+  documentId: string,
+  targetLanguage: "zh" | "en",
+): Promise<DocumentTranslationJob> {
+  const response = await assertResponse(
+    await fetch(`${API_BASE_URL}/documents/${documentId}/translations/${targetLanguage}`, {
+      cache: "no-store",
     }),
   );
   return response.json();

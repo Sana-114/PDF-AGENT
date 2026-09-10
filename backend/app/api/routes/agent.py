@@ -32,10 +32,12 @@ def get_agent_status() -> AgentStatus:
     try:
         provider = get_llm_provider()
         configured = provider.name == "extractive" or bool(provider.model)
+        translation_configured = provider.supports_translation and bool(provider.model)
         provider_name = provider.name
         model = provider.model
     except LLMConfigurationError:
         configured = False
+        translation_configured = False
         provider_name = settings.llm_provider
         model = settings.llm_model or None
     retrieval_mode = "hybrid_qdrant_rrf" if settings.vector_search_enabled else "lexical"
@@ -45,6 +47,7 @@ def get_agent_status() -> AgentStatus:
         provider=provider_name,
         model=model,
         llm_configured=configured,
+        translation_configured=translation_configured,
         retrieval_mode=retrieval_mode,
         embedding_provider=embedding.name,
         embedding_model=embedding.model,

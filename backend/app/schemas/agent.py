@@ -96,6 +96,7 @@ class AgentStatus(BaseModel):
     provider: str
     model: str | None
     llm_configured: bool
+    translation_configured: bool
     retrieval_mode: str
     embedding_provider: str
     embedding_model: str

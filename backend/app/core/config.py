@@ -24,6 +24,7 @@ class Settings(BaseSettings):
     data_dir: Path = Path("./data")
     upload_dir: Path = Path("./data/uploads")
     parsed_dir: Path = Path("./data/parsed")
+    translation_dir: Path = Path("./data/translations")
     max_upload_mb: int = 200
     celery_task_always_eager: bool = True
     parse_batch_pages: int = Field(default=25, ge=1, le=200)
@@ -66,7 +67,7 @@ class Settings(BaseSettings):
         return self.max_upload_mb * 1024 * 1024
 
     def ensure_directories(self) -> None:
-        for path in (self.data_dir, self.upload_dir, self.parsed_dir):
+        for path in (self.data_dir, self.upload_dir, self.parsed_dir, self.translation_dir):
             path.mkdir(parents=True, exist_ok=True)
 
 

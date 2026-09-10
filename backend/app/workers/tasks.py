@@ -1,3 +1,4 @@
+import asyncio
 import logging
 from pathlib import Path
 
@@ -5,10 +6,13 @@ from sqlalchemy import select
 
 from app.core.config import settings
 from app.core.database import SessionLocal, init_db
+from app.llm import get_llm_provider
 from app.models.document import Document, DocumentStatus
 from app.parsers import get_parser
 from app.parsers.checkpoint import write_json_atomic
 from app.services.chunking import replace_document_chunks
+from app.services.document_content import read_parsed_document
+from app.services.document_translation import run_document_translation
 from app.services.fingerprints import (
     bottom_k_signature,
     extract_arxiv_identity,
@@ -18,6 +22,7 @@ from app.services.fingerprints import (
     title_similarity,
 )
 from app.services.storage import storage
+from app.services.translation_store import translation_store
 from app.services.vector_index import index_document_safely
 from app.workers.celery_app import celery_app
 
@@ -155,4 +160,46 @@ def parse_document(document_id: str) -> dict[str, str]:
             document.status = DocumentStatus.FAILED
             document.error_message = str(exc)[:2000]
             session.commit()
+            raise
+
+
+@celery_app.task(name="documents.translate")
+def translate_document(document_id: str, target_language: str, force: bool = False) -> dict:
+    init_db()
+    settings.ensure_directories()
+    with SessionLocal() as session:
+        document = session.get(Document, document_id)
+        if document is None:
+            return {"document_id": document_id, "status": "missing"}
+        if document.status != DocumentStatus.READY:
+            return {"document_id": document_id, "status": "not_ready"}
+        parsed = read_parsed_document(document_id)
+        if parsed is None:
+            return {"document_id": document_id, "status": "missing_content"}
+        try:
+            provider = get_llm_provider()
+            if not provider.supports_translation:
+                raise RuntimeError("Translation provider is not configured")
+            return asyncio.run(
+                run_document_translation(
+                    document_id=document_id,
+                    parsed=parsed,
+                    source_fingerprint=document.sha256,
+                    target_language=target_language,
+                    provider=provider,
+                    force=force,
+                )
+            )
+        except Exception as exc:
+            logger.exception(
+                "Document translation failed",
+                extra={"document_id": document_id, "target_language": target_language},
+            )
+            if translation_store.read_manifest(document_id, target_language):
+                translation_store.set_status(
+                    document_id,
+                    target_language,
+                    "failed",
+                    error=str(exc)[:2000],
+                )
             raise

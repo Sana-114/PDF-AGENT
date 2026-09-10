@@ -13,11 +13,14 @@ import { Document, Page, pdfjs } from "react-pdf";
 import {
   CitationMention,
   DocumentPageTranslation,
+  DocumentTranslationJob,
   DocumentOutlineNode,
   DocumentReference,
   EvidenceAnchor,
   getDocumentOutline,
   getDocumentReferences,
+  getDocumentTranslationStatus,
+  startDocumentTranslation,
   translateDocumentPage,
   translateSelection,
   TranslationResponse,
@@ -196,6 +199,8 @@ export default function PdfReader({
   const [pageTranslation, setPageTranslation] = useState<DocumentPageTranslation | null>(null);
   const [pageTranslationLoading, setPageTranslationLoading] = useState(false);
   const [pageTranslationError, setPageTranslationError] = useState<string | null>(null);
+  const [translationJob, setTranslationJob] = useState<DocumentTranslationJob | null>(null);
+  const [translationJobStarting, setTranslationJobStarting] = useState(false);
   const [outlineOpen, setOutlineOpen] = useState(
     () => typeof window === "undefined" || window.innerWidth > 760,
   );
@@ -357,6 +362,51 @@ export default function PdfReader({
   }, [bilingualOpen, bilingualTarget, loadPageTranslation, pageNumber]);
 
   useEffect(() => {
+    if (!bilingualOpen) return;
+    let active = true;
+    void getDocumentTranslationStatus(documentId, bilingualTarget)
+      .then((status) => {
+        if (active) setTranslationJob(status);
+      })
+      .catch(() => {
+        if (active) setTranslationJob(null);
+      });
+    return () => {
+      active = false;
+    };
+  }, [bilingualOpen, bilingualTarget, documentId]);
+
+  useEffect(() => {
+    if (!translationJob || !["queued", "processing"].includes(translationJob.status)) return;
+    let active = true;
+    const timer = window.setInterval(() => {
+      void getDocumentTranslationStatus(documentId, bilingualTarget)
+        .then((status) => {
+          if (!active) return;
+          setTranslationJob(status);
+          const cacheKey = `${pageNumber}:${bilingualTarget}`;
+          if (
+            status.completed_pages >= pageNumber
+            && !translationCacheRef.current.has(cacheKey)
+          ) {
+            void loadPageTranslation(pageNumber, bilingualTarget);
+          }
+        })
+        .catch(() => undefined);
+    }, 2500);
+    return () => {
+      active = false;
+      window.clearInterval(timer);
+    };
+  }, [
+    bilingualTarget,
+    documentId,
+    loadPageTranslation,
+    pageNumber,
+    translationJob?.status,
+  ]);
+
+  useEffect(() => {
     const source = viewportRef.current;
     const target = bilingualRef.current;
     if (!bilingualOpen || !source || !target) return;
@@ -494,7 +544,22 @@ export default function PdfReader({
 
   function changeBilingualTarget(targetLanguage: "zh" | "en") {
     setBilingualTarget(targetLanguage);
+    setTranslationJob(null);
     setBilingualOpen(true);
+  }
+
+  async function startWholeDocumentTranslation() {
+    if (translationJobStarting) return;
+    setTranslationJobStarting(true);
+    setPageTranslationError(null);
+    try {
+      const status = await startDocumentTranslation(documentId, bilingualTarget);
+      setTranslationJob(status);
+    } catch (error) {
+      setPageTranslationError(error instanceof Error ? error.message : "整篇翻译任务创建失败");
+    } finally {
+      setTranslationJobStarting(false);
+    }
   }
 
   return (
@@ -708,6 +773,19 @@ export default function PdfReader({
               </div>
               <div className="pdf-bilingual-actions">
                 <button
+                  className="pdf-translate-all"
+                  disabled={translationJobStarting || ["queued", "processing", "completed"].includes(translationJob?.status ?? "")}
+                  onClick={() => void startWholeDocumentTranslation()}
+                  title="后台逐页翻译，失败后可从已完成页面继续"
+                  type="button"
+                >{translationJobStarting
+                    ? "创建中"
+                    : translationJob?.status === "failed"
+                      ? "继续"
+                      : translationJob?.status === "completed"
+                        ? "完成"
+                        : "整篇"}</button>
+                <button
                   className={bilingualTarget === "zh" ? "active" : ""}
                   onClick={() => changeBilingualTarget("zh")}
                   type="button"
@@ -720,6 +798,22 @@ export default function PdfReader({
                 <button aria-label="关闭双语对照" onClick={() => setBilingualOpen(false)} type="button">×</button>
               </div>
             </header>
+            {translationJob && (
+              <div className={`pdf-translation-job ${translationJob.status}`}>
+                <div>
+                  <span>{translationJob.status === "completed"
+                    ? "整篇翻译已完成"
+                    : translationJob.status === "failed"
+                      ? "任务已暂停，可继续"
+                      : translationJob.status === "partial"
+                        ? "已有页级缓存"
+                        : "整篇翻译处理中"}</span>
+                  <strong>{translationJob.completed_pages}/{translationJob.page_count} 页</strong>
+                </div>
+                <progress max="100" value={translationJob.percentage} />
+                {translationJob.error && <small>{translationJob.error}</small>}
+              </div>
+            )}
             {pageTranslationLoading && (
               <div className="pdf-bilingual-state">正在按段落翻译当前页…</div>
             )}

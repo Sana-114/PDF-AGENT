@@ -17,6 +17,7 @@ class OpenAIResponsesProvider:
     """OpenAI Responses API adapter with schema-constrained, grounded output."""
 
     name = "openai"
+    supports_translation = True
 
     def __init__(
         self,

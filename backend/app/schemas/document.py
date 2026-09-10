@@ -110,6 +110,26 @@ class DocumentPageTranslationRead(BaseModel):
     segments: list[PageTranslationSegmentRead]
 
 
+class TranslationJobRequest(BaseModel):
+    target_language: Literal["zh", "en"]
+    force: bool = False
+
+
+class TranslationJobRead(BaseModel):
+    document_id: str
+    source_language: Literal["auto"]
+    target_language: Literal["zh", "en"]
+    provider: str
+    model: str | None = None
+    status: Literal["partial", "queued", "processing", "completed", "failed"]
+    page_count: int = Field(ge=0)
+    completed_pages: int = Field(ge=0)
+    percentage: float = Field(ge=0, le=100)
+    resumable: bool
+    error: str | None = None
+    updated_at: str | None = None
+
+
 class HealthRead(BaseModel):
     status: str
     service: str

@@ -388,6 +388,15 @@ footer { padding: 28px; color: var(--muted); border-top: 1px solid var(--line); 
 }
 .pdf-bilingual-actions button.active { color: #173329; background: var(--lime); border-color: var(--lime); }
 .pdf-bilingual-actions button:last-child { font-size: 15px; }
+.pdf-bilingual-actions .pdf-translate-all { min-width: 38px; color: #173329; background: #9edcf2; border-color: #9edcf2; font-weight: 800; }
+.pdf-bilingual-actions button:disabled { opacity: .5; cursor: not-allowed; }
+.pdf-translation-job { display: grid; gap: 6px; padding: 9px 13px; color: #4d6259; background: #e7eee8; border-bottom: 1px solid #d2dbd3; font-size: 8px; }
+.pdf-translation-job > div { display: flex; justify-content: space-between; gap: 8px; }
+.pdf-translation-job strong { color: #245f46; }
+.pdf-translation-job progress { width: 100%; height: 5px; accent-color: var(--green); }
+.pdf-translation-job small { overflow: hidden; color: #8c3d24; text-overflow: ellipsis; white-space: nowrap; }
+.pdf-translation-job.failed { background: #fff0e9; }
+.pdf-translation-job.completed { background: #e1f1e6; }
 .pdf-bilingual-state { margin: 14px; padding: 22px 15px; color: var(--muted); background: #eceee8; border-radius: 8px; text-align: center; font-size: 10px; line-height: 1.6; }
 .pdf-bilingual-state.error { color: #8c3d24; background: #fff0e9; }
 .pdf-bilingual-segments { display: grid; gap: 0; }
