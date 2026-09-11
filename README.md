@@ -17,6 +17,9 @@ PaperPilot 是一个以原文证据为核心的科研助手 Agent 系统。本�
 - 从本地 Document AST 的 References 建立库内有向引用图，每条边保留页码、原文和匹配理由；
 - 联合入度与 PageRank 计算基石分，并标记基石、桥接、边缘衍生、外围和孤立论文；
 - Web 端以交互 SVG 展示引用拓扑、关系置信度和节点指标，可从图谱直接打开原文；
+- 从摘要、引言、结论和 Future Work 章节提取带页码/BBox 的综述证据；
+- 按论文时间与局域引用关系整理研究脉络，生成经过证据 ID 白名单校验的领域综述；
+- 将未来方向区分为“仍值得探索”和“可能已有进展”，后者同时提供较新论文证据供人工核验；
 - 基于 SHA-256 的完全重复检测；
 - Celery 后台解析和状态跟踪；
 - 长文档按默认 25 页分批解析，页面分片与进度 manifest 原子落盘，失败后从最近完整批次恢复；
@@ -220,6 +223,10 @@ LLM_BASE_URL=https://api.openai.com/v1
 
 图谱对有向边执行 PageRank，并将归一化 PageRank 与库内入度组合为“基石分”。得分最高且确实被库内论文引用的节点标记为基石论文；同时具有入边和出边的是桥接论文，只有出边的是边缘衍生论文，没有任何关系的是孤立节点。该分类只代表用户当前导入语料形成的局部拓扑，不等同于全领域引用影响力。
 
+“自动综述与前沿探索”复用同一局域图谱，并从 Document AST 的摘要、引言、讨论、结论、限制和 Future Work 区域抽取原文证据。配置生成式 LLM 时，模型只能引用本次生成的 `R1...Rn` 证据 ID，服务端会丢弃不存在的引用；未配置 LLM 时使用抽取式 Provider，仍可完整演示论文时间线和 Future Work 证据。
+
+系统不会仅凭文本相似就宣称旧方向已经解决。只有本地较新论文与原方向具有较高概念覆盖率，并在存在时叠加“新论文引用旧论文”的图关系，才标记为“可能已有进展”；界面保留原方向和后续进展两侧证据，要求用户最终确认。没有足够后续证据的方向保留为“仍值得探索”。
+
 ## 不使用 Docker 的本地启动
 
 后端默认使用 SQLite，并以内联模式运行 Celery 任务，因此无需先启动 Redis：
@@ -255,6 +262,7 @@ npm run dev
 | GET | `/api/v1/recommendations` | 按综合推荐分读取最新论文 |
 | POST | `/api/v1/recommendations/{id}/feedback` | 保存喜欢、不感兴趣或中性反馈 |
 | POST | `/api/v1/citation-graph` | 从选定或全部已解析文献构建可解释的局域引用图谱 |
+| POST | `/api/v1/reviews/generate` | 生成证据约束综述、论文时间线与 Future Work 状态 |
 | POST | `/api/v1/documents` | 上传 PDF，字段名为 `file` |
 | GET | `/api/v1/documents` | 文献列表 |
 | GET | `/api/v1/documents/{id}` | 文献详情 |
@@ -347,7 +355,8 @@ docker compose exec backend python scripts/evaluate_pdf_corpus.py `
 
 1. 用标准测试 PDF 评估当前版式基线，并按失败样本接入 Docling、GROBID 和 PaddleOCR；
 2. 用本地 BGE-M3 / Reranker 跑完官方 PDF 离线评测，并据此校准融合权重；
-3. 接入论文题名/DOI/arXiv ID 自动检索下载，并保留来源与许可证元数据；
-4. 使用 `1706.03762v7.pdf`、`v1.pdf` 和扫描版建立自动回归集。
+3. 为领域综述增加主题聚类、跨论文争议识别和人工确认后的方向状态持久化；
+4. 推进写作 Copilot、真实 References 校验、CSV 数据图表与学术 Figure Caption；
+5. 准备公网部署、技术文档 PDF 和 5–8 分钟演示视频。
 
 更完整的边界说明见 [docs/architecture.md](docs/architecture.md)。

@@ -2,15 +2,15 @@
 
 ## 目标
 
-当前阶段聚焦一条可验证的纵向链路：PDF 上传、内容指纹、异步解析、版式感知 Document AST、版本候选提醒、证据检索、受约束回答和站内原文阅读。翻译、检索推荐和引用图谱将通过稳定的数据边界逐步接入。
+当前阶段已经形成一条可验证的纵向链路：PDF 上传、内容指纹、异步解析、版式感知 Document AST、版本候选提醒、证据检索、受约束回答、站内原文阅读、学术追踪、局域引用图谱以及证据约束综述。
 
 ## 组件
 
 | 组件 | 职责 |
 | --- | --- |
-| Next.js Web | 上传、文献列表、证据问答、PDF.js 阅读、标题树与引用双向导航、版本提醒 |
-| FastAPI | 文献 CRUD、Agent 状态、Skills 和问答 API |
-| Celery + Redis | 长时 PDF 解析任务、重试和状态更新 |
+| Next.js Web | 上传、阅读、问答、翻译、学术追踪、引用图谱、综述与 Future Work 时间线 |
+| FastAPI | 文献、Agent、检索推荐、局域图谱和证据综述 API |
+| Celery + Redis | PDF 解析、整篇翻译、arXiv 定时刷新、重试和状态更新 |
 | Agent Harness | 检索、证据门控、Provider 调用、引用校验和 Trace |
 | Skill Registry | 带 Pydantic 输入 Schema 的本地工具发现与执行 |
 | LLM Provider | 默认抽取式兜底；可选 OpenAI Responses API 问答与学术翻译 |
@@ -95,6 +95,14 @@ Compose 中的 `local-bge` Profile 将 BGE-M3 Embedding 与 BGE Reranker 部署�
 Qdrant 不可达、索引失败或本地开发关闭向量检索时，`HybridRetriever` 会返回 BM25 结果。解析任务不会因向量服务故障而失败；后续查询会根据数据库 Chunk 数量自动补建缺失索引。
 
 `EvidenceAnchor` 同时保存 `document_id`、`page_number`、`block_ids`、`bbox`、`section`、`source_type` 和原文摘录。LLM 只能引用本次检索生成的 `E1...En`，Harness 会在响应前再次校验引用白名单。默认抽取式 Provider 完全不调用外部模型，可用于无密钥演示和离线回归测试。
+
+## 图谱与证据综述链路
+
+局域引用图谱读取所有选定 Document AST 的 References，优先使用 arXiv ID 精确匹配，再使用有阈值的规范化题名覆盖率建立有向边。边从引用论文指向被引论文，并保存参考文献原文、页码、标签、正文提及次数、匹配分和理由。服务对局域有向图执行 PageRank，将其与入度归一化后组合为基石分；前端按基石、桥接、衍生、外围和孤立角色布局 SVG 节点。
+
+证据综述从摘要、引言、讨论和结论提取 overview 证据，从限制、Future Work 标题及明确未来信号句提取方向证据。论文年份只使用学术来源元数据或 arXiv ID，不用上传时间冒充发表年份。若更晚论文的 overview 与旧方向达到概念覆盖阈值，且可选引用边进一步支持关系，方向会被标记为 `possibly_addressed`；系统不输出“已经解决”的强结论。
+
+生成式综述复用 LLM Provider 的 Grounded Answer Schema，输入只包含有界的 `R1...Rn` 证据。响应中的 Claim 再经服务端证据白名单过滤；Provider 不可用时切换到抽取式综述，因此时间线、方向状态和原文跳转仍可离线运行。
 
 离线评测器绕过 LLM，直接对 `LexicalRetriever` 或当前配置的 `HybridRetriever` 执行版本化 JSON 用例。文献通过 ID、文件名、标题或 arXiv ID/版本解析；证据按短文本特征、合法页码和结构类型匹配。聚合报告包含 Case Pass Rate、Evidence Recall、MRR、锚点有效率及 P50/P95 延迟，缺失文献作为显式失败。由此可以在更换 Embedding、Reranker 或融合权重时进行同一数据集对照。
 

@@ -15,6 +15,7 @@ import {
   DocumentProgress,
   DocumentRecord,
   EvidenceAnchor,
+  generateResearchReview,
   getAgentStatus,
   getDocumentProgress,
   importPaper,
@@ -24,6 +25,7 @@ import {
   PaperCandidate,
   PaperRecommendation,
   ReferenceResolveResponse,
+  ResearchReviewResponse,
   resolveDocumentReferences,
   refreshArxivSubscription,
   searchPapers,
@@ -31,6 +33,7 @@ import {
   uploadDocument,
 } from "../lib/api";
 import CitationGraph from "../components/CitationGraph";
+import ResearchReview from "../components/ResearchReview";
 import {
   defaultReferenceSelections,
   paperCandidateKey,
@@ -102,6 +105,8 @@ export default function Home() {
   const [importingRecommendation, setImportingRecommendation] = useState<string | null>(null);
   const [citationGraph, setCitationGraph] = useState<CitationGraphResponse | null>(null);
   const [buildingCitationGraph, setBuildingCitationGraph] = useState(false);
+  const [researchReview, setResearchReview] = useState<ResearchReviewResponse | null>(null);
+  const [generatingResearchReview, setGeneratingResearchReview] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const refresh = useCallback(async (quiet = false) => {
@@ -383,6 +388,25 @@ export default function Home() {
     }
   }
 
+  async function generateReview() {
+    const readyDocumentIds = documents
+      .filter((document) => document.status === "ready")
+      .map((document) => document.id);
+    if (!readyDocumentIds.length) {
+      setError("至少需要一篇已解析文献才能生成证据综述。");
+      return;
+    }
+    setGeneratingResearchReview(true);
+    setError(null);
+    try {
+      setResearchReview(await generateResearchReview(readyDocumentIds));
+    } catch (reviewError) {
+      setError(reviewError instanceof Error ? reviewError.message : "自动综述生成失败");
+    } finally {
+      setGeneratingResearchReview(false);
+    }
+  }
+
   async function addRecommendation(recommendation: PaperRecommendation) {
     setImportingRecommendation(recommendation.id);
     setError(null);
@@ -451,6 +475,7 @@ export default function Home() {
           <a href="#qa">问答</a>
           <a href="#recommendations">追踪</a>
           <a href="#citation-graph">引用图谱</a>
+          <a href="#research-review">综述</a>
           <span>写作台</span>
         </nav>
         <div className="system-pill"><span /> {agentLabel}</div>
@@ -719,6 +744,42 @@ export default function Home() {
               <CitationGraph
                 graph={citationGraph}
                 onOpenDocument={(node) => openReader(node.document_id, node.title)}
+              />
+            </>
+          )}
+        </section>
+
+        <section className="research-review-section" id="research-review">
+          <div className="section-heading">
+            <div><p className="eyebrow">EVIDENCE REVIEW</p><h2>自动综述与前沿探索</h2></div>
+            <button
+              className="ghost"
+              disabled={generatingResearchReview || !documents.some((item) => item.status === "ready")}
+              onClick={() => void generateReview()}
+              type="button"
+            >
+              {generatingResearchReview ? "正在提取证据…" : researchReview ? "重新生成" : "生成综述"}
+            </button>
+          </div>
+          {!researchReview && (
+            <div className="research-review-placeholder">
+              <strong>从原文证据生成研究脉络</strong>
+              <span>提取摘要、贡献、Future Work 和较新论文进展，并保留页码锚点。</span>
+            </div>
+          )}
+          {researchReview && (
+            <>
+              {researchReview.warnings.map((warning) => (
+                <p className="citation-warning" key={warning}>{warning}</p>
+              ))}
+              <ResearchReview
+                review={researchReview}
+                onOpenEvidence={(evidence) => openReader(
+                  evidence.document_id,
+                  evidence.document_title || "未命名文献",
+                  evidence.page_number,
+                  evidence,
+                )}
               />
             </>
           )}

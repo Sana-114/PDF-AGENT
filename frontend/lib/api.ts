@@ -234,6 +234,48 @@ export interface CitationGraphResponse {
   warnings: string[];
 }
 
+export interface ReviewEvidence extends EvidenceAnchor {
+  evidence_kind: "overview" | "future_work" | "later_progress";
+}
+
+export interface ReviewPaper {
+  document_id: string;
+  title: string;
+  publication_year: number | null;
+  graph_role: CitationGraphRole;
+  foundation_score: number;
+  overview_evidence_ids: string[];
+  future_work_evidence_ids: string[];
+}
+
+export interface FutureDirection {
+  direction_id: string;
+  text: string;
+  source_document_id: string;
+  source_title: string;
+  source_year: number | null;
+  source_evidence_id: string;
+  status: "open" | "possibly_addressed";
+  possibly_addressed_by_document_ids: string[];
+  progress_evidence_ids: string[];
+  exploration_score: number;
+  reason: string;
+}
+
+export interface ResearchReviewResponse {
+  generated_at: string;
+  review: string;
+  claims: Array<{ text: string; evidence_ids: string[] }>;
+  papers: ReviewPaper[];
+  future_directions: FutureDirection[];
+  evidence: ReviewEvidence[];
+  graph_stats: CitationGraphResponse["stats"];
+  provider: string;
+  model: string | null;
+  insufficient_evidence: boolean;
+  warnings: string[];
+}
+
 export interface EvidenceAnchor {
   evidence_id: string;
   chunk_id: string | null;
@@ -428,6 +470,23 @@ export async function buildCitationGraph(
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ document_ids: documentIds, match_threshold: 0.72 }),
+    }),
+  );
+  return response.json();
+}
+
+export async function generateResearchReview(
+  documentIds: string[] = [],
+): Promise<ResearchReviewResponse> {
+  const response = await assertResponse(
+    await fetch(`${API_BASE_URL}/reviews/generate`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        document_ids: documentIds,
+        match_threshold: 0.72,
+        max_evidence: 30,
+      }),
     }),
   );
   return response.json();
