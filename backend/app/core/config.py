@@ -35,6 +35,13 @@ class Settings(BaseSettings):
     scholarly_pdf_hosts: str = "arxiv.org,export.arxiv.org,pdfs.semanticscholar.org"
     reference_discovery_concurrency: int = Field(default=2, ge=1, le=5)
     reference_match_threshold: float = Field(default=0.55, ge=0.0, le=1.0)
+    arxiv_refresh_interval_minutes: int = Field(default=360, ge=15, le=10080)
+    arxiv_request_delay_seconds: float = Field(default=3.0, ge=0.0, le=30.0)
+    github_api_base_url: str = "https://api.github.com"
+    github_api_version: str = "2026-03-10"
+    github_token: str = ""
+    github_code_search_enabled: bool = True
+    github_code_lookup_limit: int = Field(default=3, ge=0, le=10)
     celery_task_always_eager: bool = True
     parse_batch_pages: int = Field(default=25, ge=1, le=200)
 

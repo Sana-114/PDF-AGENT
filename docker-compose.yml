@@ -151,6 +151,13 @@ services:
       SCHOLARLY_PDF_HOSTS: ${SCHOLARLY_PDF_HOSTS:-arxiv.org,export.arxiv.org,pdfs.semanticscholar.org}
       REFERENCE_DISCOVERY_CONCURRENCY: ${REFERENCE_DISCOVERY_CONCURRENCY:-2}
       REFERENCE_MATCH_THRESHOLD: ${REFERENCE_MATCH_THRESHOLD:-0.55}
+      ARXIV_REFRESH_INTERVAL_MINUTES: ${ARXIV_REFRESH_INTERVAL_MINUTES:-360}
+      ARXIV_REQUEST_DELAY_SECONDS: ${ARXIV_REQUEST_DELAY_SECONDS:-3}
+      GITHUB_API_BASE_URL: ${GITHUB_API_BASE_URL:-https://api.github.com}
+      GITHUB_API_VERSION: ${GITHUB_API_VERSION:-2026-03-10}
+      GITHUB_TOKEN: ${GITHUB_TOKEN:-}
+      GITHUB_CODE_SEARCH_ENABLED: ${GITHUB_CODE_SEARCH_ENABLED:-true}
+      GITHUB_CODE_LOOKUP_LIMIT: ${GITHUB_CODE_LOOKUP_LIMIT:-3}
     volumes:
       - ./backend:/app
       - app_data:/app/data
@@ -188,6 +195,15 @@ services:
       RERANKER_TIMEOUT_SECONDS: ${RERANKER_TIMEOUT_SECONDS:-60}
       RERANKER_CANDIDATE_K: ${RERANKER_CANDIDATE_K:-12}
       RERANKER_RETRIEVAL_WEIGHT: ${RERANKER_RETRIEVAL_WEIGHT:-0.25}
+      SCHOLARLY_API_TIMEOUT_SECONDS: ${SCHOLARLY_API_TIMEOUT_SECONDS:-20}
+      ARXIV_API_BASE_URL: ${ARXIV_API_BASE_URL:-https://export.arxiv.org/api}
+      ARXIV_REFRESH_INTERVAL_MINUTES: ${ARXIV_REFRESH_INTERVAL_MINUTES:-360}
+      ARXIV_REQUEST_DELAY_SECONDS: ${ARXIV_REQUEST_DELAY_SECONDS:-3}
+      GITHUB_API_BASE_URL: ${GITHUB_API_BASE_URL:-https://api.github.com}
+      GITHUB_API_VERSION: ${GITHUB_API_VERSION:-2026-03-10}
+      GITHUB_TOKEN: ${GITHUB_TOKEN:-}
+      GITHUB_CODE_SEARCH_ENABLED: ${GITHUB_CODE_SEARCH_ENABLED:-true}
+      GITHUB_CODE_LOOKUP_LIMIT: ${GITHUB_CODE_LOOKUP_LIMIT:-3}
       DATA_DIR: /app/data
       UPLOAD_DIR: /app/data/uploads
       PARSED_DIR: /app/data/parsed
@@ -207,6 +223,21 @@ services:
         condition: service_healthy
       redis:
         condition: service_healthy
+
+  beat:
+    build:
+      context: ./backend
+    command: celery -A app.workers.celery_app:celery_app beat --loglevel=INFO --schedule=/app/data/celerybeat-schedule
+    environment:
+      REDIS_URL: redis://redis:6379/0
+      ARXIV_REFRESH_INTERVAL_MINUTES: ${ARXIV_REFRESH_INTERVAL_MINUTES:-360}
+    volumes:
+      - ./backend:/app
+      - app_data:/app/data
+    depends_on:
+      redis:
+        condition: service_healthy
+    restart: unless-stopped
 
   frontend:
     build:

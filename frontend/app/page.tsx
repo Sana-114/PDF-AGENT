@@ -4,7 +4,10 @@ import dynamic from "next/dynamic";
 import { ChangeEvent, DragEvent, useCallback, useEffect, useMemo, useRef, useState } from "react";
 import {
   AgentAskResponse,
+  ArxivSubscription,
   askAgent,
+  createArxivSubscription,
+  deleteArxivSubscription,
   deleteDocument,
   documentFileUrl,
   DocumentProgress,
@@ -13,11 +16,16 @@ import {
   getAgentStatus,
   getDocumentProgress,
   importPaper,
+  listArxivSubscriptions,
   listDocuments,
+  listPaperRecommendations,
   PaperCandidate,
+  PaperRecommendation,
   ReferenceResolveResponse,
   resolveDocumentReferences,
+  refreshArxivSubscription,
   searchPapers,
+  setRecommendationFeedback,
   uploadDocument,
 } from "../lib/api";
 import {
@@ -81,6 +89,14 @@ export default function Home() {
   const [resolvingReferences, setResolvingReferences] = useState(false);
   const [importingReferences, setImportingReferences] = useState(false);
   const [referenceImportProgress, setReferenceImportProgress] = useState("");
+  const [subscriptions, setSubscriptions] = useState<ArxivSubscription[]>([]);
+  const [recommendations, setRecommendations] = useState<PaperRecommendation[]>([]);
+  const [feedName, setFeedName] = useState("");
+  const [feedQuery, setFeedQuery] = useState("");
+  const [feedCategory, setFeedCategory] = useState("");
+  const [savingFeed, setSavingFeed] = useState(false);
+  const [refreshingFeed, setRefreshingFeed] = useState<string | null>(null);
+  const [importingRecommendation, setImportingRecommendation] = useState<string | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const refresh = useCallback(async (quiet = false) => {
@@ -109,14 +125,32 @@ export default function Home() {
     }
   }, []);
 
+  const refreshRecommendationData = useCallback(async () => {
+    try {
+      const [subscriptionItems, recommendationItems] = await Promise.all([
+        listArxivSubscriptions(),
+        listPaperRecommendations(),
+      ]);
+      setSubscriptions(subscriptionItems);
+      setRecommendations(recommendationItems);
+    } catch {
+      // The main document workflow remains available while recommendation services recover.
+    }
+  }, []);
+
   useEffect(() => {
     void refresh();
     void getAgentStatus()
       .then((status) => setAgentLabel(status.model || status.provider))
       .catch(() => setAgentLabel("Agent 离线"));
+    void refreshRecommendationData();
     const timer = window.setInterval(() => void refresh(true), 3000);
-    return () => window.clearInterval(timer);
-  }, [refresh]);
+    const recommendationTimer = window.setInterval(() => void refreshRecommendationData(), 15000);
+    return () => {
+      window.clearInterval(timer);
+      window.clearInterval(recommendationTimer);
+    };
+  }, [refresh, refreshRecommendationData]);
 
   const processingCount = useMemo(
     () => documents.filter((document) => ["queued", "processing"].includes(document.status)).length,
@@ -260,6 +294,89 @@ export default function Home() {
     await refresh(true);
   }
 
+  async function createFeed(event: React.FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+    if (!feedName.trim() || (!feedQuery.trim() && !feedCategory.trim())) return;
+    setSavingFeed(true);
+    setError(null);
+    try {
+      await createArxivSubscription({
+        name: feedName.trim(),
+        query: feedQuery.trim(),
+        category: feedCategory.trim() || undefined,
+        max_results: 10,
+      });
+      setFeedName("");
+      setFeedQuery("");
+      setFeedCategory("");
+      setNotice("arXiv 追踪已创建，首次刷新任务已提交。 ");
+      await refreshRecommendationData();
+    } catch (feedError) {
+      setError(feedError instanceof Error ? feedError.message : "arXiv 追踪创建失败");
+    } finally {
+      setSavingFeed(false);
+    }
+  }
+
+  async function refreshFeed(subscriptionId: string) {
+    setRefreshingFeed(subscriptionId);
+    setError(null);
+    try {
+      await refreshArxivSubscription(subscriptionId);
+      setNotice("arXiv 刷新任务已提交，推荐列表将自动更新。 ");
+      window.setTimeout(() => void refreshRecommendationData(), 1200);
+    } catch (refreshError) {
+      setError(refreshError instanceof Error ? refreshError.message : "订阅刷新失败");
+    } finally {
+      setRefreshingFeed(null);
+    }
+  }
+
+  async function removeFeed(subscription: ArxivSubscription) {
+    if (!window.confirm(`删除追踪“${subscription.name}”及其推荐记录吗？`)) return;
+    try {
+      await deleteArxivSubscription(subscription.id);
+      await refreshRecommendationData();
+    } catch (deleteError) {
+      setError(deleteError instanceof Error ? deleteError.message : "订阅删除失败");
+    }
+  }
+
+  async function updateRecommendationFeedback(
+    recommendation: PaperRecommendation,
+    feedback: PaperRecommendation["feedback"],
+  ) {
+    try {
+      const updated = await setRecommendationFeedback(
+        recommendation.id,
+        recommendation.feedback === feedback ? "neutral" : feedback,
+      );
+      setRecommendations((current) => current.map((item) => (
+        item.id === updated.id ? updated : item
+      )));
+    } catch (feedbackError) {
+      setError(feedbackError instanceof Error ? feedbackError.message : "反馈保存失败");
+    }
+  }
+
+  async function addRecommendation(recommendation: PaperRecommendation) {
+    setImportingRecommendation(recommendation.id);
+    setError(null);
+    try {
+      const version = recommendation.arxiv_version ? `v${recommendation.arxiv_version}` : "";
+      const result = await importPaper({
+        source: "arxiv",
+        source_id: `${recommendation.arxiv_id}${version}`,
+      });
+      setNotice(result.message);
+      await refresh(true);
+    } catch (importError) {
+      setError(importError instanceof Error ? importError.message : "推荐论文导入失败");
+    } finally {
+      setImportingRecommendation(null);
+    }
+  }
+
   async function remove(document: DocumentRecord) {
     if (!window.confirm(`确定删除“${document.title || document.original_filename}”吗？`)) return;
     try {
@@ -308,6 +425,7 @@ export default function Home() {
         <nav aria-label="主导航">
           <a className="active" href="#library">文献库</a>
           <a href="#qa">问答</a>
+          <a href="#recommendations">追踪</a>
           <span>引用图谱</span>
           <span>写作台</span>
         </nav>
@@ -406,6 +524,139 @@ export default function Home() {
               })}
             </div>
           )}
+        </section>
+
+        <section className="recommendation-section" id="recommendations">
+          <div className="section-heading">
+            <div><p className="eyebrow">ARXIV RADAR</p><h2>研究动态追踪</h2></div>
+            <span className="evidence-promise">每 6 小时自动刷新 · 代码论文优先</span>
+          </div>
+          <form className="feed-form" onSubmit={createFeed}>
+            <label>
+              追踪名称
+              <input
+                onChange={(event) => setFeedName(event.target.value)}
+                placeholder="例如：多模态 RAG"
+                value={feedName}
+              />
+            </label>
+            <label>
+              研究关键词
+              <input
+                onChange={(event) => setFeedQuery(event.target.value)}
+                placeholder="retrieval augmented generation"
+                value={feedQuery}
+              />
+            </label>
+            <label>
+              arXiv 分类（可选）
+              <input
+                onChange={(event) => setFeedCategory(event.target.value)}
+                placeholder="cs.AI"
+                value={feedCategory}
+              />
+            </label>
+            <button
+              disabled={savingFeed || !feedName.trim() || (!feedQuery.trim() && !feedCategory.trim())}
+              type="submit"
+            >
+              {savingFeed ? "创建中…" : "创建追踪"}
+            </button>
+          </form>
+          {subscriptions.length > 0 && (
+            <div className="feed-chips">
+              {subscriptions.map((subscription) => (
+                <div className="feed-chip" key={subscription.id}>
+                  <span>
+                    <strong>{subscription.name}</strong>
+                    <small>
+                      {subscription.query || subscription.category}
+                      {subscription.last_error ? " · 最近刷新失败" : ""}
+                    </small>
+                  </span>
+                  <button
+                    disabled={refreshingFeed !== null}
+                    onClick={() => void refreshFeed(subscription.id)}
+                    type="button"
+                  >
+                    {refreshingFeed === subscription.id ? "刷新中" : "刷新"}
+                  </button>
+                  <button onClick={() => void removeFeed(subscription)} type="button">×</button>
+                </div>
+              ))}
+            </div>
+          )}
+          <div className="recommendation-grid">
+            {subscriptions.length === 0 && (
+              <div className="recommendation-empty">
+                创建一个关键词或分类追踪，系统会结合本地文献库计算相关性。
+              </div>
+            )}
+            {subscriptions.length > 0 && recommendations.length === 0 && (
+              <div className="recommendation-empty">等待首次 arXiv 刷新结果…</div>
+            )}
+            {recommendations.map((recommendation) => (
+              <article className="recommendation-card" key={recommendation.id}>
+                <div className="recommendation-score">
+                  <strong>{Math.round(recommendation.final_score * 100)}</strong>
+                  <span>推荐分</span>
+                </div>
+                <div className="recommendation-main">
+                  <div className="recommendation-tags">
+                    <span>arXiv:{recommendation.arxiv_id}</span>
+                    {recommendation.categories.slice(0, 2).map((category) => (
+                      <span key={category}>{category}</span>
+                    ))}
+                    {recommendation.code_url && <span className="code-tag">GitHub Code</span>}
+                  </div>
+                  <h3>{recommendation.title}</h3>
+                  <p className="recommendation-authors">
+                    {recommendation.authors.slice(0, 5).join(" · ") || "作者信息暂缺"}
+                  </p>
+                  {recommendation.abstract && (
+                    <p className="recommendation-abstract">{recommendation.abstract}</p>
+                  )}
+                  <small className="recommendation-reason">
+                    {recommendation.recommendation_reason}
+                  </small>
+                </div>
+                <div className="recommendation-actions">
+                  {recommendation.code_url && (
+                    <a href={recommendation.code_url} rel="noreferrer" target="_blank">
+                      代码{recommendation.code_stars ? ` · ${recommendation.code_stars}★` : ""}
+                    </a>
+                  )}
+                  <button
+                    disabled={importingRecommendation !== null}
+                    onClick={() => void addRecommendation(recommendation)}
+                    type="button"
+                  >
+                    {importingRecommendation === recommendation.id ? "导入中…" : "下载论文"}
+                  </button>
+                  <div className="feedback-actions">
+                    <button
+                      aria-pressed={recommendation.feedback === "like"}
+                      className={recommendation.feedback === "like" ? "active" : ""}
+                      onClick={() => void updateRecommendationFeedback(recommendation, "like")}
+                      title="喜欢，影响后续推荐"
+                      type="button"
+                    >
+                      ↑
+                    </button>
+                    <button
+                      aria-pressed={recommendation.feedback === "dislike"}
+                      className={recommendation.feedback === "dislike" ? "active dislike" : ""}
+                      onClick={() => void updateRecommendationFeedback(recommendation, "dislike")}
+                      title="不感兴趣，影响后续推荐"
+                      type="button"
+                    >
+                      ↓
+                    </button>
+                  </div>
+                </div>
+              </article>
+            ))}
+          </div>
         </section>
 
         {notice && <div className="notice success">{notice}</div>}

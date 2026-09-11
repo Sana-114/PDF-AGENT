@@ -25,5 +25,6 @@ def init_db() -> None:
     from app.models.chunk import DocumentChunk  # noqa: F401
     from app.models.document import Document  # noqa: F401
     from app.models.paper_source import PaperSource  # noqa: F401
+    from app.models.recommendation import ArxivSubscription, PaperRecommendation  # noqa: F401
 
     Base.metadata.create_all(bind=engine)

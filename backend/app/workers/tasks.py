@@ -1,5 +1,6 @@
 import asyncio
 import logging
+import time
 from pathlib import Path
 
 from sqlalchemy import select
@@ -8,6 +9,7 @@ from app.core.config import settings
 from app.core.database import SessionLocal, init_db
 from app.llm import get_llm_provider
 from app.models.document import Document, DocumentStatus
+from app.models.recommendation import ArxivSubscription
 from app.parsers import get_parser
 from app.parsers.checkpoint import write_json_atomic
 from app.services.chunking import replace_document_chunks
@@ -21,6 +23,7 @@ from app.services.fingerprints import (
     signature_to_json,
     title_similarity,
 )
+from app.services.recommendations import recommendation_service
 from app.services.storage import storage
 from app.services.translation_store import translation_store
 from app.services.vector_index import index_document_safely
@@ -203,3 +206,31 @@ def translate_document(document_id: str, target_language: str, force: bool = Fal
                     error=str(exc)[:2000],
                 )
             raise
+
+
+@celery_app.task(name="recommendations.refresh_subscription")
+def refresh_arxiv_subscription(subscription_id: str) -> dict:
+    init_db()
+    with SessionLocal() as session:
+        summary = asyncio.run(recommendation_service.refresh(session, subscription_id))
+        return {
+            "subscription_id": summary.subscription_id,
+            "discovered": summary.discovered,
+            "updated": summary.updated,
+            "error": summary.error,
+        }
+
+
+@celery_app.task(name="recommendations.refresh_all")
+def refresh_all_arxiv_subscriptions() -> dict:
+    init_db()
+    with SessionLocal() as session:
+        subscription_ids = session.scalars(
+            select(ArxivSubscription.id).where(ArxivSubscription.active.is_(True))
+        ).all()
+    results = []
+    for index, subscription_id in enumerate(subscription_ids):
+        if index and settings.arxiv_request_delay_seconds:
+            time.sleep(settings.arxiv_request_delay_seconds)
+        results.append(refresh_arxiv_subscription(subscription_id))
+    return {"refreshed": len(results), "results": results}

@@ -10,6 +10,10 @@ PaperPilot 是一个以原文证据为核心的科研助手 Agent 系统。本�
 - 保存外部索引、DOI、arXiv ID、落地页、许可证和检索元数据，导入仍复用 SHA-256 去重；
 - 从已解析 References 批量下钻被引论文，按 DOI/arXiv 精确标识或题名、作者、年份匹配候选；
 - Web 端展示可解释匹配分，默认勾选可信开放论文并去重后批量下载入库；
+- 支持持久化 arXiv 关键词/分类订阅，Celery Beat 默认每 6 小时自动获取最新论文；
+- 结合订阅条件、本地文献题名和点赞历史计算相关性，并综合新鲜度与代码可用性排序；
+- 从 arXiv 元数据提取 GitHub 链接，并可选调用 GitHub Repository Search 补充高置信代码仓库；
+- 支持论文推荐点赞/踩，后续刷新时把正负反馈纳入个性化兴趣画像；
 - 基于 SHA-256 的完全重复检测；
 - Celery 后台解析和状态跟踪；
 - 长文档按默认 25 页分批解析，页面分片与进度 manifest 原子落盘，失败后从最近完整批次恢复；
@@ -188,13 +192,19 @@ LLM_BASE_URL=https://api.openai.com/v1
 
 “整篇”翻译由 Celery 后台逐页执行，每页译文独立原子落盘，manifest 保存源文件指纹、Provider/模型签名、目标语言、完成页和错误状态。任务失败后再次启动会跳过已经完成的页面；源 PDF 或翻译模型发生变化时旧缓存自动失效。删除文献时对应译文缓存也会一并清理。
 
-## 在线论文检索与导入
+## 在线论文检索、追踪与导入
 
 首页可直接输入论文完整题名、DOI 或 arXiv ID。题名检索优先使用 Semantic Scholar，DOI 在需要时回退到 Crossref，arXiv ID 使用官方 API 精确查询。三个元数据接口在基础模式下均无需密钥；如配置 `SEMANTIC_SCHOLAR_API_KEY` 可获得更稳定的调用额度，`SCHOLARLY_CONTACT_EMAIL` 用于标识 Crossref polite 请求。
 
 一键导入不会接受浏览器传来的任意下载 URL。API 根据 `source` 和 `source_id` 重新查询来源，并仅允许 `SCHOLARLY_PDF_HOSTS` 中的 HTTPS 域名；下载时再次校验重定向链、文件大小和 `%PDF-` 文件头。默认白名单只包含 arXiv 与 Semantic Scholar PDF 域名，部署者可通过环境变量谨慎扩展。只有开放 PDF 可安全解析时按钮才可用，Crossref 兜底结果可能仅展示元数据。
 
 文献解析完成后，可在文献卡片点击“下钻引用”。系统默认分析前 12 条 References，每次最多支持 20 条，并把公共 API 并发限制为 2。DOI 和 arXiv ID 使用精确匹配；普通条目按候选题名词覆盖率、作者姓氏和年份给出可解释分数，默认阈值为 `0.55`。只有达到阈值且具有可信开放 PDF 的首选项会自动勾选，用户仍可检查候选后再批量入库。可通过 `REFERENCE_DISCOVERY_CONCURRENCY` 与 `REFERENCE_MATCH_THRESHOLD` 调整并发和阈值。
+
+“研究动态追踪”支持 arXiv 关键词、分类或两者组合订阅。查询按 `submittedDate` 降序获取最新条目，Celery Beat 默认每 360 分钟触发一次后台刷新；多个订阅之间默认等待 3 秒，遵守 arXiv 对连续 API 请求的友好调用建议。相关参数为 `ARXIV_REFRESH_INTERVAL_MINUTES` 和 `ARXIV_REQUEST_DELAY_SECONDS`。
+
+推荐分由本地文献兴趣相关度、发布时间新鲜度和 GitHub 代码加分组成。相关度复用当前 Embedding Provider：配置 BGE-M3 时使用真实语义向量，服务失败时安全降级到 Hash-Ngram。点赞论文加入正向画像，点踩论文形成负向惩罚，因此反馈会影响下一次刷新。
+
+系统优先使用摘要或 arXiv comment 中作者直接给出的 GitHub URL；如果没有直接链接，默认最多为每次刷新前 3 篇论文调用 GitHub Repository Search，并要求题名至少 60% 的词项重合。公共搜索存在更严格的速率限制，长期在线部署建议把只具备公共仓库读取能力的 Token 写入未提交的 `GITHUB_TOKEN`；也可设置 `GITHUB_CODE_SEARCH_ENABLED=false`，只保留直接链接识别。搜索补充结果表示高相关实现仓库，不宣称一定是作者官方代码。
 
 ## 不使用 Docker 的本地启动
 
@@ -224,6 +234,12 @@ npm run dev
 | GET | `/api/v1/discovery/papers?q=...` | 按题名、DOI 或 arXiv ID 检索论文 |
 | POST | `/api/v1/discovery/import` | 从可信开放来源下载、去重并创建解析任务 |
 | POST | `/api/v1/discovery/references/resolve` | 批量识别 References 中的被引论文及候选匹配分 |
+| POST | `/api/v1/recommendations/subscriptions` | 创建 arXiv 关键词/分类追踪并提交首次刷新 |
+| GET | `/api/v1/recommendations/subscriptions` | 查看订阅、最近刷新时间和错误状态 |
+| POST | `/api/v1/recommendations/subscriptions/{id}/refresh` | 手动提交订阅刷新任务 |
+| DELETE | `/api/v1/recommendations/subscriptions/{id}` | 删除订阅及其推荐记录 |
+| GET | `/api/v1/recommendations` | 按综合推荐分读取最新论文 |
+| POST | `/api/v1/recommendations/{id}/feedback` | 保存喜欢、不感兴趣或中性反馈 |
 | POST | `/api/v1/documents` | 上传 PDF，字段名为 `file` |
 | GET | `/api/v1/documents` | 文献列表 |
 | GET | `/api/v1/documents/{id}` | 文献详情 |

@@ -25,6 +25,8 @@ class PaperCandidate(BaseModel):
     landing_url: str | None = None
     pdf_url: str | None = None
     license: str | None = None
+    code_url: str | None = None
+    code_stars: int | None = None
     importable: bool = False
     import_reason: str | None = None
 

@@ -37,6 +37,10 @@ ARXIV_PATTERN = re.compile(
 ARXIV_BARE_PATTERN = re.compile(rf"{ARXIV_ID_PATTERN}(?:\.pdf)?", re.IGNORECASE)
 DOI_PATTERN = re.compile(r"10\.\d{4,9}/[^\s?#]+", re.IGNORECASE)
 TAG_PATTERN = re.compile(r"<[^>]+>")
+GITHUB_URL_PATTERN = re.compile(
+    r"https?://(?:www\.)?github\.com/[A-Za-z0-9_.-]+/[A-Za-z0-9_.-]+",
+    re.IGNORECASE,
+)
 
 
 class PaperDiscoveryError(RuntimeError):
@@ -66,6 +70,11 @@ def _extract_doi(value: str) -> str | None:
     if match is None:
         return None
     return match.group(0).rstrip(".,;:)]}").lower()
+
+
+def extract_github_url(value: str) -> str | None:
+    match = GITHUB_URL_PATTERN.search(value)
+    return match.group(0).rstrip(".,;:)]}") if match else None
 
 
 def detect_query_kind(query: str) -> tuple[QueryKind, str]:
@@ -179,6 +188,41 @@ class PaperDiscoveryService:
             )
         return candidate
 
+    async def search_arxiv(
+        self,
+        *,
+        query: str = "",
+        category: str | None = None,
+        limit: int = 10,
+    ) -> list[PaperCandidate]:
+        terms: list[str] = []
+        if query.strip():
+            escaped = query.strip().replace('"', "")
+            terms.append(f'all:"{escaped}"')
+        if category and category.strip():
+            terms.append(f"cat:{category.strip()}")
+        if not terms:
+            raise PaperDiscoveryError("arXiv 追踪必须提供关键词或分类。", 422)
+        url = f"{self.config.arxiv_api_base_url.rstrip('/')}/query"
+        response = await self._get(
+            url,
+            provider="arxiv",
+            params={
+                "search_query": " AND ".join(terms),
+                "start": 0,
+                "max_results": limit,
+                "sortBy": "submittedDate",
+                "sortOrder": "descending",
+            },
+        )
+        try:
+            response.raise_for_status()
+            root = ElementTree.fromstring(response.content)
+        except (httpx.HTTPStatusError, ElementTree.ParseError) as exc:
+            raise PaperDiscoveryError("arXiv 动态追踪返回了无效响应。") from exc
+        atom = "{http://www.w3.org/2005/Atom}"
+        return [self._arxiv_candidate(entry) for entry in root.findall(f"{atom}entry")]
+
     async def download(self, candidate: PaperCandidate) -> StagedUpload:
         if candidate.pdf_url is None or not self._is_safe_pdf_url(candidate.pdf_url):
             raise PaperDiscoveryError("PDF 地址不在服务端可信域名白名单中。", 409)
@@ -286,6 +330,7 @@ class PaperDiscoveryService:
             landing_url=item.get("url"),
             pdf_url=safe_pdf,
             license=open_pdf.get("license") or open_pdf.get("status"),
+            code_url=extract_github_url(_clean_text(item.get("abstract"))),
             importable=bool(safe_pdf),
             import_reason=None if safe_pdf else "未发现位于可信来源的开放 PDF。",
         )
@@ -327,6 +372,8 @@ class PaperDiscoveryService:
             for author in entry.findall(f"{atom}author")
         ]
         categories = [item.attrib.get("term", "") for item in entry.findall(f"{atom}category")]
+        abstract = _clean_text(entry.findtext(f"{atom}summary")) or None
+        comment = _clean_text(entry.findtext(f"{arxiv_ns}comment"))
         license_link = next(
             (
                 item.attrib.get("href")
@@ -340,7 +387,7 @@ class PaperDiscoveryService:
             source_id=identifier,
             title=_clean_text(entry.findtext(f"{atom}title")) or "未命名论文",
             authors=[author for author in authors if author],
-            abstract=_clean_text(entry.findtext(f"{atom}summary")) or None,
+            abstract=abstract,
             year=int(published[:4]) if published and published[:4].isdigit() else None,
             published_at=published,
             venue=", ".join(filter(None, categories)) or None,
@@ -350,6 +397,7 @@ class PaperDiscoveryService:
             landing_url=entry_url,
             pdf_url=pdf_url,
             license=license_link,
+            code_url=extract_github_url(f"{abstract or ''} {comment}"),
             importable=True,
         )
 

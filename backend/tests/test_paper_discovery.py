@@ -151,6 +151,37 @@ async def test_arxiv_identifier_uses_exact_id_list_and_keeps_version(tmp_path) -
 
 
 @pytest.mark.asyncio
+async def test_arxiv_tracking_sorts_latest_and_extracts_github_link(tmp_path) -> None:
+    feed = b"""<?xml version="1.0" encoding="UTF-8"?>
+    <feed xmlns="http://www.w3.org/2005/Atom"
+          xmlns:arxiv="http://arxiv.org/schemas/atom">
+      <entry>
+        <id>https://arxiv.org/abs/2609.01234v1</id>
+        <published>2026-09-10T00:00:00Z</published>
+        <title>Grounded Scientific Retrieval</title>
+        <summary>Code: https://github.com/lab/grounded-retrieval</summary>
+        <author><name>Ada Researcher</name></author>
+        <category term="cs.IR" />
+      </entry>
+    </feed>"""
+
+    def handler(request: httpx.Request) -> httpx.Response:
+        assert request.url.params["search_query"] == 'all:"scientific retrieval" AND cat:cs.IR'
+        assert request.url.params["sortBy"] == "submittedDate"
+        assert request.url.params["sortOrder"] == "descending"
+        return httpx.Response(200, content=feed)
+
+    async with httpx.AsyncClient(transport=httpx.MockTransport(handler)) as client:
+        service = PaperDiscoveryService(_settings(tmp_path), client)
+        items = await service.search_arxiv(
+            query="scientific retrieval", category="cs.IR", limit=5
+        )
+
+    assert len(items) == 1
+    assert items[0].code_url == "https://github.com/lab/grounded-retrieval"
+
+
+@pytest.mark.asyncio
 async def test_download_rejects_untrusted_pdf_host(tmp_path) -> None:
     transport = httpx.MockTransport(lambda _: httpx.Response(200))
     async with httpx.AsyncClient(transport=transport) as client:

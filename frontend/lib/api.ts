@@ -104,6 +104,8 @@ export interface PaperCandidate {
   landing_url: string | null;
   pdf_url: string | null;
   license: string | null;
+  code_url: string | null;
+  code_stars: number | null;
   importable: boolean;
   import_reason: string | null;
 }
@@ -143,6 +145,42 @@ export interface ReferenceResolveResponse {
 
 interface PaperImportResponse extends UploadResponse {
   source: PaperCandidate;
+}
+
+export interface ArxivSubscription {
+  id: string;
+  name: string;
+  query: string;
+  category: string | null;
+  max_results: number;
+  active: boolean;
+  last_refreshed_at: string | null;
+  last_error: string | null;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface PaperRecommendation {
+  id: string;
+  subscription_id: string;
+  arxiv_id: string;
+  arxiv_version: number | null;
+  title: string;
+  authors: string[];
+  abstract: string | null;
+  categories: string[];
+  published_at: string | null;
+  landing_url: string;
+  pdf_url: string;
+  code_url: string | null;
+  code_stars: number | null;
+  relevance_score: number;
+  freshness_score: number;
+  final_score: number;
+  recommendation_reason: string;
+  feedback: "neutral" | "like" | "dislike";
+  discovered_at: string;
+  updated_at: string;
 }
 
 export interface EvidenceAnchor {
@@ -258,12 +296,74 @@ export async function searchPapers(query: string): Promise<PaperSearchResponse> 
   return response.json();
 }
 
-export async function importPaper(candidate: PaperCandidate): Promise<PaperImportResponse> {
+export async function importPaper(
+  candidate: Pick<PaperCandidate, "source" | "source_id">,
+): Promise<PaperImportResponse> {
   const response = await assertResponse(
     await fetch(`${API_BASE_URL}/discovery/import`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ source: candidate.source, source_id: candidate.source_id }),
+    }),
+  );
+  return response.json();
+}
+
+export async function listArxivSubscriptions(): Promise<ArxivSubscription[]> {
+  const response = await assertResponse(
+    await fetch(`${API_BASE_URL}/recommendations/subscriptions`, { cache: "no-store" }),
+  );
+  return (await response.json()).items;
+}
+
+export async function createArxivSubscription(input: {
+  name: string;
+  query: string;
+  category?: string;
+  max_results?: number;
+}): Promise<ArxivSubscription> {
+  const response = await assertResponse(
+    await fetch(`${API_BASE_URL}/recommendations/subscriptions`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ ...input, refresh_now: true }),
+    }),
+  );
+  return response.json();
+}
+
+export async function refreshArxivSubscription(subscriptionId: string): Promise<void> {
+  await assertResponse(
+    await fetch(`${API_BASE_URL}/recommendations/subscriptions/${subscriptionId}/refresh`, {
+      method: "POST",
+    }),
+  );
+}
+
+export async function deleteArxivSubscription(subscriptionId: string): Promise<void> {
+  await assertResponse(
+    await fetch(`${API_BASE_URL}/recommendations/subscriptions/${subscriptionId}`, {
+      method: "DELETE",
+    }),
+  );
+}
+
+export async function listPaperRecommendations(): Promise<PaperRecommendation[]> {
+  const response = await assertResponse(
+    await fetch(`${API_BASE_URL}/recommendations?limit=30`, { cache: "no-store" }),
+  );
+  return (await response.json()).items;
+}
+
+export async function setRecommendationFeedback(
+  recommendationId: string,
+  feedback: PaperRecommendation["feedback"],
+): Promise<PaperRecommendation> {
+  const response = await assertResponse(
+    await fetch(`${API_BASE_URL}/recommendations/${recommendationId}/feedback`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ feedback }),
     }),
   );
   return response.json();
