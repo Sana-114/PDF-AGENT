@@ -92,6 +92,10 @@ docker compose up --build
 - Qdrant：http://localhost:6333/dashboard
 - MinIO Console：http://localhost:9001
 
+若 Windows 将 `6333`、`6334` 或 `6379` 纳入系统保留端口范围，可在 `.env` 中设置
+`QDRANT_HTTP_PORT`、`QDRANT_GRPC_PORT` 和 `REDIS_HOST_PORT` 改用其他宿主机端口；同时把供本机工具使用的
+`QDRANT_URL`、`REDIS_URL` 改为对应端口。容器之间仍使用原始服务端口，无需修改后端配置。
+
 开发环境中的 MinIO 默认密码只用于本地启动，上线前必须修改。
 
 Docker 镜像已经安装 `eng` 和 `chi_sim` Tesseract 语言数据。默认使用 `chi_sim+eng`，避免中文大字号标题被英文模型优先误判；可通过 `OCR_LANGUAGES` 覆盖。非 Docker 启动时，需要自行安装对应语言包并设置 `OCR_TESSDATA`；原生文本 PDF 不依赖 OCR 环境。
