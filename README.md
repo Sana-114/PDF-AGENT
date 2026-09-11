@@ -14,6 +14,9 @@ PaperPilot 是一个以原文证据为核心的科研助手 Agent 系统。本�
 - 结合订阅条件、本地文献题名和点赞历史计算相关性，并综合新鲜度与代码可用性排序；
 - 从 arXiv 元数据提取 GitHub 链接，并可选调用 GitHub Repository Search 补充高置信代码仓库；
 - 支持论文推荐点赞/踩，后续刷新时把正负反馈纳入个性化兴趣画像；
+- 从本地 Document AST 的 References 建立库内有向引用图，每条边保留页码、原文和匹配理由；
+- 联合入度与 PageRank 计算基石分，并标记基石、桥接、边缘衍生、外围和孤立论文；
+- Web 端以交互 SVG 展示引用拓扑、关系置信度和节点指标，可从图谱直接打开原文；
 - 基于 SHA-256 的完全重复检测；
 - Celery 后台解析和状态跟踪；
 - 长文档按默认 25 页分批解析，页面分片与进度 manifest 原子落盘，失败后从最近完整批次恢复；
@@ -92,9 +95,10 @@ docker compose up --build
 - Qdrant：http://localhost:6333/dashboard
 - MinIO Console：http://localhost:9001
 
-若 Windows 将 `6333`、`6334` 或 `6379` 纳入系统保留端口范围，可在 `.env` 中设置
-`QDRANT_HTTP_PORT`、`QDRANT_GRPC_PORT` 和 `REDIS_HOST_PORT` 改用其他宿主机端口；同时把供本机工具使用的
-`QDRANT_URL`、`REDIS_URL` 改为对应端口。容器之间仍使用原始服务端口，无需修改后端配置。
+若 Windows 将 `3000`、`6333`、`6334` 或 `6379` 纳入系统保留端口范围，可在 `.env` 中设置
+`FRONTEND_HOST_PORT`、`QDRANT_HTTP_PORT`、`QDRANT_GRPC_PORT` 和 `REDIS_HOST_PORT`
+改用其他宿主机端口；同时更新 `FRONTEND_ORIGIN` 以及供本机工具使用的 `QDRANT_URL`、
+`REDIS_URL`。容器之间仍使用原始服务端口，无需修改后端连接地址。
 
 开发环境中的 MinIO 默认密码只用于本地启动，上线前必须修改。
 
@@ -210,6 +214,12 @@ LLM_BASE_URL=https://api.openai.com/v1
 
 系统优先使用摘要或 arXiv comment 中作者直接给出的 GitHub URL；如果没有直接链接，默认最多为每次刷新前 3 篇论文调用 GitHub Repository Search，并要求题名至少 60% 的词项重合。公共搜索存在更严格的速率限制，长期在线部署建议把只具备公共仓库读取能力的 Token 写入未提交的 `GITHUB_TOKEN`；也可设置 `GITHUB_CODE_SEARCH_ENABLED=false`，只保留直接链接识别。搜索补充结果表示高相关实现仓库，不宣称一定是作者官方代码。
 
+## 局域引用图谱
+
+“局域引用图谱”只分析当前文献库中已经完成解析的论文。系统先从每篇论文的 References 读取结构化条目，优先按 arXiv ID 精确匹配库内文献，再按规范化题名、词项覆盖率和文本相似度建立高置信有向边。它不会让 LLM 猜测引用关系；每条边都返回参考文献 ID、标签、所在页码、原文、匹配分和理由，便于评审复核。
+
+图谱对有向边执行 PageRank，并将归一化 PageRank 与库内入度组合为“基石分”。得分最高且确实被库内论文引用的节点标记为基石论文；同时具有入边和出边的是桥接论文，只有出边的是边缘衍生论文，没有任何关系的是孤立节点。该分类只代表用户当前导入语料形成的局部拓扑，不等同于全领域引用影响力。
+
 ## 不使用 Docker 的本地启动
 
 后端默认使用 SQLite，并以内联模式运行 Celery 任务，因此无需先启动 Redis：
@@ -244,6 +254,7 @@ npm run dev
 | DELETE | `/api/v1/recommendations/subscriptions/{id}` | 删除订阅及其推荐记录 |
 | GET | `/api/v1/recommendations` | 按综合推荐分读取最新论文 |
 | POST | `/api/v1/recommendations/{id}/feedback` | 保存喜欢、不感兴趣或中性反馈 |
+| POST | `/api/v1/citation-graph` | 从选定或全部已解析文献构建可解释的局域引用图谱 |
 | POST | `/api/v1/documents` | 上传 PDF，字段名为 `file` |
 | GET | `/api/v1/documents` | 文献列表 |
 | GET | `/api/v1/documents/{id}` | 文献详情 |

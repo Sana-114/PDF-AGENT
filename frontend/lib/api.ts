@@ -183,6 +183,57 @@ export interface PaperRecommendation {
   updated_at: string;
 }
 
+export type CitationGraphRole =
+  | "cornerstone"
+  | "bridge"
+  | "derivative"
+  | "isolated"
+  | "peripheral";
+
+export interface CitationGraphNode {
+  document_id: string;
+  title: string;
+  authors: string[];
+  arxiv_id: string | null;
+  arxiv_version: number | null;
+  page_count: number | null;
+  in_degree: number;
+  out_degree: number;
+  pagerank: number;
+  foundation_score: number;
+  role: CitationGraphRole;
+}
+
+export interface CitationGraphEdge {
+  edge_id: string;
+  source_document_id: string;
+  target_document_id: string;
+  reference_ids: string[];
+  reference_labels: string[];
+  reference_pages: number[];
+  sample_reference: string;
+  mention_count: number;
+  match_score: number;
+  match_reason: string;
+}
+
+export interface CitationGraphResponse {
+  generated_at: string;
+  nodes: CitationGraphNode[];
+  edges: CitationGraphEdge[];
+  stats: {
+    document_count: number;
+    relation_count: number;
+    total_references: number;
+    matched_references: number;
+    unmatched_references: number;
+    cornerstone_count: number;
+    derivative_count: number;
+    density: number;
+  };
+  warnings: string[];
+}
+
 export interface EvidenceAnchor {
   evidence_id: string;
   chunk_id: string | null;
@@ -364,6 +415,19 @@ export async function setRecommendationFeedback(
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ feedback }),
+    }),
+  );
+  return response.json();
+}
+
+export async function buildCitationGraph(
+  documentIds: string[] = [],
+): Promise<CitationGraphResponse> {
+  const response = await assertResponse(
+    await fetch(`${API_BASE_URL}/citation-graph`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ document_ids: documentIds, match_threshold: 0.72 }),
     }),
   );
   return response.json();

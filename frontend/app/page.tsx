@@ -6,6 +6,8 @@ import {
   AgentAskResponse,
   ArxivSubscription,
   askAgent,
+  buildCitationGraph,
+  CitationGraphResponse,
   createArxivSubscription,
   deleteArxivSubscription,
   deleteDocument,
@@ -28,6 +30,7 @@ import {
   setRecommendationFeedback,
   uploadDocument,
 } from "../lib/api";
+import CitationGraph from "../components/CitationGraph";
 import {
   defaultReferenceSelections,
   paperCandidateKey,
@@ -97,6 +100,8 @@ export default function Home() {
   const [savingFeed, setSavingFeed] = useState(false);
   const [refreshingFeed, setRefreshingFeed] = useState<string | null>(null);
   const [importingRecommendation, setImportingRecommendation] = useState<string | null>(null);
+  const [citationGraph, setCitationGraph] = useState<CitationGraphResponse | null>(null);
+  const [buildingCitationGraph, setBuildingCitationGraph] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const refresh = useCallback(async (quiet = false) => {
@@ -359,6 +364,25 @@ export default function Home() {
     }
   }
 
+  async function generateCitationGraph() {
+    const readyDocumentIds = documents
+      .filter((document) => document.status === "ready")
+      .map((document) => document.id);
+    if (readyDocumentIds.length < 2) {
+      setError("至少需要两篇已解析文献才能构建局域引用图谱。");
+      return;
+    }
+    setBuildingCitationGraph(true);
+    setError(null);
+    try {
+      setCitationGraph(await buildCitationGraph(readyDocumentIds));
+    } catch (graphError) {
+      setError(graphError instanceof Error ? graphError.message : "引用图谱构建失败");
+    } finally {
+      setBuildingCitationGraph(false);
+    }
+  }
+
   async function addRecommendation(recommendation: PaperRecommendation) {
     setImportingRecommendation(recommendation.id);
     setError(null);
@@ -426,7 +450,7 @@ export default function Home() {
           <a className="active" href="#library">文献库</a>
           <a href="#qa">问答</a>
           <a href="#recommendations">追踪</a>
-          <span>引用图谱</span>
+          <a href="#citation-graph">引用图谱</a>
           <span>写作台</span>
         </nav>
         <div className="system-pill"><span /> {agentLabel}</div>
@@ -657,6 +681,47 @@ export default function Home() {
               </article>
             ))}
           </div>
+        </section>
+
+        <section className="citation-graph-section" id="citation-graph">
+          <div className="section-heading">
+            <div><p className="eyebrow">LOCAL CITATION TOPOLOGY</p><h2>局域引用图谱</h2></div>
+            <button
+              className="ghost"
+              disabled={buildingCitationGraph || documents.filter((item) => item.status === "ready").length < 2}
+              onClick={() => void generateCitationGraph()}
+              type="button"
+            >
+              {buildingCitationGraph ? "正在计算…" : citationGraph ? "重新构建" : "生成图谱"}
+            </button>
+          </div>
+          {!citationGraph && (
+            <div className="citation-graph-placeholder">
+              <strong>从已解析文献中发现真实互引关系</strong>
+              <span>题名与 arXiv ID 本地匹配，不调用 LLM 猜测；至少需要两篇已就绪论文。</span>
+            </div>
+          )}
+          {citationGraph && (
+            <>
+              <div className="citation-summary">
+                <div><strong>{citationGraph.stats.document_count}</strong><span>图谱节点</span></div>
+                <div><strong>{citationGraph.stats.relation_count}</strong><span>互引关系</span></div>
+                <div><strong>{citationGraph.stats.cornerstone_count}</strong><span>基石论文</span></div>
+                <div><strong>{citationGraph.stats.derivative_count}</strong><span>边缘衍生</span></div>
+                <p>
+                  匹配 {citationGraph.stats.matched_references} / {citationGraph.stats.total_references} 条参考文献
+                  · 图密度 {(citationGraph.stats.density * 100).toFixed(1)}%
+                </p>
+              </div>
+              {citationGraph.warnings.map((warning) => (
+                <p className="citation-warning" key={warning}>{warning}</p>
+              ))}
+              <CitationGraph
+                graph={citationGraph}
+                onOpenDocument={(node) => openReader(node.document_id, node.title)}
+              />
+            </>
+          )}
         </section>
 
         {notice && <div className="notice success">{notice}</div>}
