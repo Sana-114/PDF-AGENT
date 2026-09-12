@@ -5,11 +5,33 @@ from sqlalchemy import select
 from sqlalchemy.orm import Session
 
 from app.core.database import get_db
+from app.llm import get_llm_provider
+from app.llm.base import LLMConfigurationError, LLMResponseError
 from app.models.document import Document, DocumentStatus
+from app.schemas.academic_translation import (
+    AcademicTranslationRead,
+    AcademicTranslationRequest,
+)
 from app.schemas.writing import WritingOutlineRead, WritingOutlineRequest
+from app.services.academic_translation import AcademicTranslationService
 from app.services.writing_outline import WritingOutlineService
 
 router = APIRouter()
+
+
+@router.post("/translate", response_model=AcademicTranslationRead)
+async def translate_academic_text(
+    request: AcademicTranslationRequest,
+) -> AcademicTranslationRead:
+    try:
+        provider = get_llm_provider()
+        if not provider.supports_translation:
+            raise LLMConfigurationError("学术翻译需要配置支持翻译的生成式 LLM。")
+        return await AcademicTranslationService(provider).translate(request)
+    except LLMConfigurationError as exc:
+        raise HTTPException(status_code=503, detail=str(exc)) from exc
+    except LLMResponseError as exc:
+        raise HTTPException(status_code=502, detail=str(exc)) from exc
 
 
 @router.post("/outline", response_model=WritingOutlineRead)

@@ -52,4 +52,5 @@ class LLMProvider(Protocol):
         segments: list[tuple[str, str]],
         source_language: str,
         target_language: str,
+        context: str | None = None,
     ) -> GeneratedSegmentTranslations: ...

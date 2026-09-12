@@ -15,6 +15,7 @@
 | Skill Registry | 带 Pydantic 输入 Schema 的本地工具发现与执行 |
 | LLM Provider | 默认抽取式兜底；可选 OpenAI Responses API 问答与学术翻译 |
 | Writing Guard | 将检索证据转换为论文框架，并从持久化学术元数据重建 References |
+| Translation Guard | 分段调用生成式 LLM，并强制恢复公式、引用、代码、数字与术语占位符 |
 | Visualization Engine | 审计 CSV 字段，生成可复核图表数据、Figure Caption 与 Matplotlib 脚本 |
 | Diagram Compiler | 将用户关系路径规范化为图，并编译 Mermaid、DOT、TikZ 与 Matplotlib 脚本 |
 | Embedding Provider | 默认离线 Hash 基线；可选 OpenAI-compatible BGE-M3 等语义服务 |
@@ -109,6 +110,10 @@ Qdrant 不可达、索引失败或本地开发关闭向量检索时，`HybridRet
 
 写作 Copilot 以用户 idea 构造专门的检索问题，复用 ResearchAgent 获得经过白名单校验的 Claim 和 Evidence。框架的事实段落只由这些 Claim 与原文摘录构成；References 则完全绕过模型输出，按本次证据涉及的 `document_id` 查询 Document 和 PaperSource。格式化器只输出实际存在的作者、年份、Venue、DOI 或 arXiv ID，并向前端暴露 `verified_fields` 与 provenance，防止模型生成的虚构书目进入稿件。
 
+独立学术翻译工作台复用同一 LLM Provider，但在调用模型前先识别 LaTeX、代码块、行内代码、数字引用、URL、DOI 和独立数值，并替换为唯一的代码式占位符。用户术语表也进入同一保护链路，恢复时使用用户指定的目标术语。模型必须逐段返回原始 `segment-id`，服务端检查 ID 集合及每个占位符恰好出现一次；缺段、额外段、空段或占位符损坏都会拒绝整个结果，不展示貌似完整的译文。
+
+文本按原始空行拆段，并在最多 40 段或 12000 字符的请求预算内分批发送，最终按原位置恢复分隔符。摘要模式要求模型使用简洁的期刊摘要表达，但不补造原文缺失的目的、方法或结果；正文模式保留标题、列表、段落作用和论断强度。默认抽取式 Provider 仍明确返回不可用，只有配置支持翻译的生成式 LLM 后才会产生译文。
+
 ## 科研数据可视化链路
 
 CSV 可视化端点只接受有界的 CSV/TSV 上传，自动识别 UTF-8、GB18030、分隔符、重复列名和不规则行。原始值不会被覆盖；字段审计分别报告类型、缺失数、去重数、数值范围与均值。折线图用于日期序列，柱状图用于分类比较，用户也可显式选择图表类型。三维雷达图要求至少三个数值指标，并在当前展示记录内逐指标执行 min-max 归一化；透视层高仅用于区分记录，不编码额外数据。
@@ -130,4 +135,5 @@ CSV 可视化端点只接受有界的 CSV/TSV 上传，自动识别 UTF-8、GB18
 3. 为复杂扫描表格和公式增加专用识别适配器。
 4. 为科研图表增加列选择、误差棒、统计检验与矢量格式导出。
 5. 为架构图增加分组、边标签、SVG/PDF 下载与人工拖拽后的坐标回写。
-6. 将本地存储实现替换为 S3/MinIO 实现，保持 API 不变。
+6. 为学术翻译增加持久术语库、人工审校状态和 DOCX/Markdown 导出。
+7. 将本地存储实现替换为 S3/MinIO 实现，保持 API 不变。

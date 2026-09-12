@@ -178,6 +178,7 @@ class OpenAIResponsesProvider:
         segments: list[tuple[str, str]],
         source_language: str,
         target_language: str,
+        context: str | None = None,
     ) -> GeneratedSegmentTranslations:
         if not segments:
             return GeneratedSegmentTranslations(items={})
@@ -213,7 +214,8 @@ class OpenAIResponsesProvider:
                 "You are an academic translator. Translate every supplied segment independently "
                 "and return each original block_id exactly once. Do not merge, omit, or reorder "
                 "segments. Do not add facts or explanations. Preserve equations, citation markers, "
-                "code, model names, and numbers."
+                "code, model names, numbers, and protected placeholder tokens exactly. "
+                + (context or "Use precise formal academic prose.")
             ),
             "input": (
                 f"Source language: {language_names[source_language]}\n"

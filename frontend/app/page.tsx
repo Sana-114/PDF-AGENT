@@ -39,6 +39,7 @@ import ResearchReview from "../components/ResearchReview";
 import WritingWorkbench from "../components/WritingWorkbench";
 import DataVisualizationWorkbench from "../components/DataVisualizationWorkbench";
 import ArchitectureDiagramWorkbench from "../components/ArchitectureDiagramWorkbench";
+import AcademicTranslationWorkbench from "../components/AcademicTranslationWorkbench";
 import {
   defaultReferenceSelections,
   paperCandidateKey,
@@ -512,6 +513,7 @@ export default function Home() {
           <a href="#citation-graph">引用图谱</a>
           <a href="#research-review">综述</a>
           <a href="#writing-workbench">写作台</a>
+          <a href="#academic-translation">学术翻译</a>
           <a href="#data-visualization">数据作图</a>
           <a href="#architecture-diagram">架构图</a>
         </nav>
@@ -870,6 +872,14 @@ export default function Home() {
               />
             </>
           )}
+        </section>
+
+        <section className="academic-translation-section" id="academic-translation">
+          <div className="section-heading">
+            <div><p className="eyebrow">ACADEMIC TRANSLATION</p><h2>中英学术翻译与完整性校验</h2></div>
+            <span className="evidence-promise">公式、引用、代码、数字与指定术语受保护</span>
+          </div>
+          <AcademicTranslationWorkbench />
         </section>
 
         <section className="data-visualization-section" id="data-visualization">

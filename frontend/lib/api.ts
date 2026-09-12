@@ -371,6 +371,25 @@ export interface ArchitectureDiagramResponse {
   warnings: string[];
 }
 
+export interface AcademicTranslationResponse {
+  translation: string;
+  source_language: "auto" | "zh" | "en";
+  target_language: "zh" | "en";
+  document_type: "abstract" | "paper";
+  provider: string;
+  model: string | null;
+  source_characters: number;
+  translated_characters: number;
+  paragraph_count: number;
+  request_count: number;
+  glossary_applied: Array<{ source: string; target: string; count: number }>;
+  preservation_checks: Array<{
+    kind: "formula" | "code" | "citation" | "url" | "number";
+    count: number;
+  }>;
+  warnings: string[];
+}
+
 export interface EvidenceAnchor {
   evidence_id: string;
   chunk_id: string | null;
@@ -635,6 +654,29 @@ export async function generateArchitectureDiagram(input: {
       body: JSON.stringify({
         ...input,
         formats: ["mermaid", "graphviz", "tikz", "matplotlib"],
+      }),
+    }),
+  );
+  return response.json();
+}
+
+export async function translateAcademicText(input: {
+  text: string;
+  sourceLanguage: "auto" | "zh" | "en";
+  targetLanguage: "zh" | "en";
+  documentType: "abstract" | "paper";
+  glossary: Array<{ source: string; target: string }>;
+}): Promise<AcademicTranslationResponse> {
+  const response = await assertResponse(
+    await fetch(`${API_BASE_URL}/writing/translate`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        text: input.text,
+        source_language: input.sourceLanguage,
+        target_language: input.targetLanguage,
+        document_type: input.documentType,
+        glossary: input.glossary,
       }),
     }),
   );

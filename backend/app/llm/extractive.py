@@ -47,8 +47,9 @@ class ExtractiveProvider:
         segments: list[tuple[str, str]],
         source_language: str,
         target_language: str,
+        context: str | None = None,
     ) -> GeneratedSegmentTranslations:
-        del segments, source_language, target_language
+        del segments, source_language, target_language, context
         raise LLMConfigurationError(
             "双语阅读需要生成式 LLM；请在 .env 中配置 LLM_PROVIDER、LLM_MODEL 和 LLM_API_KEY。"
         )
