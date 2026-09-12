@@ -14,6 +14,7 @@
 | Agent Harness | 检索、证据门控、Provider 调用、引用校验和 Trace |
 | Skill Registry | 带 Pydantic 输入 Schema 的本地工具发现与执行 |
 | LLM Provider | 默认抽取式兜底；可选 OpenAI Responses API 问答与学术翻译 |
+| Writing Guard | 将检索证据转换为论文框架，并从持久化学术元数据重建 References |
 | Embedding Provider | 默认离线 Hash 基线；可选 OpenAI-compatible BGE-M3 等语义服务 |
 | Reranker | 默认关闭；可选 Cohere-compatible 或 TEI Cross-Encoder 候选重排 |
 | BGE Runtime | 可选 TEI Docker Profile，独立运行 BGE-M3 与 BGE Reranker |
@@ -103,6 +104,8 @@ Qdrant 不可达、索引失败或本地开发关闭向量检索时，`HybridRet
 证据综述从摘要、引言、讨论和结论提取 overview 证据，从限制、Future Work 标题及明确未来信号句提取方向证据。论文年份只使用学术来源元数据或 arXiv ID，不用上传时间冒充发表年份。若更晚论文的 overview 与旧方向达到概念覆盖阈值，且可选引用边进一步支持关系，方向会被标记为 `possibly_addressed`；系统不输出“已经解决”的强结论。
 
 生成式综述复用 LLM Provider 的 Grounded Answer Schema，输入只包含有界的 `R1...Rn` 证据。响应中的 Claim 再经服务端证据白名单过滤；Provider 不可用时切换到抽取式综述，因此时间线、方向状态和原文跳转仍可离线运行。
+
+写作 Copilot 以用户 idea 构造专门的检索问题，复用 ResearchAgent 获得经过白名单校验的 Claim 和 Evidence。框架的事实段落只由这些 Claim 与原文摘录构成；References 则完全绕过模型输出，按本次证据涉及的 `document_id` 查询 Document 和 PaperSource。格式化器只输出实际存在的作者、年份、Venue、DOI 或 arXiv ID，并向前端暴露 `verified_fields` 与 provenance，防止模型生成的虚构书目进入稿件。
 
 离线评测器绕过 LLM，直接对 `LexicalRetriever` 或当前配置的 `HybridRetriever` 执行版本化 JSON 用例。文献通过 ID、文件名、标题或 arXiv ID/版本解析；证据按短文本特征、合法页码和结构类型匹配。聚合报告包含 Case Pass Rate、Evidence Recall、MRR、锚点有效率及 P50/P95 延迟，缺失文献作为显式失败。由此可以在更换 Embedding、Reranker 或融合权重时进行同一数据集对照。
 

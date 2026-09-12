@@ -16,6 +16,7 @@ import {
   DocumentRecord,
   EvidenceAnchor,
   generateResearchReview,
+  generateWritingOutline,
   getAgentStatus,
   getDocumentProgress,
   importPaper,
@@ -31,9 +32,11 @@ import {
   searchPapers,
   setRecommendationFeedback,
   uploadDocument,
+  WritingOutlineResponse,
 } from "../lib/api";
 import CitationGraph from "../components/CitationGraph";
 import ResearchReview from "../components/ResearchReview";
+import WritingWorkbench from "../components/WritingWorkbench";
 import {
   defaultReferenceSelections,
   paperCandidateKey,
@@ -107,6 +110,10 @@ export default function Home() {
   const [buildingCitationGraph, setBuildingCitationGraph] = useState(false);
   const [researchReview, setResearchReview] = useState<ResearchReviewResponse | null>(null);
   const [generatingResearchReview, setGeneratingResearchReview] = useState(false);
+  const [writingIdea, setWritingIdea] = useState("");
+  const [writingLanguage, setWritingLanguage] = useState<"zh" | "en">("zh");
+  const [writingOutline, setWritingOutline] = useState<WritingOutlineResponse | null>(null);
+  const [generatingWritingOutline, setGeneratingWritingOutline] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const refresh = useCallback(async (quiet = false) => {
@@ -407,6 +414,32 @@ export default function Home() {
     }
   }
 
+  async function generateOutline(event: React.FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+    const idea = writingIdea.trim();
+    if (!idea) return;
+    const readyDocumentIds = documents
+      .filter((document) => document.status === "ready")
+      .map((document) => document.id);
+    if (!readyDocumentIds.length) {
+      setError("请先上传并解析至少一篇与 idea 相关的论文。");
+      return;
+    }
+    setGeneratingWritingOutline(true);
+    setError(null);
+    try {
+      setWritingOutline(await generateWritingOutline({
+        idea,
+        documentIds: readyDocumentIds,
+        language: writingLanguage,
+      }));
+    } catch (outlineError) {
+      setError(outlineError instanceof Error ? outlineError.message : "论文框架生成失败");
+    } finally {
+      setGeneratingWritingOutline(false);
+    }
+  }
+
   async function addRecommendation(recommendation: PaperRecommendation) {
     setImportingRecommendation(recommendation.id);
     setError(null);
@@ -476,7 +509,7 @@ export default function Home() {
           <a href="#recommendations">追踪</a>
           <a href="#citation-graph">引用图谱</a>
           <a href="#research-review">综述</a>
-          <span>写作台</span>
+          <a href="#writing-workbench">写作台</a>
         </nav>
         <div className="system-pill"><span /> {agentLabel}</div>
       </header>
@@ -774,6 +807,56 @@ export default function Home() {
               ))}
               <ResearchReview
                 review={researchReview}
+                onOpenEvidence={(evidence) => openReader(
+                  evidence.document_id,
+                  evidence.document_title || "未命名文献",
+                  evidence.page_number,
+                  evidence,
+                )}
+              />
+            </>
+          )}
+        </section>
+
+        <section className="writing-section" id="writing-workbench">
+          <div className="section-heading">
+            <div><p className="eyebrow">ACADEMIC WRITING COPILOT</p><h2>无幻觉论文框架</h2></div>
+            <span className="evidence-promise">References 仅来自本地文献与来源元数据</span>
+          </div>
+          <form className="writing-idea-form" onSubmit={generateOutline}>
+            <label>
+              研究 idea
+              <textarea
+                onChange={(event) => setWritingIdea(event.target.value)}
+                placeholder="例如：结合版式感知检索与引用约束，降低科研 PDF 问答中的事实幻觉"
+                rows={3}
+                value={writingIdea}
+              />
+            </label>
+            <label>
+              输出语言
+              <select
+                onChange={(event) => setWritingLanguage(event.target.value as "zh" | "en")}
+                value={writingLanguage}
+              >
+                <option value="zh">中文</option>
+                <option value="en">English</option>
+              </select>
+            </label>
+            <button
+              disabled={generatingWritingOutline || writingIdea.trim().length < 8}
+              type="submit"
+            >
+              {generatingWritingOutline ? "正在检索证据…" : "生成论文框架"}
+            </button>
+          </form>
+          {writingOutline && (
+            <>
+              {writingOutline.warnings.map((warning) => (
+                <p className="citation-warning" key={warning}>{warning}</p>
+              ))}
+              <WritingWorkbench
+                outline={writingOutline}
                 onOpenEvidence={(evidence) => openReader(
                   evidence.document_id,
                   evidence.document_title || "未命名文献",

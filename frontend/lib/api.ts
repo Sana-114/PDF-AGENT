@@ -276,6 +276,42 @@ export interface ResearchReviewResponse {
   warnings: string[];
 }
 
+export interface WritingSection {
+  section_id: "abstract" | "introduction" | "related_work";
+  title: string;
+  content_markdown: string;
+  evidence_ids: string[];
+}
+
+export interface VerifiedReference {
+  citation_key: string;
+  document_id: string;
+  title: string;
+  authors: string[];
+  publication_year: number | null;
+  venue: string | null;
+  doi: string | null;
+  arxiv_id: string | null;
+  landing_url: string | null;
+  provenance: string;
+  verified_fields: string[];
+  formatted_citation: string;
+  evidence_ids: string[];
+}
+
+export interface WritingOutlineResponse {
+  proposed_title: string;
+  idea: string;
+  sections: WritingSection[];
+  references: VerifiedReference[];
+  claims: Array<{ text: string; evidence_ids: string[] }>;
+  evidence: EvidenceAnchor[];
+  provider: string;
+  model: string | null;
+  insufficient_evidence: boolean;
+  warnings: string[];
+}
+
 export interface EvidenceAnchor {
   evidence_id: string;
   chunk_id: string | null;
@@ -486,6 +522,26 @@ export async function generateResearchReview(
         document_ids: documentIds,
         match_threshold: 0.72,
         max_evidence: 30,
+      }),
+    }),
+  );
+  return response.json();
+}
+
+export async function generateWritingOutline(input: {
+  idea: string;
+  documentIds?: string[];
+  language?: "zh" | "en";
+}): Promise<WritingOutlineResponse> {
+  const response = await assertResponse(
+    await fetch(`${API_BASE_URL}/writing/outline`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        idea: input.idea,
+        document_ids: input.documentIds || [],
+        top_k: 12,
+        language: input.language || "zh",
       }),
     }),
   );

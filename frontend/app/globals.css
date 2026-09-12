@@ -243,6 +243,41 @@ h1 em { color: var(--green); font-style: italic; }
 .future-card > footer { display: flex; flex-wrap: wrap; gap: 5px; margin-top: 9px; padding: 8px 0 0; border-top: 1px solid #dedfd8; text-align: left; }
 .future-work-empty { min-height: 92px; display: grid; place-items: center; color: var(--muted); font-size: 10px; }
 
+.writing-section { scroll-margin-top: 24px; }
+.writing-idea-form { display: grid; grid-template-columns: minmax(0, 1fr) 130px auto; gap: 11px; align-items: end; padding: 19px; color: white; background: #162720; border-radius: 14px; }
+.writing-idea-form label { display: grid; gap: 7px; color: rgba(255,255,255,.62); font-size: 9px; font-weight: 750; letter-spacing: .06em; }
+.writing-idea-form textarea, .writing-idea-form select { width: 100%; padding: 11px 12px; color: white; background: rgba(255,255,255,.07); border: 1px solid rgba(255,255,255,.17); border-radius: 8px; outline: none; }
+.writing-idea-form textarea { resize: vertical; line-height: 1.55; }
+.writing-idea-form textarea:focus, .writing-idea-form select:focus { border-color: var(--lime); }
+.writing-idea-form select { height: 43px; background: #263a31; }
+.writing-idea-form > button { height: 43px; padding: 0 16px; color: var(--ink); background: var(--lime); border: 0; border-radius: 8px; font-weight: 800; cursor: pointer; }
+.writing-idea-form > button:disabled { opacity: .45; cursor: not-allowed; }
+.writing-workbench { margin-top: 11px; overflow: hidden; background: var(--card); border: 1px solid var(--line); border-radius: 14px; }
+.writing-toolbar { display: flex; align-items: center; justify-content: space-between; gap: 14px; padding: 13px 16px; color: white; background: #244034; }
+.writing-toolbar > div { display: grid; gap: 2px; }
+.writing-toolbar span { color: var(--lime); font-size: 9px; font-weight: 850; letter-spacing: .07em; }
+.writing-toolbar small { color: rgba(255,255,255,.58); font-size: 8px; }
+.writing-toolbar button { padding: 7px 10px; color: var(--ink); background: var(--lime); border: 0; border-radius: 6px; font-size: 9px; font-weight: 800; cursor: pointer; }
+.writing-grid { display: grid; grid-template-columns: minmax(0, 1.3fr) minmax(300px, .7fr); }
+.writing-draft { padding: 26px; border-right: 1px solid var(--line); }
+.writing-draft > h2 { margin: 0 0 24px; font-family: Georgia, "Noto Serif SC", serif; font-size: 25px; font-weight: 500; line-height: 1.25; }
+.writing-draft > section { margin-top: 21px; padding-top: 18px; border-top: 1px solid var(--line); }
+.writing-draft > section h3 { margin: 0 0 11px; font-family: Georgia, "Noto Serif SC", serif; font-size: 17px; font-weight: 500; }
+.writing-draft pre { margin: 0; overflow-wrap: anywhere; color: #3e4d46; font-family: Georgia, "Noto Serif SC", serif; font-size: 11px; line-height: 1.8; white-space: pre-wrap; }
+.writing-draft > section > div { display: flex; flex-wrap: wrap; gap: 5px; margin-top: 10px; }
+.writing-draft > section button, .verified-references article > div button { padding: 4px 6px; color: var(--green); background: #e4f0e8; border: 1px solid #c8dfd0; border-radius: 5px; font-size: 8px; cursor: pointer; }
+.verified-references { max-height: 720px; overflow: auto; padding: 20px; background: #f5f4ee; }
+.verified-references > h3 { margin: 0 0 12px; font-size: 11px; }
+.verified-references > article { margin-top: 9px; padding: 12px; background: var(--card); border: 1px solid var(--line); border-radius: 9px; }
+.verified-references article > header { display: flex; align-items: center; justify-content: space-between; }
+.verified-references article > header strong { color: var(--green); font-size: 9px; }
+.verified-references article > header span { padding: 3px 5px; color: var(--muted); background: #eee; border-radius: 4px; font-size: 7px; }
+.verified-references article > p { margin: 9px 0 7px; font-family: Georgia, serif; font-size: 9px; line-height: 1.6; }
+.verified-references article > small { color: var(--muted); font-size: 7px; }
+.verified-references article > div { display: flex; flex-wrap: wrap; gap: 5px; margin-top: 9px; }
+.verified-references article > div a { padding: 4px 6px; color: #2d7189; background: #e1f0f5; border: 1px solid #c5dfe8; border-radius: 5px; font-size: 8px; text-decoration: none; }
+.writing-empty-reference { padding: 18px 12px; color: var(--muted); background: rgba(255,255,255,.5); border: 1px dashed var(--line); border-radius: 8px; font-size: 9px; text-align: center; }
+
 .notice { margin-top: 14px; padding: 13px 16px; border-radius: 10px; font-size: 13px; }
 .notice.success { background: #e5f2e9; color: #17663f; }
 .notice.error, .failure { background: #fbe8e1; color: #994322; }
@@ -788,6 +823,9 @@ footer { padding: 28px; color: var(--muted); border-top: 1px solid var(--line); 
   .research-review-layout, .future-work-columns { grid-template-columns: 1fr; }
   .future-work-heading { grid-template-columns: 1fr 1fr; }
   .future-work-heading p { grid-column: 1 / -1; text-align: left; }
+  .writing-idea-form, .writing-grid { grid-template-columns: 1fr; }
+  .writing-idea-form > button { width: 100%; }
+  .writing-draft { border-right: 0; border-bottom: 1px solid var(--line); }
   .document-card { grid-template-columns: auto 1fr; }
   .actions { grid-column: 2; }
   .document-title-row { display: block; }

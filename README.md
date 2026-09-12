@@ -20,6 +20,10 @@ PaperPilot 是一个以原文证据为核心的科研助手 Agent 系统。本�
 - 从摘要、引言、结论和 Future Work 章节提取带页码/BBox 的综述证据；
 - 按论文时间与局域引用关系整理研究脉络，生成经过证据 ID 白名单校验的领域综述；
 - 将未来方向区分为“仍值得探索”和“可能已有进展”，后者同时提供较新论文证据供人工核验；
+- 根据研究 idea 生成 Abstract、Introduction 与 Related Work 三段式论文框架；
+- 写作论点只使用 Agent 已通过 Evidence ID 白名单验证的内容，并可跳回 PDF 原文；
+- References 由实际命中证据的本地 Document/PaperSource 元数据重新构造，缺失字段不猜测；
+- 支持中英文框架及一键复制 Markdown，书目展示来源与已核验字段；
 - 基于 SHA-256 的完全重复检测；
 - Celery 后台解析和状态跟踪；
 - 长文档按默认 25 页分批解析，页面分片与进度 manifest 原子落盘，失败后从最近完整批次恢复；
@@ -227,6 +231,12 @@ LLM_BASE_URL=https://api.openai.com/v1
 
 系统不会仅凭文本相似就宣称旧方向已经解决。只有本地较新论文与原方向具有较高概念覆盖率，并在存在时叠加“新论文引用旧论文”的图关系，才标记为“可能已有进展”；界面保留原方向和后续进展两侧证据，要求用户最终确认。没有足够后续证据的方向保留为“仍值得探索”。
 
+## 无幻觉写作框架
+
+“写作台”接收用户给定的研究 idea，在选定的已解析文献中执行证据检索，并生成 Abstract、Introduction 和 Related Work 三段式框架。生成内容中的事实论点来自 Agent Harness 已验证的 Claim/Evidence；默认抽取式 Provider 也能输出证据框架，配置生成式 LLM 后则可提高表达连贯性。
+
+模型输出的任何书目文本都不会直接进入最终 References。系统只收集本次证据实际涉及的本地论文，再从 Document 与 PaperSource 中读取题名、作者、年份、Venue、DOI、arXiv ID 和来源链接，按现有字段格式化为 `[P1]...`。缺失的作者或年份会产生警告并留空，不会补造；界面可显示每条书目经过核验的字段及其证据页码，并导出 Markdown 草稿。
+
 ## 不使用 Docker 的本地启动
 
 后端默认使用 SQLite，并以内联模式运行 Celery 任务，因此无需先启动 Redis：
@@ -263,6 +273,7 @@ npm run dev
 | POST | `/api/v1/recommendations/{id}/feedback` | 保存喜欢、不感兴趣或中性反馈 |
 | POST | `/api/v1/citation-graph` | 从选定或全部已解析文献构建可解释的局域引用图谱 |
 | POST | `/api/v1/reviews/generate` | 生成证据约束综述、论文时间线与 Future Work 状态 |
+| POST | `/api/v1/writing/outline` | 根据 idea 生成证据框架与真实本地 References |
 | POST | `/api/v1/documents` | 上传 PDF，字段名为 `file` |
 | GET | `/api/v1/documents` | 文献列表 |
 | GET | `/api/v1/documents/{id}` | 文献详情 |
