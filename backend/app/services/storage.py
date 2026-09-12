@@ -1,4 +1,6 @@
 import hashlib
+import shutil
+from collections.abc import AsyncIterable
 from dataclasses import dataclass
 from pathlib import Path
 from uuid import uuid4
@@ -22,6 +24,7 @@ class StagedUpload:
 
     def discard(self) -> None:
         self.temporary_path.unlink(missing_ok=True)
+        (settings.upload_dir / self.storage_key).unlink(missing_ok=True)
 
 
 class LocalDocumentStorage:
@@ -77,6 +80,51 @@ class LocalDocumentStorage:
             storage_key=storage_key,
         )
 
+    async def stage_pdf_stream(self, chunks: AsyncIterable[bytes]) -> StagedUpload:
+        """Stage a remotely fetched PDF while enforcing the upload safety limits."""
+        settings.ensure_directories()
+        storage_key = f"{uuid4()}.pdf"
+        temporary_path = settings.upload_dir / f".{storage_key}.part"
+        digest = hashlib.sha256()
+        size_bytes = 0
+        header = bytearray()
+
+        try:
+            with temporary_path.open("wb") as target:
+                async for chunk in chunks:
+                    if not chunk:
+                        continue
+                    if len(header) < 1024:
+                        header.extend(chunk[: 1024 - len(header)])
+                    size_bytes += len(chunk)
+                    if size_bytes > settings.max_upload_bytes:
+                        raise HTTPException(
+                            status_code=status.HTTP_413_REQUEST_ENTITY_TOO_LARGE,
+                            detail=f"远程 PDF 超过 {settings.max_upload_mb} MB 限制。",
+                        )
+                    digest.update(chunk)
+                    target.write(chunk)
+        except Exception:
+            temporary_path.unlink(missing_ok=True)
+            raise
+
+        if size_bytes == 0:
+            temporary_path.unlink(missing_ok=True)
+            raise HTTPException(status_code=400, detail="远程 PDF 为空。")
+        if not bytes(header).lstrip().startswith(b"%PDF-"):
+            temporary_path.unlink(missing_ok=True)
+            raise HTTPException(
+                status_code=status.HTTP_415_UNSUPPORTED_MEDIA_TYPE,
+                detail="远程资源不是有效的 PDF。",
+            )
+
+        return StagedUpload(
+            temporary_path=temporary_path,
+            sha256=digest.hexdigest(),
+            size_bytes=size_bytes,
+            storage_key=storage_key,
+        )
+
     def document_path(self, storage_key: str) -> Path:
         path = (settings.upload_dir / storage_key).resolve()
         if path.parent != settings.upload_dir.resolve():
@@ -86,10 +134,34 @@ class LocalDocumentStorage:
     def parsed_path(self, document_id: str) -> Path:
         return settings.parsed_dir / f"{document_id}.json"
 
+    def checkpoint_dir(self, document_id: str) -> Path:
+        if not document_id or any(value in document_id for value in ("/", "\\", "..")):
+            raise ValueError("Invalid document id")
+        path = (settings.parsed_dir / f".{document_id}.checkpoint").resolve()
+        if path.parent != settings.parsed_dir.resolve():
+            raise ValueError("Invalid document id")
+        return path
+
+    def translation_document_dir(self, document_id: str) -> Path:
+        if not document_id or any(value in document_id for value in ("/", "\\", "..")):
+            raise ValueError("Invalid document id")
+        path = (settings.translation_dir / document_id).resolve()
+        if path.parent != settings.translation_dir.resolve():
+            raise ValueError("Invalid document id")
+        return path
+
+    def clear_checkpoint(self, document_id: str) -> None:
+        path = self.checkpoint_dir(document_id)
+        if path.exists():
+            shutil.rmtree(path)
+
     def delete(self, storage_key: str, document_id: str) -> None:
         self.document_path(storage_key).unlink(missing_ok=True)
         self.parsed_path(document_id).unlink(missing_ok=True)
+        self.clear_checkpoint(document_id)
+        translation_path = self.translation_document_dir(document_id)
+        if translation_path.exists():
+            shutil.rmtree(translation_path)
 
 
 storage = LocalDocumentStorage()
-

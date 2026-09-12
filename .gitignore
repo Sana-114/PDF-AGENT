@@ -1,4 +1,5 @@
 .env
+.env.bge
 .venv/
 __pycache__/
 *.py[cod]
@@ -12,5 +13,11 @@ frontend/node_modules/
 frontend/npm-debug.log*
 *.tsbuildinfo
 coverage.xml
+tmp/
 .DS_Store
 Thumbs.db
+
+# Downloaded/generated regression PDFs and reports are reproducible, but too large for Git.
+output/pdf/regression-corpus/*.pdf
+output/pdf/regression-corpus/*.json
+output/evals/*.json

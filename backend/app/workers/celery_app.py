@@ -15,5 +15,11 @@ celery_app.conf.update(
     task_track_started=True,
     task_always_eager=settings.celery_task_always_eager,
     task_eager_propagates=True,
+    timezone="UTC",
+    beat_schedule={
+        "refresh-active-arxiv-subscriptions": {
+            "task": "recommendations.refresh_all",
+            "schedule": settings.arxiv_refresh_interval_minutes * 60,
+        }
+    },
 )
-

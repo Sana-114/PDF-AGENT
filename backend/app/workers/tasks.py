@@ -1,13 +1,20 @@
-import json
+import asyncio
 import logging
+import time
 from pathlib import Path
 
 from sqlalchemy import select
 
 from app.core.config import settings
 from app.core.database import SessionLocal, init_db
+from app.llm import get_llm_provider
 from app.models.document import Document, DocumentStatus
+from app.models.recommendation import ArxivSubscription
 from app.parsers import get_parser
+from app.parsers.checkpoint import write_json_atomic
+from app.services.chunking import replace_document_chunks
+from app.services.document_content import read_parsed_document
+from app.services.document_translation import run_document_translation
 from app.services.fingerprints import (
     bottom_k_signature,
     extract_arxiv_identity,
@@ -16,7 +23,10 @@ from app.services.fingerprints import (
     signature_to_json,
     title_similarity,
 )
+from app.services.recommendations import recommendation_service
 from app.services.storage import storage
+from app.services.translation_store import translation_store
+from app.services.vector_index import index_document_safely
 from app.workers.celery_app import celery_app
 
 logger = logging.getLogger(__name__)
@@ -68,7 +78,9 @@ def _find_semantic_duplicate(session, current: Document) -> None:
         current.duplicate_recommendation = _recommend_version(current, candidate)
 
 
-@celery_app.task(name="documents.parse", autoretry_for=(OSError,), retry_backoff=True, max_retries=3)
+@celery_app.task(
+    name="documents.parse", autoretry_for=(OSError,), retry_backoff=True, max_retries=3
+)
 def parse_document(document_id: str) -> dict[str, str]:
     init_db()
     settings.ensure_directories()
@@ -82,8 +94,27 @@ def parse_document(document_id: str) -> dict[str, str]:
         session.commit()
 
         try:
-            parser = get_parser()
-            parsed = parser.parse(str(storage.document_path(document.storage_key)))
+            source_path = str(storage.document_path(document.storage_key))
+            parser = get_parser(source_path)
+            checkpoint_dir = storage.checkpoint_dir(document.id)
+
+            def record_progress(completed_pages: int, page_count: int) -> None:
+                logger.info(
+                    "Document parse checkpoint saved",
+                    extra={
+                        "document_id": document.id,
+                        "completed_pages": completed_pages,
+                        "page_count": page_count,
+                    },
+                )
+
+            parsed = parser.parse(
+                source_path,
+                checkpoint_dir=checkpoint_dir,
+                batch_size=settings.parse_batch_pages,
+                source_fingerprint=document.sha256,
+                progress_callback=record_progress,
+            )
             signature = bottom_k_signature(parsed.full_text)
             arxiv_id, arxiv_version = extract_arxiv_identity(parsed.full_text)
 
@@ -100,13 +131,32 @@ def parse_document(document_id: str) -> dict[str, str]:
             output["arxiv_id"] = arxiv_id
             output["arxiv_version"] = arxiv_version
             output["parser"] = {"name": parser.name, "version": parser.version}
-            Path(storage.parsed_path(document.id)).write_text(
-                json.dumps(output, ensure_ascii=False), encoding="utf-8"
-            )
+            output["processing"] = {
+                "mode": "checkpointed_page_batches",
+                "batch_size_pages": settings.parse_batch_pages,
+            }
+            diagnostics = getattr(parser, "diagnostics", None)
+            if diagnostics is not None:
+                output["pdf_diagnostics"] = diagnostics.to_dict()
+            processing_metadata = getattr(parser, "processing_metadata", None)
+            if processing_metadata is not None:
+                output["ocr"] = processing_metadata()
+            write_json_atomic(Path(storage.parsed_path(document.id)), output)
+            replace_document_chunks(session, document.id, output)
+            session.flush()
+            index_document_safely(session, document.id)
 
             document.status = DocumentStatus.READY
             _find_semantic_duplicate(session, document)
             session.commit()
+            try:
+                storage.clear_checkpoint(document.id)
+            except OSError:
+                logger.warning(
+                    "Completed parse checkpoint cleanup failed",
+                    exc_info=True,
+                    extra={"document_id": document.id},
+                )
             return {"document_id": document_id, "status": "ready"}
         except Exception as exc:
             logger.exception("Document parsing failed", extra={"document_id": document_id})
@@ -115,3 +165,72 @@ def parse_document(document_id: str) -> dict[str, str]:
             session.commit()
             raise
 
+
+@celery_app.task(name="documents.translate")
+def translate_document(document_id: str, target_language: str, force: bool = False) -> dict:
+    init_db()
+    settings.ensure_directories()
+    with SessionLocal() as session:
+        document = session.get(Document, document_id)
+        if document is None:
+            return {"document_id": document_id, "status": "missing"}
+        if document.status != DocumentStatus.READY:
+            return {"document_id": document_id, "status": "not_ready"}
+        parsed = read_parsed_document(document_id)
+        if parsed is None:
+            return {"document_id": document_id, "status": "missing_content"}
+        try:
+            provider = get_llm_provider()
+            if not provider.supports_translation:
+                raise RuntimeError("Translation provider is not configured")
+            return asyncio.run(
+                run_document_translation(
+                    document_id=document_id,
+                    parsed=parsed,
+                    source_fingerprint=document.sha256,
+                    target_language=target_language,
+                    provider=provider,
+                    force=force,
+                )
+            )
+        except Exception as exc:
+            logger.exception(
+                "Document translation failed",
+                extra={"document_id": document_id, "target_language": target_language},
+            )
+            if translation_store.read_manifest(document_id, target_language):
+                translation_store.set_status(
+                    document_id,
+                    target_language,
+                    "failed",
+                    error=str(exc)[:2000],
+                )
+            raise
+
+
+@celery_app.task(name="recommendations.refresh_subscription")
+def refresh_arxiv_subscription(subscription_id: str) -> dict:
+    init_db()
+    with SessionLocal() as session:
+        summary = asyncio.run(recommendation_service.refresh(session, subscription_id))
+        return {
+            "subscription_id": summary.subscription_id,
+            "discovered": summary.discovered,
+            "updated": summary.updated,
+            "error": summary.error,
+        }
+
+
+@celery_app.task(name="recommendations.refresh_all")
+def refresh_all_arxiv_subscriptions() -> dict:
+    init_db()
+    with SessionLocal() as session:
+        subscription_ids = session.scalars(
+            select(ArxivSubscription.id).where(ArxivSubscription.active.is_(True))
+        ).all()
+    results = []
+    for index, subscription_id in enumerate(subscription_ids):
+        if index and settings.arxiv_request_delay_seconds:
+            time.sleep(settings.arxiv_request_delay_seconds)
+        results.append(refresh_arxiv_subscription(subscription_id))
+    return {"refreshed": len(results), "results": results}

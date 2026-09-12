@@ -1,0 +1,49 @@
+{
+  "schema_version": "1.0",
+  "dataset_id": "local-chinese-thesis-v1",
+  "description": "现有中文无人机骨架动作识别论文的检索基线，不包含长段原文。",
+  "thresholds": {
+    "min_case_pass_rate": 0.8,
+    "min_evidence_recall": 0.8,
+    "min_mean_reciprocal_rank": 0.6,
+    "min_anchor_valid_rate": 1.0,
+    "require_bbox": true
+  },
+  "cases": [
+    {
+      "case_id": "core-challenges",
+      "question": "无人机俯视动作识别面临哪些核心挑战？",
+      "documents": [{"title_contains": "基于无人机俯视视角的骨架动作识别"}],
+      "top_k": 5,
+      "expectations": [{"text_contains_any": ["五大核心挑战"], "page_numbers": [2]}]
+    },
+    {
+      "case_id": "pose-training-dataset",
+      "question": "姿态估计训练使用了什么数据集？",
+      "documents": [{"title_contains": "基于无人机俯视视角的骨架动作识别"}],
+      "top_k": 5,
+      "expectations": [{"text_contains_any": ["UAV-Human PoseEstimation"], "page_numbers": [7, 18]}]
+    },
+    {
+      "case_id": "training-hardware",
+      "question": "不同实验分别使用了哪些 GPU 硬件？",
+      "documents": [{"title_contains": "基于无人机俯视视角的骨架动作识别"}],
+      "top_k": 5,
+      "expectations": [{"text_contains_any": ["RTX 4090"], "page_numbers": [19]}]
+    },
+    {
+      "case_id": "action-model",
+      "question": "第二阶段的骨架动作识别使用什么模型？",
+      "documents": [{"title_contains": "基于无人机俯视视角的骨架动作识别"}],
+      "top_k": 5,
+      "expectations": [{"text_contains_any": ["VM-GCN"], "page_numbers": [13]}]
+    },
+    {
+      "case_id": "macro-accuracy",
+      "question": "最终系统在 10 类动作上的 Macro Accuracy 是多少？",
+      "documents": [{"title_contains": "基于无人机俯视视角的骨架动作识别"}],
+      "top_k": 5,
+      "expectations": [{"text_contains_any": ["76.77%"], "page_numbers": [1, 25]}]
+    }
+  ]
+}
