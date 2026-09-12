@@ -29,6 +29,10 @@ PaperPilot 是一个以原文证据为核心的科研助手 Agent 系统。本�
 - 图表缺失值保留为空缺，超长序列采用等距抽样并明确提示，不把缺失观测伪装成零；
 - Figure Caption 直接由最值、首尾变化等可复核统计事实生成，不调用 LLM 推断因果；
 - Web 端原生 SVG 图表、数据表预览、归一化说明及可复制的 300 DPI Matplotlib 脚本；
+- 支持以 `组件 A -> 组件 B` 路径描述科研系统拓扑，自动合并重复节点与连接；
+- 从同一规范化图生成 Mermaid、Graphviz DOT、TikZ 和 Matplotlib 四种可复制脚本；
+- Web 端按拓扑层级自动布局 SVG 预览，循环关系保留并显式告警；
+- 节点名称完全来自用户输入，各输出分别执行 HTML、DOT、LaTeX 与 Python 安全转义；
 - 基于 SHA-256 的完全重复检测；
 - Celery 后台解析和状态跟踪；
 - 长文档按默认 25 页分批解析，页面分片与进度 manifest 原子落盘，失败后从最近完整批次恢复；
@@ -372,7 +376,7 @@ docker compose exec backend python scripts/evaluate_pdf_corpus.py `
 1. 用标准测试 PDF 评估当前版式基线，并按失败样本接入 Docling、GROBID 和 PaddleOCR；
 2. 用本地 BGE-M3 / Reranker 跑完官方 PDF 离线评测，并据此校准融合权重；
 3. 为领域综述增加主题聚类、跨论文争议识别和人工确认后的方向状态持久化；
-4. 扩展论文架构拓扑脚本、可编辑图表列选择与完整数据导出；
+4. 扩展可编辑图表列选择、误差棒、统计检验与完整数据导出；
 5. 准备公网部署、技术文档 PDF 和 5–8 分钟演示视频。
 
 更完整的边界说明见 [docs/architecture.md](docs/architecture.md)。

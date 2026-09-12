@@ -352,6 +352,25 @@ export interface CsvVisualizationResponse {
   warnings: string[];
 }
 
+export type DiagramLayout = "left-to-right" | "top-down";
+export type DiagramFormat = "mermaid" | "graphviz" | "tikz" | "matplotlib";
+
+export interface ArchitectureDiagramResponse {
+  title: string;
+  layout: DiagramLayout;
+  nodes: Array<{ node_id: string; label: string; x: number; y: number }>;
+  edges: Array<{ source: string; target: string }>;
+  canvas_width: number;
+  canvas_height: number;
+  scripts: Array<{
+    format: DiagramFormat;
+    language: string;
+    filename: string;
+    content: string;
+  }>;
+  warnings: string[];
+}
+
 export interface EvidenceAnchor {
   evidence_id: string;
   chunk_id: string | null;
@@ -599,6 +618,24 @@ export async function analyzeCsv(
     await fetch(`${API_BASE_URL}/visualizations/analyze`, {
       method: "POST",
       body: form,
+    }),
+  );
+  return response.json();
+}
+
+export async function generateArchitectureDiagram(input: {
+  title: string;
+  idea: string;
+  layout: DiagramLayout;
+}): Promise<ArchitectureDiagramResponse> {
+  const response = await assertResponse(
+    await fetch(`${API_BASE_URL}/diagrams/generate`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        ...input,
+        formats: ["mermaid", "graphviz", "tikz", "matplotlib"],
+      }),
     }),
   );
   return response.json();

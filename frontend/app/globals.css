@@ -328,6 +328,44 @@ h1 em { color: var(--green); font-style: italic; }
 .csv-column-audit span { color: var(--green); font-size: 7px; font-weight: 800; text-transform: uppercase; }
 .csv-column-audit small { color: var(--muted); font-size: 7px; }
 
+.architecture-diagram-section { scroll-margin-top: 24px; }
+.architecture-diagram-workbench { overflow: hidden; background: var(--card); border: 1px solid var(--line); border-radius: 14px; }
+.architecture-input-panel { display: grid; grid-template-columns: minmax(220px, 1fr) 170px; gap: 11px; padding: 18px; color: white; background: #172a22; }
+.architecture-input-panel label { display: grid; gap: 7px; color: rgba(255,255,255,.62); font-size: 9px; font-weight: 750; letter-spacing: .06em; }
+.architecture-input-panel input, .architecture-input-panel select, .architecture-input-panel textarea { width: 100%; padding: 10px 11px; color: white; background: rgba(255,255,255,.07); border: 1px solid rgba(255,255,255,.17); border-radius: 8px; outline: none; }
+.architecture-input-panel select { height: 40px; background: #263a31; }
+.architecture-input-panel textarea { resize: vertical; min-height: 108px; line-height: 1.55; }
+.architecture-input-panel input:focus, .architecture-input-panel select:focus, .architecture-input-panel textarea:focus { border-color: var(--lime); }
+.architecture-idea-field { grid-column: 1 / -1; }
+.architecture-idea-field small { color: rgba(255,255,255,.45); font-size: 8px; font-weight: 400; letter-spacing: 0; }
+.architecture-input-panel > button { grid-column: 1 / -1; justify-self: end; height: 40px; padding: 0 18px; color: var(--ink); background: var(--lime); border: 0; border-radius: 8px; font-weight: 800; cursor: pointer; }
+.architecture-input-panel > button:disabled { opacity: .45; cursor: not-allowed; }
+.diagram-error { margin: 12px 18px; padding: 10px 12px; color: #994322; background: #fbe8e1; border-radius: 8px; font-size: 10px; }
+.architecture-diagram-workbench > .citation-warning { margin-right: 18px; margin-left: 18px; }
+.architecture-result-grid { display: grid; grid-template-columns: minmax(0, 1.1fr) minmax(340px, .9fr); }
+.architecture-preview-card { min-width: 0; padding: 19px; border-right: 1px solid var(--line); }
+.architecture-preview-card > header { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 11px; }
+.architecture-preview-card > header > div { display: grid; gap: 3px; }
+.architecture-preview-card > header span { color: var(--green); font-size: 8px; font-weight: 850; letter-spacing: .09em; }
+.architecture-preview-card > header h3 { margin: 0; font-family: Georgia, "Noto Serif SC", serif; font-size: 17px; font-weight: 500; }
+.architecture-preview-card > header small { color: var(--muted); font-size: 8px; }
+.architecture-preview-scroll { overflow: auto; max-height: 540px; background: #f8f8f3; border: 1px solid #e0e2da; border-radius: 9px; }
+.architecture-preview-svg { display: block; width: 100%; min-height: 360px; }
+.architecture-edge { stroke: #718078; stroke-width: 1.6; }
+.architecture-node rect { fill: #edf4ef; stroke: #25734f; stroke-width: 1.5; }
+.architecture-node > text:not(.architecture-node-index) { fill: #213229; font-size: 10px; font-weight: 700; }
+.architecture-node circle { fill: #25734f; }
+.architecture-node-index { fill: white; font-size: 7px; font-weight: 850; }
+.architecture-preview-card > p { margin: 10px 2px 0; color: var(--muted); font-size: 8px; line-height: 1.55; }
+.diagram-code-panel { min-width: 0; padding: 15px; background: #1d2923; }
+.diagram-format-tabs { display: flex; flex-wrap: wrap; gap: 5px; margin-bottom: 10px; }
+.diagram-format-tabs button { padding: 6px 8px; color: rgba(255,255,255,.55); background: transparent; border: 1px solid rgba(255,255,255,.14); border-radius: 5px; font-size: 8px; cursor: pointer; }
+.diagram-format-tabs button[aria-pressed="true"] { color: var(--ink); background: var(--lime); border-color: var(--lime); font-weight: 800; }
+.diagram-code-panel > header { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin-bottom: 8px; }
+.diagram-code-panel > header code { color: rgba(255,255,255,.62); font-size: 8px; }
+.diagram-code-panel > header button { padding: 6px 8px; color: var(--lime); background: transparent; border: 1px solid rgba(217,238,130,.35); border-radius: 5px; font-size: 8px; cursor: pointer; }
+.diagram-code-panel > pre { max-height: 480px; overflow: auto; margin: 0; padding: 13px; color: #dbe9df; background: #101914; border: 1px solid rgba(255,255,255,.08); border-radius: 7px; font-family: "Cascadia Code", Consolas, monospace; font-size: 8px; line-height: 1.65; white-space: pre; }
+
 .notice { margin-top: 14px; padding: 13px 16px; border-radius: 10px; font-size: 13px; }
 .notice.success { background: #e5f2e9; color: #17663f; }
 .notice.error, .failure { background: #fbe8e1; color: #994322; }
@@ -873,12 +911,15 @@ footer { padding: 28px; color: var(--muted); border-top: 1px solid var(--line); 
   .research-review-layout, .future-work-columns { grid-template-columns: 1fr; }
   .future-work-heading { grid-template-columns: 1fr 1fr; }
   .future-work-heading p { grid-column: 1 / -1; text-align: left; }
-  .writing-idea-form, .writing-grid, .csv-upload-form, .visualization-result-grid { grid-template-columns: 1fr; }
+  .writing-idea-form, .writing-grid, .csv-upload-form, .visualization-result-grid, .architecture-input-panel, .architecture-result-grid { grid-template-columns: 1fr; }
   .writing-idea-form > button { width: 100%; }
   .writing-draft { border-right: 0; border-bottom: 1px solid var(--line); }
   .csv-upload-form > button[type="submit"] { width: 100%; }
   .scientific-figure-card { border-right: 0; border-bottom: 1px solid var(--line); }
   .scientific-chart-svg { min-height: 240px; }
+  .architecture-idea-field, .architecture-input-panel > button { grid-column: 1; }
+  .architecture-input-panel > button { width: 100%; }
+  .architecture-preview-card { border-right: 0; border-bottom: 1px solid var(--line); }
   .document-card { grid-template-columns: auto 1fr; }
   .actions { grid-column: 2; }
   .document-title-row { display: block; }

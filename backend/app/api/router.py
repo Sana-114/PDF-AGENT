@@ -3,6 +3,7 @@ from fastapi import APIRouter
 from app.api.routes import (
     agent,
     citation_graph,
+    diagrams,
     discovery,
     documents,
     health,
@@ -19,6 +20,7 @@ api_router.include_router(
     recommendations.router, prefix="/recommendations", tags=["recommendations"]
 )
 api_router.include_router(citation_graph.router, prefix="/citation-graph", tags=["citation-graph"])
+api_router.include_router(diagrams.router, prefix="/diagrams", tags=["diagrams"])
 api_router.include_router(reviews.router, prefix="/reviews", tags=["reviews"])
 api_router.include_router(
     visualizations.router, prefix="/visualizations", tags=["visualizations"]

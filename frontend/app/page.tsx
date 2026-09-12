@@ -38,6 +38,7 @@ import CitationGraph from "../components/CitationGraph";
 import ResearchReview from "../components/ResearchReview";
 import WritingWorkbench from "../components/WritingWorkbench";
 import DataVisualizationWorkbench from "../components/DataVisualizationWorkbench";
+import ArchitectureDiagramWorkbench from "../components/ArchitectureDiagramWorkbench";
 import {
   defaultReferenceSelections,
   paperCandidateKey,
@@ -512,6 +513,7 @@ export default function Home() {
           <a href="#research-review">综述</a>
           <a href="#writing-workbench">写作台</a>
           <a href="#data-visualization">数据作图</a>
+          <a href="#architecture-diagram">架构图</a>
         </nav>
         <div className="system-pill"><span /> {agentLabel}</div>
       </header>
@@ -876,6 +878,14 @@ export default function Home() {
             <span className="evidence-promise">结论由实际统计值生成，不推断因果</span>
           </div>
           <DataVisualizationWorkbench />
+        </section>
+
+        <section className="architecture-diagram-section" id="architecture-diagram">
+          <div className="section-heading">
+            <div><p className="eyebrow">ARCHITECTURE COPILOT</p><h2>科研架构拓扑与多格式脚本</h2></div>
+            <span className="evidence-promise">一份拓扑 · 四种可复现输出</span>
+          </div>
+          <ArchitectureDiagramWorkbench />
         </section>
 
         {notice && <div className="notice success">{notice}</div>}

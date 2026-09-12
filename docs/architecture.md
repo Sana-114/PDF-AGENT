@@ -16,6 +16,7 @@
 | LLM Provider | 默认抽取式兜底；可选 OpenAI Responses API 问答与学术翻译 |
 | Writing Guard | 将检索证据转换为论文框架，并从持久化学术元数据重建 References |
 | Visualization Engine | 审计 CSV 字段，生成可复核图表数据、Figure Caption 与 Matplotlib 脚本 |
+| Diagram Compiler | 将用户关系路径规范化为图，并编译 Mermaid、DOT、TikZ 与 Matplotlib 脚本 |
 | Embedding Provider | 默认离线 Hash 基线；可选 OpenAI-compatible BGE-M3 等语义服务 |
 | Reranker | 默认关闭；可选 Cohere-compatible 或 TEI Cross-Encoder 候选重排 |
 | BGE Runtime | 可选 TEI Docker Profile，独立运行 BGE-M3 与 BGE Reranker |
@@ -114,6 +115,12 @@ CSV 可视化端点只接受有界的 CSV/TSV 上传，自动识别 UTF-8、GB18
 
 图注生成不调用 LLM。服务端从实际绘制点计算首尾变化、最高值和最低值，并将这些事实同时作为结构化 `caption_facts` 返回。缺失值保持为空，超出显示预算的数据采用首尾覆盖的等距抽样并给出警告，避免图表看似完整却改变数据含义。前端使用原生 SVG 渲染可交互预览，API 同时返回等价的 Matplotlib 脚本，以 300 DPI 输出用于论文排版和复现实验图。
 
+## 架构拓扑编译链路
+
+架构图输入采用显式关系路径，例如 `PDF 上传 -> 版式解析 -> Document AST`。服务端只把用户实际写出的名称注册为节点，按首次出现顺序去重，并合并重复边；纯自然语言但没有关系箭头的输入会被拒绝，而不会由模型补造组件。拓扑布局先对有向无环部分做分层排序，循环节点单独展开并保留原边，同时向用户返回告警。
+
+规范化节点、边和坐标作为单一事实来源，前端 SVG 预览以及 Mermaid、Graphviz DOT、TikZ、Matplotlib 四种脚本都从它编译生成。各后端分别处理 HTML 实体、DOT 引号、LaTeX 特殊字符和 Python 字面量，避免组件名破坏输出语法。TikZ 脚本提示使用 XeLaTeX 处理中文，Matplotlib 脚本默认导出 300 DPI 透明背景 PNG。
+
 离线评测器绕过 LLM，直接对 `LexicalRetriever` 或当前配置的 `HybridRetriever` 执行版本化 JSON 用例。文献通过 ID、文件名、标题或 arXiv ID/版本解析；证据按短文本特征、合法页码和结构类型匹配。聚合报告包含 Case Pass Rate、Evidence Recall、MRR、锚点有效率及 P50/P95 延迟，缺失文献作为显式失败。由此可以在更换 Embedding、Reranker 或融合权重时进行同一数据集对照。
 
 ## 下一阶段边界
@@ -122,4 +129,5 @@ CSV 可视化端点只接受有界的 CSV/TSV 上传，自动识别 UTF-8、GB18
 2. 为向量模型升级增加蓝绿 Collection 和断点批量重建。
 3. 为复杂扫描表格和公式增加专用识别适配器。
 4. 为科研图表增加列选择、误差棒、统计检验与矢量格式导出。
-5. 将本地存储实现替换为 S3/MinIO 实现，保持 API 不变。
+5. 为架构图增加分组、边标签、SVG/PDF 下载与人工拖拽后的坐标回写。
+6. 将本地存储实现替换为 S3/MinIO 实现，保持 API 不变。
