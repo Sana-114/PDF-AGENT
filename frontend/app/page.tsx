@@ -37,6 +37,7 @@ import {
 import CitationGraph from "../components/CitationGraph";
 import ResearchReview from "../components/ResearchReview";
 import WritingWorkbench from "../components/WritingWorkbench";
+import DataVisualizationWorkbench from "../components/DataVisualizationWorkbench";
 import {
   defaultReferenceSelections,
   paperCandidateKey,
@@ -510,6 +511,7 @@ export default function Home() {
           <a href="#citation-graph">引用图谱</a>
           <a href="#research-review">综述</a>
           <a href="#writing-workbench">写作台</a>
+          <a href="#data-visualization">数据作图</a>
         </nav>
         <div className="system-pill"><span /> {agentLabel}</div>
       </header>
@@ -866,6 +868,14 @@ export default function Home() {
               />
             </>
           )}
+        </section>
+
+        <section className="data-visualization-section" id="data-visualization">
+          <div className="section-heading">
+            <div><p className="eyebrow">SCIENTIFIC DATA COPILOT</p><h2>CSV 数据可视化与学术图注</h2></div>
+            <span className="evidence-promise">结论由实际统计值生成，不推断因果</span>
+          </div>
+          <DataVisualizationWorkbench />
         </section>
 
         {notice && <div className="notice success">{notice}</div>}

@@ -26,6 +26,7 @@ class Settings(BaseSettings):
     parsed_dir: Path = Path("./data/parsed")
     translation_dir: Path = Path("./data/translations")
     max_upload_mb: int = 200
+    max_csv_mb: int = Field(default=10, ge=1, le=50)
     scholarly_api_timeout_seconds: float = 20.0
     semantic_scholar_base_url: str = "https://api.semanticscholar.org/graph/v1"
     semantic_scholar_api_key: str = ""
@@ -81,6 +82,10 @@ class Settings(BaseSettings):
     @property
     def max_upload_bytes(self) -> int:
         return self.max_upload_mb * 1024 * 1024
+
+    @property
+    def max_csv_bytes(self) -> int:
+        return self.max_csv_mb * 1024 * 1024
 
     def ensure_directories(self) -> None:
         for path in (self.data_dir, self.upload_dir, self.parsed_dir, self.translation_dir):

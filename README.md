@@ -24,6 +24,11 @@ PaperPilot 是一个以原文证据为核心的科研助手 Agent 系统。本�
 - 写作论点只使用 Agent 已通过 Evidence ID 白名单验证的内容，并可跳回 PDF 原文；
 - References 由实际命中证据的本地 Document/PaperSource 元数据重新构造，缺失字段不猜测；
 - 支持中英文框架及一键复制 Markdown，书目展示来源与已核验字段；
+- 支持上传 UTF-8/GB18030 CSV/TSV，自动识别日期、数值、分类与空列并给出字段审计；
+- 按数据形态自动选择折线图或柱状图，也可生成多指标三维雷达图；
+- 图表缺失值保留为空缺，超长序列采用等距抽样并明确提示，不把缺失观测伪装成零；
+- Figure Caption 直接由最值、首尾变化等可复核统计事实生成，不调用 LLM 推断因果；
+- Web 端原生 SVG 图表、数据表预览、归一化说明及可复制的 300 DPI Matplotlib 脚本；
 - 基于 SHA-256 的完全重复检测；
 - Celery 后台解析和状态跟踪；
 - 长文档按默认 25 页分批解析，页面分片与进度 manifest 原子落盘，失败后从最近完整批次恢复；
@@ -367,7 +372,7 @@ docker compose exec backend python scripts/evaluate_pdf_corpus.py `
 1. 用标准测试 PDF 评估当前版式基线，并按失败样本接入 Docling、GROBID 和 PaddleOCR；
 2. 用本地 BGE-M3 / Reranker 跑完官方 PDF 离线评测，并据此校准融合权重；
 3. 为领域综述增加主题聚类、跨论文争议识别和人工确认后的方向状态持久化；
-4. 推进写作 Copilot、真实 References 校验、CSV 数据图表与学术 Figure Caption；
+4. 扩展论文架构拓扑脚本、可编辑图表列选择与完整数据导出；
 5. 准备公网部署、技术文档 PDF 和 5–8 分钟演示视频。
 
 更完整的边界说明见 [docs/architecture.md](docs/architecture.md)。

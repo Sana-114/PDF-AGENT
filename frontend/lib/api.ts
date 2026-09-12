@@ -312,6 +312,46 @@ export interface WritingOutlineResponse {
   warnings: string[];
 }
 
+export type CsvChartRequestType = "auto" | "line" | "bar" | "radar3d";
+export type CsvChartType = Exclude<CsvChartRequestType, "auto">;
+
+export interface CsvColumnSummary {
+  name: string;
+  kind: "numeric" | "date" | "categorical" | "empty";
+  missing_count: number;
+  distinct_count: number;
+  numeric_count: number;
+  minimum: number | null;
+  maximum: number | null;
+  mean: number | null;
+}
+
+export interface ScientificChart {
+  chart_type: CsvChartType;
+  title: string;
+  categories: string[];
+  series: Array<{ name: string; values: Array<number | null> }>;
+  x_label: string;
+  y_label: string;
+  normalization: string | null;
+  caption: string;
+  caption_facts: string[];
+  matplotlib_script: string;
+}
+
+export interface CsvVisualizationResponse {
+  filename: string;
+  sha256: string;
+  encoding: string;
+  delimiter: string;
+  row_count: number;
+  column_count: number;
+  columns: CsvColumnSummary[];
+  preview_rows: Array<Record<string, string | null>>;
+  chart: ScientificChart;
+  warnings: string[];
+}
+
 export interface EvidenceAnchor {
   evidence_id: string;
   chunk_id: string | null;
@@ -543,6 +583,22 @@ export async function generateWritingOutline(input: {
         top_k: 12,
         language: input.language || "zh",
       }),
+    }),
+  );
+  return response.json();
+}
+
+export async function analyzeCsv(
+  file: File,
+  chartType: CsvChartRequestType,
+): Promise<CsvVisualizationResponse> {
+  const form = new FormData();
+  form.append("file", file);
+  form.append("chart_type", chartType);
+  const response = await assertResponse(
+    await fetch(`${API_BASE_URL}/visualizations/analyze`, {
+      method: "POST",
+      body: form,
     }),
   );
   return response.json();

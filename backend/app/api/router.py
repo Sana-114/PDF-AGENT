@@ -8,6 +8,7 @@ from app.api.routes import (
     health,
     recommendations,
     reviews,
+    visualizations,
     writing,
 )
 
@@ -19,6 +20,9 @@ api_router.include_router(
 )
 api_router.include_router(citation_graph.router, prefix="/citation-graph", tags=["citation-graph"])
 api_router.include_router(reviews.router, prefix="/reviews", tags=["reviews"])
+api_router.include_router(
+    visualizations.router, prefix="/visualizations", tags=["visualizations"]
+)
 api_router.include_router(writing.router, prefix="/writing", tags=["writing"])
 api_router.include_router(documents.router, prefix="/documents", tags=["documents"])
 api_router.include_router(agent.router, prefix="/agent", tags=["agent"])

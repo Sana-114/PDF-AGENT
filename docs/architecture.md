@@ -8,13 +8,14 @@
 
 | 组件 | 职责 |
 | --- | --- |
-| Next.js Web | 上传、阅读、问答、翻译、学术追踪、引用图谱、综述与 Future Work 时间线 |
-| FastAPI | 文献、Agent、检索推荐、局域图谱和证据综述 API |
+| Next.js Web | 上传、阅读、问答、翻译、学术追踪、引用图谱、综述、写作与数据可视化 |
+| FastAPI | 文献、Agent、检索推荐、局域图谱、证据综述和 CSV 分析 API |
 | Celery + Redis | PDF 解析、整篇翻译、arXiv 定时刷新、重试和状态更新 |
 | Agent Harness | 检索、证据门控、Provider 调用、引用校验和 Trace |
 | Skill Registry | 带 Pydantic 输入 Schema 的本地工具发现与执行 |
 | LLM Provider | 默认抽取式兜底；可选 OpenAI Responses API 问答与学术翻译 |
 | Writing Guard | 将检索证据转换为论文框架，并从持久化学术元数据重建 References |
+| Visualization Engine | 审计 CSV 字段，生成可复核图表数据、Figure Caption 与 Matplotlib 脚本 |
 | Embedding Provider | 默认离线 Hash 基线；可选 OpenAI-compatible BGE-M3 等语义服务 |
 | Reranker | 默认关闭；可选 Cohere-compatible 或 TEI Cross-Encoder 候选重排 |
 | BGE Runtime | 可选 TEI Docker Profile，独立运行 BGE-M3 与 BGE Reranker |
@@ -107,12 +108,18 @@ Qdrant 不可达、索引失败或本地开发关闭向量检索时，`HybridRet
 
 写作 Copilot 以用户 idea 构造专门的检索问题，复用 ResearchAgent 获得经过白名单校验的 Claim 和 Evidence。框架的事实段落只由这些 Claim 与原文摘录构成；References 则完全绕过模型输出，按本次证据涉及的 `document_id` 查询 Document 和 PaperSource。格式化器只输出实际存在的作者、年份、Venue、DOI 或 arXiv ID，并向前端暴露 `verified_fields` 与 provenance，防止模型生成的虚构书目进入稿件。
 
+## 科研数据可视化链路
+
+CSV 可视化端点只接受有界的 CSV/TSV 上传，自动识别 UTF-8、GB18030、分隔符、重复列名和不规则行。原始值不会被覆盖；字段审计分别报告类型、缺失数、去重数、数值范围与均值。折线图用于日期序列，柱状图用于分类比较，用户也可显式选择图表类型。三维雷达图要求至少三个数值指标，并在当前展示记录内逐指标执行 min-max 归一化；透视层高仅用于区分记录，不编码额外数据。
+
+图注生成不调用 LLM。服务端从实际绘制点计算首尾变化、最高值和最低值，并将这些事实同时作为结构化 `caption_facts` 返回。缺失值保持为空，超出显示预算的数据采用首尾覆盖的等距抽样并给出警告，避免图表看似完整却改变数据含义。前端使用原生 SVG 渲染可交互预览，API 同时返回等价的 Matplotlib 脚本，以 300 DPI 输出用于论文排版和复现实验图。
+
 离线评测器绕过 LLM，直接对 `LexicalRetriever` 或当前配置的 `HybridRetriever` 执行版本化 JSON 用例。文献通过 ID、文件名、标题或 arXiv ID/版本解析；证据按短文本特征、合法页码和结构类型匹配。聚合报告包含 Case Pass Rate、Evidence Recall、MRR、锚点有效率及 P50/P95 延迟，缺失文献作为显式失败。由此可以在更换 Embedding、Reranker 或融合权重时进行同一数据集对照。
 
 ## 下一阶段边界
 
 1. 扩充官方 PDF 标注用例，并据此校准召回、重排权重和证据阈值。
 2. 为向量模型升级增加蓝绿 Collection 和断点批量重建。
-3. 接入论文题名、DOI 和 arXiv ID 自动检索下载，并保留来源与许可证元数据。
-4. 为复杂扫描表格和公式增加专用识别适配器。
+3. 为复杂扫描表格和公式增加专用识别适配器。
+4. 为科研图表增加列选择、误差棒、统计检验与矢量格式导出。
 5. 将本地存储实现替换为 S3/MinIO 实现，保持 API 不变。

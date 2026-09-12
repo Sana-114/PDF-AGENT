@@ -278,6 +278,56 @@ h1 em { color: var(--green); font-style: italic; }
 .verified-references article > div a { padding: 4px 6px; color: #2d7189; background: #e1f0f5; border: 1px solid #c5dfe8; border-radius: 5px; font-size: 8px; text-decoration: none; }
 .writing-empty-reference { padding: 18px 12px; color: var(--muted); background: rgba(255,255,255,.5); border: 1px dashed var(--line); border-radius: 8px; font-size: 9px; text-align: center; }
 
+.data-visualization-section { scroll-margin-top: 24px; }
+.data-visualization-workbench { overflow: hidden; background: var(--card); border: 1px solid var(--line); border-radius: 14px; }
+.csv-upload-form { display: grid; grid-template-columns: minmax(260px, 1fr) 170px auto; gap: 11px; align-items: end; padding: 18px; color: white; background: #172a22; }
+.csv-file-picker { display: grid; gap: 4px; padding: 10px 12px; color: white; background: rgba(255,255,255,.06); border: 1px dashed rgba(255,255,255,.28); border-radius: 8px; text-align: left; cursor: pointer; }
+.csv-file-picker strong { overflow: hidden; font-size: 11px; text-overflow: ellipsis; white-space: nowrap; }
+.csv-file-picker span { color: rgba(255,255,255,.52); font-size: 8px; }
+.csv-upload-form label { display: grid; gap: 7px; color: rgba(255,255,255,.62); font-size: 9px; font-weight: 750; letter-spacing: .06em; }
+.csv-upload-form select { height: 41px; padding: 0 10px; color: white; background: #263a31; border: 1px solid rgba(255,255,255,.17); border-radius: 8px; }
+.csv-upload-form > button[type="submit"] { height: 41px; padding: 0 16px; color: var(--ink); background: var(--lime); border: 0; border-radius: 8px; font-weight: 800; cursor: pointer; }
+.csv-upload-form > button[type="submit"]:disabled { opacity: .45; cursor: not-allowed; }
+.csv-error { margin: 12px 18px; padding: 10px 12px; color: #994322; background: #fbe8e1; border-radius: 8px; font-size: 10px; }
+.data-visualization-workbench > .citation-warning { margin-right: 18px; margin-left: 18px; }
+.csv-summary-strip { display: flex; flex-wrap: wrap; gap: 7px; padding: 13px 18px; background: #eef1ea; border-bottom: 1px solid var(--line); }
+.csv-summary-strip span { padding: 5px 8px; color: var(--muted); background: rgba(255,255,255,.7); border: 1px solid #d9ddd5; border-radius: 6px; font-size: 8px; }
+.csv-summary-strip strong { color: var(--green); font-size: 10px; }
+.visualization-result-grid { display: grid; grid-template-columns: minmax(0, 1.25fr) minmax(300px, .75fr); }
+.scientific-figure-card { min-width: 0; padding: 19px; border-right: 1px solid var(--line); }
+.scientific-figure-card > header { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 10px; }
+.scientific-figure-card > header > div { display: grid; gap: 3px; }
+.scientific-figure-card > header span { color: var(--green); font-size: 8px; font-weight: 850; letter-spacing: .09em; }
+.scientific-figure-card > header h3 { margin: 0; font-family: Georgia, "Noto Serif SC", serif; font-size: 17px; font-weight: 500; }
+.scientific-figure-card > header button { flex: none; padding: 7px 9px; color: var(--green); background: #edf4ef; border: 1px solid #cde0d3; border-radius: 6px; font-size: 8px; font-weight: 750; cursor: pointer; }
+.scientific-chart-svg { display: block; width: 100%; min-height: 300px; background: #fbfbf7; border: 1px solid #e2e3dc; border-radius: 9px; }
+.chart-gridline { stroke: #dde2dc; stroke-width: 1; }
+.chart-axis { stroke: #637168; stroke-width: 1; }
+.chart-tick, .chart-category, .radar-label, .radar-scale-note { fill: #657068; font-size: 9px; }
+.chart-axis-label { fill: #38473f; font-size: 9px; font-weight: 700; }
+.chart-line { fill: none; stroke-width: 2.2; }
+.scientific-chart-legend { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 9px; }
+.scientific-chart-legend span { display: inline-flex; align-items: center; gap: 5px; color: var(--muted); font-size: 8px; }
+.scientific-chart-legend i { width: 13px; height: 3px; border-radius: 3px; }
+.figure-caption { margin: 13px 0 0; color: #36453d; font-family: Georgia, "Noto Serif SC", serif; font-size: 10px; line-height: 1.7; }
+.normalization-note { display: block; margin-top: 6px; color: var(--muted); font-size: 8px; }
+.radar-grid { fill: none; stroke: #d5ddd7; stroke-width: 1; }
+.radar-axis { stroke: #d5ddd7; stroke-width: 1; }
+.radar-series { fill-opacity: .14; stroke-width: 2; }
+.csv-data-panel { min-width: 0; max-height: 680px; overflow: auto; padding: 17px; background: #f5f4ee; }
+.csv-data-panel > h3 { margin: 2px 0 10px; font-size: 10px; }
+.csv-data-panel > h3:not(:first-child) { margin-top: 18px; }
+.csv-table-scroll { overflow: auto; max-height: 275px; background: white; border: 1px solid var(--line); border-radius: 7px; }
+.csv-table-scroll table { width: 100%; border-collapse: collapse; font-size: 8px; white-space: nowrap; }
+.csv-table-scroll th { position: sticky; top: 0; padding: 7px 8px; color: white; background: #30473d; text-align: center; }
+.csv-table-scroll td { padding: 6px 8px; border-bottom: 1px solid #ecece5; text-align: right; }
+.csv-table-scroll td:first-child { text-align: left; }
+.csv-column-audit { display: grid; gap: 6px; }
+.csv-column-audit > div { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 3px 8px; padding: 8px 9px; background: white; border: 1px solid #dedfd8; border-radius: 7px; }
+.csv-column-audit strong { overflow: hidden; font-size: 9px; text-overflow: ellipsis; white-space: nowrap; }
+.csv-column-audit span { color: var(--green); font-size: 7px; font-weight: 800; text-transform: uppercase; }
+.csv-column-audit small { color: var(--muted); font-size: 7px; }
+
 .notice { margin-top: 14px; padding: 13px 16px; border-radius: 10px; font-size: 13px; }
 .notice.success { background: #e5f2e9; color: #17663f; }
 .notice.error, .failure { background: #fbe8e1; color: #994322; }
@@ -823,9 +873,12 @@ footer { padding: 28px; color: var(--muted); border-top: 1px solid var(--line); 
   .research-review-layout, .future-work-columns { grid-template-columns: 1fr; }
   .future-work-heading { grid-template-columns: 1fr 1fr; }
   .future-work-heading p { grid-column: 1 / -1; text-align: left; }
-  .writing-idea-form, .writing-grid { grid-template-columns: 1fr; }
+  .writing-idea-form, .writing-grid, .csv-upload-form, .visualization-result-grid { grid-template-columns: 1fr; }
   .writing-idea-form > button { width: 100%; }
   .writing-draft { border-right: 0; border-bottom: 1px solid var(--line); }
+  .csv-upload-form > button[type="submit"] { width: 100%; }
+  .scientific-figure-card { border-right: 0; border-bottom: 1px solid var(--line); }
+  .scientific-chart-svg { min-height: 240px; }
   .document-card { grid-template-columns: auto 1fr; }
   .actions { grid-column: 2; }
   .document-title-row { display: block; }

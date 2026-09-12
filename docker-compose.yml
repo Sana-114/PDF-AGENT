@@ -128,6 +128,7 @@ services:
       UPLOAD_DIR: /app/data/uploads
       PARSED_DIR: /app/data/parsed
       TRANSLATION_DIR: /app/data/translations
+      MAX_CSV_MB: ${MAX_CSV_MB:-10}
       CELERY_TASK_ALWAYS_EAGER: "false"
       PARSE_BATCH_PAGES: ${PARSE_BATCH_PAGES:-25}
       FRONTEND_ORIGIN: ${FRONTEND_ORIGIN:-http://localhost:3000}
