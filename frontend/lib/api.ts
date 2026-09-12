@@ -390,6 +390,34 @@ export interface AcademicTranslationResponse {
   warnings: string[];
 }
 
+export interface TranslationGlossary {
+  id: string;
+  name: string;
+  source_language: "zh" | "en";
+  target_language: "zh" | "en";
+  terms: Array<{ source: string; target: string }>;
+  term_count: number;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface AcademicTranslationDraft {
+  id: string;
+  title: string;
+  source_text: string;
+  translated_text: string;
+  source_language: "auto" | "zh" | "en";
+  target_language: "zh" | "en";
+  document_type: "abstract" | "paper";
+  status: "draft" | "reviewed";
+  glossary_id: string | null;
+  provider: string | null;
+  model: string | null;
+  reviewed_at: string | null;
+  created_at: string;
+  updated_at: string;
+}
+
 export interface EvidenceAnchor {
   evidence_id: string;
   chunk_id: string | null;
@@ -681,6 +709,116 @@ export async function translateAcademicText(input: {
     }),
   );
   return response.json();
+}
+
+export async function listTranslationGlossaries(): Promise<TranslationGlossary[]> {
+  const response = await assertResponse(
+    await fetch(`${API_BASE_URL}/writing/glossaries`, { cache: "no-store" }),
+  );
+  const payload = (await response.json()) as { items: TranslationGlossary[] };
+  return payload.items;
+}
+
+export async function saveTranslationGlossary(input: {
+  id?: string;
+  name: string;
+  sourceLanguage: "zh" | "en";
+  targetLanguage: "zh" | "en";
+  terms: Array<{ source: string; target: string }>;
+}): Promise<TranslationGlossary> {
+  const response = await assertResponse(
+    await fetch(
+      input.id
+        ? `${API_BASE_URL}/writing/glossaries/${input.id}`
+        : `${API_BASE_URL}/writing/glossaries`,
+      {
+        method: input.id ? "PUT" : "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          name: input.name,
+          source_language: input.sourceLanguage,
+          target_language: input.targetLanguage,
+          terms: input.terms,
+        }),
+      },
+    ),
+  );
+  return response.json();
+}
+
+export async function deleteTranslationGlossary(glossaryId: string): Promise<void> {
+  await assertResponse(
+    await fetch(`${API_BASE_URL}/writing/glossaries/${glossaryId}`, { method: "DELETE" }),
+  );
+}
+
+export async function listTranslationDrafts(): Promise<AcademicTranslationDraft[]> {
+  const response = await assertResponse(
+    await fetch(`${API_BASE_URL}/writing/drafts`, { cache: "no-store" }),
+  );
+  const payload = (await response.json()) as { items: AcademicTranslationDraft[] };
+  return payload.items;
+}
+
+export async function createTranslationDraft(input: {
+  title: string;
+  sourceText: string;
+  translatedText: string;
+  sourceLanguage: "auto" | "zh" | "en";
+  targetLanguage: "zh" | "en";
+  documentType: "abstract" | "paper";
+  status: "draft" | "reviewed";
+  glossaryId: string | null;
+  provider: string | null;
+  model: string | null;
+}): Promise<AcademicTranslationDraft> {
+  const response = await assertResponse(
+    await fetch(`${API_BASE_URL}/writing/drafts`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        title: input.title,
+        source_text: input.sourceText,
+        translated_text: input.translatedText,
+        source_language: input.sourceLanguage,
+        target_language: input.targetLanguage,
+        document_type: input.documentType,
+        status: input.status,
+        glossary_id: input.glossaryId,
+        provider: input.provider,
+        model: input.model,
+      }),
+    }),
+  );
+  return response.json();
+}
+
+export async function updateTranslationDraft(
+  draftId: string,
+  input: {
+    title?: string;
+    translatedText?: string;
+    status?: "draft" | "reviewed";
+  },
+): Promise<AcademicTranslationDraft> {
+  const response = await assertResponse(
+    await fetch(`${API_BASE_URL}/writing/drafts/${draftId}`, {
+      method: "PATCH",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        title: input.title,
+        translated_text: input.translatedText,
+        status: input.status,
+      }),
+    }),
+  );
+  return response.json();
+}
+
+export async function deleteTranslationDraft(draftId: string): Promise<void> {
+  await assertResponse(
+    await fetch(`${API_BASE_URL}/writing/drafts/${draftId}`, { method: "DELETE" }),
+  );
 }
 
 export async function resolveDocumentReferences(

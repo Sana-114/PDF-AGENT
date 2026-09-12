@@ -29,6 +29,10 @@ PaperPilot 是一个以原文证据为核心的科研助手 Agent 系统。本�
 - 支持“源术语 = 目标术语”术语表，将指定译法作为受保护占位符强制恢复；
 - 翻译前保护 LaTeX 公式、代码、数字、引用、URL 与 DOI，任一占位符丢失即拒绝结果；
 - 返回模型、请求次数、段落数、术语应用记录和完整性核验报告，支持译文/中英对照复制；
+- 支持把双向术语表持久保存到数据库，并在后续翻译中一键载入、更新或删除；
+- 译文可原位人工修改并保存为历史译稿，支持“待审校/审校完成”状态和时间戳；
+- 已审校译稿再次修改时自动退回待审校，避免旧审校状态覆盖新内容；
+- 可重新载入历史译稿继续编辑，并导出保留原文、译文与审校元数据的 Markdown；
 - 支持上传 UTF-8/GB18030 CSV/TSV，自动识别日期、数值、分类与空列并给出字段审计；
 - 按数据形态自动选择折线图或柱状图，也可生成多指标三维雷达图；
 - 图表缺失值保留为空缺，超长序列采用等距抽样并明确提示，不把缺失观测伪装成零；
@@ -251,6 +255,12 @@ LLM_BASE_URL=https://api.openai.com/v1
 
 模型输出的任何书目文本都不会直接进入最终 References。系统只收集本次证据实际涉及的本地论文，再从 Document 与 PaperSource 中读取题名、作者、年份、Venue、DOI、arXiv ID 和来源链接，按现有字段格式化为 `[P1]...`。缺失的作者或年份会产生警告并留空，不会补造；界面可显示每条书目经过核验的字段及其证据页码，并导出 Markdown 草稿。
 
+## 学术翻译审校工作区
+
+翻译工作台允许把常用双向术语表保存为数据库记录，在后续摘要或正文翻译中一键载入。模型译文不会直接标记为完成：初始状态为“待人工审校”，用户可原位修改、保存历史译稿并显式标记“审校完成”。审校后的文本一旦再次修改，状态会自动退回草稿并清除旧审校时间，避免未复核内容继承旧结论。
+
+历史译稿保留源文、当前译文、语言方向、文本类型、术语库关联以及生成 Provider/模型。术语库删除后译稿继续保留，关联安全置空；Markdown 导出包含双语正文与审校元数据，可直接进入后续写作流程。当前阶段不提供 DOCX 排版导出。
+
 ## 不使用 Docker 的本地启动
 
 后端默认使用 SQLite，并以内联模式运行 Celery 任务，因此无需先启动 Redis：
@@ -288,6 +298,11 @@ npm run dev
 | POST | `/api/v1/citation-graph` | 从选定或全部已解析文献构建可解释的局域引用图谱 |
 | POST | `/api/v1/reviews/generate` | 生成证据约束综述、论文时间线与 Future Work 状态 |
 | POST | `/api/v1/writing/outline` | 根据 idea 生成证据框架与真实本地 References |
+| POST | `/api/v1/writing/translate` | 生成受公式、引用、数字和术语保护的学术译文 |
+| GET/POST | `/api/v1/writing/glossaries` | 列出或创建持久化翻译术语库 |
+| PUT/DELETE | `/api/v1/writing/glossaries/{id}` | 更新或删除翻译术语库 |
+| GET/POST | `/api/v1/writing/drafts` | 列出或保存人工审校译稿 |
+| PATCH/DELETE | `/api/v1/writing/drafts/{id}` | 修改审校状态、译文或删除译稿 |
 | POST | `/api/v1/documents` | 上传 PDF，字段名为 `file` |
 | GET | `/api/v1/documents` | 文献列表 |
 | GET | `/api/v1/documents/{id}` | 文献详情 |
@@ -382,7 +397,7 @@ docker compose exec backend python scripts/evaluate_pdf_corpus.py `
 2. 用本地 BGE-M3 / Reranker 跑完官方 PDF 离线评测，并据此校准融合权重；
 3. 为领域综述增加主题聚类、跨论文争议识别和人工确认后的方向状态持久化；
 4. 扩展可编辑图表列选择、误差棒、统计检验与完整数据导出；
-5. 增加翻译术语库持久化、译后人工编辑与 DOCX/Markdown 导出；
+5. 为已审校译稿增加 DOCX 模板化排版导出与变更历史；
 6. 准备公网部署、技术文档 PDF 和 5–8 分钟演示视频。
 
 更完整的边界说明见 [docs/architecture.md](docs/architecture.md)。

@@ -280,22 +280,41 @@ h1 em { color: var(--green); font-style: italic; }
 
 .academic-translation-section { scroll-margin-top: 24px; }
 .academic-translation-workbench { overflow: hidden; background: var(--card); border: 1px solid var(--line); border-radius: 14px; }
+.translation-workspace-bar { display: grid; grid-template-columns: minmax(220px, 1fr) auto auto; gap: 10px; align-items: end; padding: 12px 18px; background: #edf1eb; border-bottom: 1px solid var(--line); }
+.translation-workspace-bar label { display: grid; gap: 5px; color: var(--muted); font-size: 8px; font-weight: 750; }
+.translation-workspace-bar select { min-width: 0; height: 36px; padding: 0 9px; color: var(--ink); background: white; border: 1px solid #ccd7cf; border-radius: 7px; }
+.translation-workspace-bar > span { align-self: center; color: var(--muted); font-size: 8px; }
+.translation-workspace-bar > button { height: 36px; padding: 0 10px; color: #8c3d24; background: #fff8f3; border: 1px solid #e8cbbb; border-radius: 7px; cursor: pointer; }
+.translation-workspace-bar > button:disabled { opacity: .45; cursor: not-allowed; }
 .academic-translation-form { display: grid; grid-template-columns: minmax(0, 1.35fr) minmax(240px, .65fr); gap: 12px; padding: 18px; color: white; background: #172a22; }
 .translation-controls { grid-column: 1 / -1; display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
 .academic-translation-form label { display: grid; gap: 7px; color: rgba(255,255,255,.62); font-size: 9px; font-weight: 750; letter-spacing: .06em; }
-.academic-translation-form select, .academic-translation-form textarea { width: 100%; padding: 10px 11px; color: white; background: rgba(255,255,255,.07); border: 1px solid rgba(255,255,255,.17); border-radius: 8px; outline: none; }
+.academic-translation-form select, .academic-translation-form textarea, .academic-translation-form input { width: 100%; padding: 10px 11px; color: white; background: rgba(255,255,255,.07); border: 1px solid rgba(255,255,255,.17); border-radius: 8px; outline: none; }
 .academic-translation-form select { height: 40px; background: #263a31; }
 .academic-translation-form textarea { resize: vertical; line-height: 1.6; }
-.academic-translation-form select:focus, .academic-translation-form textarea:focus { border-color: var(--lime); }
+.academic-translation-form select:focus, .academic-translation-form textarea:focus, .academic-translation-form input:focus { border-color: var(--lime); }
+.translation-glossary-library { grid-column: 1 / -1; display: grid; grid-template-columns: minmax(180px, .7fr) minmax(220px, 1fr) auto; gap: 10px; align-items: end; padding: 11px; background: rgba(255,255,255,.045); border: 1px solid rgba(255,255,255,.11); border-radius: 9px; }
+.translation-glossary-library > div { display: flex; gap: 6px; }
+.translation-glossary-library button { height: 40px; padding: 0 10px; color: white; background: rgba(255,255,255,.08); border: 1px solid rgba(255,255,255,.18); border-radius: 7px; cursor: pointer; white-space: nowrap; }
+.translation-glossary-library button:nth-child(2) { color: var(--ink); background: var(--lime); border-color: var(--lime); font-weight: 800; }
+.translation-glossary-library button:disabled { opacity: .42; cursor: not-allowed; }
 .academic-source-field textarea { min-height: 220px; }
 .academic-glossary-field textarea { min-height: 110px; font-family: "Cascadia Code", Consolas, monospace; font-size: 9px; }
 .academic-translation-form label > small { color: rgba(255,255,255,.45); font-size: 8px; font-weight: 400; letter-spacing: 0; }
 .academic-translation-form > button { grid-column: 1 / -1; justify-self: end; height: 41px; padding: 0 18px; color: var(--ink); background: var(--lime); border: 0; border-radius: 8px; font-weight: 800; cursor: pointer; }
 .academic-translation-form > button:disabled { opacity: .45; cursor: not-allowed; }
 .academic-translation-error { margin: 12px 18px; padding: 10px 12px; color: #994322; background: #fbe8e1; border-radius: 8px; font-size: 10px; }
+.academic-translation-notice { margin: 12px 18px; padding: 9px 12px; color: #285f49; background: #e8f2eb; border-radius: 8px; font-size: 9px; }
 .academic-translation-workbench > .citation-warning { margin-right: 18px; margin-left: 18px; }
 .translation-quality-strip { display: flex; flex-wrap: wrap; gap: 6px; padding: 12px 18px; background: #edf1eb; border-bottom: 1px solid var(--line); }
 .translation-quality-strip span { padding: 5px 7px; color: #426052; background: white; border: 1px solid #d6ddd7; border-radius: 5px; font-size: 8px; }
+.translation-quality-strip span.reviewed { color: #176440; background: #daf0e1; border-color: #b7d9c2; font-weight: 800; }
+.translation-quality-strip span.draft { color: #8a571d; background: #fff2d8; border-color: #ead4a7; font-weight: 800; }
+.translation-draft-actions { display: grid; grid-template-columns: minmax(180px, 1fr) auto auto auto; gap: 7px; padding: 11px 18px; background: #fbfaf5; border-bottom: 1px solid var(--line); }
+.translation-draft-actions input { min-width: 0; height: 35px; padding: 0 9px; color: var(--ink); background: white; border: 1px solid #d3d9d2; border-radius: 7px; }
+.translation-draft-actions button { padding: 0 10px; color: var(--green); background: #edf4ef; border: 1px solid #cde0d3; border-radius: 7px; cursor: pointer; }
+.translation-draft-actions button:nth-of-type(2) { color: white; background: var(--green); border-color: var(--green); }
+.translation-draft-actions button:disabled { opacity: .45; cursor: not-allowed; }
 .academic-translation-result { display: grid; grid-template-columns: 1fr 1fr; }
 .academic-translation-result > article { min-width: 0; padding: 20px; }
 .academic-translation-result > article:first-child { background: #f5f4ee; border-right: 1px solid var(--line); }
@@ -305,6 +324,7 @@ h1 em { color: var(--green); font-style: italic; }
 .academic-translation-result article > header > div { display: flex; gap: 5px; }
 .academic-translation-result article > header button { padding: 5px 7px; color: var(--green); background: #edf4ef; border: 1px solid #cde0d3; border-radius: 5px; font-size: 8px; cursor: pointer; }
 .academic-translation-result article > p { min-height: 180px; margin: 14px 0 0; color: #37483f; font-family: Georgia, "Noto Serif SC", serif; font-size: 11px; line-height: 1.8; white-space: pre-wrap; }
+.academic-translation-result article > textarea { width: 100%; min-height: 210px; margin-top: 14px; padding: 11px; color: #263c31; background: #fafffb; border: 1px solid #c9d9ce; border-radius: 8px; font-family: Georgia, "Noto Serif SC", serif; font-size: 11px; line-height: 1.8; resize: vertical; }
 .translation-glossary-report { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; padding: 12px 18px; background: #fbfaf5; border-top: 1px solid var(--line); }
 .translation-glossary-report strong { margin-right: 4px; font-size: 9px; }
 .translation-glossary-report span { padding: 4px 6px; color: #426052; background: #edf4ef; border-radius: 5px; font-size: 8px; }
@@ -946,6 +966,10 @@ footer { padding: 28px; color: var(--muted); border-top: 1px solid var(--line); 
   .writing-idea-form > button { width: 100%; }
   .writing-draft { border-right: 0; border-bottom: 1px solid var(--line); }
   .translation-controls { grid-column: 1; grid-template-columns: 1fr; }
+  .translation-workspace-bar, .translation-glossary-library, .translation-draft-actions { grid-template-columns: 1fr; }
+  .translation-glossary-library { grid-column: 1; }
+  .translation-glossary-library > div { flex-wrap: wrap; }
+  .translation-draft-actions button { min-height: 35px; }
   .academic-translation-form > button { grid-column: 1; width: 100%; }
   .academic-translation-result > article:first-child { border-right: 0; border-bottom: 1px solid var(--line); }
   .csv-upload-form > button[type="submit"] { width: 100%; }

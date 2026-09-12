@@ -26,5 +26,9 @@ def init_db() -> None:
     from app.models.document import Document  # noqa: F401
     from app.models.paper_source import PaperSource  # noqa: F401
     from app.models.recommendation import ArxivSubscription, PaperRecommendation  # noqa: F401
+    from app.models.translation import (  # noqa: F401
+        AcademicTranslationDraft,
+        TranslationGlossary,
+    )
 
     Base.metadata.create_all(bind=engine)
