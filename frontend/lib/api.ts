@@ -34,6 +34,15 @@ export interface DocumentProgress {
   updated_at: string | null;
 }
 
+export type DuplicateResolutionAction = "keep_existing" | "replace_existing" | "keep_both";
+
+export interface DuplicateResolutionResponse {
+  action: DuplicateResolutionAction;
+  kept_document: DocumentRecord;
+  removed_document_id: string | null;
+  message: string;
+}
+
 export interface DocumentOutlineNode {
   text: string;
   level: 1 | 2 | 3;
@@ -843,6 +852,20 @@ export async function deleteDocument(documentId: string): Promise<void> {
   await assertResponse(
     await fetch(`${API_BASE_URL}/documents/${documentId}`, { method: "DELETE" }),
   );
+}
+
+export async function resolveDocumentDuplicate(
+  documentId: string,
+  action: DuplicateResolutionAction,
+): Promise<DuplicateResolutionResponse> {
+  const response = await assertResponse(
+    await fetch(`${API_BASE_URL}/documents/${documentId}/duplicates/resolve`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ action }),
+    }),
+  );
+  return response.json();
 }
 
 export async function getDocumentProgress(documentId: string): Promise<DocumentProgress> {

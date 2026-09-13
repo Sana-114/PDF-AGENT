@@ -37,6 +37,8 @@
 
 所有解析器输出同一个 Document AST，并保留 `page_number`、`bbox`、`block_id` 和 `reading_order`，供 RAG 引用和阅读器跳转复用。
 
+解析完成后，系统对同一 arXiv ID 或高相似题名候选计算正文指纹重合度。命中候选只产生待处理提醒，不自动删除文件；`POST /documents/{id}/duplicates/resolve` 要求用户明确选择保留库中版本、用当前版本替换或两版并存。删除路径同时清理原文件、解析结果、翻译缓存、向量索引和来源记录；两版并存只关闭当前提醒，不改写任一 PDF。
+
 ## 阅读器联动
 
 前端通过轻量级 `GET /documents/{id}/outline` 获取递归标题树，不下载包含所有页面块的完整 AST。阅读器将标题按原始层级渲染，点击节点后切换到对应页；翻页或从问答证据进入时，以当前页之前最近出现的标题作为活动章节。目录可折叠，移动端以抽屉形式覆盖画布。PDF 文件接口支持 Range 请求并暴露 `Accept-Ranges`、`Content-Length` 与 `Content-Range`，为超长文档保留按需加载能力。

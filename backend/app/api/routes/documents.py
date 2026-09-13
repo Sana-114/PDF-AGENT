@@ -5,7 +5,7 @@ from urllib.parse import quote
 from fastapi import APIRouter, Depends, File, HTTPException, Query, UploadFile, status
 from fastapi.responses import FileResponse, Response
 from sqlalchemy import delete as sql_delete
-from sqlalchemy import func, select
+from sqlalchemy import func, select, update
 from sqlalchemy.orm import Session
 
 from app.core.database import get_db
@@ -21,6 +21,8 @@ from app.schemas.document import (
     DocumentProgressRead,
     DocumentRead,
     DocumentReferencesRead,
+    DuplicateResolutionRead,
+    DuplicateResolutionRequest,
     PageTranslationRequest,
     TranslationJobRead,
     TranslationJobRequest,
@@ -90,11 +92,85 @@ def _get_document(document_id: str, db: Session) -> Document:
     return document
 
 
+def _delete_document_record(db: Session, document: Document) -> None:
+    db.execute(
+        update(Document)
+        .where(Document.duplicate_of_id == document.id)
+        .values(
+            duplicate_of_id=None,
+            duplicate_score=None,
+            duplicate_recommendation=None,
+        )
+    )
+    delete_document_index_safely(document.id)
+    storage.delete(document.storage_key, document.id)
+    db.execute(sql_delete(PaperSource).where(PaperSource.document_id == document.id))
+    db.delete(document)
+
+
+def _clear_duplicate_warning(document: Document) -> None:
+    document.duplicate_of_id = None
+    document.duplicate_score = None
+    document.duplicate_recommendation = None
+
+
 @router.get("/{document_id}", response_model=DocumentRead)
 def get_document(
     document_id: str, db: Annotated[Session, Depends(get_db)]
 ) -> DocumentRead:
     return DocumentRead.model_validate(_get_document(document_id, db))
+
+
+@router.post(
+    "/{document_id}/duplicates/resolve",
+    response_model=DuplicateResolutionRead,
+)
+def resolve_document_duplicate(
+    document_id: str,
+    request: DuplicateResolutionRequest,
+    db: Annotated[Session, Depends(get_db)],
+) -> DuplicateResolutionRead:
+    current = _get_document(document_id, db)
+    existing_id = current.duplicate_of_id
+    if not existing_id:
+        raise HTTPException(status_code=409, detail="该文献没有待处理的版本冲突。")
+    existing = db.get(Document, existing_id)
+    if existing is None:
+        _clear_duplicate_warning(current)
+        db.commit()
+        raise HTTPException(status_code=409, detail="关联版本已不存在，冲突提醒已清除。")
+
+    if request.action == "keep_existing":
+        _delete_document_record(db, current)
+        db.commit()
+        db.refresh(existing)
+        return DuplicateResolutionRead(
+            action=request.action,
+            kept_document=DocumentRead.model_validate(existing),
+            removed_document_id=current.id,
+            message="已保留库中版本，并移除本次上传的重复版本。",
+        )
+
+    if request.action == "replace_existing":
+        _clear_duplicate_warning(current)
+        _delete_document_record(db, existing)
+        db.commit()
+        db.refresh(current)
+        return DuplicateResolutionRead(
+            action=request.action,
+            kept_document=DocumentRead.model_validate(current),
+            removed_document_id=existing.id,
+            message="已用当前版本替换库中原版本。",
+        )
+
+    _clear_duplicate_warning(current)
+    db.commit()
+    db.refresh(current)
+    return DuplicateResolutionRead(
+        action=request.action,
+        kept_document=DocumentRead.model_validate(current),
+        message="已保留两个版本，并清除待处理提醒。",
+    )
 
 
 @router.get("/{document_id}/progress", response_model=DocumentProgressRead)
@@ -431,8 +507,5 @@ def delete_document(
     document_id: str, db: Annotated[Session, Depends(get_db)]
 ) -> None:
     document = _get_document(document_id, db)
-    delete_document_index_safely(document.id)
-    storage.delete(document.storage_key, document.id)
-    db.execute(sql_delete(PaperSource).where(PaperSource.document_id == document.id))
-    db.delete(document)
+    _delete_document_record(db, document)
     db.commit()

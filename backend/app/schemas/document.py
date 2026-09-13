@@ -33,6 +33,20 @@ class UploadResult(BaseModel):
     message: str
 
 
+DuplicateResolutionAction = Literal["keep_existing", "replace_existing", "keep_both"]
+
+
+class DuplicateResolutionRequest(BaseModel):
+    action: DuplicateResolutionAction
+
+
+class DuplicateResolutionRead(BaseModel):
+    action: DuplicateResolutionAction
+    kept_document: DocumentRead
+    removed_document_id: str | None = None
+    message: str
+
+
 class DocumentList(BaseModel):
     items: list[DocumentRead]
     total: int

@@ -52,6 +52,7 @@ PaperPilot 是一个以原文证据为核心的科研助手 Agent 系统。本�
 - 自动区分原生文本、扫描图像和混合 PDF，并对低文本页执行中英文 OCR；
 - 从正文识别 arXiv ID/版本并生成紧凑语义指纹；
 - 对同一 arXiv 或高相似标题文献生成版本提醒；
+- 版本提醒支持“保留库中版本”“用当前版本替换”和“两版并存”三种可审计处理动作；
 - 自动把页面块切分为不跨页的检索 Chunk，保留章节、页码、块 ID 和 BBox；
 - 将摘要、表格、图注、公式候选和参考文献建立为独立证据 Chunk，旧索引可按需自动升级；
 - 中英混合 BM25 风格检索，可限定单篇文献或跨文献查询；
@@ -307,6 +308,7 @@ npm run dev
 | POST | `/api/v1/documents` | 上传 PDF，字段名为 `file` |
 | GET | `/api/v1/documents` | 文献列表 |
 | GET | `/api/v1/documents/{id}` | 文献详情 |
+| POST | `/api/v1/documents/{id}/duplicates/resolve` | 处理相似版本：保留现有、替换现有或两版并存 |
 | GET | `/api/v1/documents/{id}/progress` | 已完成页数、百分比和断点恢复状态 |
 | GET | `/api/v1/documents/{id}/file` | 原始 PDF |
 | GET | `/api/v1/documents/{id}/content` | Document AST |

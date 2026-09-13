@@ -14,6 +14,7 @@ import {
   documentFileUrl,
   DocumentProgress,
   DocumentRecord,
+  DuplicateResolutionAction,
   EvidenceAnchor,
   generateResearchReview,
   generateWritingOutline,
@@ -28,6 +29,7 @@ import {
   ReferenceResolveResponse,
   ResearchReviewResponse,
   resolveDocumentReferences,
+  resolveDocumentDuplicate,
   refreshArxivSubscription,
   searchPapers,
   setRecommendationFeedback,
@@ -109,6 +111,7 @@ export default function Home() {
   const [savingFeed, setSavingFeed] = useState(false);
   const [refreshingFeed, setRefreshingFeed] = useState<string | null>(null);
   const [importingRecommendation, setImportingRecommendation] = useState<string | null>(null);
+  const [resolvingDuplicate, setResolvingDuplicate] = useState<string | null>(null);
   const [citationGraph, setCitationGraph] = useState<CitationGraphResponse | null>(null);
   const [buildingCitationGraph, setBuildingCitationGraph] = useState(false);
   const [researchReview, setResearchReview] = useState<ResearchReviewResponse | null>(null);
@@ -468,6 +471,30 @@ export default function Home() {
       setDocuments((current) => current.filter((item) => item.id !== document.id));
     } catch (deleteError) {
       setError(deleteError instanceof Error ? deleteError.message : "删除失败");
+    }
+  }
+
+  async function resolveDuplicate(
+    document: DocumentRecord,
+    action: DuplicateResolutionAction,
+  ) {
+    const title = document.title || document.original_filename;
+    const confirmation = action === "keep_existing"
+      ? `保留库中已有版本，并删除本次上传的“${title}”吗？`
+      : action === "replace_existing"
+        ? `用当前文件“${title}”替换库中已有版本吗？`
+        : null;
+    if (confirmation && !window.confirm(confirmation)) return;
+    setResolvingDuplicate(document.id);
+    setError(null);
+    try {
+      const result = await resolveDocumentDuplicate(document.id, action);
+      setNotice(result.message);
+      await refresh(true);
+    } catch (resolveError) {
+      setError(resolveError instanceof Error ? resolveError.message : "版本处理失败");
+    } finally {
+      setResolvingDuplicate(null);
     }
   }
 
@@ -1033,7 +1060,26 @@ export default function Home() {
                     <span>·</span>{new Date(document.created_at).toLocaleString("zh-CN")}
                   </p>
                   {document.duplicate_recommendation && (
-                    <div className="version-warning"><strong>版本提醒</strong>{document.duplicate_recommendation}</div>
+                    <div className="version-warning">
+                      <div><strong>版本提醒</strong>{document.duplicate_recommendation}</div>
+                      <div className="version-resolution-actions">
+                        <button
+                          disabled={resolvingDuplicate === document.id}
+                          onClick={() => void resolveDuplicate(document, "keep_existing")}
+                          type="button"
+                        >保留库中版本</button>
+                        <button
+                          disabled={resolvingDuplicate === document.id}
+                          onClick={() => void resolveDuplicate(document, "replace_existing")}
+                          type="button"
+                        >用当前版本替换</button>
+                        <button
+                          disabled={resolvingDuplicate === document.id}
+                          onClick={() => void resolveDuplicate(document, "keep_both")}
+                          type="button"
+                        >两版并存</button>
+                      </div>
+                    </div>
                   )}
                   {progress?.page_count && document.status !== "ready" && (
                     <div className="parse-progress" aria-label={`解析进度 ${progress.percentage}%`}>

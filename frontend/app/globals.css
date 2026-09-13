@@ -479,6 +479,10 @@ h1 em { color: var(--green); font-style: italic; }
 .version-warning, .failure { margin-top: 12px; padding: 10px 12px; border-radius: 8px; font-size: 12px; line-height: 1.5; }
 .version-warning { background: #fff4d8; color: #76540a; }
 .version-warning strong { margin-right: 8px; }
+.version-resolution-actions { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 8px; }
+.version-resolution-actions button { padding: 5px 8px; color: #76540a; background: rgba(255,255,255,.64); border: 1px solid #d8bc72; border-radius: 5px; font-size: 10px; font-weight: 750; cursor: pointer; }
+.version-resolution-actions button:hover { color: white; background: #8b6714; }
+.version-resolution-actions button:disabled { opacity: .5; cursor: not-allowed; }
 .actions { display: flex; align-items: center; gap: 8px; }
 .actions a, .actions button { padding: 8px 10px; color: var(--green); background: transparent; border: 1px solid var(--line); border-radius: 7px; text-decoration: none; font-size: 12px; cursor: pointer; }
 .actions button { color: var(--muted); }
