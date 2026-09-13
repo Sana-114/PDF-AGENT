@@ -21,6 +21,7 @@ from app.schemas.document import (
     DocumentProgressRead,
     DocumentRead,
     DocumentReferencesRead,
+    DocumentVersionDifferenceRead,
     DuplicateResolutionRead,
     DuplicateResolutionRequest,
     PageTranslationRequest,
@@ -37,6 +38,7 @@ from app.services.document_content import (
 from app.services.document_ingestion import dispatch_document_parse, persist_staged_document
 from app.services.document_translation import page_translation_payload
 from app.services.document_translation_export import build_document_translation_export
+from app.services.document_version_diff import compare_document_versions
 from app.services.storage import storage
 from app.services.translation_store import translation_store
 from app.services.vector_index import delete_document_index_safely
@@ -119,6 +121,34 @@ def get_document(
     document_id: str, db: Annotated[Session, Depends(get_db)]
 ) -> DocumentRead:
     return DocumentRead.model_validate(_get_document(document_id, db))
+
+
+@router.get(
+    "/{document_id}/duplicates/diff",
+    response_model=DocumentVersionDifferenceRead,
+)
+def get_document_version_difference(
+    document_id: str,
+    db: Annotated[Session, Depends(get_db)],
+) -> DocumentVersionDifferenceRead:
+    current = _get_document(document_id, db)
+    if not current.duplicate_of_id:
+        raise HTTPException(status_code=409, detail="该文献没有可比较的版本候选。")
+    existing = db.get(Document, current.duplicate_of_id)
+    if existing is None:
+        raise HTTPException(status_code=409, detail="关联版本已不存在，无法比较。")
+    current_parsed = read_parsed_document(current.id)
+    existing_parsed = read_parsed_document(existing.id)
+    if current_parsed is None or existing_parsed is None:
+        raise HTTPException(status_code=409, detail="两个版本都完成结构化解析后才能比较。")
+    return DocumentVersionDifferenceRead.model_validate(
+        compare_document_versions(
+            current=current,
+            existing=existing,
+            current_parsed=current_parsed,
+            existing_parsed=existing_parsed,
+        )
+    )
 
 
 @router.post(

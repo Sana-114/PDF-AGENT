@@ -14,12 +14,14 @@ import {
   documentFileUrl,
   DocumentProgress,
   DocumentRecord,
+  DocumentVersionDifference,
   DuplicateResolutionAction,
   EvidenceAnchor,
   generateResearchReview,
   generateWritingOutline,
   getAgentStatus,
   getDocumentProgress,
+  getDocumentVersionDifference,
   importPaper,
   listArxivSubscriptions,
   listDocuments,
@@ -112,6 +114,8 @@ export default function Home() {
   const [refreshingFeed, setRefreshingFeed] = useState<string | null>(null);
   const [importingRecommendation, setImportingRecommendation] = useState<string | null>(null);
   const [resolvingDuplicate, setResolvingDuplicate] = useState<string | null>(null);
+  const [comparingVersion, setComparingVersion] = useState<string | null>(null);
+  const [versionDifferences, setVersionDifferences] = useState<Record<string, DocumentVersionDifference>>({});
   const [citationGraph, setCitationGraph] = useState<CitationGraphResponse | null>(null);
   const [buildingCitationGraph, setBuildingCitationGraph] = useState(false);
   const [researchReview, setResearchReview] = useState<ResearchReviewResponse | null>(null);
@@ -495,6 +499,27 @@ export default function Home() {
       setError(resolveError instanceof Error ? resolveError.message : "版本处理失败");
     } finally {
       setResolvingDuplicate(null);
+    }
+  }
+
+  async function compareVersion(document: DocumentRecord) {
+    if (versionDifferences[document.id]) {
+      setVersionDifferences((current) => {
+        const next = { ...current };
+        delete next[document.id];
+        return next;
+      });
+      return;
+    }
+    setComparingVersion(document.id);
+    setError(null);
+    try {
+      const result = await getDocumentVersionDifference(document.id);
+      setVersionDifferences((current) => ({ ...current, [document.id]: result }));
+    } catch (compareError) {
+      setError(compareError instanceof Error ? compareError.message : "版本差异分析失败");
+    } finally {
+      setComparingVersion(null);
     }
   }
 
@@ -1064,6 +1089,11 @@ export default function Home() {
                       <div><strong>版本提醒</strong>{document.duplicate_recommendation}</div>
                       <div className="version-resolution-actions">
                         <button
+                          disabled={comparingVersion === document.id}
+                          onClick={() => void compareVersion(document)}
+                          type="button"
+                        >{versionDifferences[document.id] ? "收起差异" : comparingVersion === document.id ? "比较中" : "查看差异"}</button>
+                        <button
                           disabled={resolvingDuplicate === document.id}
                           onClick={() => void resolveDuplicate(document, "keep_existing")}
                           type="button"
@@ -1079,6 +1109,35 @@ export default function Home() {
                           type="button"
                         >两版并存</button>
                       </div>
+                      {versionDifferences[document.id] && (
+                        <div className="version-difference">
+                          <div className="version-difference-score">
+                            <strong>{versionDifferences[document.id].current_label}</strong>
+                            <span>vs</span>
+                            <strong>{versionDifferences[document.id].existing_label}</strong>
+                            <small>正文重合 {Math.round(versionDifferences[document.id].content_overlap * 100)}%</small>
+                          </div>
+                          <ul>
+                            {versionDifferences[document.id].summary.map((item) => <li key={item}>{item}</li>)}
+                          </ul>
+                          {versionDifferences[document.id].added_headings.length > 0 && (
+                            <details>
+                              <summary>当前版本新增标题（{versionDifferences[document.id].added_headings.length}）</summary>
+                              {versionDifferences[document.id].added_headings.map((item) => (
+                                <p key={`${item.page_number}:${item.text}`}>p.{item.page_number} · {item.text}</p>
+                              ))}
+                            </details>
+                          )}
+                          {versionDifferences[document.id].possibly_added_passages.length > 0 && (
+                            <details>
+                              <summary>可能新增的正文证据（{versionDifferences[document.id].possibly_added_passages.length}）</summary>
+                              {versionDifferences[document.id].possibly_added_passages.map((item) => (
+                                <blockquote key={item.block_id}>p.{item.page_number} · {item.text}</blockquote>
+                              ))}
+                            </details>
+                          )}
+                        </div>
+                      )}
                     </div>
                   )}
                   {progress?.page_count && document.status !== "ready" && (

@@ -43,6 +43,34 @@ export interface DuplicateResolutionResponse {
   message: string;
 }
 
+export interface VersionHeadingDifference {
+  text: string;
+  page_number: number;
+  level: number;
+}
+
+export interface VersionPassageDifference {
+  page_number: number;
+  block_id: string;
+  text: string;
+}
+
+export interface DocumentVersionDifference {
+  current_document_id: string;
+  existing_document_id: string;
+  current_label: string;
+  existing_label: string;
+  content_overlap: number;
+  page_delta: number;
+  text_character_delta: number;
+  structure_deltas: Record<string, number>;
+  added_headings: VersionHeadingDifference[];
+  removed_headings: VersionHeadingDifference[];
+  possibly_added_passages: VersionPassageDifference[];
+  possibly_removed_passages: VersionPassageDifference[];
+  summary: string[];
+}
+
 export interface DocumentOutlineNode {
   text: string;
   level: 1 | 2 | 3;
@@ -863,6 +891,17 @@ export async function resolveDocumentDuplicate(
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ action }),
+    }),
+  );
+  return response.json();
+}
+
+export async function getDocumentVersionDifference(
+  documentId: string,
+): Promise<DocumentVersionDifference> {
+  const response = await assertResponse(
+    await fetch(`${API_BASE_URL}/documents/${documentId}/duplicates/diff`, {
+      cache: "no-store",
     }),
   );
   return response.json();

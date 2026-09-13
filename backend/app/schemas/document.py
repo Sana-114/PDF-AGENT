@@ -47,6 +47,34 @@ class DuplicateResolutionRead(BaseModel):
     message: str
 
 
+class VersionHeadingDifferenceRead(BaseModel):
+    text: str
+    page_number: int = Field(ge=0)
+    level: int = Field(ge=1, le=3)
+
+
+class VersionPassageDifferenceRead(BaseModel):
+    page_number: int = Field(ge=0)
+    block_id: str
+    text: str
+
+
+class DocumentVersionDifferenceRead(BaseModel):
+    current_document_id: str
+    existing_document_id: str
+    current_label: str
+    existing_label: str
+    content_overlap: float = Field(ge=0, le=1)
+    page_delta: int
+    text_character_delta: int
+    structure_deltas: dict[str, int]
+    added_headings: list[VersionHeadingDifferenceRead]
+    removed_headings: list[VersionHeadingDifferenceRead]
+    possibly_added_passages: list[VersionPassageDifferenceRead]
+    possibly_removed_passages: list[VersionPassageDifferenceRead]
+    summary: list[str]
+
+
 class DocumentList(BaseModel):
     items: list[DocumentRead]
     total: int
