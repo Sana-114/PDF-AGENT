@@ -37,6 +37,15 @@ def extract_arxiv_identity(text: str) -> tuple[str | None, int | None]:
     return match.group("id"), int(version) if version else None
 
 
+def extract_document_arxiv_identity(
+    filename: str | None, text: str
+) -> tuple[str | None, int | None]:
+    """Prefer an explicit source filename, then inspect the parsed document text."""
+
+    identity = extract_arxiv_identity(filename or "")
+    return identity if identity[0] else extract_arxiv_identity(text)
+
+
 def bottom_k_signature(text: str, *, shingle_size: int = 5, size: int = 128) -> list[int]:
     """Return a compact, deterministic sketch for approximate content overlap."""
     tokens = normalize_text(text).split()
@@ -86,4 +95,3 @@ def signature_similarity(left: list[int], right: list[int]) -> float:
     left_set = set(left)
     right_set = set(right)
     return len(left_set & right_set) / len(left_set | right_set)
-

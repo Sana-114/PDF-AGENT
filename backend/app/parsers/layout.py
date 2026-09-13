@@ -29,6 +29,7 @@ AFFILIATION_HINT = re.compile(
     r"research center|大学|学院|研究院|实验室|研究中心|系)",
     re.IGNORECASE,
 )
+AUTHOR_FOOTNOTE_MARKER = re.compile(r"\s+[*∗†‡]+(?:\s*[*∗†‡]+)*\s*")
 MATH_HINT = re.compile(r"[=∑∫√≈≤≥±×÷∞∂∇α-ωΑ-Ω]|\b(?:argmax|argmin|softmax)\b")
 FORMULA_CORE = re.compile(r"[=∑∫√≈≤≥±∞∂∇]|\b(?:argmax|argmin|softmax)\b")
 
@@ -136,6 +137,9 @@ def classify_block(
     title: str | None,
 ) -> tuple[str, int | None]:
     text = raw.text.strip()
+    width = max(0.0, raw.bbox[2] - raw.bbox[0])
+    height = max(0.0, raw.bbox[3] - raw.bbox[1])
+    is_vertical_margin = height > 72 and height > width * 1.5
     if raw.page_number == 1 and title and _normalise(text) == _normalise(title):
         return "title", None
     if FIGURE_CAPTION.match(text):
@@ -145,6 +149,8 @@ def classify_block(
     if (
         len(text) <= 140
         and raw.line_count <= 2
+        and not is_vertical_margin
+        and raw.font_size >= body_size * 0.95
         and NUMBERED_HEADING.match(text)
         and not MATH_HINT.search(text)
     ):
@@ -157,6 +163,7 @@ def classify_block(
     font_heading = (
         len(text) <= 140
         and raw.line_count <= 2
+        and not is_vertical_margin
         and raw.font_size >= max(body_size * 1.16, body_size + 1.4)
         and not MATH_HINT.search(text)
         and not text.endswith((".", "。", ",", "，", ";", "；"))
@@ -211,20 +218,46 @@ def extract_abstract(pages: list[Any]) -> str | None:
 
 
 def extract_first_page_people(blocks: list[Block]) -> tuple[list[str], list[str]]:
-    title_index = next((i for i, block in enumerate(blocks) if block.type == "title"), -1)
-    candidates: list[str] = []
-    for block in blocks[title_index + 1 :]:
-        if ABSTRACT_PREFIX.match(block.text) or block.type == "heading":
-            break
-        if block.type in {"text", "figure_caption", "table_caption"}:
-            candidates.append(block.text)
-    if title_index < 0 or not candidates:
+    title = next((block for block in blocks if block.type == "title"), None)
+    if title is None:
         return [], []
 
-    affiliations = [text for text in candidates if AFFILIATION_HINT.search(text) or "@" in text]
-    author_lines = [text for text in candidates if text not in affiliations]
+    abstract_tops = [
+        block.bbox[1]
+        for block in blocks
+        if ABSTRACT_PREFIX.match(block.text) and block.bbox[1] >= title.bbox[3]
+    ]
+    cutoff = min(abstract_tops, default=float("inf"))
+    candidate_blocks = sorted(
+        (
+            block
+            for block in blocks
+            if block.type in {"text", "figure_caption", "table_caption"}
+            and block.bbox[1] >= title.bbox[3] - 2
+            and block.bbox[3] <= cutoff + 2
+        ),
+        key=lambda block: (block.bbox[1], block.bbox[0]),
+    )
+    if not candidate_blocks:
+        return [], []
+
+    affiliations: list[str] = []
+    author_lines: list[str] = []
+    for block in candidate_blocks:
+        text = block.text
+        marker = AUTHOR_FOOTNOTE_MARKER.search(text)
+        if marker and marker.start() > 1:
+            author_lines.append(text[: marker.start()].strip())
+            remainder = text[marker.end() :].strip()
+            if remainder:
+                affiliations.append(remainder)
+        elif AFFILIATION_HINT.search(text) or "@" in text:
+            affiliations.append(text)
+        else:
+            author_lines.append(text)
+
     authors: list[str] = []
-    for line in author_lines[:3]:
+    for line in author_lines:
         cleaned = re.sub(r"[\d*†‡]+", "", line).strip()
         if len(cleaned) > 240 or len(cleaned.split()) > 30:
             continue

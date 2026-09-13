@@ -1,6 +1,7 @@
 from app.services.fingerprints import (
     bottom_k_signature,
     extract_arxiv_identity,
+    extract_document_arxiv_identity,
     signature_similarity,
     title_similarity,
 )
@@ -8,6 +9,12 @@ from app.services.fingerprints import (
 
 def test_extract_arxiv_identity() -> None:
     assert extract_arxiv_identity("arXiv:1706.03762v7 [cs.CL]") == ("1706.03762", 7)
+
+
+def test_document_arxiv_identity_prefers_versioned_filename() -> None:
+    assert extract_document_arxiv_identity(
+        "1706.03762v7.pdf", "References include arXiv:1610.10099v2"
+    ) == ("1706.03762", 7)
 
 
 def test_related_text_has_higher_signature_similarity() -> None:
@@ -23,4 +30,3 @@ def test_related_text_has_higher_signature_similarity() -> None:
 
 def test_title_similarity_normalizes_case_and_spacing() -> None:
     assert title_similarity("Attention Is All You Need", " attention  is ALL you need ") == 1.0
-

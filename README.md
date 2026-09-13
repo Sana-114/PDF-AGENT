@@ -375,6 +375,8 @@ docker compose exec backend python scripts/evaluate_retrieval.py `
 .\scripts\fetch_pdf_corpus.ps1
 # 需要显式代理时：
 .\scripts\fetch_pdf_corpus.ps1 -Proxy http://127.0.0.1:7890
+# 只下载本轮需要的 Transformer 两个版本：
+.\scripts\fetch_pdf_corpus.ps1 -PaperIds transformer-v1,transformer-v7
 ```
 
 语料默认保存在 `output/pdf/regression-corpus/`。若已有一篇真实 PDF，可在 backend 容器内派生无文本层扫描版和精确 541 页压力版：
@@ -397,9 +399,23 @@ docker compose exec backend python scripts/evaluate_pdf_corpus.py `
 
 验收清单位于 `docs/pdf-regression-corpus.json`，覆盖页数、文本层、OCR 输出量、标题、结构节点、耗时和 Python 峰值内存。下载 URL 均固定到论文版本；二进制 PDF 和动态报告由 `.gitignore` 排除。
 
+复现比赛指定的“先上传 v7、再上传 v1”版本判定，可在后端环境执行：
+
+```powershell
+Push-Location backend
+python scripts/evaluate_version_pair.py `
+  ..\output\pdf\regression-corpus\1706.03762v7.pdf `
+  ..\output\pdf\regression-corpus\1706.03762v1.pdf `
+  --batch-pages 5 `
+  --strict
+Pop-Location
+```
+
+2026-09-13 的官方样本实测、文件哈希、解析指标、重复分数和已修复问题见 [Transformer 官方版本样本验收](docs/official-transformer-acceptance-2026-09-13.md)。
+
 ## 下一里程碑
 
-1. 用标准测试 PDF 评估当前版式基线，并按失败样本接入 Docling、GROBID 和 PaddleOCR；
+1. 用官方扫描版和 541 页教材继续验收 OCR、检查点恢复及内存上限，并按失败类型增强解析器；
 2. 用本地 BGE-M3 / Reranker 跑完官方 PDF 离线评测，并据此校准融合权重；
 3. 为领域综述增加主题聚类、跨论文争议识别和人工确认后的方向状态持久化；
 4. 扩展可编辑图表列选择、误差棒、统计检验与完整数据导出；

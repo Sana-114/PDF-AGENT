@@ -1,5 +1,7 @@
 import fitz
 
+from app.parsers.base import Block
+from app.parsers.layout import RawTextBlock, classify_block, extract_first_page_people
 from app.parsers.pymupdf_parser import PyMuPDFParser
 
 
@@ -155,3 +157,78 @@ def test_two_column_reading_order_is_stable(tmp_path) -> None:
     assert left.column == 1
     assert right.column == 2
     assert left.reading_order < right.reading_order
+
+
+def test_title_guess_ignores_vertical_arxiv_identifier() -> None:
+    blocks = [
+        RawTextBlock(
+            1,
+            [10, 215, 38, 560],
+            "arXiv:1706.03762v1 [cs.CL] 12 Jun 2017",
+            20,
+            1,
+            38,
+        ),
+        RawTextBlock(1, [211, 100, 400, 118], "Attention Is All You Need", 17.2, 1, 25),
+        RawTextBlock(1, [284, 337, 329, 349], "Abstract", 12, 1, 8),
+    ]
+
+    assert PyMuPDFParser._guess_title_from_blocks(blocks) == "Attention Is All You Need"
+
+
+def test_people_extraction_uses_geometry_and_splits_combined_author_blocks() -> None:
+    blocks = [
+        Block("p1-b1", "title", "Attention Is All You Need", [210, 100, 400, 118], 0),
+        Block(
+            "p1-b2",
+            "text",
+            "Ashish Vaswani ∗ Google Brain avaswani@google.com",
+            [116, 184, 216, 218],
+            1,
+        ),
+        Block(
+            "p1-b3",
+            "text",
+            "Aidan N. Gomez ∗† University of Toronto aidan@cs.toronto.edu",
+            [235, 234, 340, 268],
+            2,
+        ),
+        Block("p1-b4", "heading", "Abstract", [284, 337, 329, 349], 3, level=1),
+        Block(
+            "p1-b5",
+            "text",
+            "arXiv:1706.03762v1 [cs.CL] 12 Jun 2017",
+            [10, 215, 38, 560],
+            4,
+        ),
+    ]
+
+    authors, affiliations = extract_first_page_people(blocks)
+
+    assert authors == ["Ashish Vaswani", "Aidan N. Gomez"]
+    assert affiliations == [
+        "Google Brain avaswani@google.com",
+        "University of Toronto aidan@cs.toronto.edu",
+    ]
+
+
+def test_heading_classifier_rejects_vertical_stamp_and_small_numbered_footnote() -> None:
+    stamp = RawTextBlock(
+        1,
+        [10, 215, 38, 560],
+        "arXiv:1706.03762v7 [cs.CL] 2 Aug 2023",
+        20,
+        1,
+        38,
+    )
+    footnote = RawTextBlock(
+        8,
+        [110, 700, 500, 720],
+        "5 We used values of 2.8, 3.7, 6.0 and 9.5 TFLOPS for K80 and P100.",
+        8,
+        1,
+        74,
+    )
+
+    assert classify_block(stamp, body_size=10, title=None) == ("text", None)
+    assert classify_block(footnote, body_size=10, title=None) == ("text", None)

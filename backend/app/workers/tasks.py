@@ -14,14 +14,13 @@ from app.parsers import get_parser
 from app.parsers.checkpoint import write_json_atomic
 from app.services.chunking import replace_document_chunks
 from app.services.document_content import read_parsed_document
+from app.services.document_duplicates import assess_duplicate, recommend_version
 from app.services.document_translation import run_document_translation
 from app.services.fingerprints import (
     bottom_k_signature,
-    extract_arxiv_identity,
+    extract_document_arxiv_identity,
     signature_from_json,
-    signature_similarity,
     signature_to_json,
-    title_similarity,
 )
 from app.services.recommendations import recommendation_service
 from app.services.storage import storage
@@ -30,21 +29,6 @@ from app.services.vector_index import index_document_safely
 from app.workers.celery_app import celery_app
 
 logger = logging.getLogger(__name__)
-
-
-def _recommend_version(current: Document, existing: Document) -> str:
-    if current.arxiv_version and existing.arxiv_version:
-        if current.arxiv_version < existing.arxiv_version:
-            return (
-                f"库中已有更新的 arXiv v{existing.arxiv_version}，"
-                f"建议保留现有版本并将本次 v{current.arxiv_version} 作为历史版本。"
-            )
-        if current.arxiv_version > existing.arxiv_version:
-            return (
-                f"当前文件是更新的 arXiv v{current.arxiv_version}，"
-                f"建议用它替换库中的 v{existing.arxiv_version}。"
-            )
-    return "两份文献正文高度重合，请确认覆盖现有版本或同时保留。"
 
 
 def _find_semantic_duplicate(session, current: Document) -> None:
@@ -59,23 +43,24 @@ def _find_semantic_duplicate(session, current: Document) -> None:
 
     best: tuple[float, Document] | None = None
     for candidate in candidates:
-        same_arxiv = bool(current.arxiv_id and current.arxiv_id == candidate.arxiv_id)
-        identity_score = 1.0 if same_arxiv else title_similarity(current.title, candidate.title)
-        content_score = signature_similarity(
-            current_signature, signature_from_json(candidate.semantic_signature)
+        assessment = assess_duplicate(
+            current_arxiv_id=current.arxiv_id,
+            current_title=current.title,
+            current_signature=current_signature,
+            existing_arxiv_id=candidate.arxiv_id,
+            existing_title=candidate.title,
+            existing_signature=signature_from_json(candidate.semantic_signature),
         )
-        combined_score = 0.55 * identity_score + 0.45 * content_score
-        qualifies = (same_arxiv and content_score >= 0.30) or (
-            identity_score >= 0.92 and content_score >= 0.55
-        )
-        if qualifies and (best is None or combined_score > best[0]):
-            best = combined_score, candidate
+        if assessment.qualifies and (best is None or assessment.combined_score > best[0]):
+            best = assessment.combined_score, candidate
 
     if best:
         score, candidate = best
         current.duplicate_of_id = candidate.id
         current.duplicate_score = round(score, 4)
-        current.duplicate_recommendation = _recommend_version(current, candidate)
+        current.duplicate_recommendation = recommend_version(
+            current.arxiv_version, candidate.arxiv_version
+        )
 
 
 @celery_app.task(
@@ -116,7 +101,9 @@ def parse_document(document_id: str) -> dict[str, str]:
                 progress_callback=record_progress,
             )
             signature = bottom_k_signature(parsed.full_text)
-            arxiv_id, arxiv_version = extract_arxiv_identity(parsed.full_text)
+            arxiv_id, arxiv_version = extract_document_arxiv_identity(
+                document.original_filename, parsed.full_text
+            )
 
             document.title = parsed.title
             document.page_count = len(parsed.pages)

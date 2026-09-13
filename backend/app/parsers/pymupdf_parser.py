@@ -412,7 +412,19 @@ class PyMuPDFParser:
 
     @staticmethod
     def _guess_title_from_blocks(blocks: list[RawTextBlock]) -> str | None:
-        candidates = [block for block in blocks if 8 <= len(block.text) <= 240]
+        candidates = []
+        for block in blocks:
+            width = max(0.0, block.bbox[2] - block.bbox[0])
+            height = max(0.0, block.bbox[3] - block.bbox[1])
+            if not 8 <= len(block.text) <= 240:
+                continue
+            if block.text.casefold().startswith("arxiv:"):
+                continue
+            # arXiv adds a large, rotated identifier along the page margin. Its
+            # font is often larger than the real title, so reject vertical bands.
+            if height > 72 or height > width * 1.5:
+                continue
+            candidates.append(block)
         if not candidates:
             return None
         return max(candidates, key=lambda item: (item.font_size, len(item.text))).text
