@@ -50,6 +50,8 @@ def evaluate_pdf(
     elapsed = time.perf_counter() - started
     _, peak = tracemalloc.get_traced_memory()
     tracemalloc.stop()
+    processing_metadata = getattr(parser, "processing_metadata", None)
+    processing = processing_metadata() if callable(processing_metadata) else {}
     metrics = {
         "filename": path.name,
         "size_bytes": path.stat().st_size,
@@ -70,6 +72,8 @@ def evaluate_pdf(
         "figures": len(parsed.figures),
         "formulas": len(parsed.formulas),
         "references": len(parsed.references),
+        "ocr_page_count": int(processing.get("ocr_page_count", 0)),
+        "ocr_pages": processing.get("ocr_pages", []),
         "warnings": parsed.warnings,
     }
     failures = _validate(metrics, expectation)
@@ -87,6 +91,8 @@ def _validate(metrics: dict[str, Any], expected: dict[str, Any]) -> list[str]:
         "min_figures": "figures",
         "min_formulas": "formulas",
         "min_references": "references",
+        "min_authors": "authors",
+        "min_ocr_pages": "ocr_page_count",
     }
     for expectation_key, metric_key in minimums.items():
         minimum = expected.get(expectation_key)

@@ -1,7 +1,12 @@
 import fitz
 
 from app.parsers.base import Block
-from app.parsers.layout import RawTextBlock, classify_block, extract_first_page_people
+from app.parsers.layout import (
+    RawTextBlock,
+    classify_block,
+    extract_first_page_people,
+    extract_text_blocks,
+)
 from app.parsers.pymupdf_parser import PyMuPDFParser
 
 
@@ -170,7 +175,7 @@ def test_title_guess_ignores_vertical_arxiv_identifier() -> None:
             38,
         ),
         RawTextBlock(1, [211, 100, 400, 118], "Attention Is All You Need", 17.2, 1, 25),
-        RawTextBlock(1, [284, 337, 329, 349], "Abstract", 12, 1, 8),
+        RawTextBlock(1, [18, 331, 328, 355], "5 Abstract", 25.5, 2, 10),
     ]
 
     assert PyMuPDFParser._guess_title_from_blocks(blocks) == "Attention Is All You Need"
@@ -232,3 +237,48 @@ def test_heading_classifier_rejects_vertical_stamp_and_small_numbered_footnote()
 
     assert classify_block(stamp, body_size=10, title=None) == ("text", None)
     assert classify_block(footnote, body_size=10, title=None) == ("text", None)
+
+
+def test_people_extraction_recovers_ocr_merged_author_grid() -> None:
+    merged = (
+        "Ashish Vaswani* Noam Shazeer* Niki Parmar* Jakob Uszkoreit* "
+        "Google Brain Google Research avaswani@google.com noam@google.com "
+        "Llion Jones* Aidan N. Gomez*! Łukasz Kaiser* University of Toronto "
+        "Illia Polosukhin* illia.polosukhin@gmail.com"
+    )
+    blocks = [
+        Block("p1-b1", "title", "Attention Is All You Need", [211, 101, 400, 114], 0),
+        Block("p1-b2", "text", merged, [18, 187, 496, 310], 1),
+        Block("p1-b3", "heading", "5 Abstract", [18, 331, 328, 355], 2, level=1),
+    ]
+
+    authors, affiliations = extract_first_page_people(blocks)
+
+    assert authors == [
+        "Ashish Vaswani",
+        "Noam Shazeer",
+        "Niki Parmar",
+        "Jakob Uszkoreit",
+        "Llion Jones",
+        "Aidan N. Gomez",
+        "Łukasz Kaiser",
+        "Illia Polosukhin",
+    ]
+    assert affiliations == [merged]
+
+
+def test_ocr_block_font_size_uses_character_weighted_median() -> None:
+    page = {
+        "blocks": [
+            {
+                "type": 0,
+                "bbox": [10, 10, 500, 200],
+                "lines": [
+                    {"spans": [{"text": "Introduction", "size": 24}]},
+                    {"spans": [{"text": "body text " * 20, "size": 10}]},
+                ],
+            }
+        ]
+    }
+
+    assert extract_text_blocks(page, 1)[0].font_size == 10

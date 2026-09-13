@@ -12,7 +12,7 @@ from app.parsers.base import (
     TableNode,
 )
 
-NUMBERED_HEADING = re.compile(r"^(?:\d+(?:\.\d+){0,2}\.?|[A-Z]\.)\s+\S+")
+NUMBERED_HEADING = re.compile(r"^(?:[§\d](?:\.\d+){0,2}\.?|[A-Z]\.)\s+\S+")
 KNOWN_HEADING = re.compile(
     r"^(?:abstract|摘要|keywords?|关键词|references|bibliography|参考文献|"
     r"acknowledg(?:e)?ments?|致谢|appendix(?:\s+[A-Z0-9]+)?|附录(?:\s*[A-Z0-9一二三四五六七八九十]+)?)$",
@@ -30,6 +30,12 @@ AFFILIATION_HINT = re.compile(
     re.IGNORECASE,
 )
 AUTHOR_FOOTNOTE_MARKER = re.compile(r"\s+[*∗†‡]+(?:\s*[*∗†‡]+)*\s*")
+AUTHOR_WITH_MARKER = re.compile(
+    r"(?<![\w.'’-])"
+    r"(?P<name>[A-ZÀ-ÖØ-ÞŁ][\w.'’-]*(?:\s+[A-ZÀ-ÖØ-ÞŁ]\.)?"
+    r"\s+[A-ZÀ-ÖØ-ÞŁ][\w.'’-]*)"
+    r"\s*[*∗]"
+)
 MATH_HINT = re.compile(r"[=∑∫√≈≤≥±×÷∞∂∇α-ωΑ-Ω]|\b(?:argmax|argmin|softmax)\b")
 FORMULA_CORE = re.compile(r"[=∑∫√≈≤≥±∞∂∇]|\b(?:argmax|argmin|softmax)\b")
 
@@ -66,14 +72,14 @@ def extract_text_blocks(page_dict: dict[str, Any], page_number: int) -> list[Raw
         text = _normalize_text_spacing(" ".join(" ".join(line_texts).split()))
         if not text:
             continue
-        sizes = [float(span.get("size", 0.0)) for span in spans if span.get("text", "").strip()]
+        font_size = _representative_font_size(spans)
         bbox = raw_block.get("bbox", (0, 0, 0, 0))
         blocks.append(
             RawTextBlock(
                 page_number=page_number,
                 bbox=_round_bbox(bbox),
                 text=text,
-                font_size=max(sizes, default=0.0),
+                font_size=font_size,
                 line_count=max(1, len(lines)),
                 char_weight=max(1, len(text)),
             )
@@ -85,6 +91,29 @@ def _normalize_text_spacing(text: str) -> str:
     """Remove OCR span gaps between Han characters without touching Latin words."""
 
     return re.sub(r"(?<=[\u3400-\u9fff])\s+(?=[\u3400-\u9fff])", "", text)
+
+
+def _representative_font_size(spans: list[dict[str, Any]]) -> float:
+    """Use a character-weighted median so one large OCR glyph cannot size a whole block."""
+
+    weighted = sorted(
+        (
+            float(span.get("size", 0.0)),
+            max(1, len(str(span.get("text", "")).strip())),
+        )
+        for span in spans
+        if span.get("text", "").strip()
+    )
+    total = sum(weight for _, weight in weighted)
+    if not total:
+        return 0.0
+    midpoint = total / 2
+    running = 0
+    for size, weight in weighted:
+        running += weight
+        if running >= midpoint:
+            return size
+    return weighted[-1][0]
 
 
 def body_font_size(blocks: list[RawTextBlock]) -> float:
@@ -150,9 +179,9 @@ def classify_block(
         len(text) <= 140
         and raw.line_count <= 2
         and not is_vertical_margin
-        and raw.font_size >= body_size * 0.95
         and NUMBERED_HEADING.match(text)
         and not MATH_HINT.search(text)
+        and not text.endswith((".", "。", ",", "，", ";", "；"))
     ):
         prefix = text.split(maxsplit=1)[0].rstrip(".")
         return "heading", min(prefix.count(".") + 1, 3)
@@ -245,6 +274,14 @@ def extract_first_page_people(blocks: list[Block]) -> tuple[list[str], list[str]
     author_lines: list[str] = []
     for block in candidate_blocks:
         text = block.text
+        marked_names = [match.group("name") for match in AUTHOR_WITH_MARKER.finditer(text)]
+        if len(marked_names) > 1:
+            # OCR commonly merges the complete multi-column author grid into one
+            # block. Footnote markers remain reliable separators for the names.
+            author_lines.extend(marked_names)
+            if AFFILIATION_HINT.search(text) or "@" in text:
+                affiliations.append(text)
+            continue
         marker = AUTHOR_FOOTNOTE_MARKER.search(text)
         if marker and marker.start() > 1:
             author_lines.append(text[: marker.start()].strip())
@@ -445,6 +482,14 @@ def is_reference_heading(text: str) -> bool:
 def is_appendix_heading(text: str) -> bool:
     without_number = re.sub(r"^\s*\d+(?:\.\d+)*\.?\s*", "", text)
     return bool(APPENDIX_HEADING.match(without_number.strip()))
+
+
+def is_probable_section_heading(text: str) -> bool:
+    """Return whether a short block is shaped like a numbered/known section title."""
+
+    stripped = text.strip()
+    without_number = re.sub(r"^\s*\d+(?:\.\d+)*\.?\s*", "", stripped)
+    return bool(NUMBERED_HEADING.match(stripped) or KNOWN_HEADING.match(without_number))
 
 
 def union_bbox(boxes: list[list[float]]) -> list[float]:

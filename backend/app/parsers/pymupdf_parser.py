@@ -25,6 +25,7 @@ from app.parsers.layout import (
     extract_formulas,
     extract_references,
     extract_text_blocks,
+    is_probable_section_heading,
     make_figure_nodes,
     make_table_node,
     nearest_caption,
@@ -419,6 +420,8 @@ class PyMuPDFParser:
             if not 8 <= len(block.text) <= 240:
                 continue
             if block.text.casefold().startswith("arxiv:"):
+                continue
+            if is_probable_section_heading(block.text):
                 continue
             # arXiv adds a large, rotated identifier along the page margin. Its
             # font is often larger than the real title, so reject vertical bands.

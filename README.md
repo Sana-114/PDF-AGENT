@@ -386,6 +386,17 @@ docker compose exec backend python scripts/build_pdf_fixtures.py `
   /app/data/uploads/<source.pdf> /tmp/regression-corpus
 ```
 
+只构造比赛命名方式的 15 页 Transformer 扫描替代样本，可执行：
+
+```powershell
+docker compose exec backend python scripts/build_pdf_fixtures.py `
+  /app/tmp/stage40/1706.03762v1.pdf `
+  /app/tmp/stage40 `
+  --scan-pages 15 `
+  --scan-filename 1706.03762v1_img.pdf `
+  --only scan
+```
+
 执行完整解析并输出机器可读报告：
 
 ```powershell
@@ -413,9 +424,11 @@ Pop-Location
 
 2026-09-13 的官方样本实测、文件哈希、解析指标、重复分数和已修复问题见 [Transformer 官方版本样本验收](docs/official-transformer-acceptance-2026-09-13.md)。
 
+同日使用官方 v1 内容构造的无文本层扫描替代样本、OCR 指标和当前多模态边界见 [扫描 PDF OCR 验收](docs/scanned-pdf-ocr-acceptance-2026-09-13.md)。
+
 ## 下一里程碑
 
-1. 用官方扫描版和 541 页教材继续验收 OCR、检查点恢复及内存上限，并按失败类型增强解析器；
+1. 获取组委会官方扫描版后复跑 OCR，并增加扫描表格和独立图区域恢复；
 2. 用本地 BGE-M3 / Reranker 跑完官方 PDF 离线评测，并据此校准融合权重；
 3. 为领域综述增加主题聚类、跨论文争议识别和人工确认后的方向状态持久化；
 4. 扩展可编辑图表列选择、误差棒、统计检验与完整数据导出；

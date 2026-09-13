@@ -12,17 +12,36 @@ def build_fixtures(
     scan_pages: int = 6,
     scan_dpi: int = 144,
     long_pages: int = 541,
+    only: set[str] | None = None,
+    scan_filename: str | None = None,
 ) -> dict[str, Path]:
     if not source.is_file():
         raise FileNotFoundError(source)
+    selected = only or {"native", "scan", "long"}
+    unknown = selected - {"native", "scan", "long"}
+    if unknown:
+        raise ValueError(f"Unknown fixture type(s): {', '.join(sorted(unknown))}")
+    if scan_filename and (
+        Path(scan_filename).name != scan_filename or not scan_filename.endswith(".pdf")
+    ):
+        raise ValueError("scan_filename must be a plain .pdf filename")
     output_dir.mkdir(parents=True, exist_ok=True)
     native_path = output_dir / "local_chinese_thesis_native.pdf"
-    scan_path = output_dir / f"local_chinese_thesis_scan_{scan_pages}p.pdf"
+    scan_path = output_dir / (
+        scan_filename or f"local_chinese_thesis_scan_{scan_pages}p.pdf"
+    )
     long_path = output_dir / f"local_chinese_thesis_long_{long_pages}p.pdf"
-    shutil.copy2(source, native_path)
-    _build_scan(source, scan_path, page_limit=scan_pages, dpi=scan_dpi)
-    _build_long_document(source, long_path, target_pages=long_pages)
-    return {"native": native_path, "scan": scan_path, "long": long_path}
+    outputs: dict[str, Path] = {}
+    if "native" in selected:
+        shutil.copy2(source, native_path)
+        outputs["native"] = native_path
+    if "scan" in selected:
+        _build_scan(source, scan_path, page_limit=scan_pages, dpi=scan_dpi)
+        outputs["scan"] = scan_path
+    if "long" in selected:
+        _build_long_document(source, long_path, target_pages=long_pages)
+        outputs["long"] = long_path
+    return outputs
 
 
 def _build_scan(source: Path, output: Path, *, page_limit: int, dpi: int) -> None:
@@ -76,7 +95,14 @@ def main() -> None:
     parser.add_argument("output_dir", type=Path)
     parser.add_argument("--scan-pages", type=int, default=6)
     parser.add_argument("--scan-dpi", type=int, default=144)
+    parser.add_argument("--scan-filename")
     parser.add_argument("--long-pages", type=int, default=541)
+    parser.add_argument(
+        "--only",
+        action="append",
+        choices=("native", "scan", "long"),
+        help="Build only the selected fixture type; repeat to select more than one.",
+    )
     args = parser.parse_args()
     outputs = build_fixtures(
         args.source,
@@ -84,6 +110,8 @@ def main() -> None:
         scan_pages=args.scan_pages,
         scan_dpi=args.scan_dpi,
         long_pages=args.long_pages,
+        only=set(args.only) if args.only else None,
+        scan_filename=args.scan_filename,
     )
     for kind, path in outputs.items():
         print(f"{kind}: {path}")

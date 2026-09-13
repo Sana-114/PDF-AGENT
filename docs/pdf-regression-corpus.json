@@ -39,6 +39,24 @@
   ],
   "local_fixtures": [
     {
+      "id": "transformer-v1-scan",
+      "filename": "1706.03762v1_img.pdf",
+      "derived_from": "1706.03762v1.pdf",
+      "purpose": ["scanned-image", "ocr", "two-column", "references"],
+      "expect": {
+        "min_pages": 15,
+        "content_kind": "scanned_image",
+        "min_extracted_text_chars": 25000,
+        "min_authors": 6,
+        "min_outline_nodes": 20,
+        "min_references": 30,
+        "min_ocr_pages": 15,
+        "max_elapsed_seconds": 180,
+        "max_python_peak_memory_mb": 256,
+        "title_contains": "Attention"
+      }
+    },
+    {
       "filename": "local_chinese_thesis_native.pdf",
       "purpose": ["chinese", "tables", "figures", "formulas", "references"],
       "expect": {"min_pages": 20, "min_text_chars": 20000, "min_extracted_text_chars": 20000, "min_tables": 10, "min_references": 5, "max_elapsed_seconds": 30, "max_python_peak_memory_mb": 128}
