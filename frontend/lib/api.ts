@@ -947,6 +947,16 @@ export async function getDocumentTranslationStatus(
   return response.json();
 }
 
+export function documentTranslationExportUrl(
+  documentId: string,
+  targetLanguage: "zh" | "en",
+  format: "markdown" | "html",
+  mode: "translation" | "bilingual" = "bilingual",
+): string {
+  const params = new URLSearchParams({ format, mode });
+  return `${API_BASE_URL}/documents/${documentId}/translations/${targetLanguage}/export?${params}`;
+}
+
 export function documentFileUrl(documentId: string, pageNumber?: number): string {
   const pageAnchor = pageNumber ? `#page=${pageNumber}` : "";
   return `${API_BASE_URL}/documents/${documentId}/file${pageAnchor}`;

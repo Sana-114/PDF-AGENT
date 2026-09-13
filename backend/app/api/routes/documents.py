@@ -1,8 +1,9 @@
 import json
 from typing import Annotated, Literal
+from urllib.parse import quote
 
 from fastapi import APIRouter, Depends, File, HTTPException, Query, UploadFile, status
-from fastapi.responses import FileResponse
+from fastapi.responses import FileResponse, Response
 from sqlalchemy import delete as sql_delete
 from sqlalchemy import func, select
 from sqlalchemy.orm import Session
@@ -33,6 +34,7 @@ from app.services.document_content import (
 )
 from app.services.document_ingestion import dispatch_document_parse, persist_staged_document
 from app.services.document_translation import page_translation_payload
+from app.services.document_translation_export import build_document_translation_export
 from app.services.storage import storage
 from app.services.translation_store import translation_store
 from app.services.vector_index import delete_document_index_safely
@@ -352,6 +354,63 @@ def get_cached_document_page_translation(
     if cached is None:
         raise HTTPException(status_code=404, detail="该页译文尚未生成。")
     return DocumentPageTranslationRead.model_validate(cached)
+
+
+@router.get("/{document_id}/translations/{target_language}/export")
+def export_document_translation(
+    document_id: str,
+    target_language: Literal["zh", "en"],
+    db: Annotated[Session, Depends(get_db)],
+    output_format: Annotated[Literal["markdown", "html"], Query(alias="format")] = "markdown",
+    mode: Annotated[Literal["translation", "bilingual"], Query()] = "bilingual",
+) -> Response:
+    document = _get_document(document_id, db)
+    manifest = _translation_manifest_for_document(document, target_language)
+    if manifest is None:
+        raise HTTPException(status_code=404, detail="尚未创建该语言的整篇翻译任务。")
+    if manifest.get("status") != "completed":
+        raise HTTPException(status_code=409, detail="整篇翻译完成后才能导出。")
+
+    page_count = int(manifest.get("page_count", 0))
+    pages: list[dict] = []
+    missing_pages: list[int] = []
+    for page_number in range(1, page_count + 1):
+        payload = translation_store.read_page(
+            document_id,
+            target_language,
+            page_number,
+            source_fingerprint=document.sha256,
+        )
+        if payload is None:
+            missing_pages.append(page_number)
+        else:
+            pages.append(payload)
+    if missing_pages:
+        preview = ", ".join(str(value) for value in missing_pages[:8])
+        suffix = "…" if len(missing_pages) > 8 else ""
+        raise HTTPException(
+            status_code=409,
+            detail=f"翻译缓存不完整，缺少第 {preview}{suffix} 页，请继续翻译任务。",
+        )
+
+    artifact = build_document_translation_export(
+        title=document.title,
+        original_filename=document.original_filename,
+        manifest=manifest,
+        pages=pages,
+        output_format=output_format,
+        mode=mode,
+    )
+    ascii_filename = f"translation-{document.id[:12]}.{artifact.filename.rsplit('.', 1)[-1]}"
+    disposition = (
+        f'attachment; filename="{ascii_filename}"; '
+        f"filename*=UTF-8''{quote(artifact.filename)}"
+    )
+    return Response(
+        content=artifact.content.encode("utf-8"),
+        media_type=artifact.media_type,
+        headers={"Content-Disposition": disposition},
+    )
 
 
 @router.post("/{document_id}/reparse", response_model=DocumentRead, status_code=202)

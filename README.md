@@ -72,6 +72,7 @@ PaperPilot 是一个以原文证据为核心的科研助手 Agent 系统。本�
 - 阅读器支持中英文划词/选段翻译，保留公式、代码、引用和数字，零密钥模式明确拒绝伪翻译；
 - 支持当前页段落对齐翻译、中英目标语言切换、双栏双向同步滚动和会话内页级缓存；
 - 支持整篇后台翻译、逐页原子缓存、实时进度展示和失败后的断点续跑；
+- 整篇翻译完成后可导出按页、按 Block 对齐的双语 Markdown 或自包含 HTML，公式、代码和引用沿用已核验译文且不再二次改写；
 - 文献列表、原文访问、结构化结果读取、重解析和删除；
 - Web 端展示长文档已处理页数、百分比和断点可恢复状态；
 - Docker Compose 编排 PostgreSQL、Redis、Qdrant、MinIO、API、Worker 和 Web。
@@ -315,6 +316,7 @@ npm run dev
 | POST | `/api/v1/documents/{id}/translations` | 创建或续跑整篇后台翻译任务 |
 | GET | `/api/v1/documents/{id}/translations/{language}` | 查询整篇翻译进度与错误状态 |
 | GET | `/api/v1/documents/{id}/translations/{language}/pages/{page}` | 读取已持久化的页级译文 |
+| GET | `/api/v1/documents/{id}/translations/{language}/export` | 以 Markdown/HTML 导出完成的整篇译文 |
 | POST | `/api/v1/documents/{id}/reparse` | 重新解析 |
 | DELETE | `/api/v1/documents/{id}` | 删除文献及本地文件 |
 | GET | `/api/v1/agent/status` | 当前 Provider、模型和 Skills 状态 |
@@ -397,7 +399,7 @@ docker compose exec backend python scripts/evaluate_pdf_corpus.py `
 2. 用本地 BGE-M3 / Reranker 跑完官方 PDF 离线评测，并据此校准融合权重；
 3. 为领域综述增加主题聚类、跨论文争议识别和人工确认后的方向状态持久化；
 4. 扩展可编辑图表列选择、误差棒、统计检验与完整数据导出；
-5. 为整篇翻译增加 Markdown/HTML 导出，并继续评估保持原位排版的 PDF 输出；
+5. 继续评估保持原位排版的双语 PDF 输出；
 6. 准备公网部署、技术文档 PDF 和 5–8 分钟演示视频。
 
 更完整的边界说明见 [docs/architecture.md](docs/architecture.md)。

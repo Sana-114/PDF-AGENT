@@ -17,6 +17,7 @@ import {
   DocumentOutlineNode,
   DocumentReference,
   EvidenceAnchor,
+  documentTranslationExportUrl,
   getDocumentOutline,
   getDocumentReferences,
   getDocumentTranslationStatus,
@@ -811,6 +812,19 @@ export default function PdfReader({
                   <strong>{translationJob.completed_pages}/{translationJob.page_count} 页</strong>
                 </div>
                 <progress max="100" value={translationJob.percentage} />
+                {translationJob.status === "completed" && (
+                  <div className="pdf-translation-exports">
+                    <span>双语全文导出</span>
+                    <a
+                      download
+                      href={documentTranslationExportUrl(documentId, bilingualTarget, "markdown")}
+                    >Markdown</a>
+                    <a
+                      download
+                      href={documentTranslationExportUrl(documentId, bilingualTarget, "html")}
+                    >HTML</a>
+                  </div>
+                )}
                 {translationJob.error && <small>{translationJob.error}</small>}
               </div>
             )}

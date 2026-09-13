@@ -788,6 +788,10 @@ footer { padding: 28px; color: var(--muted); border-top: 1px solid var(--line); 
 .pdf-translation-job small { overflow: hidden; color: #8c3d24; text-overflow: ellipsis; white-space: nowrap; }
 .pdf-translation-job.failed { background: #fff0e9; }
 .pdf-translation-job.completed { background: #e1f1e6; }
+.pdf-translation-exports { display: flex; align-items: center; justify-content: flex-start !important; gap: 6px !important; }
+.pdf-translation-exports span { margin-right: auto; color: #4d6259; letter-spacing: 0; }
+.pdf-translation-exports a { padding: 4px 7px; color: #245f46; background: rgba(255,255,255,.62); border: 1px solid #b8cdbd; border-radius: 5px; font-weight: 800; text-decoration: none; }
+.pdf-translation-exports a:hover { color: white; background: #245f46; }
 .pdf-bilingual-state { margin: 14px; padding: 22px 15px; color: var(--muted); background: #eceee8; border-radius: 8px; text-align: center; font-size: 10px; line-height: 1.6; }
 .pdf-bilingual-state.error { color: #8c3d24; background: #fff0e9; }
 .pdf-bilingual-segments { display: grid; gap: 0; }
