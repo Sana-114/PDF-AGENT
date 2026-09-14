@@ -397,6 +397,24 @@ docker compose exec backend python scripts/build_pdf_fixtures.py `
   --only scan
 ```
 
+构造精确 541 页的真实版式压力样本并验证中断恢复：
+
+```powershell
+docker compose exec backend python scripts/build_pdf_fixtures.py `
+  /app/tmp/stage41/1706.03762v1.pdf `
+  /app/tmp/stage41 `
+  --long-pages 541 `
+  --long-filename transformer_long_541p.pdf `
+  --only long
+
+docker compose exec backend python scripts/evaluate_long_document.py `
+  /app/tmp/stage41/transformer_long_541p.pdf `
+  --batch-pages 25 `
+  --interrupt-after-pages 50 `
+  --expected-pages 541 `
+  --strict
+```
+
 执行完整解析并输出机器可读报告：
 
 ```powershell
@@ -426,9 +444,11 @@ Pop-Location
 
 同日使用官方 v1 内容构造的无文本层扫描替代样本、OCR 指标和当前多模态边界见 [扫描 PDF OCR 验收](docs/scanned-pdf-ocr-acceptance-2026-09-13.md)。
 
+541 页真实版式压力样本的生成优化、中断恢复、内存和完整结构指标见 [长文档验收](docs/long-document-acceptance-2026-09-14.md)。
+
 ## 下一里程碑
 
-1. 获取组委会官方扫描版后复跑 OCR，并增加扫描表格和独立图区域恢复；
+1. 获取组委会官方扫描版和 Understanding Deep Learning 后复跑同一套验收，并增加扫描表格和独立图区域恢复；
 2. 用本地 BGE-M3 / Reranker 跑完官方 PDF 离线评测，并据此校准融合权重；
 3. 为领域综述增加主题聚类、跨论文争议识别和人工确认后的方向状态持久化；
 4. 扩展可编辑图表列选择、误差棒、统计检验与完整数据导出；

@@ -24,6 +24,7 @@ APPENDIX_HEADING = re.compile(r"^(?:appendix\b|附录)", re.IGNORECASE)
 REFERENCE_ENTRY = re.compile(r"^\s*(?:\[(\d+)\]\s*|(\d+)[.)]\s+)(.+)", re.DOTALL)
 FIGURE_CAPTION = re.compile(r"^(?:fig(?:ure)?\.?\s*\d+|图\s*\d+)", re.IGNORECASE)
 TABLE_CAPTION = re.compile(r"^(?:table\s*\d+|表\s*\d+)", re.IGNORECASE)
+TABLE_PAGE_HINT = re.compile(r"(?:^|\s)(?:table|表)\s*\d+", re.IGNORECASE)
 AFFILIATION_HINT = re.compile(
     r"(?:university|institute|laborator(?:y|ies)|department|school|college|"
     r"research center|大学|学院|研究院|实验室|研究中心|系)",

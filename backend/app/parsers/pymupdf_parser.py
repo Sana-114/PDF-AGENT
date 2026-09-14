@@ -14,6 +14,7 @@ from app.parsers.checkpoint import (
     write_json_atomic,
 )
 from app.parsers.layout import (
+    TABLE_PAGE_HINT,
     RawTextBlock,
     TableSnapshot,
     appendix_nodes,
@@ -184,19 +185,21 @@ class PyMuPDFParser:
             page_number = page_index + 1
             textpage = self._get_textpage(pdf_page, page_number)
             page_dict = pdf_page.get_text("dict", sort=False, textpage=textpage)
+            raw_blocks = extract_text_blocks(page_dict, page_number)
             pages.append(
                 {
                     "page_number": page_number,
                     "width": float(pdf_page.rect.width),
                     "height": float(pdf_page.rect.height),
-                    "raw_blocks": [
-                        asdict(block) for block in extract_text_blocks(page_dict, page_number)
-                    ],
+                    "raw_blocks": [asdict(block) for block in raw_blocks],
                     "images": self._extract_image_info(pdf_page, warnings),
                     "tables": [
                         asdict(table)
                         for table in self._extract_native_tables(
-                            pdf_page, textpage=textpage, warnings=warnings
+                            pdf_page,
+                            textpage=textpage,
+                            raw_blocks=raw_blocks,
+                            warnings=warnings,
                         )
                     ],
                 }
@@ -377,9 +380,10 @@ class PyMuPDFParser:
         page: fitz.Page,
         *,
         textpage: fitz.TextPage | None,
+        raw_blocks: list[RawTextBlock],
         warnings: list[str],
     ) -> list[Any]:
-        if textpage is not None:
+        if textpage is not None or not PyMuPDFParser._should_detect_tables(raw_blocks):
             return []
         try:
             finder = page.find_tables()
@@ -387,6 +391,12 @@ class PyMuPDFParser:
         except Exception as exc:
             warnings.append(f"第 {page.number + 1} 页表格检测跳过：{type(exc).__name__}")
             return []
+
+    @staticmethod
+    def _should_detect_tables(raw_blocks: list[RawTextBlock]) -> bool:
+        """Gate expensive native table analysis on an academic table-number hint."""
+
+        return any(TABLE_PAGE_HINT.search(block.text) for block in raw_blocks)
 
     @staticmethod
     def _extract_image_info(page: fitz.Page, warnings: list[str]) -> list[dict[str, Any]]:

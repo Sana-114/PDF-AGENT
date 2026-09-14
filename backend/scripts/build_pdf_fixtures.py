@@ -14,6 +14,7 @@ def build_fixtures(
     long_pages: int = 541,
     only: set[str] | None = None,
     scan_filename: str | None = None,
+    long_filename: str | None = None,
 ) -> dict[str, Path]:
     if not source.is_file():
         raise FileNotFoundError(source)
@@ -25,12 +26,18 @@ def build_fixtures(
         Path(scan_filename).name != scan_filename or not scan_filename.endswith(".pdf")
     ):
         raise ValueError("scan_filename must be a plain .pdf filename")
+    if long_filename and (
+        Path(long_filename).name != long_filename or not long_filename.endswith(".pdf")
+    ):
+        raise ValueError("long_filename must be a plain .pdf filename")
     output_dir.mkdir(parents=True, exist_ok=True)
     native_path = output_dir / "local_chinese_thesis_native.pdf"
     scan_path = output_dir / (
         scan_filename or f"local_chinese_thesis_scan_{scan_pages}p.pdf"
     )
-    long_path = output_dir / f"local_chinese_thesis_long_{long_pages}p.pdf"
+    long_path = output_dir / (
+        long_filename or f"local_chinese_thesis_long_{long_pages}p.pdf"
+    )
     outputs: dict[str, Path] = {}
     if "native" in selected:
         shutil.copy2(source, native_path)
@@ -75,8 +82,17 @@ def _build_long_document(source: Path, output: Path, *, target_pages: int) -> No
         while len(long_pdf) < target_pages:
             remaining = target_pages - len(long_pdf)
             final_page = min(len(source_pdf), remaining) - 1
-            long_pdf.insert_pdf(source_pdf, from_page=0, to_page=final_page)
-        long_pdf.save(output, deflate=True, garbage=4)
+            will_finish = final_page + 1 >= remaining
+            # Keep PyMuPDF's source-object map between repeated inserts so fonts,
+            # images and other resources are reused instead of copied hundreds
+            # of times. This makes 500+ page fixtures practical to generate.
+            long_pdf.insert_pdf(
+                source_pdf,
+                from_page=0,
+                to_page=final_page,
+                final=1 if will_finish else 0,
+            )
+        long_pdf.save(output)
     finally:
         long_pdf.close()
         source_pdf.close()
@@ -97,6 +113,7 @@ def main() -> None:
     parser.add_argument("--scan-dpi", type=int, default=144)
     parser.add_argument("--scan-filename")
     parser.add_argument("--long-pages", type=int, default=541)
+    parser.add_argument("--long-filename")
     parser.add_argument(
         "--only",
         action="append",
@@ -112,6 +129,7 @@ def main() -> None:
         long_pages=args.long_pages,
         only=set(args.only) if args.only else None,
         scan_filename=args.scan_filename,
+        long_filename=args.long_filename,
     )
     for kind, path in outputs.items():
         print(f"{kind}: {path}")

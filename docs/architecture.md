@@ -68,7 +68,7 @@ Document
 └── appendices[]               # 附录目录子树
 ```
 
-表格检测仅在原生文本页执行，避免对 OCR TextPage 重复做不可靠的网格推断；全页扫描图不会被误当成论文插图。公式节点明确标记为 `text_candidate`，在接入公式识别模型前不声称能够无损还原 LaTeX。
+表格检测仅在原生文本页执行，并先用页面中的学术表格编号提示筛选候选页，再调用较重的矢量网格分析；这避免在 500 页以上文档的纯正文页重复扫描绘图对象，也避免对 OCR TextPage 做不可靠的网格推断。没有表格编号提示的非标准表格和扫描表格仍需要后续专用适配器。全页扫描图不会被误当成论文插图。公式节点明确标记为 `text_candidate`，在接入公式识别模型前不声称能够无损还原 LaTeX。
 
 解析前先对最多 12 个均匀分布的页面进行有界诊断，将文档标记为 `native_text`、`scanned_image`、`hybrid` 或 `empty`。扫描和混合文档由 `SelectiveOcrParser` 逐页检查文本密度，只对低文本页调用 PyMuPDF 集成的 Tesseract TextPage；Docker 镜像提供中英文语言数据，并默认用 `chi_sim+eng` 防止中文标题被英文模型优先误判。文本块归一化只移除连续汉字之间的 OCR Span 空隙，不改变拉丁词、代码或公式间距。OCR 结果沿用相同的页面块、BBox、Chunk 和 Evidence 数据结构。
 

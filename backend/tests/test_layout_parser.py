@@ -282,3 +282,20 @@ def test_ocr_block_font_size_uses_character_weighted_median() -> None:
     }
 
     assert extract_text_blocks(page, 1)[0].font_size == 10
+
+
+def test_native_table_detection_is_gated_by_table_number_hint() -> None:
+    caption = RawTextBlock(1, [10, 10, 200, 30], "Table 1. Results", 10, 1, 16)
+    merged = RawTextBlock(
+        1,
+        [10, 10, 500, 80],
+        "Prior paragraph text. Table 2: Detailed scores",
+        10,
+        2,
+        46,
+    )
+    prose = RawTextBlock(1, [10, 40, 500, 80], "Results are discussed here.", 10, 1, 27)
+
+    assert PyMuPDFParser._should_detect_tables([caption, prose]) is True
+    assert PyMuPDFParser._should_detect_tables([merged]) is True
+    assert PyMuPDFParser._should_detect_tables([prose]) is False
