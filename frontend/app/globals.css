@@ -957,7 +957,7 @@ footer { padding: 28px; color: var(--muted); border-top: 1px solid var(--line); 
 .pdf-reader-location strong.reference { background: #26748f; }
 .pdf-reader-location strong.citation { background: #347a4c; }
 .pdf-reader-location span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-.pdf-reader-footer-actions { flex: none; display: flex; align-items: center; gap: 10px; }
+.pdf-reader-footer-actions { flex: none; display: flex; flex-wrap: wrap; align-items: center; justify-content: flex-end; gap: 7px; }
 .pdf-reader-footer-actions button { padding: 5px 8px; color: #865400; background: #fff1c4; border: 1px solid #e8c967; border-radius: 6px; font-size: 9px; font-weight: 700; cursor: pointer; }
 
 @media (max-width: 760px) {

@@ -27,6 +27,10 @@ import {
   TranslationResponse,
 } from "../lib/api";
 import { bboxToPercentRect } from "../lib/pdfGeometry";
+import {
+  adjacentCitationLocation,
+  nearestCitationLocation,
+} from "../lib/readerNavigation";
 import { linkifyNumericCitations } from "../lib/referenceMarkup";
 import {
   inferTranslationTarget,
@@ -78,6 +82,7 @@ type HighlightTarget = ReferenceTarget | {
 
 interface ReferenceTarget {
   kind: ReferenceTargetKind;
+  targetId: string;
   label: string;
   pageNumber: number;
   bbox: number[] | null;
@@ -127,7 +132,7 @@ function ReferencePanel({
                 <button
                   className={activeTarget?.kind === "citation"
                     && activeTarget.label === mention.label
-                    && activeTarget.pageNumber === mention.page_number ? "active" : ""}
+                    && activeTarget.targetId === mention.citation_id ? "active" : ""}
                   key={mention.citation_id}
                   onClick={() => onSelectMention(mention)}
                   title={mention.context}
@@ -191,11 +196,13 @@ export default function PdfReader({
   const [referencesError, setReferencesError] = useState<string | null>(null);
   const [sidebarTab, setSidebarTab] = useState<SidebarTab>("outline");
   const [referenceTarget, setReferenceTarget] = useState<ReferenceTarget | null>(null);
+  const [citationOrigin, setCitationOrigin] = useState<ReferenceTarget | null>(null);
   const [selectionDraft, setSelectionDraft] = useState<SelectionDraft | null>(null);
   const [translation, setTranslation] = useState<TranslationResponse | null>(null);
   const [translationLoading, setTranslationLoading] = useState(false);
   const [translationError, setTranslationError] = useState<string | null>(null);
   const [bilingualOpen, setBilingualOpen] = useState(false);
+  const [synchronizedScroll, setSynchronizedScroll] = useState(true);
   const [bilingualTarget, setBilingualTarget] = useState<"zh" | "en">("zh");
   const [pageTranslation, setPageTranslation] = useState<DocumentPageTranslation | null>(null);
   const [pageTranslationLoading, setPageTranslationLoading] = useState(false);
@@ -410,7 +417,7 @@ export default function PdfReader({
   useEffect(() => {
     const source = viewportRef.current;
     const target = bilingualRef.current;
-    if (!bilingualOpen || !source || !target) return;
+    if (!bilingualOpen || !synchronizedScroll || !source || !target) return;
     let locked = false;
     let animationFrame = 0;
 
@@ -441,7 +448,7 @@ export default function PdfReader({
       source.removeEventListener("scroll", fromPdf);
       target.removeEventListener("scroll", fromTranslation);
     };
-  }, [bilingualOpen, pageTranslation]);
+  }, [bilingualOpen, pageTranslation, synchronizedScroll]);
 
   function goToPage(target: number) {
     const roundedTarget = Math.max(1, Math.round(target));
@@ -469,9 +476,13 @@ export default function PdfReader({
     if (window.innerWidth <= 760) setOutlineOpen(false);
   }
 
-  function selectReference(reference: DocumentReference) {
+  function selectReference(reference: DocumentReference, origin?: ReferenceTarget) {
+    setCitationOrigin((current) => origin ?? (
+      current?.label === reference.label ? current : null
+    ));
     showReferenceTarget({
       kind: "reference",
+      targetId: reference.reference_id,
       label: reference.label,
       pageNumber: reference.page_number,
       bbox: reference.bbox,
@@ -482,6 +493,7 @@ export default function PdfReader({
   function selectMention(mention: CitationMention) {
     showReferenceTarget({
       kind: "citation",
+      targetId: mention.citation_id,
       label: mention.label,
       pageNumber: mention.page_number,
       bbox: mention.bbox,
@@ -497,7 +509,43 @@ export default function PdfReader({
     const reference = references.find((item) => item.label === label);
     if (!reference) return;
     event.preventDefault();
-    selectReference(reference);
+    const shell = pageShellRef.current;
+    const shellRect = shell?.getBoundingClientRect();
+    const pagePoint = shellRect && pageSize ? {
+      x: (event.clientX - shellRect.left) / shellRect.width * pageSize.width,
+      y: (event.clientY - shellRect.top) / shellRect.height * pageSize.height,
+    } : undefined;
+    const mention = nearestCitationLocation(mentions, label, pageNumber, pagePoint);
+    const origin = mention ? {
+      kind: "citation" as const,
+      targetId: mention.citation_id,
+      label: mention.label,
+      pageNumber: mention.page_number,
+      bbox: mention.bbox,
+      context: mention.context,
+    } : undefined;
+    selectReference(reference, origin);
+  }
+
+  function cycleCitation(direction: -1 | 1) {
+    if (!referenceTarget) return;
+    const currentId = referenceTarget.kind === "citation"
+      ? referenceTarget.targetId
+      : citationOrigin?.label === referenceTarget.label
+        ? citationOrigin.targetId
+        : null;
+    const mention = adjacentCitationLocation(
+      mentions,
+      referenceTarget.label,
+      currentId,
+      direction,
+    );
+    if (mention) selectMention(mention);
+  }
+
+  function returnToCitationOrigin() {
+    if (!citationOrigin) return;
+    showReferenceTarget(citationOrigin);
   }
 
   function captureTextSelection() {
@@ -796,6 +844,13 @@ export default function PdfReader({
                   onClick={() => changeBilingualTarget("en")}
                   type="button"
                 >EN</button>
+                <button
+                  aria-pressed={synchronizedScroll}
+                  className={synchronizedScroll ? "active" : ""}
+                  onClick={() => setSynchronizedScroll((current) => !current)}
+                  title={synchronizedScroll ? "关闭双向同步滚动" : "开启双向同步滚动"}
+                  type="button"
+                >联动</button>
                 <button aria-label="关闭双语对照" onClick={() => setBilingualOpen(false)} type="button">×</button>
               </div>
             </header>
@@ -849,7 +904,9 @@ export default function PdfReader({
                 {pageTranslation.truncated && (
                   <div className="pdf-bilingual-warning">当前页文本超过单次翻译上限，仅显示已处理段落。</div>
                 )}
-                <footer>{pageTranslation.model || pageTranslation.provider} · 滚动位置与原文联动</footer>
+                <footer>{pageTranslation.model || pageTranslation.provider} · {synchronizedScroll
+                  ? "双向滚动联动已开启"
+                  : "双向滚动联动已暂停"}</footer>
               </div>
             )}
           </aside>
@@ -906,6 +963,18 @@ export default function PdfReader({
             )}
           </div>
           <div className="pdf-reader-footer-actions">
+            {referenceTarget && mentions.some((item) => item.label === referenceTarget.label) && (
+              <>
+                {referenceTarget.kind === "reference"
+                  && citationOrigin?.label === referenceTarget.label && (
+                    <button onClick={returnToCitationOrigin} type="button">
+                      返回正文 [{referenceTarget.label}]
+                    </button>
+                  )}
+                <button onClick={() => cycleCitation(-1)} type="button">上一处引用</button>
+                <button onClick={() => cycleCitation(1)} type="button">下一处引用</button>
+              </>
+            )}
             {evidence && evidence.page_number !== pageNumber && (
               <button onClick={() => goToPage(evidence.page_number)} type="button">
                 返回证据 {evidence.evidence_id}
