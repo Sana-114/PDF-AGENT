@@ -186,21 +186,33 @@ class PyMuPDFParser:
             textpage = self._get_textpage(pdf_page, page_number)
             page_dict = pdf_page.get_text("dict", sort=False, textpage=textpage)
             raw_blocks = extract_text_blocks(page_dict, page_number)
+            raster_tables, raster_images = self._extract_raster_layout(
+                pdf_page,
+                textpage=textpage,
+                raw_blocks=raw_blocks,
+                warnings=warnings,
+            )
             pages.append(
                 {
                     "page_number": page_number,
                     "width": float(pdf_page.rect.width),
                     "height": float(pdf_page.rect.height),
                     "raw_blocks": [asdict(block) for block in raw_blocks],
-                    "images": self._extract_image_info(pdf_page, warnings),
+                    "images": [
+                        *self._extract_image_info(pdf_page, warnings),
+                        *raster_images,
+                    ],
                     "tables": [
                         asdict(table)
-                        for table in self._extract_native_tables(
-                            pdf_page,
-                            textpage=textpage,
-                            raw_blocks=raw_blocks,
-                            warnings=warnings,
-                        )
+                        for table in [
+                            *self._extract_native_tables(
+                                pdf_page,
+                                textpage=textpage,
+                                raw_blocks=raw_blocks,
+                                warnings=warnings,
+                            ),
+                            *raster_tables,
+                        ]
                     ],
                 }
             )
@@ -397,6 +409,17 @@ class PyMuPDFParser:
         """Gate expensive native table analysis on an academic table-number hint."""
 
         return any(TABLE_PAGE_HINT.search(block.text) for block in raw_blocks)
+
+    def _extract_raster_layout(
+        self,
+        page: fitz.Page,
+        *,
+        textpage: fitz.TextPage | None,
+        raw_blocks: list[RawTextBlock],
+        warnings: list[str],
+    ) -> tuple[list[TableSnapshot], list[dict[str, Any]]]:
+        del page, textpage, raw_blocks, warnings
+        return [], []
 
     @staticmethod
     def _extract_image_info(page: fitz.Page, warnings: list[str]) -> list[dict[str, Any]]:
