@@ -65,6 +65,7 @@ class FormulaNode:
     text: str
     block_id: str
     representation: str = "text_candidate"
+    latex: str | None = None
 
 
 @dataclass(slots=True)

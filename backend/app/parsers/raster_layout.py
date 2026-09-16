@@ -8,7 +8,12 @@ from typing import Any
 
 import fitz
 
-from app.parsers.layout import FIGURE_CAPTION, TABLE_CAPTION, RawTextBlock, TableSnapshot
+from app.parsers.layout import (
+    RawTextBlock,
+    TableSnapshot,
+    is_figure_caption,
+    is_table_caption,
+)
 
 RENDER_DPI = 96
 DARK_PIXEL = 170
@@ -35,8 +40,8 @@ def detect_raster_layout(
     ordinary prose pages.
     """
 
-    table_captions = [block for block in raw_blocks if TABLE_CAPTION.match(block.text)]
-    figure_captions = [block for block in raw_blocks if FIGURE_CAPTION.match(block.text)]
+    table_captions = [block for block in raw_blocks if is_table_caption(block.text)]
+    figure_captions = [block for block in raw_blocks if is_figure_caption(block.text)]
     if not table_captions and not figure_captions:
         return [], []
 

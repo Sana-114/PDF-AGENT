@@ -83,6 +83,7 @@ def _structured_document() -> dict:
                     "bbox": [10, 90, 300, 110],
                     "block_id": "p1-b3",
                     "text": "beta_1 = 0.9, beta_2 = 0.98",
+                    "latex": r"\beta_1 = 0.9, \beta_2 = 0.98",
                 }
             ],
             "references": [
@@ -148,6 +149,8 @@ def test_chunking_adds_anchored_structured_nodes() -> None:
     assert table.bbox == [20.0, 100.0, 300.0, 220.0]
     assert "31.2" in table.text
     assert formula.section == "公式 · formula-1"
+    assert "LaTeX candidate:" in formula.text
+    assert r"\beta_1" in formula.text
     assert reference.text.startswith("[7] A. Author")
 
 

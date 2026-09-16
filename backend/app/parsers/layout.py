@@ -25,6 +25,13 @@ REFERENCE_ENTRY = re.compile(r"^\s*(?:\[(\d+)\]\s*|(\d+)[.)]\s+)(.+)", re.DOTALL
 FIGURE_CAPTION = re.compile(r"^(?:fig(?:ure)?\.?\s*\d+|图\s*\d+)", re.IGNORECASE)
 TABLE_CAPTION = re.compile(r"^(?:table\s*\d+|表\s*\d+)", re.IGNORECASE)
 TABLE_PAGE_HINT = re.compile(r"(?:^|\s)(?:table|表)\s*\d+", re.IGNORECASE)
+CAPTION_PROSE = re.compile(
+    r"^(?:fig(?:ure)?\.?|table)\s*\d+\s+"
+    r"(?:shows?|summari[sz]es?|lists?|reports?|presents?|compares?|illustrates?|"
+    r"gives?|contains?|depicts?|demonstrates?|is|are)\b|"
+    r"^(?:图|表)\s*\d+\s*(?:显示|总结|列出|给出|说明|比较|是|为)",
+    re.IGNORECASE,
+)
 AFFILIATION_HINT = re.compile(
     r"(?:university|institute|laborator(?:y|ies)|department|school|college|"
     r"research center|大学|学院|研究院|实验室|研究中心|系)",
@@ -39,6 +46,62 @@ AUTHOR_WITH_MARKER = re.compile(
 )
 MATH_HINT = re.compile(r"[=∑∫√≈≤≥±×÷∞∂∇α-ωΑ-Ω]|\b(?:argmax|argmin|softmax)\b")
 FORMULA_CORE = re.compile(r"[=∑∫√≈≤≥±∞∂∇]|\b(?:argmax|argmin|softmax)\b")
+FORMULA_TOKEN = re.compile(
+    r"[∑∫√≈≤≥±×÷∞∂∇α-ωΑ-Ω²³⁴⁵⁶⁷⁸⁹ⁱⁿ₀-₉ᵢⱼₖₙ]|[_^][A-Za-z0-9{]"
+)
+
+LATEX_SYMBOLS = {
+    "∑": r"\sum",
+    "∫": r"\int",
+    "√": r"\sqrt",
+    "≈": r"\approx",
+    "≤": r"\leq",
+    "≥": r"\geq",
+    "±": r"\pm",
+    "×": r"\times",
+    "÷": r"\div",
+    "∞": r"\infty",
+    "∂": r"\partial",
+    "∇": r"\nabla",
+    "·": r"\cdot",
+    "∈": r"\in",
+}
+LATEX_GREEK = {
+    "α": r"\alpha",
+    "β": r"\beta",
+    "γ": r"\gamma",
+    "δ": r"\delta",
+    "ε": r"\epsilon",
+    "θ": r"\theta",
+    "λ": r"\lambda",
+    "μ": r"\mu",
+    "π": r"\pi",
+    "ρ": r"\rho",
+    "σ": r"\sigma",
+    "τ": r"\tau",
+    "φ": r"\phi",
+    "ω": r"\omega",
+    "Γ": r"\Gamma",
+    "Δ": r"\Delta",
+    "Θ": r"\Theta",
+    "Λ": r"\Lambda",
+    "Π": r"\Pi",
+    "Σ": r"\Sigma",
+    "Φ": r"\Phi",
+    "Ω": r"\Omega",
+}
+SUPERSCRIPT_TRANSLATION = str.maketrans(
+    {**dict(zip("⁰¹²³⁴⁵⁶⁷⁸⁹⁺⁻", "0123456789+-", strict=True)), "ⁱ": "i", "ⁿ": "n"}
+)
+SUBSCRIPT_TRANSLATION = str.maketrans(
+    {
+        **dict(zip("₀₁₂₃₄₅₆₇₈₉₊₋", "0123456789+-", strict=True)),
+        "ᵢ": "i",
+        "ⱼ": "j",
+        "ₖ": "k",
+        "ₙ": "n",
+    }
+)
 
 
 @dataclass(slots=True)
@@ -172,9 +235,9 @@ def classify_block(
     is_vertical_margin = height > 72 and height > width * 1.5
     if raw.page_number == 1 and title and _normalise(text) == _normalise(title):
         return "title", None
-    if FIGURE_CAPTION.match(text):
+    if is_figure_caption(text):
         return "figure_caption", None
-    if TABLE_CAPTION.match(text):
+    if is_table_caption(text):
         return "table_caption", None
     if (
         len(text) <= 140
@@ -342,13 +405,13 @@ def extract_formulas(pages: list[Any]) -> list[FormulaNode]:
     formulas: list[FormulaNode] = []
     for page in pages:
         for block in page.blocks:
-            if (
-                block.type != "text"
-                or len(block.text) > 180
-                or not FORMULA_CORE.search(block.text)
-            ):
+            if block.type != "text" or len(block.text) > 180:
+                continue
+            tokens = FORMULA_TOKEN.findall(block.text)
+            if not FORMULA_CORE.search(block.text) and len(tokens) < 2:
                 continue
             block.type = "formula"
+            latex = formula_latex_candidate(block.text)
             formulas.append(
                 FormulaNode(
                     formula_id=f"formula-{len(formulas) + 1}",
@@ -356,9 +419,37 @@ def extract_formulas(pages: list[Any]) -> list[FormulaNode]:
                     bbox=block.bbox,
                     text=block.text,
                     block_id=block.block_id,
+                    representation="normalized_latex_candidate",
+                    latex=latex,
                 )
             )
     return formulas
+
+
+def formula_latex_candidate(text: str) -> str:
+    """Normalize explicit math symbols without claiming full LaTeX reconstruction."""
+
+    value = text
+    for symbol, replacement in {**LATEX_SYMBOLS, **LATEX_GREEK}.items():
+        value = value.replace(symbol, f" {replacement} ")
+    value = re.sub(
+        r"[⁰¹²³⁴⁵⁶⁷⁸⁹⁺⁻ⁱⁿ]+",
+        lambda match: "^{" + match.group(0).translate(SUPERSCRIPT_TRANSLATION) + "}",
+        value,
+    )
+    value = re.sub(
+        r"[₀₁₂₃₄₅₆₇₈₉₊₋ᵢⱼₖₙ]+",
+        lambda match: "_{" + match.group(0).translate(SUBSCRIPT_TRANSLATION) + "}",
+        value,
+    )
+    value = re.sub(
+        r"(?<!\\)\bsum(?=\s|_|\^|$)", lambda _: r"\sum", value, flags=re.IGNORECASE
+    )
+    value = re.sub(
+        r"(?<!\\)\bsqrt(?=\s|\(|\{|$)", lambda _: r"\sqrt", value, flags=re.IGNORECASE
+    )
+    value = " ".join(value.split())
+    return re.sub(r"\s+([_^]\{)", r"\1", value)
 
 
 def make_table_node(
@@ -478,6 +569,14 @@ def appendix_nodes(outline: list[OutlineNode]) -> list[OutlineNode]:
 def is_reference_heading(text: str) -> bool:
     without_number = re.sub(r"^\s*\d+(?:\.\d+)*\.?\s*", "", text)
     return bool(REFERENCE_HEADING.match(without_number.strip()))
+
+
+def is_table_caption(text: str) -> bool:
+    return bool(TABLE_CAPTION.match(text)) and not bool(CAPTION_PROSE.match(text))
+
+
+def is_figure_caption(text: str) -> bool:
+    return bool(FIGURE_CAPTION.match(text)) and not bool(CAPTION_PROSE.match(text))
 
 
 def is_appendix_heading(text: str) -> bool:

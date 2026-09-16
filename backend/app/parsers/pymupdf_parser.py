@@ -33,6 +33,7 @@ from app.parsers.layout import (
     order_page_blocks,
     snapshot_table,
 )
+from app.parsers.text_table import extract_borderless_tables
 
 
 class PyMuPDFParser:
@@ -397,18 +398,50 @@ class PyMuPDFParser:
     ) -> list[Any]:
         if textpage is not None or not PyMuPDFParser._should_detect_tables(raw_blocks):
             return []
+        tables: list[TableSnapshot] = []
         try:
             finder = page.find_tables()
-            return [snapshot_table(table) for table in finder.tables]
+            tables.extend(snapshot_table(table) for table in finder.tables)
         except Exception as exc:
             warnings.append(f"第 {page.number + 1} 页表格检测跳过：{type(exc).__name__}")
-            return []
+        try:
+            borderless = extract_borderless_tables(page, raw_blocks)
+        except Exception as exc:
+            warnings.append(
+                f"第 {page.number + 1} 页无框表格检测跳过：{type(exc).__name__}"
+            )
+            borderless = []
+        for candidate in borderless:
+            if not any(
+                PyMuPDFParser._table_overlap(candidate, table) >= 0.72 for table in tables
+            ):
+                tables.append(candidate)
+        return tables
 
     @staticmethod
     def _should_detect_tables(raw_blocks: list[RawTextBlock]) -> bool:
         """Gate expensive native table analysis on an academic table-number hint."""
 
         return any(TABLE_PAGE_HINT.search(block.text) for block in raw_blocks)
+
+    @staticmethod
+    def _table_overlap(first: TableSnapshot, second: TableSnapshot) -> float:
+        intersection_width = max(
+            0.0, min(first.bbox[2], second.bbox[2]) - max(first.bbox[0], second.bbox[0])
+        )
+        intersection_height = max(
+            0.0, min(first.bbox[3], second.bbox[3]) - max(first.bbox[1], second.bbox[1])
+        )
+        intersection = intersection_width * intersection_height
+        if not intersection:
+            return 0.0
+        first_area = max(0.0, first.bbox[2] - first.bbox[0]) * max(
+            0.0, first.bbox[3] - first.bbox[1]
+        )
+        second_area = max(0.0, second.bbox[2] - second.bbox[0]) * max(
+            0.0, second.bbox[3] - second.bbox[1]
+        )
+        return intersection / max(1.0, min(first_area, second_area))
 
     def _extract_raster_layout(
         self,

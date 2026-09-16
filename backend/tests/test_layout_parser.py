@@ -1,11 +1,14 @@
 import fitz
 
-from app.parsers.base import Block
+from app.parsers.base import Block, Page
 from app.parsers.layout import (
     RawTextBlock,
     classify_block,
     extract_first_page_people,
+    extract_formulas,
     extract_text_blocks,
+    formula_latex_candidate,
+    is_table_caption,
 )
 from app.parsers.pymupdf_parser import PyMuPDFParser
 
@@ -117,6 +120,29 @@ def _save_layout_pdf(path) -> None:
         second,
         fitz.Rect(60, 220, 535, 260),
         "Additional implementation details are provided here.",
+        fontsize=10,
+    )
+    document.save(path)
+    document.close()
+
+
+def _save_borderless_table_pdf(path) -> None:
+    document = fitz.open()
+    document.set_metadata({"title": "Borderless Table Benchmark"})
+    page = document.new_page(width=600, height=800)
+    page.insert_text((70, 42), "Borderless Table Benchmark", fontsize=18)
+    page.insert_text((70, 90), "Table 1: Borderless benchmark results", fontsize=11)
+    for y, values in [
+        (125, ("Model", "Score", "Cost")),
+        (153, ("Baseline", "91.2", "10")),
+        (181, ("Proposed", "93.4", "12")),
+    ]:
+        page.insert_text((80, y), values[0], fontsize=10)
+        page.insert_text((290, y), values[1], fontsize=10)
+        page.insert_text((420, y), values[2], fontsize=10)
+    page.insert_text(
+        (70, 235),
+        "Table 1 summarizes the experiment, but this sentence is not another caption.",
         fontsize=10,
     )
     document.save(path)
@@ -299,3 +325,46 @@ def test_native_table_detection_is_gated_by_table_number_hint() -> None:
     assert PyMuPDFParser._should_detect_tables([caption, prose]) is True
     assert PyMuPDFParser._should_detect_tables([merged]) is True
     assert PyMuPDFParser._should_detect_tables([prose]) is False
+
+
+def test_borderless_table_uses_caption_and_repeated_column_alignment(tmp_path) -> None:
+    path = tmp_path / "borderless-table.pdf"
+    _save_borderless_table_pdf(path)
+
+    parsed = PyMuPDFParser().parse(str(path))
+
+    assert len(parsed.tables) == 1
+    assert parsed.tables[0].caption == "Table 1: Borderless benchmark results"
+    assert parsed.tables[0].rows == [
+        ["Model", "Score", "Cost"],
+        ["Baseline", "91.2", "10"],
+        ["Proposed", "93.4", "12"],
+    ]
+    assert all(cell.bbox for cell in parsed.tables[0].cells)
+    assert is_table_caption("Table 1 summarizes the experiment") is False
+
+
+def test_formula_candidates_expose_conservative_normalized_latex() -> None:
+    formula = Block(
+        "p1-b1",
+        "text",
+        "β₁ = ∑ᵢ xᵢ · α²",
+        [80, 120, 300, 145],
+        0,
+    )
+    prose = Block(
+        "p1-b2",
+        "text",
+        "The coefficient α improves stability.",
+        [80, 160, 400, 180],
+        1,
+    )
+
+    formulas = extract_formulas([Page(1, 600, 800, [formula, prose])])
+
+    assert len(formulas) == 1
+    assert formulas[0].representation == "normalized_latex_candidate"
+    assert formulas[0].latex == r"\beta_{1} = \sum_{i} x_{i} \cdot \alpha^{2}"
+    assert formula.type == "formula"
+    assert prose.type == "text"
+    assert formula_latex_candidate("L = sum_i x_i / N") == r"L = \sum_i x_i / N"

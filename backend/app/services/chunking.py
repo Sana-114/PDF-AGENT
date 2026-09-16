@@ -142,12 +142,16 @@ def _append_structured_drafts(
     for formula in parsed.get("formulas", []):
         formula_id = str(formula.get("formula_id", "formula"))
         block_id = str(formula.get("block_id", ""))
+        formula_text = str(formula.get("text") or "")
+        latex = str(formula.get("latex") or "").strip()
+        if latex and latex != formula_text:
+            formula_text = f"{formula_text}\nLaTeX candidate: {latex}"
         append(
             page_number=int(formula.get("page_number", 1)),
             node_ids=[value for value in (formula_id, block_id) if value],
             bbox=_valid_bbox(formula.get("bbox")),
             section=f"公式 · {formula_id}",
-            text=str(formula.get("text") or ""),
+            text=formula_text,
         )
 
     for reference in parsed.get("references", []):
