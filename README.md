@@ -452,9 +452,23 @@ Pop-Location
 
 Transformer v1 的 Table 1/2 无框表格恢复、表格去重和公式 LaTeX 候选指标见 [无框表格与公式候选验收](docs/borderless-table-formula-acceptance-2026-09-16.md)。
 
+### 系统级 E2E 验收
+
+已下载 Transformer v1/v7 后，可从仓库根目录运行一条命令验收真实部署链路：
+
+```powershell
+.\scripts\run_system_e2e.ps1
+# 调试时保留本轮创建的两条文献：
+.\scripts\run_system_e2e.ps1 -KeepDocuments
+```
+
+脚本会自动选择未被 Windows 保留的前端端口，启动 Qdrant、Backend、Celery Worker 与 Frontend，执行“先 v7、后 v1”的上传解析流程，再检查 Document AST、目录、引用双向数据、PDF Range 响应、语义重复提醒和版本差异。若本机存在 Microsoft Edge，还会以无头模式确认页面 DOM 中出现本轮随机 arXiv ID，并保存 1440×1200 截图。默认在结束时删除本轮文献；机器报告和截图位于 `backend/tmp/e2e/`，不会提交到 Git。
+
+2026-09-16 的完整 15 项服务检查、2 项浏览器检查与实测指标见 [系统级 E2E 验收](docs/system-e2e-acceptance-2026-09-16.md)。
+
 ## 下一里程碑
 
-1. 获取组委会官方扫描版和 Understanding Deep Learning 后复跑同一套验收，并针对无框表格、跨页表格和无图注图像增加专用适配器；
+1. 获取组委会官方扫描版和 Understanding Deep Learning 后复跑同一套验收，并针对复杂无框表格、跨页表格和无图注图像增加专用适配器；
 2. 用本地 BGE-M3 / Reranker 跑完官方 PDF 离线评测，并据此校准融合权重；
 3. 为领域综述增加主题聚类、跨论文争议识别和人工确认后的方向状态持久化；
 4. 扩展可编辑图表列选择、误差棒、统计检验与完整数据导出；

@@ -138,6 +138,12 @@ CSV 可视化端点只接受有界的 CSV/TSV 上传，自动识别 UTF-8、GB18
 
 离线评测器绕过 LLM，直接对 `LexicalRetriever` 或当前配置的 `HybridRetriever` 执行版本化 JSON 用例。文献通过 ID、文件名、标题或 arXiv ID/版本解析；证据按短文本特征、合法页码和结构类型匹配。聚合报告包含 Case Pass Rate、Evidence Recall、MRR、锚点有效率及 P50/P95 延迟，缺失文献作为显式失败。由此可以在更换 Embedding、Reranker 或融合权重时进行同一数据集对照。
 
+## 部署级验收链路
+
+`scripts/run_system_e2e.ps1` 不绕过 API、数据库或任务队列。它启动实际 Compose 服务，将 Transformer v7/v1 复制进受控临时目录，并在 Backend 容器中调用 `evaluate_system_workflow.py`：HTTP 上传创建数据库记录，Celery Worker 分批解析，API 再读取进度、Document AST、目录、引用和 PDF Range 数据，最后验证旧版本指向新版本的语义重复关系及结构化差异。上传内容附加唯一 PDF 注释且文件名使用随机测试 arXiv ID，既避免历史精确哈希记录短路本次解析，又不改变可见页面内容。
+
+浏览器验收与 API 断言分离。API 评测先输出本轮随机 arXiv ID，Edge DOM 会话必须找到该唯一 ID，不能用页面固定示例文字代替动态数据；另一个隔离 Profile 负责截图，避免 Windows 下 Edge Profile 锁导致假失败。脚本在 200 个候选端口内探测可绑定端口，并让 Compose 的 `FRONTEND_ORIGIN` 与宿主机端口保持一致，因此不会因为 Hyper-V 保留端口或 CORS 产生误报。默认清理本轮创建的文献，报告、截图和浏览器 Profile 均位于被忽略的 `backend/tmp/e2e/`。
+
 ## 下一阶段边界
 
 1. 扩充官方 PDF 标注用例，并据此校准召回、重排权重和证据阈值。
