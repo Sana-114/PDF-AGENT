@@ -1,4 +1,4 @@
-# 离线 RAG 检索评测
+# RAG 检索与生成评测
 
 评测器直接调用检索层，不调用 LLM。每个用例用文献身份、问题和一组可接受的证据特征描述金标准，避免把生成模型的措辞偏好混入召回质量。
 
@@ -40,3 +40,30 @@ python scripts/evaluate_retrieval.py evals/attention_v1.json `
 ## 用例格式
 
 `documents` 支持 `document_id`、文件名、标题子串或 arXiv ID/版本定位。每个 `expectations` 至少包含一组 `text_contains_any`，还可以限定合法页码、证据类型和文献标题。一个事实出现在多处时，应列出所有同样可靠的页码，避免把更完整的表格证据误判为错误。
+
+## DeepSeek 端到端抗幻觉评测
+
+`evaluate_grounded_rag.py` 在检索评测之上调用真实 Agent 和配置的 LLM，并分别检查：
+
+- 回答是否覆盖预期事实，检索证据是否命中；
+- 页码、块 ID、BBox 是否可回到 PDF 原文；
+- 每条声明是否只引用本次返回的证据 ID；
+- 声明是否被金标准证据或其引用原文中的关键型号/数值支持；
+- 无依据问题是否明确拒答，以及是否发生抽取式 fallback；
+- 实际 provider 是否与数据集要求的 `deepseek` 一致。
+
+PDF 文本会被视为不可信引用内容，模型不得执行正文中嵌入的命令。评测匹配会容忍 PDF 抽取产生的数字、公式间空格，但不会放宽答案事实或新数值检查。
+
+配置好本地 `.env` 后，可一键上传公开 v1 PDF、等待异步解析并执行离线与在线两级严格验收：
+
+```powershell
+.\scripts\run_grounded_rag_e2e.ps1
+```
+
+默认使用可重复的 BM25 `lexical` 基线；需要验收当前 Qdrant/Embedding/Reranker 配置时使用：
+
+```powershell
+.\scripts\run_grounded_rag_e2e.ps1 -Retriever configured
+```
+
+结果保存在 `backend/tmp/grounded-rag/`，不会提交到 Git。脚本不会打印 API Key，也不会向模型发送库中的其他私有文献；仅数据集中选中的公开 arXiv 文献会进入请求上下文。

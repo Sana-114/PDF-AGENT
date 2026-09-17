@@ -6,8 +6,10 @@ from sqlalchemy.orm import Session
 
 from app.core.database import Base
 from app.evaluation import RetrievalEvaluationSet, evaluate_retrieval
+from app.evaluation.retrieval import _matches
 from app.models.chunk import DocumentChunk  # noqa: F401
 from app.models.document import Document, DocumentStatus
+from app.schemas.agent import EvidenceAnchor
 from app.services.chunking import replace_document_chunks
 from app.services.retrieval import LexicalRetriever
 
@@ -135,6 +137,22 @@ def test_missing_document_is_an_explicit_failure() -> None:
     assert report["status"] == "failed"
     assert report["metrics"]["case_pass_rate"] == 0
     assert {case["status"] for case in report["cases"]} == {"missing_document"}
+
+
+def test_evidence_matching_tolerates_pdf_layout_spacing() -> None:
+    anchor = EvidenceAnchor(
+        evidence_id="E1",
+        document_id="doc-1",
+        page_number=7,
+        block_ids=["p7-b5"],
+        quote="Adam used β 1 = 0 . 9 and β 2 = 0 . 98; the score was 28 . 4 BLEU.",
+        score=1,
+    )
+    expectation = _dataset().cases[0].expectations[0].model_copy(
+        update={"text_contains_any": ["β1 = 0.9"], "page_numbers": [7]}
+    )
+
+    assert _matches(anchor, expectation)
 
 
 @pytest.mark.parametrize("filename", ["local_chinese_thesis.json", "attention_v1.json"])

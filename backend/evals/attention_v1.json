@@ -32,14 +32,14 @@
       "question": "What BLEU score did the big Transformer achieve on English-to-German?",
       "documents": [{"arxiv_id": "1706.03762", "arxiv_version": 1}],
       "top_k": 6,
-      "expectations": [{"text_contains_any": ["28.4 BLEU"], "source_types": ["text", "table"]}]
+      "expectations": [{"text_contains_any": ["28.4 BLEU", "score of 28.4", "28.4"], "source_types": ["text", "table", "abstract"]}]
     },
     {
       "case_id": "english-french-bleu",
       "question": "What BLEU score did the big Transformer achieve on English-to-French?",
       "documents": [{"arxiv_id": "1706.03762", "arxiv_version": 1}],
       "top_k": 6,
-      "expectations": [{"text_contains_any": ["41.8 BLEU", "41.8"], "source_types": ["text", "table"]}]
+      "expectations": [{"text_contains_any": ["41.0 BLEU", "41.0"], "source_types": ["text", "table", "abstract"]}]
     }
   ]
 }

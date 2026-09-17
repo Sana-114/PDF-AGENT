@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import math
 import time
+import unicodedata
 from datetime import UTC, datetime
 from typing import Protocol
 
@@ -191,8 +192,11 @@ def _document_matches(document: Document, selector: DocumentSelector) -> bool:
 
 
 def _matches(anchor: EvidenceAnchor, expectation: EvidenceExpectation) -> bool:
-    searchable = f"{anchor.section or ''}\n{anchor.quote}".casefold()
-    if not any(value.casefold() in searchable for value in expectation.text_contains_any):
+    searchable = _normalize_match_text(f"{anchor.section or ''}\n{anchor.quote}")
+    if not any(
+        _normalize_match_text(value) in searchable
+        for value in expectation.text_contains_any
+    ):
         return False
     if expectation.page_numbers and anchor.page_number not in expectation.page_numbers:
         return False
@@ -204,6 +208,12 @@ def _matches(anchor: EvidenceAnchor, expectation: EvidenceExpectation) -> bool:
     ).casefold():
         return False
     return True
+
+
+def _normalize_match_text(value: str) -> str:
+    """Ignore layout spacing/punctuation introduced by PDF text extraction."""
+    normalized = unicodedata.normalize("NFKC", value).casefold()
+    return "".join(character for character in normalized if character.isalnum())
 
 
 def _anchor_is_valid(anchor: EvidenceAnchor, *, require_bbox: bool) -> bool:

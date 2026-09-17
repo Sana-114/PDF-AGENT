@@ -488,10 +488,20 @@ Transformer v1 的 Table 1/2 无框表格恢复、表格去重和公式 LaTeX �
 
 2026-09-16 的完整 15 项服务检查、2 项浏览器检查与实测指标见 [系统级 E2E 验收](docs/system-e2e-acceptance-2026-09-16.md)。
 
+### DeepSeek 抗幻觉 RAG 验收
+
+配置 `LLM_PROVIDER=deepseek`、`LLM_MODEL=deepseek-flash` 和本地 `LLM_API_KEY` 后，可对公开 Transformer v1 执行上传、解析、检索、生成、引用与拒答的一键严格验收：
+
+```powershell
+.\scripts\run_grounded_rag_e2e.ps1
+```
+
+脚本默认使用可重复的 BM25 基线；`-Retriever configured` 会改用当前 Qdrant/Embedding/Reranker 链。报告写入 `backend/tmp/grounded-rag/`，不会提交 PDF、运行时答案或密钥。2026-09-17 的 5/5 DeepSeek 实测、v1/v7 BLEU 金标准修正和安全边界见 [DeepSeek 抗幻觉 RAG 验收](docs/deepseek-grounded-rag-acceptance-2026-09-17.md)。
+
 ## 下一里程碑
 
 1. 获取组委会官方扫描版和 Understanding Deep Learning 后复跑同一套验收，并针对复杂合并/旋转表格、弱续接信号跨页表格和无图注图像增加专用适配器；
-2. 用本地 BGE-M3 / Reranker 跑完官方 PDF 离线评测，并据此校准融合权重；
+2. 用本地 BGE-M3 / Reranker 复跑 DeepSeek 端到端评测，并据此校准融合权重；
 3. 为领域综述增加主题聚类、跨论文争议识别和人工确认后的方向状态持久化；
 4. 扩展可编辑图表列选择、误差棒、统计检验与完整数据导出；
 5. 继续评估保持原位排版的双语 PDF 输出；

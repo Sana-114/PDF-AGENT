@@ -1,0 +1,74 @@
+{
+  "schema_version": "1.0",
+  "dataset_id": "attention-is-all-you-need-v1-grounded",
+  "description": "公开 arXiv 1706.03762v1 的 DeepSeek 抗幻觉 RAG 端到端验收集。",
+  "expected_provider": "deepseek",
+  "thresholds": {
+    "min_case_pass_rate": 0.8,
+    "min_answer_fact_recall": 0.8,
+    "min_evidence_recall": 0.8,
+    "min_anchor_valid_rate": 1.0,
+    "min_citation_valid_rate": 1.0,
+    "min_grounded_claim_rate": 1.0,
+    "min_refusal_pass_rate": 1.0,
+    "min_provider_match_rate": 1.0,
+    "max_fallback_rate": 0.0,
+    "require_bbox": true
+  },
+  "cases": [
+    {
+      "case_id": "adam-hyperparameters",
+      "question": "What beta_1 and beta_2 values were used for Adam?",
+      "documents": [{"arxiv_id": "1706.03762", "arxiv_version": 1}],
+      "top_k": 8,
+      "evidence_expectations": [
+        {"text_contains_any": ["beta1 = 0.9", "beta_1 = 0.9", "β1 = 0.9", "β1=0.9"]},
+        {"text_contains_any": ["beta2 = 0.98", "beta_2 = 0.98", "β2 = 0.98", "β2=0.98"]}
+      ],
+      "answer_expectations": [
+        {"text_contains_any": ["0.9"]},
+        {"text_contains_any": ["0.98"]}
+      ]
+    },
+    {
+      "case_id": "training-gpus",
+      "question": "What GPU model and how many GPUs were used for training?",
+      "documents": [{"arxiv_id": "1706.03762", "arxiv_version": 1}],
+      "top_k": 8,
+      "evidence_expectations": [
+        {"text_contains_any": ["8 NVIDIA P100 GPUs", "eight NVIDIA P100"]}
+      ],
+      "answer_expectations": [
+        {"text_contains_any": ["8", "eight"]},
+        {"text_contains_any": ["P100"]}
+      ]
+    },
+    {
+      "case_id": "english-german-bleu",
+      "question": "What BLEU score did the big Transformer achieve on English-to-German?",
+      "documents": [{"arxiv_id": "1706.03762", "arxiv_version": 1}],
+      "top_k": 8,
+      "evidence_expectations": [
+        {"text_contains_any": ["28.4 BLEU", "score of 28.4", "28.4"], "source_types": ["text", "table", "abstract"]}
+      ],
+      "answer_expectations": [{"text_contains_any": ["28.4"]}]
+    },
+    {
+      "case_id": "english-french-bleu",
+      "question": "What BLEU score did the Transformer report on English-to-French in arXiv v1?",
+      "documents": [{"arxiv_id": "1706.03762", "arxiv_version": 1}],
+      "top_k": 8,
+      "evidence_expectations": [
+        {"text_contains_any": ["41.0 BLEU", "41.0"], "source_types": ["text", "table", "abstract"]}
+      ],
+      "answer_expectations": [{"text_contains_any": ["41.0"]}]
+    },
+    {
+      "case_id": "unsupported-carbon-emissions",
+      "question": "What exact kilograms of CO2-equivalent emissions did this experiment produce?",
+      "documents": [{"arxiv_id": "1706.03762", "arxiv_version": 1}],
+      "top_k": 6,
+      "must_refuse": true
+    }
+  ]
+}
