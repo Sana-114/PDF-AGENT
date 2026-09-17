@@ -22,6 +22,8 @@ DeepSeek 官方接口支持 OpenAI Responses API 结构，项目通过 `DeepSeek
 
 真实 API Key 只存在于根目录 `.env`。该文件由 `.gitignore` 排除，`.env.example` 和文档只保存无密钥模板。
 
+Compose 同时把 LLM Provider、模型、Key、Base URL 和超时配置传入 Backend 与 Worker。Backend 负责问答、划词和当前页翻译；Worker 负责可恢复的整篇翻译。两者必须同时重新创建，避免同一部署中出现前台使用 DeepSeek、后台仍使用抽取式 Provider 的配置漂移。
+
 ## 自动化与真实调用验收
 
 MockTransport 单元测试断言了请求 URL、Bearer Header 是否存在、模型 ID、Provider 名称、思考模式和 JSON Schema 结构，但测试密钥仅为固定的 `test-key`。真实密钥不会出现在断言、Git Diff 或测试输出中。
@@ -38,6 +40,8 @@ MockTransport 单元测试断言了请求 URL、Bearer Header 是否存在、模
 ```
 
 随后通过项目自身的 `POST /api/v1/agent/translate` 发送最小英文术语 `neural network`，接口成功返回 `provider=deepseek`、`model=deepseek-flash` 以及中文译文“神经网络”。该验收证明环境变量、Factory、Provider、FastAPI 路由和 DeepSeek 远程接口已形成完整调用链。
+
+继续验收时发现 Worker 原先没有透传 LLM 环境变量，导致 Backend 使用 DeepSeek、Worker 仍使用抽取式 Provider。Compose 修复并重新创建 Worker 后，Worker 返回 `provider=deepseek`、`model=deepseek-flash` 且支持翻译。随后使用不含本地论文内容的合成证据验证受约束问答：模型从 `E1` 提取 `beta_1 = 0.9`、`beta_2 = 0.98`，生成的唯一 Claim 正确引用 `E1`。完整后端 Ruff 检查通过，133 项 Pytest 回归通过。
 
 ## 安全与部署边界
 
