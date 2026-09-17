@@ -351,6 +351,8 @@ export interface WritingOutlineResponse {
 
 export type CsvChartRequestType = "auto" | "line" | "bar" | "radar3d";
 export type CsvChartType = Exclude<CsvChartRequestType, "auto">;
+export type CsvAggregationMode = "raw" | "mean";
+export type CsvErrorBarMode = "none" | "std" | "sem" | "ci95";
 
 export interface CsvColumnSummary {
   name: string;
@@ -367,13 +369,31 @@ export interface ScientificChart {
   chart_type: CsvChartType;
   title: string;
   categories: string[];
-  series: Array<{ name: string; values: Array<number | null> }>;
+  series: Array<{
+    name: string;
+    values: Array<number | null>;
+    errors: Array<number | null>;
+    sample_sizes: number[];
+  }>;
   x_label: string;
   y_label: string;
   normalization: string | null;
   caption: string;
   caption_facts: string[];
   matplotlib_script: string;
+  x_column: string | null;
+  y_columns: string[];
+  group_column: string | null;
+  aggregation: CsvAggregationMode;
+  error_mode: CsvErrorBarMode;
+  statistics: Array<{
+    name: string;
+    count: number;
+    mean: number | null;
+    standard_deviation: number | null;
+    minimum: number | null;
+    maximum: number | null;
+  }>;
 }
 
 export interface CsvVisualizationResponse {
@@ -694,10 +714,22 @@ export async function generateWritingOutline(input: {
 export async function analyzeCsv(
   file: File,
   chartType: CsvChartRequestType,
+  config: {
+    xColumn?: string;
+    yColumns?: string[];
+    groupColumn?: string;
+    aggregation?: CsvAggregationMode;
+    errorMode?: CsvErrorBarMode;
+  } = {},
 ): Promise<CsvVisualizationResponse> {
   const form = new FormData();
   form.append("file", file);
   form.append("chart_type", chartType);
+  if (config.xColumn) form.append("x_column", config.xColumn);
+  config.yColumns?.forEach((column) => form.append("y_columns", column));
+  if (config.groupColumn) form.append("group_column", config.groupColumn);
+  form.append("aggregation", config.aggregation ?? "raw");
+  form.append("error_mode", config.errorMode ?? "none");
   const response = await assertResponse(
     await fetch(`${API_BASE_URL}/visualizations/analyze`, {
       method: "POST",

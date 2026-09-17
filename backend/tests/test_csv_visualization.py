@@ -1,3 +1,6 @@
+import math
+
+import pytest
 from fastapi.testclient import TestClient
 
 from app.main import app
@@ -54,6 +57,91 @@ def test_radar_chart_normalizes_metrics_and_uses_raw_caption_facts() -> None:
     assert "层高仅用于区分记录" in result.chart.caption
 
 
+def test_grouped_mean_chart_computes_sample_standard_deviation() -> None:
+    content = (
+        b"dataset,model,seed,accuracy\n"
+        b"D1,A,1,0.80\n"
+        b"D1,A,2,0.84\n"
+        b"D1,B,1,0.76\n"
+        b"D1,B,2,0.80\n"
+        b"D2,A,1,0.86\n"
+        b"D2,A,2,0.90\n"
+        b"D2,B,1,0.82\n"
+        b"D2,B,2,0.84\n"
+    )
+
+    result = analyze_csv(
+        content,
+        "replicates.csv",
+        "bar",
+        x_column="dataset",
+        y_columns=["accuracy"],
+        group_column="model",
+        aggregation="mean",
+        error_mode="std",
+    )
+
+    assert result.chart.categories == ["D1", "D2"]
+    assert [series.name for series in result.chart.series] == ["A", "B"]
+    assert result.chart.series[0].values == pytest.approx([0.82, 0.88])
+    expected_standard_deviation = math.sqrt(0.0008)
+    assert result.chart.series[0].errors == pytest.approx(
+        [expected_standard_deviation, expected_standard_deviation]
+    )
+    assert result.chart.series[0].sample_sizes == [2, 2]
+    assert result.chart.statistics[0].count == 4
+    assert result.chart.statistics[0].mean == pytest.approx(0.85)
+    assert result.chart.error_mode == "std"
+    assert "每个聚合点包含 2 个有效观测" in result.chart.caption
+    assert "yerr=" in result.chart.matplotlib_script
+
+
+def test_explicit_axis_selection_limits_plotted_metrics() -> None:
+    content = b"epoch,accuracy,loss\n1,0.7,1.2\n2,0.8,0.8\n3,0.9,0.5\n"
+
+    result = analyze_csv(
+        content,
+        "training.csv",
+        "line",
+        x_column="epoch",
+        y_columns=["loss"],
+    )
+
+    assert result.chart.x_column == "epoch"
+    assert result.chart.y_columns == ["loss"]
+    assert [series.name for series in result.chart.series] == ["loss"]
+    assert result.chart.series[0].values == [1.2, 0.8, 0.5]
+
+
+def test_error_bars_require_an_x_axis_for_replicate_aggregation() -> None:
+    with pytest.raises(CsvVisualizationError, match="X 轴"):
+        analyze_csv(
+            b"accuracy\n0.8\n0.9\n",
+            "replicates.csv",
+            "bar",
+            y_columns=["accuracy"],
+            error_mode="sem",
+        )
+
+
+def test_error_bars_warn_instead_of_inventing_uncertainty_for_single_observation() -> None:
+    result = analyze_csv(
+        b"dataset,score\nD1,1\nD2,2\nD2,4\n",
+        "small-sample.csv",
+        "bar",
+        x_column="dataset",
+        y_columns=["score"],
+        aggregation="mean",
+        error_mode="sem",
+    )
+
+    assert result.chart.series[0].values == [1.0, 3.0]
+    assert result.chart.series[0].errors[0] is None
+    assert result.chart.series[0].errors[1] == pytest.approx(1.0)
+    assert result.chart.series[0].sample_sizes == [1, 2]
+    assert any("只有 1 个有效观测" in warning for warning in result.warnings)
+
+
 def test_parser_normalizes_duplicate_and_blank_headers() -> None:
     parsed = parse_csv(b"metric,metric,,value\nA,B,C,1\n")
 
@@ -86,6 +174,33 @@ def test_visualization_api_accepts_multipart_csv() -> None:
     assert payload["chart"]["series"][0]["name"] == "loss"
     assert not any("最多同时展示" in warning for warning in payload["warnings"])
     assert payload["sha256"]
+
+
+def test_visualization_api_accepts_academic_chart_configuration() -> None:
+    content = b"dataset,model,score\nD1,A,1\nD1,A,3\nD1,B,2\nD1,B,4\n"
+    with TestClient(app) as client:
+        response = client.post(
+            "/api/v1/visualizations/analyze",
+            files={"file": ("metrics.csv", content, "text/csv")},
+            data={
+                "chart_type": "bar",
+                "x_column": "dataset",
+                "y_columns": "score",
+                "group_column": "model",
+                "aggregation": "mean",
+                "error_mode": "ci95",
+            },
+        )
+
+    assert response.status_code == 200
+    chart = response.json()["chart"]
+    assert chart["x_column"] == "dataset"
+    assert chart["y_columns"] == ["score"]
+    assert chart["group_column"] == "model"
+    assert chart["aggregation"] == "mean"
+    assert chart["error_mode"] == "ci95"
+    assert chart["series"][0]["sample_sizes"] == [2]
+    assert chart["series"][0]["errors"] == pytest.approx([1.96])
 
 
 def test_visualization_api_rejects_non_csv_extension() -> None:

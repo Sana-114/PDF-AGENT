@@ -5,6 +5,8 @@ from pydantic import BaseModel, Field
 ChartRequestType = Literal["auto", "line", "bar", "radar3d"]
 ChartType = Literal["line", "bar", "radar3d"]
 ColumnKind = Literal["numeric", "date", "categorical", "empty"]
+AggregationMode = Literal["raw", "mean"]
+ErrorBarMode = Literal["none", "std", "sem", "ci95"]
 
 
 class CsvColumnSummary(BaseModel):
@@ -21,6 +23,17 @@ class CsvColumnSummary(BaseModel):
 class ChartSeriesRead(BaseModel):
     name: str
     values: list[float | None]
+    errors: list[float | None] = Field(default_factory=list)
+    sample_sizes: list[int] = Field(default_factory=list)
+
+
+class SeriesStatisticsRead(BaseModel):
+    name: str
+    count: int
+    mean: float | None = None
+    standard_deviation: float | None = None
+    minimum: float | None = None
+    maximum: float | None = None
 
 
 class ScientificChartRead(BaseModel):
@@ -34,6 +47,12 @@ class ScientificChartRead(BaseModel):
     caption: str
     caption_facts: list[str] = Field(default_factory=list)
     matplotlib_script: str
+    x_column: str | None = None
+    y_columns: list[str] = Field(default_factory=list)
+    group_column: str | None = None
+    aggregation: AggregationMode = "raw"
+    error_mode: ErrorBarMode = "none"
+    statistics: list[SeriesStatisticsRead] = Field(default_factory=list)
 
 
 class CsvVisualizationRead(BaseModel):

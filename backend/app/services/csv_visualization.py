@@ -6,13 +6,17 @@ import re
 from dataclasses import dataclass
 from datetime import datetime
 from pathlib import Path
+from statistics import fmean, stdev
 
 from app.schemas.visualization import (
+    AggregationMode,
     ChartRequestType,
     ChartSeriesRead,
     CsvColumnSummary,
     CsvVisualizationRead,
+    ErrorBarMode,
     ScientificChartRead,
+    SeriesStatisticsRead,
 )
 
 MAX_ROWS = 5000
@@ -27,6 +31,12 @@ NUMBER_RE = re.compile(
     r"^[+-]?(?:\d+(?:\.\d*)?|\.\d+)(?:[eE][+-]?\d+)?$"
 )
 DATE_FORMATS = ("%Y-%m-%d", "%Y/%m/%d", "%Y.%m.%d", "%m/%d/%Y", "%d/%m/%Y")
+ERROR_LABELS: dict[ErrorBarMode, str] = {
+    "none": "",
+    "std": "样本标准差",
+    "sem": "标准误",
+    "ci95": "95% 置信区间（1.96 × 标准误，正态近似）",
+}
 
 
 class CsvVisualizationError(ValueError):
@@ -208,6 +218,153 @@ def _format_number(value: float) -> str:
     return f"{value:.4g}"
 
 
+def _column_index(parsed: ParsedCsv, name: str | None, role: str) -> int | None:
+    if not name:
+        return None
+    try:
+        return parsed.headers.index(name)
+    except ValueError as exc:
+        raise CsvVisualizationError(f"{role}列“{name}”不存在。") from exc
+
+
+def _series_statistics(name: str, values: list[float]) -> SeriesStatisticsRead:
+    if not values:
+        return SeriesStatisticsRead(name=name, count=0)
+    return SeriesStatisticsRead(
+        name=name,
+        count=len(values),
+        mean=fmean(values),
+        standard_deviation=stdev(values) if len(values) >= 2 else None,
+        minimum=min(values),
+        maximum=max(values),
+    )
+
+
+def _error_value(values: list[float], mode: ErrorBarMode) -> float | None:
+    if mode == "none" or len(values) < 2:
+        return None
+    standard_deviation = stdev(values)
+    if mode == "std":
+        return standard_deviation
+    standard_error = standard_deviation / math.sqrt(len(values))
+    return standard_error if mode == "sem" else 1.96 * standard_error
+
+
+def _raw_chart_data(
+    parsed: ParsedCsv,
+    *,
+    x_index: int | None,
+    y_indices: list[int],
+    limit: int,
+    warnings: list[str],
+) -> tuple[list[str], list[ChartSeriesRead], list[SeriesStatisticsRead]]:
+    indices = _sample_indices(len(parsed.rows), limit)
+    if len(indices) < len(parsed.rows):
+        warnings.append(
+            f"图表从 {len(parsed.rows)} 行中等距展示 {len(indices)} 行；"
+            "统计摘要仍基于全部已分析行。"
+        )
+    categories = [
+        (parsed.rows[index][x_index] or "（空）") if x_index is not None else str(index + 1)
+        for index in indices
+    ]
+    series: list[ChartSeriesRead] = []
+    statistics: list[SeriesStatisticsRead] = []
+    for column_index in y_indices:
+        displayed_values = [
+            _parse_number(parsed.rows[row_index][column_index]) for row_index in indices
+        ]
+        all_values = [
+            value
+            for row in parsed.rows
+            if (value := _parse_number(row[column_index])) is not None
+        ]
+        name = parsed.headers[column_index]
+        series.append(
+            ChartSeriesRead(
+                name=name,
+                values=displayed_values,
+                errors=[None] * len(displayed_values),
+                sample_sizes=[1 if value is not None else 0 for value in displayed_values],
+            )
+        )
+        statistics.append(_series_statistics(name, all_values))
+    return categories, series, statistics
+
+
+def _aggregated_chart_data(
+    parsed: ParsedCsv,
+    *,
+    x_index: int,
+    y_indices: list[int],
+    group_index: int | None,
+    error_mode: ErrorBarMode,
+    limit: int,
+    warnings: list[str],
+) -> tuple[list[str], list[ChartSeriesRead], list[SeriesStatisticsRead]]:
+    categories: list[str] = []
+    category_seen: set[str] = set()
+    series_names: list[str] = []
+    series_seen: set[str] = set()
+    buckets: dict[str, dict[str, list[float]]] = {}
+
+    for row in parsed.rows:
+        category = row[x_index] or "（空）"
+        if category not in category_seen:
+            category_seen.add(category)
+            categories.append(category)
+        group = (row[group_index] or "（空分组）") if group_index is not None else None
+        for column_index in y_indices:
+            metric = parsed.headers[column_index]
+            name = group if group is not None and len(y_indices) == 1 else metric
+            if group is not None and len(y_indices) > 1:
+                name = f"{group} · {metric}"
+            if name not in series_seen:
+                series_seen.add(name)
+                series_names.append(name)
+                buckets[name] = {}
+            values = buckets[name].setdefault(category, [])
+            value = _parse_number(row[column_index])
+            if value is not None:
+                values.append(value)
+
+    if len(series_names) > MAX_SERIES:
+        warnings.append(f"分组后产生 {len(series_names)} 个序列，仅展示前 {MAX_SERIES} 个。")
+        series_names = series_names[:MAX_SERIES]
+    category_indices = _sample_indices(len(categories), limit)
+    displayed_categories = [categories[index] for index in category_indices]
+    if len(displayed_categories) < len(categories):
+        warnings.append(
+            f"聚合后共有 {len(categories)} 个类别，图表等距展示 {len(displayed_categories)} 个。"
+        )
+
+    series: list[ChartSeriesRead] = []
+    statistics: list[SeriesStatisticsRead] = []
+    insufficient_error_points = 0
+    for name in series_names:
+        displayed_buckets = [buckets[name].get(category, []) for category in displayed_categories]
+        values = [fmean(items) if items else None for items in displayed_buckets]
+        errors = [_error_value(items, error_mode) for items in displayed_buckets]
+        sample_sizes = [len(items) for items in displayed_buckets]
+        if error_mode != "none":
+            insufficient_error_points += sum(0 < len(items) < 2 for items in displayed_buckets)
+        raw_values = [value for items in buckets[name].values() for value in items]
+        series.append(
+            ChartSeriesRead(
+                name=name,
+                values=values,
+                errors=errors,
+                sample_sizes=sample_sizes,
+            )
+        )
+        statistics.append(_series_statistics(name, raw_values))
+    if insufficient_error_points:
+        warnings.append(
+            f"{insufficient_error_points} 个聚合点只有 1 个有效观测，无法计算所选误差棒。"
+        )
+    return displayed_categories, series, statistics
+
+
 def _series_facts(
     chart_type: str,
     categories: list[str],
@@ -262,11 +419,13 @@ def _matplotlib_script(
     y_label: str,
 ) -> str:
     series_data = {item.name: item.values for item in series}
+    error_data = {item.name: item.errors for item in series}
     prelude = (
         "import math\n"
         "import matplotlib.pyplot as plt\n\n"
         f"categories = {_python_literal(categories)}\n"
         f"series = {_python_literal(series_data)}\n"
+        f"errors = {_python_literal(error_data)}\n"
         f"title = {_python_literal(title)}\n\n"
     )
     if chart_type == "line":
@@ -275,7 +434,13 @@ def _matplotlib_script(
             "x = list(range(len(categories)))\n"
             "for name, values in series.items():\n"
             "    y = [float('nan') if value is None else value for value in values]\n"
-            "    ax.plot(x, y, marker='o', linewidth=2, markersize=4, label=name)\n"
+            "    raw_errors = errors.get(name, [])\n"
+            "    yerr = [0.0 if value is None else value for value in raw_errors]\n"
+            "    if any(value > 0 for value in yerr):\n"
+            "        ax.errorbar(x, y, yerr=yerr, marker='o', linewidth=2, "
+            "capsize=4, label=name)\n"
+            "    else:\n"
+            "        ax.plot(x, y, marker='o', linewidth=2, markersize=4, label=name)\n"
             "ax.set_xticks(x, categories, rotation=35, ha='right')\n"
         )
     elif chart_type == "bar":
@@ -285,8 +450,11 @@ def _matplotlib_script(
             "width = 0.8 / max(len(series), 1)\n"
             "for index, (name, values) in enumerate(series.items()):\n"
             "    y = [float('nan') if value is None else value for value in values]\n"
+            "    raw_errors = errors.get(name, [])\n"
+            "    yerr = [0.0 if value is None else value for value in raw_errors]\n"
             "    offsets = [value + (index - (len(series) - 1) / 2) * width for value in x]\n"
-            "    ax.bar(offsets, y, width=width, label=name)\n"
+            "    ax.bar(offsets, y, width=width, yerr=yerr if any(yerr) else None, "
+            "capsize=4, label=name)\n"
             "ax.set_xticks(x, categories, rotation=35, ha='right')\n"
             "ax.axhline(0, color='#53645c', linewidth=0.8)\n"
         )
@@ -330,46 +498,94 @@ def _regular_chart(
     summaries: list[CsvColumnSummary],
     requested_type: ChartRequestType,
     warnings: list[str],
+    *,
+    x_column: str | None,
+    y_columns: list[str] | None,
+    group_column: str | None,
+    aggregation: AggregationMode,
+    error_mode: ErrorBarMode,
 ) -> ScientificChartRead:
     numeric_indices = [index for index, item in enumerate(summaries) if item.kind == "numeric"]
     if not numeric_indices:
         raise CsvVisualizationError("CSV 中没有足够稳定的数值列，无法生成图表。")
 
+    explicit_x_index = _column_index(parsed, x_column, "X 轴")
     first_kind = summaries[0].kind
     numeric_x_axis = (
         first_kind == "numeric"
         and len(numeric_indices) > 1
         and _is_monotonic_numeric_column(parsed, 0)
     )
-    x_index: int | None = 0 if first_kind in {"date", "categorical"} or numeric_x_axis else None
+    x_index: int | None = explicit_x_index
+    if x_index is None and (first_kind in {"date", "categorical"} or numeric_x_axis):
+        x_index = 0
+    if x_index is not None and summaries[x_index].kind == "empty":
+        raise CsvVisualizationError("X 轴列不能是空列。")
+
+    selected_names = list(dict.fromkeys(y_columns or []))
+    if len(selected_names) > MAX_SERIES:
+        raise CsvVisualizationError(f"Y 轴最多选择 {MAX_SERIES} 个数值列。")
+    selected_numeric: list[int] = []
+    for name in selected_names:
+        column_index = _column_index(parsed, name, "Y 轴")
+        if column_index is None or summaries[column_index].kind != "numeric":
+            raise CsvVisualizationError(f"Y 轴列“{name}”不是稳定的数值列。")
+        if column_index == x_index:
+            raise CsvVisualizationError(f"列“{name}”不能同时作为 X 轴和 Y 轴。")
+        selected_numeric.append(column_index)
+
     candidate_numeric = [index for index in numeric_indices if index != x_index]
-    selected_numeric = candidate_numeric[:MAX_SERIES]
     if not selected_numeric:
-        candidate_numeric = numeric_indices
+        if not candidate_numeric:
+            candidate_numeric = numeric_indices
         selected_numeric = candidate_numeric[:MAX_SERIES]
+    if not selected_numeric:
+        raise CsvVisualizationError("没有可用的 Y 轴数值列。")
+
+    group_index = _column_index(parsed, group_column, "分组")
+    if group_index is not None:
+        if group_index == x_index or group_index in selected_numeric:
+            raise CsvVisualizationError("分组列不能与 X 轴或 Y 轴列重复。")
+        if summaries[group_index].kind == "empty":
+            raise CsvVisualizationError("分组列不能是空列。")
 
     if requested_type == "auto":
-        chart_type = "line" if first_kind == "date" or numeric_x_axis else "bar"
+        x_kind = summaries[x_index].kind if x_index is not None else None
+        chart_type = "line" if x_kind == "date" or (x_index == 0 and numeric_x_axis) else "bar"
     else:
         chart_type = requested_type
     limit = MAX_LINE_POINTS if chart_type == "line" else MAX_BAR_POINTS
-    indices = _sample_indices(len(parsed.rows), limit)
-    if len(indices) < len(parsed.rows):
-        warnings.append(
-            f"图表从 {len(parsed.rows)} 行中等距展示 {len(indices)} 行；统计表仍基于全部已分析行。"
+    effective_aggregation: AggregationMode = aggregation
+    if group_index is not None and effective_aggregation == "raw":
+        effective_aggregation = "mean"
+        warnings.append("使用分组列时自动按 X 轴类别计算均值。")
+    if error_mode != "none":
+        effective_aggregation = "mean"
+        if x_index is None:
+            raise CsvVisualizationError("误差棒需要明确的 X 轴列来聚合同类重复观测。")
+
+    if effective_aggregation == "mean":
+        if x_index is None:
+            raise CsvVisualizationError("均值聚合需要选择 X 轴列。")
+        categories, series, statistics = _aggregated_chart_data(
+            parsed,
+            x_index=x_index,
+            y_indices=selected_numeric,
+            group_index=group_index,
+            error_mode=error_mode,
+            limit=limit,
+            warnings=warnings,
         )
-    categories = [
-        parsed.rows[index][x_index] if x_index is not None else str(index + 1)
-        for index in indices
-    ]
-    series = [
-        ChartSeriesRead(
-            name=parsed.headers[column_index],
-            values=[_parse_number(parsed.rows[row_index][column_index]) for row_index in indices],
+    else:
+        categories, series, statistics = _raw_chart_data(
+            parsed,
+            x_index=x_index,
+            y_indices=selected_numeric,
+            limit=limit,
+            warnings=warnings,
         )
-        for column_index in selected_numeric
-    ]
-    if len(candidate_numeric) > len(selected_numeric):
+
+    if not selected_names and len(candidate_numeric) > len(selected_numeric):
         warnings.append(f"图表最多同时展示 {MAX_SERIES} 个数值序列。")
     missing_points = sum(value is None for item in series for value in item.values)
     if missing_points:
@@ -380,10 +596,31 @@ def _regular_chart(
     x_label = parsed.headers[x_index] if x_index is not None else "数据行"
     y_label = "、".join(item.name for item in series)
     facts, fact_summary = _series_facts(chart_type, categories, series)
+    uncertainty_note = ""
+    if error_mode != "none":
+        sample_sizes = [
+            size
+            for item in series
+            for size in item.sample_sizes
+            if size > 0
+        ]
+        if sample_sizes:
+            sample_range = (
+                str(sample_sizes[0])
+                if min(sample_sizes) == max(sample_sizes)
+                else f"{min(sample_sizes)}–{max(sample_sizes)}"
+            )
+            uncertainty_fact = (
+                f"误差棒表示{ERROR_LABELS[error_mode]}，每个聚合点包含 "
+                f"{sample_range} 个有效观测"
+            )
+            facts.append(uncertainty_fact)
+            uncertainty_note = uncertainty_fact + "；"
+    aggregation_note = "重复类别按算术平均值聚合；" if effective_aggregation == "mean" else ""
     caption = (
         f"图 1. {title}。{fact_summary}"
         f"图中展示 {len(categories)} 个观测点和 {len(series)} 个数值序列；"
-        "缺失值保留为空缺。"
+        f"{aggregation_note}{uncertainty_note}缺失值保留为空缺。"
     )
     return ScientificChartRead(
         chart_type=chart_type,
@@ -397,6 +634,12 @@ def _regular_chart(
         matplotlib_script=_matplotlib_script(
             chart_type, title, categories, series, x_label, y_label
         ),
+        x_column=parsed.headers[x_index] if x_index is not None else None,
+        y_columns=[parsed.headers[index] for index in selected_numeric],
+        group_column=parsed.headers[group_index] if group_index is not None else None,
+        aggregation=effective_aggregation,
+        error_mode=error_mode,
+        statistics=statistics,
     )
 
 
@@ -476,6 +719,13 @@ def _radar_chart(
         "不编码额外数值。"
     )
     normalization = "各指标按展示记录 min-max 归一化至 0–1；常量指标记为 1。"
+    statistics = [
+        _series_statistics(
+            parsed.headers[column_index],
+            [value for value in raw_values if value is not None],
+        )
+        for column_index, raw_values in zip(metric_indices, raw_by_metric, strict=True)
+    ]
     return ScientificChartRead(
         chart_type="radar3d",
         title=title,
@@ -489,6 +739,9 @@ def _radar_chart(
         matplotlib_script=_matplotlib_script(
             "radar3d", title, categories, series, "指标", "归一化值"
         ),
+        x_column=parsed.headers[label_index] if label_index is not None else None,
+        y_columns=categories,
+        statistics=statistics,
     )
 
 
@@ -496,6 +749,12 @@ def analyze_csv(
     content: bytes,
     filename: str,
     chart_type: ChartRequestType = "auto",
+    *,
+    x_column: str | None = None,
+    y_columns: list[str] | None = None,
+    group_column: str | None = None,
+    aggregation: AggregationMode = "raw",
+    error_mode: ErrorBarMode = "none",
 ) -> CsvVisualizationRead:
     parsed = parse_csv(content)
     summaries = _summarize_columns(parsed)
@@ -503,7 +762,18 @@ def analyze_csv(
     if chart_type == "radar3d":
         chart = _radar_chart(filename, parsed, summaries, warnings)
     else:
-        chart = _regular_chart(filename, parsed, summaries, chart_type, warnings)
+        chart = _regular_chart(
+            filename,
+            parsed,
+            summaries,
+            chart_type,
+            warnings,
+            x_column=x_column,
+            y_columns=y_columns,
+            group_column=group_column,
+            aggregation=aggregation,
+            error_mode=error_mode,
+        )
     preview_rows = [
         {
             header: (row[index] if row[index] else None)
