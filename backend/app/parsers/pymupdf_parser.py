@@ -33,6 +33,10 @@ from app.parsers.layout import (
     order_page_blocks,
     snapshot_table,
 )
+from app.parsers.table_stitching import (
+    is_unlabelled_snapshot_continuation,
+    stitch_cross_page_tables,
+)
 from app.parsers.text_table import extract_borderless_tables
 
 
@@ -120,6 +124,13 @@ class PyMuPDFParser:
             raw_pages, page_sizes, page_images, page_tables = self._merge_batches(
                 batch_payloads
             )
+            self._recover_unlabelled_table_continuations(
+                document,
+                raw_pages=raw_pages,
+                page_sizes=page_sizes,
+                page_tables=page_tables,
+                warnings=warnings,
+            )
             first_page_title_guess = (
                 self._guess_title_from_blocks(raw_pages[0]) if raw_pages else None
             )
@@ -150,6 +161,8 @@ class PyMuPDFParser:
                         blocks=page.blocks,
                     )
                 )
+
+            tables = stitch_cross_page_tables(tables, pages)
 
             authors, affiliations = extract_first_page_people(pages[0].blocks if pages else [])
             outline = build_outline(pages)
@@ -417,6 +430,51 @@ class PyMuPDFParser:
             ):
                 tables.append(candidate)
         return tables
+
+    @staticmethod
+    def _recover_unlabelled_table_continuations(
+        document: fitz.Document,
+        *,
+        raw_pages: list[list[RawTextBlock]],
+        page_sizes: list[tuple[float, float]],
+        page_tables: list[list[TableSnapshot]],
+        warnings: list[str],
+    ) -> None:
+        """Run a bounded second pass for native continuation pages without captions."""
+
+        for page_index in range(1, len(page_tables)):
+            if page_tables[page_index] or not page_tables[page_index - 1]:
+                continue
+            if PyMuPDFParser._should_detect_tables(raw_pages[page_index]):
+                continue
+            pdf_page = document[page_index]
+            if len("".join(pdf_page.get_text("text").split())) < 20:
+                continue
+            previous_candidates = [
+                table
+                for table in page_tables[page_index - 1]
+                if table.bbox[3] >= page_sizes[page_index - 1][1] * 0.72
+            ]
+            if not previous_candidates:
+                continue
+            try:
+                detected = [snapshot_table(table) for table in pdf_page.find_tables().tables]
+            except Exception as exc:
+                warnings.append(
+                    f"第 {page_index + 1} 页跨页表格补检跳过：{type(exc).__name__}"
+                )
+                continue
+            for candidate in detected:
+                if any(
+                    is_unlabelled_snapshot_continuation(
+                        previous,
+                        candidate,
+                        first_page_size=page_sizes[page_index - 1],
+                        second_page_size=page_sizes[page_index],
+                    )
+                    for previous in previous_candidates
+                ):
+                    page_tables[page_index].append(candidate)
 
     @staticmethod
     def _should_detect_tables(raw_blocks: list[RawTextBlock]) -> bool:

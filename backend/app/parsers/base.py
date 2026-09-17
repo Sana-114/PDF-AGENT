@@ -32,6 +32,16 @@ class TableCell:
     column: int
     text: str
     bbox: list[float] | None = None
+    page_number: int | None = None
+
+
+@dataclass(slots=True)
+class TableSegment:
+    page_number: int
+    bbox: list[float]
+    row_start: int
+    row_end: int
+    caption_block_id: str | None = None
 
 
 @dataclass(slots=True)
@@ -44,6 +54,7 @@ class TableNode:
     markdown: str
     caption: str | None = None
     caption_block_id: str | None = None
+    segments: list[TableSegment] = field(default_factory=list)
 
 
 @dataclass(slots=True)

@@ -7,6 +7,7 @@ from sqlalchemy.orm import Session
 
 from app.models.chunk import DocumentChunk
 from app.models.document import Document, DocumentStatus
+from app.parsers.layout import rows_to_markdown
 from app.services.storage import storage
 
 
@@ -112,6 +113,39 @@ def _append_structured_drafts(
         table_id = str(table.get("table_id", "table"))
         caption = str(table.get("caption") or table_id)
         markdown = str(table.get("markdown") or "")
+        segments = table.get("segments")
+        rows = table.get("rows")
+        if (
+            isinstance(segments, list)
+            and len(segments) > 1
+            and isinstance(rows, list)
+        ):
+            emitted_segment = False
+            for segment_index, segment in enumerate(segments, start=1):
+                if not isinstance(segment, dict):
+                    continue
+                try:
+                    row_start = max(0, int(segment.get("row_start", 0)))
+                    row_end = min(len(rows), int(segment.get("row_end", len(rows))))
+                    segment_page = int(segment.get("page_number", table.get("page_number", 1)))
+                except (TypeError, ValueError):
+                    continue
+                segment_rows = rows[row_start:row_end]
+                if row_start > 0 and rows and segment_rows:
+                    segment_rows = [rows[0], *segment_rows]
+                node_ids = [table_id, f"{table_id}-segment-{segment_index}"]
+                if segment.get("caption_block_id"):
+                    node_ids.append(str(segment["caption_block_id"]))
+                append(
+                    page_number=segment_page,
+                    node_ids=node_ids,
+                    bbox=_valid_bbox(segment.get("bbox")),
+                    section=f"表格 · {caption} · 第 {segment_page} 页",
+                    text=f"{caption}\n{rows_to_markdown(segment_rows)}",
+                )
+                emitted_segment = True
+            if emitted_segment:
+                continue
         node_ids = [table_id]
         if table.get("caption_block_id"):
             node_ids.append(str(table["caption_block_id"]))

@@ -10,6 +10,7 @@ from app.parsers.base import (
     ReferenceNode,
     TableCell,
     TableNode,
+    TableSegment,
 )
 
 NUMBERED_HEADING = re.compile(r"^(?:[§\d](?:\.\d+){0,2}\.?|[A-Z]\.)\s+\S+")
@@ -473,6 +474,7 @@ def make_table_node(
                     column=column_index,
                     text=value,
                     bbox=_round_bbox(cell_bbox) if cell_bbox else None,
+                    page_number=page_number,
                 )
             )
     return TableNode(
@@ -484,6 +486,15 @@ def make_table_node(
         markdown=rows_to_markdown(rows),
         caption=caption.text if caption else None,
         caption_block_id=caption.block_id if caption else None,
+        segments=[
+            TableSegment(
+                page_number=page_number,
+                bbox=_round_bbox(table.bbox),
+                row_start=0,
+                row_end=len(rows),
+                caption_block_id=caption.block_id if caption else None,
+            )
+        ],
     )
 
 

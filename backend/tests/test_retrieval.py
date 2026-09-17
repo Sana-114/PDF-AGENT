@@ -154,6 +154,52 @@ def test_chunking_adds_anchored_structured_nodes() -> None:
     assert reference.text.startswith("[7] A. Author")
 
 
+def test_chunking_splits_cross_page_table_into_page_anchored_evidence() -> None:
+    parsed = _parsed_document()
+    parsed["tables"] = [
+        {
+            "table_id": "p1-table-1",
+            "page_number": 1,
+            "bbox": [20, 600, 300, 820],
+            "caption": "Table 2. Cross-page results",
+            "caption_block_id": "p1-b3",
+            "rows": [
+                ["Model", "BLEU"],
+                ["Small", "28.4"],
+                ["Large", "31.2"],
+            ],
+            "markdown": "full table markdown",
+            "segments": [
+                {
+                    "page_number": 1,
+                    "bbox": [20, 600, 300, 820],
+                    "row_start": 0,
+                    "row_end": 2,
+                    "caption_block_id": "p1-b3",
+                },
+                {
+                    "page_number": 2,
+                    "bbox": [20, 40, 300, 180],
+                    "row_start": 2,
+                    "row_end": 3,
+                    "caption_block_id": "p2-b3",
+                },
+            ],
+        }
+    ]
+
+    drafts = build_chunk_drafts(parsed)
+    segments = [draft for draft in drafts if "p1-table-1" in draft.block_ids]
+
+    assert len(segments) == 2
+    assert [draft.page_number for draft in segments] == [1, 2]
+    assert segments[1].bbox == [20.0, 40.0, 300.0, 180.0]
+    assert "| Model | BLEU |" in segments[1].text
+    assert "| Large | 31.2 |" in segments[1].text
+    assert "28.4" not in segments[1].text
+    assert "p2-b3" in segments[1].block_ids
+
+
 def test_retrieval_prioritizes_matching_structured_evidence() -> None:
     engine = create_engine("sqlite://")
     Base.metadata.create_all(engine)
