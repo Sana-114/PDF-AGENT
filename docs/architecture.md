@@ -13,7 +13,7 @@
 | Celery + Redis | PDF 解析、整篇翻译、arXiv 定时刷新、重试和状态更新 |
 | Agent Harness | 检索、证据门控、Provider 调用、引用校验和 Trace |
 | Skill Registry | 带 Pydantic 输入 Schema 的本地工具发现与执行 |
-| LLM Provider | 默认抽取式兜底；可选 OpenAI Responses API 问答与学术翻译 |
+| LLM Provider | 默认抽取式兜底；可选 OpenAI 或 DeepSeek Responses API 问答与学术翻译 |
 | Writing Guard | 将检索证据转换为论文框架，并从持久化学术元数据重建 References |
 | Translation Guard | 分段调用生成式 LLM，并强制恢复公式、引用、代码、数字与术语占位符 |
 | Visualization Engine | 审计 CSV 字段，生成可复核图表数据、Figure Caption 与 Matplotlib 脚本 |
@@ -88,7 +88,7 @@ ResearchAgent Harness
    ↓ calls
 search_evidence Skill → BM25 + Qdrant Dense/Sparse → RRF → Cross-Encoder → ranked EvidenceAnchor
    ↓ evidence score gate
-Extractive Provider / OpenAI Responses API
+Extractive Provider / OpenAI Responses API / DeepSeek Responses API
    ↓ citation allow-list validation
 Answer + Claims + Evidence + Trace
 ```
@@ -106,6 +106,8 @@ Compose 中的 `local-bge` Profile 将 BGE-M3 Embedding 与 BGE Reranker 部署�
 Qdrant 不可达、索引失败或本地开发关闭向量检索时，`HybridRetriever` 会返回 BM25 结果。解析任务不会因向量服务故障而失败；后续查询会根据数据库 Chunk 数量自动补建缺失索引。
 
 `EvidenceAnchor` 同时保存 `document_id`、`page_number`、`block_ids`、`bbox`、`section`、`source_type` 和原文摘录。LLM 只能引用本次检索生成的 `E1...En`，Harness 会在响应前再次校验引用白名单。默认抽取式 Provider 完全不调用外部模型，可用于无密钥演示和离线回归测试。
+
+OpenAI 与 DeepSeek 共用同一 Responses 输出解析、证据 ID 过滤和分段翻译完整性校验。DeepSeek 适配层使用官方 `deepseek-flash` 模型 ID 和 `https://api.deepseek.com/responses` 端点，移除该接口 Schema 未声明的 `text.format.strict` 与请求侧 `store` 参数，并把思考强度设置为 `none`，避免短文本翻译消耗不必要的推理预算。Provider 名称在状态、问答和翻译响应中保留为 `deepseek`，便于演示和审计时确认真实调用来源。
 
 ## 图谱与证据综述链路
 

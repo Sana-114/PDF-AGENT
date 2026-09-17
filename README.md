@@ -68,7 +68,7 @@ PaperPilot 是一个以原文证据为核心的科研助手 Agent 系统。本�
 - Claim/Evidence 问答响应、证据门控、有效引用 ID 校验和执行轨迹；
 - 版本化离线 RAG 评测集，输出 Case Pass Rate、Evidence Recall、MRR、锚点有效率和 P50/P95 延迟；
 - 内置 `search_evidence`、`get_document_outline`、`get_document_structure`、`get_document_table` Skills 和可扩展注册表；
-- 可切换 LLM Provider：默认抽取式零密钥模式，或 OpenAI Responses API；
+- 可切换 LLM Provider：默认抽取式零密钥模式、OpenAI Responses API 或 DeepSeek Responses API；
 - Web 端证据问答、正文/表格/公式/引用来源标签和相关度展示；
 - 内置 PDF.js 阅读器，支持站内阅读、翻页、缩放、三级标题树导航和当前章节联动；
 - 点击问答证据后按页码和 BBox 定位原文，高亮区域随阅读器缩放保持对齐；
@@ -223,6 +223,24 @@ LLM_BASE_URL=https://api.openai.com/v1
 ```
 
 适配器使用 Responses API 的 Structured Outputs，并在返回前剔除不存在的证据 ID。请勿把 `.env` 或密钥提交到 Git；仓库只保留 `.env.example`。
+
+DeepSeek `deepseek-flash` 使用同一套受证据约束的问答和学术翻译链路。官方接口原生兼容 Responses API，但其 JSON Schema 参数没有声明 OpenAI 专用的 `strict` 字段，因此使用独立 Provider 适配层：
+
+```dotenv
+LLM_PROVIDER=deepseek
+LLM_MODEL=deepseek-flash
+LLM_API_KEY=<仅保存在本地的 DeepSeek API Key>
+LLM_BASE_URL=https://api.deepseek.com
+LLM_TIMEOUT_SECONDS=60
+```
+
+修改 `.env` 后必须重建或重新创建 Backend/Worker 容器，才能载入新的环境变量：
+
+```powershell
+docker compose up -d --force-recreate backend worker
+```
+
+`GET /api/v1/agent/status` 只报告配置是否加载；实际连通性应再通过一次短文本翻译或基于已入库论文的问答验证。DeepSeek 适配器默认关闭思考模式，以降低短问答和逐段翻译的延迟；RAG 的证据 ID 白名单、低分门控及失败时抽取式降级保持不变。
 
 同一 Provider 也用于阅读器划词翻译。翻译请求使用独立的结构化输出约束，要求只翻译用户选中的原文并保留公式、代码、引用标记、模型名称、数字和段落结构。默认 `mock`/抽取式模式没有可靠的翻译能力，接口会返回可解释的 `503`，不会把原文或模板文本冒充译文。
 

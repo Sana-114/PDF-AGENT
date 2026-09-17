@@ -1,4 +1,5 @@
 import json
+from typing import Any
 
 import httpx
 
@@ -26,15 +27,75 @@ class OpenAIResponsesProvider:
         model: str,
         base_url: str,
         timeout_seconds: float,
+        provider_name: str = "openai",
+        strict_structured_output: bool = True,
+        include_store: bool = True,
+        reasoning_effort: str | None = None,
+        transport: httpx.AsyncBaseTransport | None = None,
     ) -> None:
         if not api_key:
-            raise LLMConfigurationError("LLM_PROVIDER=openai 时必须配置 LLM_API_KEY。")
+            raise LLMConfigurationError(
+                f"LLM_PROVIDER={provider_name} 时必须配置 LLM_API_KEY。"
+            )
         if not model:
-            raise LLMConfigurationError("LLM_PROVIDER=openai 时必须配置 LLM_MODEL。")
+            raise LLMConfigurationError(
+                f"LLM_PROVIDER={provider_name} 时必须配置 LLM_MODEL。"
+            )
+        self.name = provider_name
         self.api_key = api_key
         self.model = model
         self.base_url = base_url.rstrip("/")
         self.timeout_seconds = timeout_seconds
+        self.strict_structured_output = strict_structured_output
+        self.include_store = include_store
+        self.reasoning_effort = reasoning_effort
+        self.transport = transport
+        self.provider_label = (
+            "DeepSeek Responses API"
+            if provider_name == "deepseek"
+            else "OpenAI Responses API"
+        )
+
+    def _text_config(self, name: str, schema: dict[str, Any]) -> dict[str, Any]:
+        output_format: dict[str, Any] = {
+            "type": "json_schema",
+            "name": name,
+            "schema": schema,
+        }
+        if self.strict_structured_output:
+            output_format["strict"] = True
+        return {"format": output_format}
+
+    def _prepare_payload(self, payload: dict[str, Any]) -> dict[str, Any]:
+        if self.include_store:
+            payload["store"] = False
+        if self.reasoning_effort:
+            payload["reasoning"] = {"effort": self.reasoning_effort}
+        return payload
+
+    async def _post_response(self, payload: dict[str, Any]) -> dict[str, Any]:
+        headers = {"Authorization": f"Bearer {self.api_key}"}
+        try:
+            async with httpx.AsyncClient(
+                timeout=self.timeout_seconds,
+                transport=self.transport,
+            ) as client:
+                response = await client.post(
+                    f"{self.base_url}/responses",
+                    json=self._prepare_payload(payload),
+                    headers=headers,
+                )
+        except httpx.HTTPError as exc:
+            raise LLMResponseError(f"{self.provider_label} 网络请求失败：{exc}") from exc
+        if response.is_error:
+            raise LLMResponseError(
+                f"{self.provider_label} 返回 HTTP {response.status_code}: "
+                f"{response.text[:500]}"
+            )
+        try:
+            return response.json()
+        except ValueError as exc:
+            raise LLMResponseError(f"{self.provider_label} 返回了无效 JSON。") from exc
 
     async def generate_grounded_answer(
         self, question: str, evidence: list[EvidenceAnchor]
@@ -70,39 +131,17 @@ class OpenAIResponsesProvider:
             },
             "required": ["answer", "claims"],
         }
-        payload = {
+        payload: dict[str, Any] = {
             "model": self.model,
-            "store": False,
             "instructions": (
                 "You are an evidence-grounded research assistant. Answer in the language of the "
                 "question. Use only the supplied evidence. Every factual claim must cite one or "
                 "more supplied evidence IDs. If evidence is insufficient, say so explicitly."
             ),
             "input": f"Question:\n{question}\n\nEvidence:\n{evidence_text}",
-            "text": {
-                "format": {
-                    "type": "json_schema",
-                    "name": "grounded_answer",
-                    "strict": True,
-                    "schema": schema,
-                }
-            },
+            "text": self._text_config("grounded_answer", schema),
         }
-        headers = {"Authorization": f"Bearer {self.api_key}"}
-        try:
-            async with httpx.AsyncClient(timeout=self.timeout_seconds) as client:
-                response = await client.post(
-                    f"{self.base_url}/responses", json=payload, headers=headers
-                )
-        except httpx.HTTPError as exc:
-            raise LLMResponseError(f"OpenAI Responses API 网络请求失败：{exc}") from exc
-        if response.is_error:
-            raise LLMResponseError(
-                f"OpenAI Responses API 返回 HTTP {response.status_code}: "
-                f"{response.text[:500]}"
-            )
-
-        raw = response.json()
+        raw = await self._post_response(payload)
         output_text = self._extract_output_text(raw)
         try:
             parsed = json.loads(output_text)
@@ -128,9 +167,8 @@ class OpenAIResponsesProvider:
             "properties": {"translation": {"type": "string"}},
             "required": ["translation"],
         }
-        payload = {
+        payload: dict[str, Any] = {
             "model": self.model,
-            "store": False,
             "instructions": (
                 "You are an academic translator. Translate faithfully without adding facts, "
                 "explanations, or citations. Preserve equations, citation markers, code, model "
@@ -141,31 +179,10 @@ class OpenAIResponsesProvider:
                 f"Target language: {language_names[target_language]}\n\n"
                 f"Text:\n{text}"
             ),
-            "text": {
-                "format": {
-                    "type": "json_schema",
-                    "name": "academic_translation",
-                    "strict": True,
-                    "schema": schema,
-                }
-            },
+            "text": self._text_config("academic_translation", schema),
         }
-        headers = {"Authorization": f"Bearer {self.api_key}"}
         try:
-            async with httpx.AsyncClient(timeout=self.timeout_seconds) as client:
-                response = await client.post(
-                    f"{self.base_url}/responses", json=payload, headers=headers
-                )
-        except httpx.HTTPError as exc:
-            raise LLMResponseError(f"OpenAI Responses API 网络请求失败：{exc}") from exc
-        if response.is_error:
-            raise LLMResponseError(
-                f"OpenAI Responses API 返回 HTTP {response.status_code}: "
-                f"{response.text[:500]}"
-            )
-
-        try:
-            parsed = json.loads(self._extract_output_text(response.json()))
+            parsed = json.loads(self._extract_output_text(await self._post_response(payload)))
         except json.JSONDecodeError as exc:
             raise LLMResponseError("翻译模型未返回有效的结构化 JSON。") from exc
         translation = str(parsed.get("translation", "")).strip()
@@ -207,9 +224,8 @@ class OpenAIResponsesProvider:
             [{"block_id": block_id, "text": text} for block_id, text in segments],
             ensure_ascii=False,
         )
-        payload = {
+        payload: dict[str, Any] = {
             "model": self.model,
-            "store": False,
             "instructions": (
                 "You are an academic translator. Translate every supplied segment independently "
                 "and return each original block_id exactly once. Do not merge, omit, or reorder "
@@ -222,30 +238,10 @@ class OpenAIResponsesProvider:
                 f"Target language: {language_names[target_language]}\n\n"
                 f"Segments JSON:\n{source_payload}"
             ),
-            "text": {
-                "format": {
-                    "type": "json_schema",
-                    "name": "aligned_academic_translation",
-                    "strict": True,
-                    "schema": schema,
-                }
-            },
+            "text": self._text_config("aligned_academic_translation", schema),
         }
-        headers = {"Authorization": f"Bearer {self.api_key}"}
         try:
-            async with httpx.AsyncClient(timeout=self.timeout_seconds) as client:
-                response = await client.post(
-                    f"{self.base_url}/responses", json=payload, headers=headers
-                )
-        except httpx.HTTPError as exc:
-            raise LLMResponseError(f"OpenAI Responses API 网络请求失败：{exc}") from exc
-        if response.is_error:
-            raise LLMResponseError(
-                f"OpenAI Responses API 返回 HTTP {response.status_code}: "
-                f"{response.text[:500]}"
-            )
-        try:
-            parsed = json.loads(self._extract_output_text(response.json()))
+            parsed = json.loads(self._extract_output_text(await self._post_response(payload)))
         except json.JSONDecodeError as exc:
             raise LLMResponseError("分段翻译模型未返回有效的结构化 JSON。") from exc
 

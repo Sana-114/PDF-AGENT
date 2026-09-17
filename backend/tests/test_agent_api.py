@@ -1,9 +1,12 @@
 from fastapi.testclient import TestClient
 
+from app.api.routes import agent as agent_routes
+from app.llm.extractive import ExtractiveProvider
 from app.main import app
 
 
-def test_agent_status_and_skills_are_exposed() -> None:
+def test_agent_status_and_skills_are_exposed(monkeypatch) -> None:
+    monkeypatch.setattr(agent_routes, "get_llm_provider", ExtractiveProvider)
     with TestClient(app) as client:
         status_response = client.get("/api/v1/agent/status")
         skills_response = client.get("/api/v1/agent/skills")

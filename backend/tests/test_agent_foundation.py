@@ -1,8 +1,14 @@
+import json
+
+import httpx
 import pytest
 from pydantic import BaseModel
 
 from app.agent.registry import SkillContext, SkillDefinition, SkillRegistry
+from app.core.config import Settings
+from app.llm.deepseek_responses import DeepSeekResponsesProvider
 from app.llm.extractive import ExtractiveProvider
+from app.llm.factory import get_llm_provider
 from app.llm.openai_responses import OpenAIResponsesProvider
 from app.schemas.agent import EvidenceAnchor
 
@@ -61,3 +67,62 @@ def test_openai_output_text_extraction() -> None:
         '{"answer":"ok","claims":[]}'
     )
 
+
+def test_deepseek_factory_uses_responses_compatibility_mode() -> None:
+    provider = get_llm_provider(
+        Settings(
+            llm_provider="deepseek",
+            llm_model="deepseek-flash",
+            llm_api_key="test-key",
+            llm_base_url="https://api.deepseek.com",
+        )
+    )
+
+    assert isinstance(provider, DeepSeekResponsesProvider)
+    assert provider.name == "deepseek"
+    assert provider.model == "deepseek-flash"
+    assert provider.strict_structured_output is False
+    assert provider.reasoning_effort == "none"
+
+
+@pytest.mark.asyncio
+async def test_deepseek_translation_uses_supported_response_schema() -> None:
+    def handler(request: httpx.Request) -> httpx.Response:
+        payload = json.loads(request.content)
+        output_format = payload["text"]["format"]
+        assert request.url == "https://api.deepseek.com/responses"
+        assert request.headers["authorization"] == "Bearer test-key"
+        assert payload["model"] == "deepseek-flash"
+        assert payload["reasoning"] == {"effort": "none"}
+        assert "store" not in payload
+        assert output_format["type"] == "json_schema"
+        assert output_format["name"] == "academic_translation"
+        assert "strict" not in output_format
+        return httpx.Response(
+            200,
+            json={
+                "output": [
+                    {
+                        "type": "message",
+                        "content": [
+                            {
+                                "type": "output_text",
+                                "text": '{"translation":"神经网络"}',
+                            }
+                        ],
+                    }
+                ]
+            },
+        )
+
+    provider = DeepSeekResponsesProvider(
+        api_key="test-key",
+        model="deepseek-flash",
+        base_url="https://api.deepseek.com/",
+        timeout_seconds=10,
+        transport=httpx.MockTransport(handler),
+    )
+
+    result = await provider.translate_text("neural network", "en", "zh")
+
+    assert result.text == "神经网络"
