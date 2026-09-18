@@ -36,6 +36,7 @@ class AgentTraceStep(BaseModel):
 
 class AskRequest(BaseModel):
     question: str = Field(min_length=2, max_length=4000)
+    retrieval_query: str | None = Field(default=None, min_length=2, max_length=8000)
     document_ids: list[str] | None = None
     top_k: int = Field(default=6, ge=1, le=20)
 

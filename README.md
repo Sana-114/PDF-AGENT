@@ -66,6 +66,9 @@ PaperPilot 是一个以原文证据为核心的科研助手 Agent 系统。本�
 - 可切换 Cohere-compatible 或 Hugging Face TEI Cross-Encoder 服务，对有限候选集重排并保留召回分数；
 - 可选 `local-bge` Docker Profile，一条命令编排 BGE-M3、BGE Reranker、模型缓存和健康检查；
 - Claim/Evidence 问答响应、证据门控、有效引用 ID 校验和执行轨迹；
+- 持久化多轮问答会话、历史恢复与删除，可在创建会话时固定单篇或全库检索范围；
+- 最近对话只用于消解“它”“第二个”等指代，每一轮事实仍重新检索 PDF，历史回答不会被当作证据；
+- 问答界面通过 SSE 逐步呈现状态、回答片段、Claims、Evidence 和执行轨迹，并支持逐条 Claim 跳回原文；
 - 版本化离线 RAG 评测集，输出 Case Pass Rate、Evidence Recall、MRR、锚点有效率和 P50/P95 延迟；
 - 内置 `search_evidence`、`get_document_outline`、`get_document_structure`、`get_document_table` Skills 和可扩展注册表；
 - 可切换 LLM Provider：默认抽取式零密钥模式、OpenAI Responses API 或 DeepSeek Responses API；
@@ -346,6 +349,10 @@ npm run dev
 | GET | `/api/v1/agent/status` | 当前 Provider、模型和 Skills 状态 |
 | GET | `/api/v1/agent/skills` | 可供 Harness 调用的 Skill 清单与输入 Schema |
 | POST | `/api/v1/agent/ask` | 文献问答，返回 Claim、Evidence 和执行轨迹 |
+| GET/POST | `/api/v1/agent/conversations` | 列出历史会话或创建固定文献范围的多轮会话 |
+| GET/DELETE | `/api/v1/agent/conversations/{id}` | 恢复或删除会话及其全部消息 |
+| POST | `/api/v1/agent/conversations/{id}/messages` | 提交一轮问题并持久化问答与引用 |
+| POST | `/api/v1/agent/conversations/{id}/stream` | 以 SSE 返回状态、回答片段、Claims、Evidence、Trace 和最终消息 |
 | POST | `/api/v1/agent/translate` | 中英学术选段翻译，需配置生成式 LLM |
 
 `GET /documents/{id}/content` 返回 `schema_version=0.2.0` 的 Document AST。除逐页 `blocks` 外，顶层包含 `authors`、`affiliations`、`abstract`、`outline`、`tables`、`figures`、`formulas`、`references` 和 `appendices`；所有可跳转节点均保留页码、块 ID 或 BBox。
@@ -359,6 +366,8 @@ npm run dev
   "top_k": 6
 }
 ```
+
+首页“与文献连续对话”区域使用会话接口。SSE 会先返回检索状态，再在完成一次受结构化输出约束的 Provider 调用后渐进发送回答片段和引用；这能改善界面反馈，但当前不是上游模型逐 Token 直传。会话及每轮 Claims、Evidence、Trace 均保存在数据库，刷新页面后可恢复。完整验收见 [多轮问答与 SSE 验收](docs/multiturn-streaming-qa-acceptance-2026-09-18.md)。
 
 ## 测试和静态检查
 
@@ -512,9 +521,9 @@ Transformer v1 的 Table 1/2 无框表格恢复、表格去重和公式 LaTeX �
 ## 下一里程碑
 
 1. 获取组委会官方扫描版和 Understanding Deep Learning 后复跑同一套验收，并针对复杂合并/旋转表格、弱续接信号跨页表格和无图注图像增加专用适配器；
-2. 将现有单轮问答升级为多轮会话，增加历史记录、流式输出和逐条 Claim 引用展示；
+2. 为多文问答增加跨论文冲突识别、按来源分组的结论对照和并发写入控制；
 3. 为领域综述增加主题聚类、跨论文争议识别和人工确认后的方向状态持久化；
-4. 扩展可编辑图表列选择、误差棒、统计检验与完整数据导出；
+4. 扩展可编辑图表列选择、统计检验与完整数据导出；
 5. 继续评估保持原位排版的双语 PDF 输出；
 6. 准备公网部署、技术文档 PDF 和 5–8 分钟演示视频。
 

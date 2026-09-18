@@ -3,9 +3,7 @@
 import dynamic from "next/dynamic";
 import { ChangeEvent, DragEvent, useCallback, useEffect, useMemo, useRef, useState } from "react";
 import {
-  AgentAskResponse,
   ArxivSubscription,
-  askAgent,
   buildCitationGraph,
   CitationGraphResponse,
   createArxivSubscription,
@@ -44,6 +42,7 @@ import WritingWorkbench from "../components/WritingWorkbench";
 import DataVisualizationWorkbench from "../components/DataVisualizationWorkbench";
 import ArchitectureDiagramWorkbench from "../components/ArchitectureDiagramWorkbench";
 import AcademicTranslationWorkbench from "../components/AcademicTranslationWorkbench";
+import ChatWorkbench from "../components/ChatWorkbench";
 import {
   defaultReferenceSelections,
   paperCandidateKey,
@@ -93,10 +92,6 @@ export default function Home() {
   const [dragging, setDragging] = useState(false);
   const [notice, setNotice] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
-  const [question, setQuestion] = useState("");
-  const [selectedDocument, setSelectedDocument] = useState("all");
-  const [answer, setAnswer] = useState<AgentAskResponse | null>(null);
-  const [asking, setAsking] = useState(false);
   const [agentLabel, setAgentLabel] = useState("正在检测 Agent");
   const [reader, setReader] = useState<ReaderState | null>(null);
   const [referenceExplorer, setReferenceExplorer] = useState<ReferenceExplorerDocument | null>(null);
@@ -523,25 +518,6 @@ export default function Home() {
     }
   }
 
-  async function submitQuestion(event: React.FormEvent<HTMLFormElement>) {
-    event.preventDefault();
-    const cleanQuestion = question.trim();
-    if (!cleanQuestion) return;
-    setAsking(true);
-    setError(null);
-    try {
-      const result = await askAgent(
-        cleanQuestion,
-        selectedDocument === "all" ? undefined : [selectedDocument],
-      );
-      setAnswer(result);
-    } catch (askError) {
-      setError(askError instanceof Error ? askError.message : "问答请求失败");
-    } finally {
-      setAsking(false);
-    }
-  }
-
   function openReader(
     documentId: string,
     title: string,
@@ -955,105 +931,19 @@ export default function Home() {
 
         <section className="qa-section" id="qa">
           <div className="section-heading">
-            <div><p className="eyebrow">GROUNDED Q&amp;A</p><h2>向文献提问</h2></div>
-            <span className="evidence-promise">回答仅使用已解析原文</span>
+            <div><p className="eyebrow">GROUNDED CONVERSATIONS</p><h2>与文献连续对话</h2></div>
+            <span className="evidence-promise">多轮理解 · 每轮重新取证 · SSE 输出</span>
           </div>
-          <form className="qa-panel" onSubmit={submitQuestion}>
-            <div className="qa-controls">
-              <label>
-                检索范围
-                <select
-                  value={selectedDocument}
-                  onChange={(event) => setSelectedDocument(event.target.value)}
-                >
-                  <option value="all">全部已就绪文献</option>
-                  {documents.filter((item) => item.status === "ready").map((document) => (
-                    <option key={document.id} value={document.id}>
-                      {document.title || document.original_filename}
-                    </option>
-                  ))}
-                </select>
-              </label>
-              <span>{documents.filter((item) => item.status === "ready").length} 篇可检索</span>
-            </div>
-            <div className="question-box">
-              <textarea
-                value={question}
-                onChange={(event) => setQuestion(event.target.value)}
-                placeholder="例如：这篇论文使用了哪些训练超参数？请给出原文位置。"
-                rows={3}
-              />
-              <button disabled={asking || !question.trim()} type="submit">
-                {asking ? "正在查找证据…" : "检索并回答"}
-              </button>
-            </div>
-            <div className="question-suggestions">
-              {["论文的核心贡献是什么？", "训练使用了哪些数据集？", "作者提出了哪些未来工作？"].map((item) => (
-                <button key={item} type="button" onClick={() => setQuestion(item)}>{item}</button>
-              ))}
-            </div>
-          </form>
-
-          {answer && (
-            <div className="answer-layout">
-              <article className="answer-card">
-                <div className="answer-heading">
-                  <span>{answer.insufficient_evidence ? "证据不足" : "可追溯回答"}</span>
-                  <small>{answer.model || answer.provider}</small>
-                </div>
-                <p>{answer.answer}</p>
-                <details>
-                  <summary>查看执行轨迹</summary>
-                  {answer.trace.map((step) => (
-                    <div className="trace-step" key={`${step.skill}-${step.duration_ms}`}>
-                      <code>{step.skill}</code><span>{step.summary}</span><small>{step.duration_ms} ms</small>
-                    </div>
-                  ))}
-                </details>
-              </article>
-              <aside className="evidence-list">
-                <h3>原文证据 · {answer.evidence.length}</h3>
-                {answer.evidence.map((evidence) => (
-                  <button
-                    className="evidence-card"
-                    key={evidence.evidence_id}
-                    onClick={() => openReader(
-                      evidence.document_id,
-                      evidence.document_title || "未命名文献",
-                      evidence.page_number,
-                      evidence,
-                    )}
-                    type="button"
-                  >
-                    <div>
-                      <strong>{evidence.evidence_id}</strong>
-                      <span>
-                        {({
-                          text: "正文",
-                          abstract: "摘要",
-                          table: "表格",
-                          figure: "图表",
-                          formula: "公式",
-                          reference: "参考文献",
-                        } as const)[evidence.source_type] || "正文"}
-                        {" · "}{evidence.retrieval_mode === "reranked"
-                          ? "模型重排"
-                          : evidence.retrieval_mode === "hybrid"
-                            ? "混合检索"
-                            : evidence.retrieval_mode === "vector"
-                              ? "向量检索"
-                              : "词法检索"}
-                        {" · "}第 {evidence.page_number} 页 · {Math.round(evidence.score * 100)}%
-                      </span>
-                    </div>
-                    <h4>{evidence.section || evidence.document_title || "未命名章节"}</h4>
-                    <p>{evidence.quote}</p>
-                    <small>在阅读器中定位 →</small>
-                  </button>
-                ))}
-              </aside>
-            </div>
-          )}
+          <ChatWorkbench
+            agentLabel={agentLabel}
+            documents={documents}
+            onOpenEvidence={(evidence) => openReader(
+              evidence.document_id,
+              evidence.document_title || "未命名文献",
+              evidence.page_number,
+              evidence,
+            )}
+          />
         </section>
 
         <div className="section-heading">

@@ -111,6 +111,26 @@ Qdrant 不可达、索引失败或本地开发关闭向量检索时，`HybridRet
 
 OpenAI 与 DeepSeek 共用同一 Responses 输出解析、证据 ID 过滤和分段翻译完整性校验。DeepSeek 适配层使用官方 `deepseek-flash` 模型 ID 和 `https://api.deepseek.com/responses` 端点，移除该接口 Schema 未声明的 `text.format.strict` 与请求侧 `store` 参数，并把思考强度设置为 `none`，避免短文本翻译消耗不必要的推理预算。Provider 名称在状态、问答和翻译响应中保留为 `deepseek`，便于演示和审计时确认真实调用来源。
 
+### 持久化多轮问答与渐进响应
+
+```text
+Conversation + recent messages
+             ↓ contextualize pronouns only
+Current question ──→ retrieval query ──→ search_evidence ──→ current PDF Evidence
+             ↓                                  ↓
+        ResearchAgent ← bounded dialogue context + evidence allow-list
+             ↓
+User message + Assistant message + Claims/Evidence/Trace (transactional persistence)
+             ↓
+SSE: status → message_start → delta* → claims → evidence → trace → done
+```
+
+`AgentConversation` 固定本次对话允许检索的文献 ID，`AgentConversationMessage` 以序号保存用户问题、模型回答、逐条 Claim、Evidence 锚点、执行轨迹和 Provider 信息。创建会话时验证指定文献均已解析完成；恢复历史时不重新生成答案，因此不会因刷新页面丢失引用审计信息。
+
+上下文窗口只取最近 6 条消息并限制为 6000 字符。它帮助模型理解省略与指代，但系统提示明确禁止把历史回答当作事实来源；检索查询只组合最近两条用户问题和当前问题，不把模型自己生成的文字回灌为检索事实。每一轮仍经过既有证据分数门控和 Evidence ID 白名单校验。
+
+SSE 端点先发送检索状态，在结构化 Provider 调用完成后将已验证回答分片发送，再分别发送 Claims、Evidence、Trace 与可持久化的最终消息。这个设计确保前端能渐进展示且最终状态可恢复，但目前不是 DeepSeek 的逐 Token 上游流式传输。当前部署尚无用户认证，因此会话历史属于单实例共享数据；公网多用户部署前必须增加所有权字段与鉴权。
+
 ## 图谱与证据综述链路
 
 局域引用图谱读取所有选定 Document AST 的 References，优先使用 arXiv ID 精确匹配，再使用有阈值的规范化题名覆盖率建立有向边。边从引用论文指向被引论文，并保存参考文献原文、页码、标签、正文提及次数、匹配分和理由。服务对局域有向图执行 PageRank，将其与入度归一化后组合为基石分；前端按基石、桥接、衍生、外围和孤立角色布局 SVG 节点。
@@ -158,5 +178,6 @@ CSV 可视化端点只接受有界的 CSV/TSV 上传，自动识别 UTF-8、GB18
 3. 为复杂扫描表格、弱续接信号跨页表格和公式增加专用识别适配器。
 4. 为科研图表增加散点图、箱线图、热力图，以及有明确多重比较校正的统计检验。
 5. 为架构图增加分组、边标签、SVG/PDF 下载与人工拖拽后的坐标回写。
-6. 为整篇翻译增加保持原位排版的双语 PDF 输出和多用户所有权。
-7. 将本地存储实现替换为 S3/MinIO 实现，保持 API 不变。
+6. 为多轮会话增加用户所有权、并发写入控制和真正的 Provider Token Streaming。
+7. 为整篇翻译增加保持原位排版的双语 PDF 输出和多用户所有权。
+8. 将本地存储实现替换为 S3/MinIO 实现，保持 API 不变。

@@ -37,7 +37,7 @@ class ResearchAgent:
         evidence = await self.registry.execute(
             "search_evidence",
             {
-                "question": request.question,
+                "question": request.retrieval_query or request.question,
                 "document_ids": request.document_ids,
                 "top_k": request.top_k,
             },

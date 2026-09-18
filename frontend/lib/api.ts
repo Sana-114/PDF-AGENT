@@ -500,6 +500,55 @@ export interface AgentAskResponse {
   trace: Array<{ skill: string; status: string; summary: string; duration_ms: number }>;
 }
 
+export interface ConversationMessage {
+  id: string;
+  conversation_id: string;
+  sequence: number;
+  role: "user" | "assistant";
+  content: string;
+  claims: Array<{ text: string; evidence_ids: string[] }>;
+  evidence: EvidenceAnchor[];
+  trace: Array<{ skill: string; status: string; summary: string; duration_ms: number }>;
+  insufficient_evidence: boolean;
+  provider: string | null;
+  model: string | null;
+  created_at: string;
+}
+
+export interface ConversationSummary {
+  id: string;
+  title: string;
+  document_ids: string[];
+  message_count: number;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface ConversationDetail extends ConversationSummary {
+  messages: ConversationMessage[];
+}
+
+export interface ConversationTurn {
+  conversation: ConversationSummary;
+  user_message: ConversationMessage;
+  assistant_message: ConversationMessage;
+}
+
+export interface ConversationStreamHandlers {
+  onStatus?: (payload: { phase: string; message: string }) => void;
+  onStart?: (payload: {
+    message_id: string;
+    provider: string | null;
+    model: string | null;
+    insufficient_evidence: boolean;
+  }) => void;
+  onDelta?: (text: string) => void;
+  onClaims?: (items: ConversationMessage["claims"]) => void;
+  onEvidence?: (items: EvidenceAnchor[]) => void;
+  onTrace?: (items: ConversationMessage["trace"]) => void;
+  onDone?: (turn: ConversationTurn) => void;
+}
+
 export interface AgentStatus {
   provider: string;
   model: string | null;
@@ -972,6 +1021,98 @@ export async function askAgent(
     }),
   );
   return response.json();
+}
+
+export async function createConversation(
+  documentIds: string[],
+  title?: string,
+): Promise<ConversationDetail> {
+  const response = await assertResponse(
+    await fetch(`${API_BASE_URL}/agent/conversations`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ document_ids: documentIds, title }),
+    }),
+  );
+  return response.json();
+}
+
+export async function listConversations(): Promise<ConversationSummary[]> {
+  const response = await assertResponse(
+    await fetch(`${API_BASE_URL}/agent/conversations`, { cache: "no-store" }),
+  );
+  return response.json();
+}
+
+export async function getConversation(conversationId: string): Promise<ConversationDetail> {
+  const response = await assertResponse(
+    await fetch(`${API_BASE_URL}/agent/conversations/${conversationId}`, {
+      cache: "no-store",
+    }),
+  );
+  return response.json();
+}
+
+export async function deleteConversation(conversationId: string): Promise<void> {
+  await assertResponse(
+    await fetch(`${API_BASE_URL}/agent/conversations/${conversationId}`, {
+      method: "DELETE",
+    }),
+  );
+}
+
+export async function streamConversationMessage(
+  conversationId: string,
+  question: string,
+  handlers: ConversationStreamHandlers,
+): Promise<ConversationTurn> {
+  const response = await assertResponse(
+    await fetch(`${API_BASE_URL}/agent/conversations/${conversationId}/stream`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json", Accept: "text/event-stream" },
+      body: JSON.stringify({ question, top_k: 6 }),
+    }),
+  );
+  if (!response.body) throw new Error("浏览器未提供流式响应读取能力。");
+
+  const reader = response.body.getReader();
+  const decoder = new TextDecoder();
+  let buffer = "";
+  let completed: ConversationTurn | null = null;
+
+  const consume = (block: string) => {
+    const lines = block.split(/\r?\n/);
+    const event = lines.find((line) => line.startsWith("event: "))?.slice(7) || "message";
+    const dataText = lines
+      .filter((line) => line.startsWith("data: "))
+      .map((line) => line.slice(6))
+      .join("\n");
+    if (!dataText) return;
+    const data = JSON.parse(dataText);
+    if (event === "status") handlers.onStatus?.(data);
+    if (event === "message_start") handlers.onStart?.(data);
+    if (event === "delta") handlers.onDelta?.(String(data.text || ""));
+    if (event === "claims") handlers.onClaims?.(data.items || []);
+    if (event === "evidence") handlers.onEvidence?.(data.items || []);
+    if (event === "trace") handlers.onTrace?.(data.items || []);
+    if (event === "done") {
+      completed = data as ConversationTurn;
+      handlers.onDone?.(completed);
+    }
+    if (event === "error") throw new Error(String(data.message || "问答生成失败"));
+  };
+
+  while (true) {
+    const { done, value } = await reader.read();
+    buffer += decoder.decode(value, { stream: !done });
+    const blocks = buffer.split(/\r?\n\r?\n/);
+    buffer = blocks.pop() || "";
+    blocks.filter(Boolean).forEach(consume);
+    if (done) break;
+  }
+  if (buffer.trim()) consume(buffer.trim());
+  if (!completed) throw new Error("流式回答提前结束，未收到完成事件。");
+  return completed;
 }
 
 export async function getAgentStatus(): Promise<AgentStatus> {
