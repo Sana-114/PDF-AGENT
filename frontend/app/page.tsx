@@ -37,6 +37,7 @@ import {
   WritingOutlineResponse,
 } from "../lib/api";
 import CitationGraph from "../components/CitationGraph";
+import PaperComparisonWorkbench from "../components/PaperComparisonWorkbench";
 import ResearchReview from "../components/ResearchReview";
 import WritingWorkbench from "../components/WritingWorkbench";
 import DataVisualizationWorkbench from "../components/DataVisualizationWorkbench";
@@ -537,6 +538,7 @@ export default function Home() {
         <nav aria-label="主导航">
           <a className="active" href="#library">文献库</a>
           <a href="#qa">问答</a>
+          <a href="#paper-comparison">多文对比</a>
           <a href="#recommendations">追踪</a>
           <a href="#citation-graph">引用图谱</a>
           <a href="#research-review">综述</a>
@@ -928,6 +930,22 @@ export default function Home() {
 
         {notice && <div className="notice success">{notice}</div>}
         {error && <div className="notice error">{error}</div>}
+
+        <section className="paper-comparison-section" id="paper-comparison">
+          <div className="section-heading">
+            <div><p className="eyebrow">CROSS-PAPER REASONING</p><h2>跨论文对比与冲突识别</h2></div>
+            <span className="evidence-promise">逐篇均衡检索 · 来源隔离 · 冲突保守判定</span>
+          </div>
+          <PaperComparisonWorkbench
+            documents={documents}
+            onOpenEvidence={(evidence) => openReader(
+              evidence.document_id,
+              evidence.document_title || "未命名文献",
+              evidence.page_number,
+              evidence,
+            )}
+          />
+        </section>
 
         <section className="qa-section" id="qa">
           <div className="section-heading">

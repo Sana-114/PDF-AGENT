@@ -500,6 +500,49 @@ export interface AgentAskResponse {
   trace: Array<{ skill: string; status: string; summary: string; duration_ms: number }>;
 }
 
+export type ComparisonRelation =
+  | "agreement"
+  | "difference"
+  | "conflict"
+  | "single_source"
+  | "unclassified";
+
+export interface ComparisonPaper {
+  document_id: string;
+  title: string;
+  evidence_ids: string[];
+  evidence_count: number;
+  coverage: "supported" | "no_evidence";
+}
+
+export interface ComparisonClaim {
+  text: string;
+  relation: ComparisonRelation;
+  evidence_ids: string[];
+  document_ids: string[];
+}
+
+export interface CrossPaperComparisonResponse {
+  question: string;
+  answer: string;
+  papers: ComparisonPaper[];
+  claims: ComparisonClaim[];
+  evidence: EvidenceAnchor[];
+  stats: {
+    agreement_count: number;
+    difference_count: number;
+    conflict_count: number;
+    single_source_count: number;
+    unclassified_count: number;
+    supported_document_count: number;
+  };
+  insufficient_evidence: boolean;
+  provider: string;
+  model: string | null;
+  trace: Array<{ skill: string; status: string; summary: string; duration_ms: number }>;
+  warnings: string[];
+}
+
 export interface ConversationMessage {
   id: string;
   conversation_id: string;
@@ -1018,6 +1061,24 @@ export async function askAgent(
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ question, document_ids: documentIds, top_k: 6 }),
+    }),
+  );
+  return response.json();
+}
+
+export async function comparePapers(
+  question: string,
+  documentIds: string[],
+): Promise<CrossPaperComparisonResponse> {
+  const response = await assertResponse(
+    await fetch(`${API_BASE_URL}/agent/compare`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        question,
+        document_ids: documentIds,
+        evidence_per_document: 4,
+      }),
     }),
   );
   return response.json();

@@ -5,6 +5,7 @@ from typing import Annotated
 
 from fastapi import APIRouter, Depends, HTTPException, Response, status
 from fastapi.responses import StreamingResponse
+from sqlalchemy import select
 from sqlalchemy.orm import Session
 
 from app.agent.harness import ResearchAgent
@@ -15,6 +16,7 @@ from app.core.database import get_db
 from app.embeddings import get_embedding_provider
 from app.llm import get_llm_provider
 from app.llm.base import LLMConfigurationError, LLMResponseError
+from app.models.document import Document, DocumentStatus
 from app.rerankers import get_reranker
 from app.schemas.agent import (
     AgentStatus,
@@ -24,6 +26,7 @@ from app.schemas.agent import (
     TranslateRequest,
     TranslateResponse,
 )
+from app.schemas.comparison import CrossPaperComparisonRead, CrossPaperComparisonRequest
 from app.schemas.conversation import (
     ConversationAskRequest,
     ConversationCreate,
@@ -36,6 +39,7 @@ from app.services.conversations import (
     ConversationService,
     ConversationValidationError,
 )
+from app.services.paper_comparison import PaperComparisonService
 
 router = APIRouter()
 
@@ -85,6 +89,35 @@ async def ask_agent(
 ) -> AskResponse:
     agent = ResearchAgent(db)
     return await agent.ask(request)
+
+
+@router.post("/compare", response_model=CrossPaperComparisonRead)
+async def compare_documents(
+    request: CrossPaperComparisonRequest,
+    db: Annotated[Session, Depends(get_db)],
+) -> CrossPaperComparisonRead:
+    documents = list(
+        db.scalars(
+            select(Document).where(
+                Document.id.in_(request.document_ids),
+                Document.status == DocumentStatus.READY,
+            )
+        ).all()
+    )
+    found = {item.id for item in documents}
+    missing = [item for item in request.document_ids if item not in found]
+    if missing:
+        raise HTTPException(
+            status_code=409,
+            detail=f"有 {len(missing)} 篇文献不存在或尚未解析完成。",
+        )
+    order = {document_id: index for index, document_id in enumerate(request.document_ids)}
+    documents.sort(key=lambda item: order[item.id])
+    return await PaperComparisonService(db).compare(
+        documents,
+        request.question,
+        evidence_per_document=request.evidence_per_document,
+    )
 
 
 @router.post(

@@ -131,6 +131,29 @@ SSE: status → message_start → delta* → claims → evidence → trace → d
 
 SSE 端点先发送检索状态，在结构化 Provider 调用完成后将已验证回答分片发送，再分别发送 Claims、Evidence、Trace 与可持久化的最终消息。这个设计确保前端能渐进展示且最终状态可恢复，但目前不是 DeepSeek 的逐 Token 上游流式传输。当前部署尚无用户认证，因此会话历史属于单实例共享数据；公网多用户部署前必须增加所有权字段与鉴权。
 
+### 跨论文均衡检索与冲突识别
+
+```text
+Comparison question + 2–6 document IDs
+                    ↓
+        per-document HybridRetriever (same top-k budget)
+           ↓              ↓              ↓
+        Paper A E*      Paper B E*     Paper C E*
+           └────────── global Evidence ID renumbering ──────────┘
+                                   ↓
+                DeepSeek / Extractive grounded comparison
+                                   ↓
+        agreement | difference | conflict | single_source | unclassified
+                                   ↓
+          Evidence allow-list + cross-document source validation
+```
+
+`POST /agent/compare` 要求 2–6 篇已解析论文。服务不会把所有 Chunk 放进一个候选池，而是以同一个问题对每篇论文分别调用 `HybridRetriever`，使用相同的 `evidence_per_document` 预算并分别经过 BGE-M3、Qdrant 和 BGE Reranker；随后把各论文的局部证据 ID 重新编号为全局唯一的 `E1...En`。这避免篇幅、Chunk 数量或单篇高分候选让其他论文完全失去生成上下文。
+
+生成提示要求每条 Claim 标记为一致、差异、冲突或单来源。服务端不会盲信标签：一致、差异和冲突必须在引用白名单内同时命中至少两个不同 `document_id`，否则降级为单来源并返回警告；没有标签的多来源声明保留为 `unclassified`，交给用户核验。“一篇论文未提及某事实”不构成冲突，只有可比较条件下的显式不兼容陈述才能标记为冲突。这个门禁验证的是来源覆盖，不等同于形式逻辑证明，因此 UI 始终显示原文引用和论文覆盖状态。
+
+少于两篇论文命中强证据时，服务直接返回证据不足而不调用生成模型。前端允许选择 2–6 篇论文，展示逐篇强证据数量、关系统计、来源数、警告和执行轨迹；点击任一证据仍复用 PDF 页码与 BBox 高亮链路。
+
 ## 图谱与证据综述链路
 
 局域引用图谱读取所有选定 Document AST 的 References，优先使用 arXiv ID 精确匹配，再使用有阈值的规范化题名覆盖率建立有向边。边从引用论文指向被引论文，并保存参考文献原文、页码、标签、正文提及次数、匹配分和理由。服务对局域有向图执行 PageRank，将其与入度归一化后组合为基石分；前端按基石、桥接、衍生、外围和孤立角色布局 SVG 节点。
