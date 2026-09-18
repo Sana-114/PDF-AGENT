@@ -118,7 +118,7 @@ scripts/            本地开发脚本
 
 ```powershell
 Copy-Item .env.example .env
-docker compose up --build
+docker compose up --build -d
 ```
 
 或直接运行：
@@ -134,10 +134,20 @@ docker compose up --build
 - Qdrant：http://localhost:6333/dashboard
 - MinIO Console：http://localhost:9001
 
+默认 Compose 使用多阶段镜像执行 `next build`，运行容器只启动 Next.js standalone 生产服务，不挂载源码，也不会启动 Turbopack/HMR。这样在同时运行数据库、Worker 和模型服务时，按钮交互不会因开发服务器缓存耗尽而失去响应。修改前端源码后需要重新执行 `docker compose up --build -d frontend`。
+
+需要前端热更新时，显式叠加开发配置：
+
+```powershell
+docker compose -f docker-compose.yml -f docker-compose.dev.yml up --build frontend
+```
+
+开发配置才会挂载 `frontend/` 并运行 `next dev`，不建议用于比赛演示或长期在线部署。
+
 若 Windows 将 `3000`、`6333`、`6334` 或 `6379` 纳入系统保留端口范围，可在 `.env` 中设置
 `FRONTEND_HOST_PORT`、`QDRANT_HTTP_PORT`、`QDRANT_GRPC_PORT` 和 `REDIS_HOST_PORT`
 改用其他宿主机端口；同时更新 `FRONTEND_ORIGIN` 以及供本机工具使用的 `QDRANT_URL`、
-`REDIS_URL`。容器之间仍使用原始服务端口，无需修改后端连接地址。
+`REDIS_URL`。若 API 地址也发生变化，还需设置构建期变量 `NEXT_PUBLIC_API_BASE_URL` 并重新构建前端镜像。容器之间仍使用原始服务端口，无需修改后端连接地址。
 
 开发环境中的 MinIO 默认密码只用于本地启动，上线前必须修改。
 
@@ -526,6 +536,8 @@ Transformer v1 的 Table 1/2 无框表格恢复、表格去重和公式 LaTeX �
 脚本会叠加 `.env` 与 `.env.bge`、真实探测两个 BGE 服务、显式重建当前公开论文索引，并强制要求每条返回证据均经过 `reranked`，因此服务故障后静默退回 BM25 不会被误报为 BGE 验收通过。2026-09-18 的 Top-1、延迟、110 个 Point 索引核对和 5/5 DeepSeek 实测见 [BGE + DeepSeek 完整 RAG 验收](docs/bge-deepseek-grounded-acceptance-2026-09-18.md)。
 
 首页的 Agent-first 信息架构、五类任务入口、原有深链兼容和响应式布局见 [Agent-first 前端界面验收](docs/agent-first-interface-acceptance-2026-09-18.md)。
+
+Docker 默认前端已切换为 standalone 生产运行时，资源占用、静态资源加载和真实按钮点击结果见 [生产前端运行时验收](docs/production-frontend-runtime-acceptance-2026-09-18.md)。
 
 ## 下一里程碑
 

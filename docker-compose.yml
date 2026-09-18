@@ -249,11 +249,17 @@ services:
   frontend:
     build:
       context: ./frontend
-    environment:
-      NEXT_PUBLIC_API_BASE_URL: http://localhost:8000/api/v1
-    volumes:
-      - ./frontend:/app
-      - frontend_node_modules:/app/node_modules
+      args:
+        NEXT_PUBLIC_API_BASE_URL: ${NEXT_PUBLIC_API_BASE_URL:-http://localhost:8000/api/v1}
+      target: runner
+    init: true
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "wget", "--spider", "-q", "http://127.0.0.1:3000/"]
+      interval: 15s
+      timeout: 5s
+      retries: 10
+      start_period: 10s
     ports:
       - "${FRONTEND_HOST_PORT:-3000}:3000"
     depends_on:
@@ -265,6 +271,5 @@ volumes:
   qdrant_data:
   minio_data:
   app_data:
-  frontend_node_modules:
   bge_embedding_cache:
   bge_reranker_cache:

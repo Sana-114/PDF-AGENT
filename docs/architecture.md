@@ -26,6 +26,8 @@
 | Qdrant | Dense/Sparse 命名向量、Payload 过滤和 RRF 混合召回 |
 | MinIO | 后续替换本地文件卷的对象存储 |
 
+默认 Compose 前端采用多阶段 Docker 构建。依赖层使用锁文件执行 `npm ci`，Builder 执行 Next.js 生产构建，最终 Runner 只包含 standalone 服务与静态资源，并以非 root 用户运行。生产容器不挂载源码、不包含开发期 HMR，也不会在请求过程中编译页面；需要热更新时才显式叠加 `docker-compose.dev.yml`。
+
 ## Agent-first 前端信息架构
 
 首页默认进入“科研 Agent”，把连续证据问答作为主任务，并在同一区域提供多文对比。其余能力不再纵向平铺，而是按用户目标收敛为五个一级任务区：
