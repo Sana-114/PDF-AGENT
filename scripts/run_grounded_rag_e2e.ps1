@@ -3,6 +3,8 @@ param(
     [ValidateSet("lexical", "configured")]
     [string]$Retriever = "lexical",
     [int]$TimeoutSeconds = 300,
+    [switch]$LocalBge,
+    [switch]$Gpu,
     [switch]$CleanupImported
 )
 
@@ -10,16 +12,40 @@ $ErrorActionPreference = "Stop"
 $projectRoot = Split-Path -Parent $PSScriptRoot
 $source = (Resolve-Path (Join-Path $projectRoot $PdfPath)).Path
 $reportDir = Join-Path $projectRoot "backend/tmp/grounded-rag"
-$retrievalReport = Join-Path $reportDir "attention-v1-$Retriever-retrieval.json"
-$groundedReport = Join-Path $reportDir "attention-v1-$Retriever-deepseek.json"
+$reportMode = if ($LocalBge) { "bge-$Retriever" } else { $Retriever }
+$retrievalReport = Join-Path $reportDir "attention-v1-$reportMode-retrieval.json"
+$groundedReport = Join-Path $reportDir "attention-v1-$reportMode-deepseek.json"
 $createdDocument = $false
 $documentId = $null
+$composeArgs = @("compose")
+
+if ($Gpu -and -not $LocalBge) {
+    throw "-Gpu requires -LocalBge."
+}
+if ($LocalBge -and $Retriever -ne "configured") {
+    throw "-LocalBge requires -Retriever configured."
+}
+if ($LocalBge) {
+    if ($Gpu) {
+        $composeArgs += @(
+            "-f", "docker-compose.yml",
+            "-f", "docker-compose.bge-gpu.yml"
+        )
+    }
+    $composeArgs += @(
+        "--env-file", ".env",
+        "--env-file", ".env.bge",
+        "--profile", "local-bge"
+    )
+}
 
 New-Item -ItemType Directory -Force -Path $reportDir | Out-Null
 
 Push-Location $projectRoot
 try {
-    docker compose up -d postgres redis qdrant backend worker
+    $services = @("postgres", "redis", "qdrant", "backend", "worker")
+    if ($LocalBge) { $services += @("bge-embedding", "bge-reranker") }
+    & docker @composeArgs up -d @services
     if ($LASTEXITCODE -ne 0) { throw "Docker services failed to start." }
 
     $healthDeadline = (Get-Date).AddSeconds([Math]::Min($TimeoutSeconds, 120))
@@ -54,20 +80,41 @@ try {
     } while ((Get-Date) -lt $parseDeadline)
     if ($document.status -ne "ready") { throw "PDF parsing timed out." }
 
-    docker compose exec -T backend python scripts/evaluate_retrieval.py `
-        evals/attention_v1.json `
-        --retriever $Retriever `
-        --output "/app/tmp/grounded-rag/attention-v1-$Retriever-retrieval.json" `
-        --summary-only `
-        --strict
+    if ($LocalBge) {
+        & docker @composeArgs exec -T backend python scripts/check_bge_services.py `
+            --embedding-url http://bge-embedding `
+            --reranker-url http://bge-reranker
+        if ($LASTEXITCODE -ne 0) { throw "BGE service smoke test failed." }
+
+        & docker @composeArgs exec -T backend python scripts/reindex_vectors.py `
+            --document-id $documentId `
+            --output "/app/tmp/grounded-rag/attention-v1-bge-reindex.json" `
+            --strict
+        if ($LASTEXITCODE -ne 0) { throw "BGE vector reindex failed." }
+    }
+
+    $retrievalArgs = @(
+        "scripts/evaluate_retrieval.py",
+        "evals/attention_v1.json",
+        "--retriever", $Retriever,
+        "--output", "/app/tmp/grounded-rag/attention-v1-$reportMode-retrieval.json",
+        "--summary-only",
+        "--strict"
+    )
+    if ($LocalBge) { $retrievalArgs += @("--require-retrieval-mode", "reranked") }
+    & docker @composeArgs exec -T backend python @retrievalArgs
     if ($LASTEXITCODE -ne 0) { throw "Retrieval evaluation failed." }
 
-    docker compose exec -T backend python scripts/evaluate_grounded_rag.py `
-        evals/attention_v1_grounded.json `
-        --retriever $Retriever `
-        --output "/app/tmp/grounded-rag/attention-v1-$Retriever-deepseek.json" `
-        --summary-only `
-        --strict
+    $groundedArgs = @(
+        "scripts/evaluate_grounded_rag.py",
+        "evals/attention_v1_grounded.json",
+        "--retriever", $Retriever,
+        "--output", "/app/tmp/grounded-rag/attention-v1-$reportMode-deepseek.json",
+        "--summary-only",
+        "--strict"
+    )
+    if ($LocalBge) { $groundedArgs += @("--require-retrieval-mode", "reranked") }
+    & docker @composeArgs exec -T backend python @groundedArgs
     if ($LASTEXITCODE -ne 0) { throw "Grounded RAG evaluation failed." }
 
     Write-Host "Grounded RAG E2E passed for document $documentId."

@@ -30,6 +30,11 @@ async def run() -> None:
     )
     parser.add_argument("--strict", action="store_true")
     parser.add_argument(
+        "--require-retrieval-mode",
+        choices=("lexical", "vector", "hybrid", "reranked"),
+        help="Fail if any returned evidence bypasses the required retrieval stage.",
+    )
+    parser.add_argument(
         "--summary-only",
         action="store_true",
         help="Print aggregate metrics while retaining full case details in --output.",
@@ -46,6 +51,7 @@ async def run() -> None:
             session,
             dataset,
             retriever=retriever,
+            required_retrieval_mode=args.require_retrieval_mode,
         )
     report["retriever"] = args.retriever
 
@@ -58,6 +64,7 @@ async def run() -> None:
                     "provider": report["provider"],
                     "model": report["model"],
                     "retriever": report["retriever"],
+                    "required_retrieval_mode": report["required_retrieval_mode"],
                     "status": report["status"],
                     "threshold_failures": report["threshold_failures"],
                     "metrics": report["metrics"],

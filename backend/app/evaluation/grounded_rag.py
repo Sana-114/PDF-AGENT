@@ -40,6 +40,7 @@ async def evaluate_grounded_rag(
     *,
     provider: LLMProvider | None = None,
     retriever: Retriever | None = None,
+    required_retrieval_mode: str | None = None,
 ) -> dict:
     active_provider = provider or get_llm_provider()
     registry = _registry_for_retriever(retriever) if retriever is not None else None
@@ -61,6 +62,8 @@ async def evaluate_grounded_rag(
     fallback_calls = 0
     provider_checks = 0
     provider_matches = 0
+    retrieval_mode_checks = 0
+    retrieval_mode_matches = 0
 
     for case in dataset.cases:
         total_answer_facts += len(case.answer_expectations)
@@ -109,6 +112,17 @@ async def evaluate_grounded_rag(
             dataset.expected_provider is None or response.provider == dataset.expected_provider
         )
         provider_matches += int(provider_match)
+        case_mode_valid = required_retrieval_mode is None or bool(response.evidence)
+        for anchor in response.evidence:
+            retrieval_mode_checks += int(required_retrieval_mode is not None)
+            mode_matches = (
+                required_retrieval_mode is None
+                or anchor.retrieval_mode == required_retrieval_mode
+            )
+            retrieval_mode_matches += int(
+                required_retrieval_mode is not None and mode_matches
+            )
+            case_mode_valid = case_mode_valid and mode_matches
 
         generation_step = next(
             (step for step in response.trace if step.skill == "llm.generate_grounded_answer"),
@@ -153,6 +167,11 @@ async def evaluate_grounded_rag(
                     "expected": expectation.model_dump(),
                     "evidence_id": matched.evidence_id,
                     "anchor_valid": anchor_valid,
+                    "retrieval_mode": matched.retrieval_mode,
+                    "retrieval_mode_valid": (
+                        required_retrieval_mode is None
+                        or matched.retrieval_mode == required_retrieval_mode
+                    ),
                 }
             )
 
@@ -180,7 +199,12 @@ async def evaluate_grounded_rag(
         if case.must_refuse:
             refusal_passed = response.insufficient_evidence and not response.claims
             passed_refusals += int(refusal_passed)
-            passed = refusal_passed and provider_match and generation_status != "fallback"
+            passed = (
+                refusal_passed
+                and provider_match
+                and generation_status != "fallback"
+                and case_mode_valid
+            )
         else:
             passed = all(
                 (
@@ -193,6 +217,7 @@ async def evaluate_grounded_rag(
                     not response.insufficient_evidence,
                     generation_status == "ok",
                     provider_match,
+                    case_mode_valid,
                 )
             )
 
@@ -210,6 +235,8 @@ async def evaluate_grounded_rag(
                 "model": response.model,
                 "provider_match": provider_match,
                 "generation_status": generation_status,
+                "required_retrieval_mode": required_retrieval_mode,
+                "retrieval_mode_valid": case_mode_valid,
                 "insufficient_evidence": response.insufficient_evidence,
                 "answer_expectations": answer_results,
                 "evidence_expectations": evidence_results,
@@ -239,6 +266,11 @@ async def evaluate_grounded_rag(
         "refusal_pass_rate": _ratio(passed_refusals, refusal_cases),
         "provider_match_rate": _ratio(provider_matches, provider_checks),
         "fallback_rate": _ratio(fallback_calls, provider_calls, empty_value=0.0),
+        "retrieval_mode_match_rate": (
+            _ratio(retrieval_mode_matches, retrieval_mode_checks, empty_value=0.0)
+            if required_retrieval_mode is not None
+            else None
+        ),
         "latency_ms_p50": _percentile(latencies, 0.5),
         "latency_ms_p95": _percentile(latencies, 0.95),
         "passed_cases": passed_cases,
@@ -250,13 +282,14 @@ async def evaluate_grounded_rag(
         "matched_evidence_expectations": matched_evidence_expectations,
         "total_evidence_expectations": total_evidence_expectations,
     }
-    failures = _threshold_failures(metrics, dataset)
+    failures = _threshold_failures(metrics, dataset, required_retrieval_mode)
     return {
         "schema_version": "1.0",
         "dataset_id": dataset.dataset_id,
         "generated_at": datetime.now(UTC).isoformat(),
         "status": "passed" if not failures else "failed",
         "expected_provider": dataset.expected_provider,
+        "required_retrieval_mode": required_retrieval_mode,
         "provider": active_provider.name,
         "model": active_provider.model,
         "threshold_failures": failures,
@@ -341,7 +374,11 @@ def _ratio(numerator: int, denominator: int, *, empty_value: float = 1.0) -> flo
     return round(numerator / denominator, 4)
 
 
-def _threshold_failures(metrics: dict, dataset: GroundedRAGEvaluationSet) -> list[str]:
+def _threshold_failures(
+    metrics: dict,
+    dataset: GroundedRAGEvaluationSet,
+    required_retrieval_mode: str | None,
+) -> list[str]:
     thresholds = dataset.thresholds
     minimums = {
         "case_pass_rate": thresholds.min_case_pass_rate,
@@ -361,5 +398,14 @@ def _threshold_failures(metrics: dict, dataset: GroundedRAGEvaluationSet) -> lis
     if metrics["fallback_rate"] > thresholds.max_fallback_rate:
         failures.append(
             f"fallback_rate={metrics['fallback_rate']} > {thresholds.max_fallback_rate}"
+        )
+    if (
+        required_retrieval_mode is not None
+        and metrics["retrieval_mode_match_rate"] < 1.0
+    ):
+        failures.append(
+            "retrieval_mode_match_rate="
+            f"{metrics['retrieval_mode_match_rate']} < 1.0 "
+            f"(required={required_retrieval_mode})"
         )
     return failures

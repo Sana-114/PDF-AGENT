@@ -66,4 +66,22 @@ PDF 文本会被视为不可信引用内容，模型不得执行正文中嵌入�
 .\scripts\run_grounded_rag_e2e.ps1 -Retriever configured
 ```
 
+启用仓库内置 BGE-M3、Qdrant、BGE Reranker 与 DeepSeek 的完整 GPU 链路：
+
+```powershell
+.\scripts\run_grounded_rag_e2e.ps1 `
+  -Retriever configured `
+  -LocalBge `
+  -Gpu
+```
+
+CPU 模式省略 `-Gpu`。`-LocalBge` 会同时加载 `.env` 与 `.env.bge`：前者保留 DeepSeek Key，后者覆盖 Embedding/Reranker 配置；脚本还会实际请求两个 BGE 服务、显式重建当前公开文献的向量，并要求全部评测证据的 `retrieval_mode=reranked`。任何 Qdrant、Embedding 或 Reranker 故障导致的 BM25/hybrid fallback 都会使严格验收失败，而不是被汇总指标掩盖。
+
 结果保存在 `backend/tmp/grounded-rag/`，不会提交到 Git。脚本不会打印 API Key，也不会向模型发送库中的其他私有文献；仅数据集中选中的公开 arXiv 文献会进入请求上下文。
+
+也可以单独为当前 Embedding 模型重建指定文献的 Collection：
+
+```powershell
+docker compose --env-file .env --env-file .env.bge exec backend `
+  python scripts/reindex_vectors.py --document-id <DOCUMENT_ID> --strict
+```

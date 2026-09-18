@@ -14,10 +14,17 @@ def test_agent_status_and_skills_are_exposed(monkeypatch) -> None:
     assert status_response.status_code == 200
     assert status_response.json()["provider"] == "extractive"
     assert status_response.json()["translation_configured"] is False
-    assert status_response.json()["retrieval_mode"] in {"lexical", "hybrid_qdrant_rrf"}
-    assert status_response.json()["embedding_provider"] == "hash"
-    assert status_response.json()["reranker_provider"] == "disabled"
-    assert status_response.json()["reranker_model"] is None
+    assert status_response.json()["retrieval_mode"] in {
+        "lexical",
+        "hybrid_qdrant_rrf",
+        "hybrid_qdrant_rrf+cross_encoder",
+    }
+    assert status_response.json()["embedding_provider"] in {"hash", "openai-compatible"}
+    assert status_response.json()["reranker_provider"] in {"disabled", "tei"}
+    if status_response.json()["reranker_provider"] == "disabled":
+        assert status_response.json()["reranker_model"] is None
+    else:
+        assert status_response.json()["reranker_model"] == "BAAI/bge-reranker-v2-m3"
     assert skills_response.status_code == 200
     assert {item["name"] for item in skills_response.json()} == {
         "get_document_outline",

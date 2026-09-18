@@ -60,11 +60,33 @@ docker compose --env-file .env.bge exec backend python scripts/check_bge_service
 {"status":"ok","embedding_dimensions":1024,"reranker_top_index":0}
 ```
 
+## 与 DeepSeek 同时启用
+
+`.env.bge` 只保存本地检索模型配置，不应复制外部 LLM Key。需要运行 BGE + DeepSeek 完整链路时，按顺序叠加两个环境文件，后者仅覆盖检索配置：
+
+```powershell
+docker compose -f docker-compose.yml -f docker-compose.bge-gpu.yml `
+  --env-file .env --env-file .env.bge --profile local-bge up -d
+```
+
+只传 `--env-file .env.bge` 时，Compose 会使用默认 `LLM_PROVIDER=mock`；这适合离线检索评测，但不会调用 DeepSeek。完整抗幻觉验收请运行：
+
+```powershell
+.\scripts\run_grounded_rag_e2e.ps1 -Retriever configured -LocalBge -Gpu
+```
+
 已有文献在切换模型后不需要重新上传。向量 Collection 按 Provider、模型和维度隔离；首次查询会按需为新模型回填索引。可使用已有离线评测器量化 BGE 相对 Hash/BM25 基线的收益：
 
 ```powershell
 docker compose --env-file .env.bge exec backend python scripts/evaluate_retrieval.py `
-  --dataset evals/local_chinese_thesis.json --retriever configured
+  evals/local_chinese_thesis.json --retriever configured
+```
+
+比赛验收前可显式重建并核对 Chunk/Point 数量，避免把首次查询的索引时间混入热查询指标：
+
+```powershell
+docker compose --env-file .env --env-file .env.bge exec backend `
+  python scripts/reindex_vectors.py --document-id <DOCUMENT_ID> --strict
 ```
 
 ## 常见问题

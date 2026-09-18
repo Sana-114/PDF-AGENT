@@ -155,7 +155,7 @@ def test_hybrid_retriever_preserves_rank_when_reranker_fails() -> None:
 
 
 def test_reranker_is_disabled_by_default_and_configurable() -> None:
-    assert get_reranker(Settings()).enabled is False
+    assert get_reranker(Settings(reranker_provider="none")).enabled is False
 
     reranker = get_reranker(
         Settings(

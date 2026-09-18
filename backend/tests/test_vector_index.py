@@ -177,6 +177,10 @@ def test_hybrid_retriever_falls_back_when_vector_store_fails() -> None:
             del session, question, document_ids, limit
             raise ConnectionError("offline")
 
+    class DisabledReranker:
+        enabled = False
+        candidate_k = 12
+
     engine = create_engine("sqlite://")
     Base.metadata.create_all(engine)
     with Session(engine) as session:
@@ -193,7 +197,11 @@ def test_hybrid_retriever_falls_back_when_vector_store_fails() -> None:
         replace_document_chunks(session, document.id, _parsed_document())
         session.commit()
 
-        results = HybridRetriever(session, vector_index=FailingVectorIndex()).search(
+        results = HybridRetriever(
+            session,
+            vector_index=FailingVectorIndex(),
+            reranker=DisabledReranker(),  # type: ignore[arg-type]
+        ).search(
             "Adam learning rate", [document.id], top_k=2
         )
 

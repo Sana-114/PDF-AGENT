@@ -103,6 +103,8 @@ Answer + Claims + Evidence + Trace
 
 Compose 中的 `local-bge` Profile 将 BGE-M3 Embedding 与 BGE Reranker 部署为两个独立 TEI 服务。两者具有独立模型缓存卷和 `/info` 健康检查；CPU 镜像为默认值，GPU Override 只改变运行镜像和设备请求。API 与 Worker 通过内部服务名访问模型，因此无需依赖宿主机端口；未启用 Profile 时现有 Hash/BM25 零模型路径完全不变。
 
+端到端验收可通过 `--require-retrieval-mode reranked` 强制检查每条返回证据的真实检索阶段。该门禁与向量/重排故障时的在线 BM25 fallback 并存：生产问答保持可用，但标记为 BGE 的严格验收会失败。`reindex_vectors.py` 可按文献显式重建当前模型命名空间，并核对 Chunk 与 Qdrant Point 数量。
+
 Qdrant 不可达、索引失败或本地开发关闭向量检索时，`HybridRetriever` 会返回 BM25 结果。解析任务不会因向量服务故障而失败；后续查询会根据数据库 Chunk 数量自动补建缺失索引。
 
 `EvidenceAnchor` 同时保存 `document_id`、`page_number`、`block_ids`、`bbox`、`section`、`source_type` 和原文摘录。LLM 只能引用本次检索生成的 `E1...En`，Harness 会在响应前再次校验引用白名单。默认抽取式 Provider 完全不调用外部模型，可用于无密钥演示和离线回归测试。

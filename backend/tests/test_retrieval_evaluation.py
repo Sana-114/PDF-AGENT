@@ -139,6 +139,38 @@ def test_missing_document_is_an_explicit_failure() -> None:
     assert {case["status"] for case in report["cases"]} == {"missing_document"}
 
 
+def test_required_retrieval_mode_exposes_silent_fallback() -> None:
+    engine = create_engine("sqlite://")
+    Base.metadata.create_all(engine)
+    with Session(engine) as session:
+        document = Document(
+            original_filename="1706.03762v1.pdf",
+            storage_key="attention.pdf",
+            size_bytes=100,
+            sha256="f" * 64,
+            status=DocumentStatus.READY,
+            title="Attention Is All You Need",
+            arxiv_id="1706.03762",
+            arxiv_version=1,
+        )
+        session.add(document)
+        session.flush()
+        replace_document_chunks(session, document.id, _parsed_document())
+        session.commit()
+
+        report = evaluate_retrieval(
+            session,
+            _dataset(),
+            retriever=LexicalRetriever(session),
+            required_retrieval_mode="reranked",
+        )
+
+    assert report["status"] == "failed"
+    assert report["metrics"]["retrieval_mode_match_rate"] == 0
+    assert all(not case["retrieval_mode_valid"] for case in report["cases"])
+    assert any("required=reranked" in item for item in report["threshold_failures"])
+
+
 def test_evidence_matching_tolerates_pdf_layout_spacing() -> None:
     anchor = EvidenceAnchor(
         evidence_id="E1",

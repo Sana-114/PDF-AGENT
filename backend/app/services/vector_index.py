@@ -122,7 +122,7 @@ class QdrantVectorIndex:
                     DocumentChunk.document_id == document_id
                 )
             ) or 0
-            actual = self._document_point_count(document_id)
+            actual = self.document_point_count(document_id)
             if actual != expected:
                 indexed += self.index_document(session, document_id)
         return indexed
@@ -184,7 +184,7 @@ class QdrantVectorIndex:
             wait=True,
         )
 
-    def _document_point_count(self, document_id: str) -> int:
+    def document_point_count(self, document_id: str) -> int:
         self.ensure_collection()
         return int(
             self.client.count(
@@ -193,6 +193,10 @@ class QdrantVectorIndex:
                 exact=True,
             ).count
         )
+
+    def _document_point_count(self, document_id: str) -> int:
+        """Backward-compatible alias for existing internal tests."""
+        return self.document_point_count(document_id)
 
     def _point(
         self,

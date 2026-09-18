@@ -173,6 +173,26 @@ async def test_grounded_rag_evaluator_exposes_provider_fallback() -> None:
     assert any("fallback_rate" in failure for failure in report["threshold_failures"])
 
 
+@pytest.mark.asyncio
+async def test_grounded_rag_evaluator_rejects_retrieval_mode_fallback() -> None:
+    engine = create_engine("sqlite://")
+    Base.metadata.create_all(engine)
+    with Session(engine) as session:
+        _add_document(session)
+        report = await evaluate_grounded_rag(
+            session,
+            _dataset(),
+            provider=GroundedProvider(),  # type: ignore[arg-type]
+            retriever=LexicalRetriever(session),
+            required_retrieval_mode="reranked",
+        )
+
+    assert report["status"] == "failed"
+    assert report["metrics"]["retrieval_mode_match_rate"] == 0
+    assert all(not case["retrieval_mode_valid"] for case in report["cases"])
+    assert any("required=reranked" in item for item in report["threshold_failures"])
+
+
 def test_committed_grounded_rag_dataset_validates() -> None:
     path = Path(__file__).resolve().parents[1] / "evals" / "attention_v1_grounded.json"
     dataset = GroundedRAGEvaluationSet.model_validate_json(path.read_text(encoding="utf-8"))

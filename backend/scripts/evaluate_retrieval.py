@@ -26,6 +26,11 @@ def main() -> None:
     )
     parser.add_argument("--strict", action="store_true")
     parser.add_argument(
+        "--require-retrieval-mode",
+        choices=("lexical", "vector", "hybrid", "reranked"),
+        help="Fail if any returned evidence bypasses the required retrieval stage.",
+    )
+    parser.add_argument(
         "--summary-only",
         action="store_true",
         help="Print only status and aggregate metrics while keeping the full output file.",
@@ -38,7 +43,12 @@ def main() -> None:
     init_db()
     with SessionLocal() as session:
         retriever = LexicalRetriever(session) if args.retriever == "lexical" else None
-        report = evaluate_retrieval(session, dataset, retriever=retriever)
+        report = evaluate_retrieval(
+            session,
+            dataset,
+            retriever=retriever,
+            required_retrieval_mode=args.require_retrieval_mode,
+        )
     report["retriever"] = args.retriever
 
     rendered = json.dumps(report, ensure_ascii=False, indent=2)
@@ -48,6 +58,7 @@ def main() -> None:
                 {
                     "dataset_id": report["dataset_id"],
                     "retriever": report["retriever"],
+                    "required_retrieval_mode": report["required_retrieval_mode"],
                     "status": report["status"],
                     "threshold_failures": report["threshold_failures"],
                     "metrics": report["metrics"],

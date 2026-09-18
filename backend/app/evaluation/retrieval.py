@@ -30,6 +30,7 @@ def evaluate_retrieval(
     dataset: RetrievalEvaluationSet,
     *,
     retriever: Retriever | None = None,
+    required_retrieval_mode: str | None = None,
 ) -> dict:
     active_retriever = retriever or HybridRetriever(session)
     case_results = []
@@ -37,6 +38,8 @@ def evaluate_retrieval(
     total_expectations = 0
     valid_anchors = 0
     matched_anchors = 0
+    retrieval_mode_checks = 0
+    retrieval_mode_matches = 0
     reciprocal_ranks = []
     latencies = []
 
@@ -70,6 +73,17 @@ def evaluate_retrieval(
         )
         latency_ms = max(0, round((time.perf_counter() - started) * 1000))
         latencies.append(latency_ms)
+        case_mode_valid = required_retrieval_mode is None or bool(evidence)
+        for anchor in evidence:
+            retrieval_mode_checks += int(required_retrieval_mode is not None)
+            mode_matches = (
+                required_retrieval_mode is None
+                or anchor.retrieval_mode == required_retrieval_mode
+            )
+            retrieval_mode_matches += int(
+                required_retrieval_mode is not None and mode_matches
+            )
+            case_mode_valid = case_mode_valid and mode_matches
         expectation_results = []
         matched_ranks = []
         case_anchors_valid = True
@@ -102,6 +116,11 @@ def evaluate_retrieval(
                     "matched_rank": rank,
                     "evidence_id": anchor.evidence_id,
                     "anchor_valid": anchor_valid,
+                    "retrieval_mode": anchor.retrieval_mode,
+                    "retrieval_mode_valid": (
+                        required_retrieval_mode is None
+                        or anchor.retrieval_mode == required_retrieval_mode
+                    ),
                 }
             )
 
@@ -112,12 +131,18 @@ def evaluate_retrieval(
             {
                 "case_id": case.case_id,
                 "question": case.question,
-                "status": "passed" if all_expected_found and case_anchors_valid else "failed",
-                "passed": all_expected_found and case_anchors_valid,
+                "status": (
+                    "passed"
+                    if all_expected_found and case_anchors_valid and case_mode_valid
+                    else "failed"
+                ),
+                "passed": all_expected_found and case_anchors_valid and case_mode_valid,
                 "missing_documents": [],
                 "document_ids": document_ids,
                 "latency_ms": latency_ms,
                 "reciprocal_rank": round(reciprocal_rank, 4),
+                "required_retrieval_mode": required_retrieval_mode,
+                "retrieval_mode_valid": case_mode_valid,
                 "expectations": expectation_results,
                 "evidence": [
                     _evidence_summary(anchor, rank)
@@ -133,6 +158,11 @@ def evaluate_retrieval(
         "evidence_recall": round(matched_expectations / max(total_expectations, 1), 4),
         "mean_reciprocal_rank": round(sum(reciprocal_ranks) / case_count, 4),
         "anchor_valid_rate": round(valid_anchors / max(matched_anchors, 1), 4),
+        "retrieval_mode_match_rate": (
+            round(retrieval_mode_matches / max(retrieval_mode_checks, 1), 4)
+            if required_retrieval_mode is not None
+            else None
+        ),
         "latency_ms_p50": _percentile(latencies, 0.5),
         "latency_ms_p95": _percentile(latencies, 0.95),
         "passed_cases": passed_cases,
@@ -140,10 +170,11 @@ def evaluate_retrieval(
         "matched_expectations": matched_expectations,
         "total_expectations": total_expectations,
     }
-    failures = _threshold_failures(metrics, dataset)
+    failures = _threshold_failures(metrics, dataset, required_retrieval_mode)
     return {
         "schema_version": "1.0",
         "dataset_id": dataset.dataset_id,
+        "required_retrieval_mode": required_retrieval_mode,
         "generated_at": datetime.now(UTC).isoformat(),
         "status": "passed" if not failures else "failed",
         "threshold_failures": failures,
@@ -245,7 +276,11 @@ def _evidence_summary(anchor: EvidenceAnchor, rank: int) -> dict:
     }
 
 
-def _threshold_failures(metrics: dict, dataset: RetrievalEvaluationSet) -> list[str]:
+def _threshold_failures(
+    metrics: dict,
+    dataset: RetrievalEvaluationSet,
+    required_retrieval_mode: str | None,
+) -> list[str]:
     thresholds = dataset.thresholds
     checks = {
         "case_pass_rate": thresholds.min_case_pass_rate,
@@ -253,11 +288,21 @@ def _threshold_failures(metrics: dict, dataset: RetrievalEvaluationSet) -> list[
         "mean_reciprocal_rank": thresholds.min_mean_reciprocal_rank,
         "anchor_valid_rate": thresholds.min_anchor_valid_rate,
     }
-    return [
+    failures = [
         f"{metric}={metrics[metric]} < {minimum}"
         for metric, minimum in checks.items()
         if metrics[metric] < minimum
     ]
+    if (
+        required_retrieval_mode is not None
+        and metrics["retrieval_mode_match_rate"] < 1.0
+    ):
+        failures.append(
+            "retrieval_mode_match_rate="
+            f"{metrics['retrieval_mode_match_rate']} < 1.0 "
+            f"(required={required_retrieval_mode})"
+        )
+    return failures
 
 
 def _percentile(values: list[int], quantile: float) -> int:
