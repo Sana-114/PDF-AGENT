@@ -4,6 +4,9 @@ PaperPilot 是一个以原文证据为核心的科研助手 Agent 系统。本�
 
 ## 当前能力
 
+- 首页采用 Agent-first 信息架构，默认直接进入带原文证据的连续问答，而非平铺全部功能；
+- 将完整能力收敛为“科研 Agent、知识库、论文发现、研究分析、创作工具”五个任务区，复杂功能通过区内二级标签按需展开；
+- 保留原有 URL Hash 深链，引用图谱、综述、写作、翻译、数据可视化等链接可直接定位到对应工作台；
 - 单篇或批量 PDF 上传，校验真实 PDF 内容和大小限制；
 - 按完整题名、DOI 或 arXiv ID 检索 Semantic Scholar、arXiv 和 Crossref，并一键导入开放 PDF；
 - 远程导入仅接受“来源 + 论文 ID”，由服务端重新解析可信 HTTPS 地址、校验跳转、大小和 PDF 文件头；
@@ -521,6 +524,8 @@ Transformer v1 的 Table 1/2 无框表格恢复、表格去重和公式 LaTeX �
 ```
 
 脚本会叠加 `.env` 与 `.env.bge`、真实探测两个 BGE 服务、显式重建当前公开论文索引，并强制要求每条返回证据均经过 `reranked`，因此服务故障后静默退回 BM25 不会被误报为 BGE 验收通过。2026-09-18 的 Top-1、延迟、110 个 Point 索引核对和 5/5 DeepSeek 实测见 [BGE + DeepSeek 完整 RAG 验收](docs/bge-deepseek-grounded-acceptance-2026-09-18.md)。
+
+首页的 Agent-first 信息架构、五类任务入口、原有深链兼容和响应式布局见 [Agent-first 前端界面验收](docs/agent-first-interface-acceptance-2026-09-18.md)。
 
 ## 下一里程碑
 

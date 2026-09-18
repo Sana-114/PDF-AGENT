@@ -68,6 +68,61 @@ interface ReferenceExplorerDocument {
   title: string;
 }
 
+type WorkspaceArea = "agent" | "library" | "discover" | "insights" | "copilot";
+type AgentTool = "chat" | "compare";
+type DiscoverTool = "search" | "radar";
+type InsightTool = "graph" | "review";
+type CopilotTool = "writing" | "translation" | "visualization" | "diagram";
+
+const WORKSPACE_AREAS: Array<{
+  id: WorkspaceArea;
+  icon: string;
+  label: string;
+  description: string;
+}> = [
+  { id: "agent", icon: "AI", label: "科研 Agent", description: "问答与多文推理" },
+  { id: "library", icon: "库", label: "知识库", description: "上传、解析与版本" },
+  { id: "discover", icon: "寻", label: "论文发现", description: "检索、追踪与推荐" },
+  { id: "insights", icon: "析", label: "研究分析", description: "图谱、综述与前沿" },
+  { id: "copilot", icon: "创", label: "创作工具", description: "写作、翻译与制图" },
+];
+
+const WORKSPACE_META: Record<WorkspaceArea, { eyebrow: string; title: string; description: string }> = {
+  agent: {
+    eyebrow: "EVIDENCE-FIRST AGENT",
+    title: "从问题出发，而不是从功能列表出发",
+    description: "连续追问、多论文对比与每条结论的原文证据都集中在这里。",
+  },
+  library: {
+    eyebrow: "KNOWLEDGE BASE",
+    title: "管理 Agent 可以信任的研究资料",
+    description: "上传、解析、检查版本差异，并随时回到 PDF 原文。",
+  },
+  discover: {
+    eyebrow: "PAPER DISCOVERY",
+    title: "从可信来源扩展本地文献库",
+    description: "按题名或标识检索论文，持续追踪 arXiv 研究动态。",
+  },
+  insights: {
+    eyebrow: "RESEARCH INTELLIGENCE",
+    title: "从文献集合中提取结构与研究脉络",
+    description: "构建局域引用图谱，生成可追溯综述并梳理 Future Work。",
+  },
+  copilot: {
+    eyebrow: "ACADEMIC COPILOT",
+    title: "把研究材料转化为可编辑学术产物",
+    description: "论文框架、学术翻译、数据图表与架构图按需启用。",
+  },
+};
+
+const AREA_HASH: Record<WorkspaceArea, string> = {
+  agent: "qa",
+  library: "library",
+  discover: "paper-discovery",
+  insights: "citation-graph",
+  copilot: "writing-workbench",
+};
+
 const STATUS_LABEL: Record<DocumentRecord["status"], string> = {
   queued: "等待解析",
   processing: "解析中",
@@ -81,6 +136,11 @@ function formatBytes(bytes: number): string {
 }
 
 export default function Home() {
+  const [activeArea, setActiveArea] = useState<WorkspaceArea>("agent");
+  const [agentTool, setAgentTool] = useState<AgentTool>("chat");
+  const [discoverTool, setDiscoverTool] = useState<DiscoverTool>("search");
+  const [insightTool, setInsightTool] = useState<InsightTool>("graph");
+  const [copilotTool, setCopilotTool] = useState<CopilotTool>("writing");
   const [documents, setDocuments] = useState<DocumentRecord[]>([]);
   const [documentProgress, setDocumentProgress] = useState<Record<string, DocumentProgress>>({});
   const [loading, setLoading] = useState(true);
@@ -174,6 +234,52 @@ export default function Home() {
       window.clearInterval(recommendationTimer);
     };
   }, [refresh, refreshRecommendationData]);
+
+  useEffect(() => {
+    const syncWorkspaceFromHash = () => {
+      const hash = window.location.hash.slice(1);
+      if (hash === "qa") {
+        setActiveArea("agent");
+        setAgentTool("chat");
+      } else if (hash === "paper-comparison") {
+        setActiveArea("agent");
+        setAgentTool("compare");
+      } else if (hash === "library") {
+        setActiveArea("library");
+      } else if (hash === "paper-discovery") {
+        setActiveArea("discover");
+        setDiscoverTool("search");
+      } else if (hash === "recommendations") {
+        setActiveArea("discover");
+        setDiscoverTool("radar");
+      } else if (hash === "citation-graph") {
+        setActiveArea("insights");
+        setInsightTool("graph");
+      } else if (hash === "research-review") {
+        setActiveArea("insights");
+        setInsightTool("review");
+      } else if (["writing-workbench", "academic-translation", "data-visualization", "architecture-diagram"].includes(hash)) {
+        setActiveArea("copilot");
+        const toolByHash: Record<string, CopilotTool> = {
+          "writing-workbench": "writing",
+          "academic-translation": "translation",
+          "data-visualization": "visualization",
+          "architecture-diagram": "diagram",
+        };
+        setCopilotTool(toolByHash[hash]);
+      } else {
+        return;
+      }
+      window.requestAnimationFrame(() => {
+        window.requestAnimationFrame(() => {
+          document.getElementById("agent-workspace")?.scrollIntoView({ block: "start" });
+        });
+      });
+    };
+    syncWorkspaceFromHash();
+    window.addEventListener("hashchange", syncWorkspaceFromHash);
+    return () => window.removeEventListener("hashchange", syncWorkspaceFromHash);
+  }, []);
 
   const processingCount = useMemo(
     () => documents.filter((document) => ["queued", "processing"].includes(document.status)).length,
@@ -528,6 +634,49 @@ export default function Home() {
     setReader({ documentId, title, pageNumber, evidence });
   }
 
+  function openWorkspace(area: WorkspaceArea) {
+    setActiveArea(area);
+    if (area === "agent") setAgentTool("chat");
+    if (area === "discover") setDiscoverTool("search");
+    if (area === "insights") setInsightTool("graph");
+    if (area === "copilot") setCopilotTool("writing");
+    window.history.replaceState(null, "", `#${AREA_HASH[area]}`);
+    window.requestAnimationFrame(() => {
+      document.getElementById("agent-workspace")?.scrollIntoView({
+        behavior: "smooth",
+        block: "start",
+      });
+    });
+  }
+
+  function selectAgentTool(tool: AgentTool) {
+    setAgentTool(tool);
+    window.history.replaceState(null, "", tool === "chat" ? "#qa" : "#paper-comparison");
+  }
+
+  function selectDiscoverTool(tool: DiscoverTool) {
+    setDiscoverTool(tool);
+    window.history.replaceState(null, "", tool === "search" ? "#paper-discovery" : "#recommendations");
+  }
+
+  function selectInsightTool(tool: InsightTool) {
+    setInsightTool(tool);
+    window.history.replaceState(null, "", tool === "graph" ? "#citation-graph" : "#research-review");
+  }
+
+  function selectCopilotTool(tool: CopilotTool) {
+    setCopilotTool(tool);
+    const hashByTool: Record<CopilotTool, string> = {
+      writing: "writing-workbench",
+      translation: "academic-translation",
+      visualization: "data-visualization",
+      diagram: "architecture-diagram",
+    };
+    window.history.replaceState(null, "", `#${hashByTool[tool]}`);
+  }
+
+  const activeWorkspaceMeta = WORKSPACE_META[activeArea];
+
   return (
     <main>
       <header className="topbar">
@@ -535,37 +684,100 @@ export default function Home() {
           <span className="brand-mark">P</span>
           <span>PaperPilot</span>
         </a>
-        <nav aria-label="主导航">
-          <a className="active" href="#library">文献库</a>
-          <a href="#qa">问答</a>
-          <a href="#paper-comparison">多文对比</a>
-          <a href="#recommendations">追踪</a>
-          <a href="#citation-graph">引用图谱</a>
-          <a href="#research-review">综述</a>
-          <a href="#writing-workbench">写作台</a>
-          <a href="#academic-translation">学术翻译</a>
-          <a href="#data-visualization">数据作图</a>
-          <a href="#architecture-diagram">架构图</a>
-        </nav>
+        <div className="topbar-purpose">证据驱动的科研智能体</div>
         <div className="system-pill"><span /> {agentLabel}</div>
       </header>
 
-      <section className="hero">
+      <section className="hero agent-first-hero">
         <div>
-          <p className="eyebrow">EVIDENCE-FIRST RESEARCH</p>
-          <h1>让每一个结论，<br /><em>都能回到原文。</em></h1>
-          <p className="hero-copy">上传论文，建立带页码和坐标的结构化知识库。当前版本已接通内容去重、异步解析、证据检索与可追溯问答链路。</p>
+          <p className="eyebrow">YOUR RESEARCH AGENT</p>
+          <h1>先问 Agent，<br /><em>再核对原文。</em></h1>
+          <p className="hero-copy">把论文交给 Agent 完成解析、检索、对比与写作辅助。回答中的每个关键结论都保留页码和坐标，可一键返回 PDF。</p>
+          <div className="hero-actions">
+            <button onClick={() => openWorkspace("agent")} type="button">开始证据问答</button>
+            <button onClick={() => openWorkspace("library")} type="button">添加研究资料</button>
+          </div>
         </div>
         <div className="metric-row">
-          <div><strong>{documents.length}</strong><span>篇文献</span></div>
+          <div><strong>{documents.filter((item) => item.status === "ready").length}</strong><span>可检索文献</span></div>
           <div><strong>{processingCount}</strong><span>处理中</span></div>
-          <div><strong>{documents.filter((item) => item.duplicate_of_id).length}</strong><span>版本提醒</span></div>
+          <div><strong>{agentLabel === "Agent 离线" ? "—" : "●"}</strong><span>{agentLabel}</span></div>
         </div>
       </section>
 
-      <section className="workspace" id="library">
+      <div className="workspace-shell" id="agent-workspace">
+        <aside className="workspace-rail" aria-label="工作区导航">
+          <div className="workspace-rail-heading">
+            <span>WORKSPACE</span>
+            <strong>选择任务</strong>
+          </div>
+          {WORKSPACE_AREAS.map((area) => (
+            <button
+              aria-current={activeArea === area.id ? "page" : undefined}
+              className={activeArea === area.id ? "active" : ""}
+              key={area.id}
+              onClick={() => openWorkspace(area.id)}
+              type="button"
+            >
+              <span>{area.icon}</span>
+              <div>
+                <strong>{area.label}{area.id === "agent" && <em>核心</em>}</strong>
+                <small>{area.description}</small>
+              </div>
+            </button>
+          ))}
+          <p>功能按研究任务分区，未选中的工作台不会占用页面空间。</p>
+        </aside>
+
+        <section className="workspace agent-workspace">
+          <header className="workspace-view-header">
+            <div>
+              <p className="eyebrow">{activeWorkspaceMeta.eyebrow}</p>
+              <h2>{activeWorkspaceMeta.title}</h2>
+              <span>{activeWorkspaceMeta.description}</span>
+            </div>
+            <div className="workspace-context">
+              <strong>{documents.filter((item) => item.status === "ready").length}</strong>
+              <span>篇文献已就绪</span>
+            </div>
+          </header>
+
+          <div className="workspace-subnav" aria-label="当前工作区工具">
+            {activeArea === "agent" && (
+              <>
+                <button aria-pressed={agentTool === "chat"} onClick={() => selectAgentTool("chat")} type="button">连续问答</button>
+                <button aria-pressed={agentTool === "compare"} onClick={() => selectAgentTool("compare")} type="button">多文对比</button>
+              </>
+            )}
+            {activeArea === "discover" && (
+              <>
+                <button aria-pressed={discoverTool === "search"} onClick={() => selectDiscoverTool("search")} type="button">论文检索</button>
+                <button aria-pressed={discoverTool === "radar"} onClick={() => selectDiscoverTool("radar")} type="button">动态追踪</button>
+              </>
+            )}
+            {activeArea === "insights" && (
+              <>
+                <button aria-pressed={insightTool === "graph"} onClick={() => selectInsightTool("graph")} type="button">引用图谱</button>
+                <button aria-pressed={insightTool === "review"} onClick={() => selectInsightTool("review")} type="button">证据综述</button>
+              </>
+            )}
+            {activeArea === "copilot" && (
+              <>
+                <button aria-pressed={copilotTool === "writing"} onClick={() => selectCopilotTool("writing")} type="button">论文框架</button>
+                <button aria-pressed={copilotTool === "translation"} onClick={() => selectCopilotTool("translation")} type="button">学术翻译</button>
+                <button aria-pressed={copilotTool === "visualization"} onClick={() => selectCopilotTool("visualization")} type="button">数据作图</button>
+                <button aria-pressed={copilotTool === "diagram"} onClick={() => selectCopilotTool("diagram")} type="button">架构图</button>
+              </>
+            )}
+            {activeArea === "library" && <span>上传与版本管理集中在同一视图</span>}
+          </div>
+
+          {notice && <div className="notice success">{notice}</div>}
+          {error && <div className="notice error">{error}</div>}
+
         <div
           className={`dropzone ${dragging ? "dragging" : ""}`}
+          hidden={activeArea !== "library"}
           onDragEnter={(event) => { event.preventDefault(); setDragging(true); }}
           onDragOver={(event) => event.preventDefault()}
           onDragLeave={() => setDragging(false)}
@@ -582,7 +794,11 @@ export default function Home() {
           <input ref={fileInputRef} type="file" accept="application/pdf,.pdf" multiple hidden onChange={onFileChange} />
         </div>
 
-        <section className="paper-discovery" aria-labelledby="paper-discovery-title">
+        <section
+          className="paper-discovery"
+          aria-labelledby="paper-discovery-title"
+          hidden={activeArea !== "discover" || discoverTool !== "search"}
+        >
           <div className="discovery-intro">
             <div>
               <p className="eyebrow">SCHOLARLY DISCOVERY</p>
@@ -644,7 +860,11 @@ export default function Home() {
           )}
         </section>
 
-        <section className="recommendation-section" id="recommendations">
+        <section
+          className="recommendation-section"
+          hidden={activeArea !== "discover" || discoverTool !== "radar"}
+          id="recommendations"
+        >
           <div className="section-heading">
             <div><p className="eyebrow">ARXIV RADAR</p><h2>研究动态追踪</h2></div>
             <span className="evidence-promise">每 6 小时自动刷新 · 代码论文优先</span>
@@ -777,7 +997,11 @@ export default function Home() {
           </div>
         </section>
 
-        <section className="citation-graph-section" id="citation-graph">
+        <section
+          className="citation-graph-section"
+          hidden={activeArea !== "insights" || insightTool !== "graph"}
+          id="citation-graph"
+        >
           <div className="section-heading">
             <div><p className="eyebrow">LOCAL CITATION TOPOLOGY</p><h2>局域引用图谱</h2></div>
             <button
@@ -818,7 +1042,11 @@ export default function Home() {
           )}
         </section>
 
-        <section className="research-review-section" id="research-review">
+        <section
+          className="research-review-section"
+          hidden={activeArea !== "insights" || insightTool !== "review"}
+          id="research-review"
+        >
           <div className="section-heading">
             <div><p className="eyebrow">EVIDENCE REVIEW</p><h2>自动综述与前沿探索</h2></div>
             <button
@@ -854,7 +1082,11 @@ export default function Home() {
           )}
         </section>
 
-        <section className="writing-section" id="writing-workbench">
+        <section
+          className="writing-section"
+          hidden={activeArea !== "copilot" || copilotTool !== "writing"}
+          id="writing-workbench"
+        >
           <div className="section-heading">
             <div><p className="eyebrow">ACADEMIC WRITING COPILOT</p><h2>无幻觉论文框架</h2></div>
             <span className="evidence-promise">References 仅来自本地文献与来源元数据</span>
@@ -904,7 +1136,11 @@ export default function Home() {
           )}
         </section>
 
-        <section className="academic-translation-section" id="academic-translation">
+        <section
+          className="academic-translation-section"
+          hidden={activeArea !== "copilot" || copilotTool !== "translation"}
+          id="academic-translation"
+        >
           <div className="section-heading">
             <div><p className="eyebrow">ACADEMIC TRANSLATION</p><h2>中英学术翻译与完整性校验</h2></div>
             <span className="evidence-promise">公式、引用、代码、数字与指定术语受保护</span>
@@ -912,7 +1148,11 @@ export default function Home() {
           <AcademicTranslationWorkbench />
         </section>
 
-        <section className="data-visualization-section" id="data-visualization">
+        <section
+          className="data-visualization-section"
+          hidden={activeArea !== "copilot" || copilotTool !== "visualization"}
+          id="data-visualization"
+        >
           <div className="section-heading">
             <div><p className="eyebrow">SCIENTIFIC DATA COPILOT</p><h2>CSV 数据可视化与学术图注</h2></div>
             <span className="evidence-promise">结论由实际统计值生成，不推断因果</span>
@@ -920,7 +1160,11 @@ export default function Home() {
           <DataVisualizationWorkbench />
         </section>
 
-        <section className="architecture-diagram-section" id="architecture-diagram">
+        <section
+          className="architecture-diagram-section"
+          hidden={activeArea !== "copilot" || copilotTool !== "diagram"}
+          id="architecture-diagram"
+        >
           <div className="section-heading">
             <div><p className="eyebrow">ARCHITECTURE COPILOT</p><h2>科研架构拓扑与多格式脚本</h2></div>
             <span className="evidence-promise">一份拓扑 · 四种可复现输出</span>
@@ -928,10 +1172,11 @@ export default function Home() {
           <ArchitectureDiagramWorkbench />
         </section>
 
-        {notice && <div className="notice success">{notice}</div>}
-        {error && <div className="notice error">{error}</div>}
-
-        <section className="paper-comparison-section" id="paper-comparison">
+        <section
+          className="paper-comparison-section"
+          hidden={activeArea !== "agent" || agentTool !== "compare"}
+          id="paper-comparison"
+        >
           <div className="section-heading">
             <div><p className="eyebrow">CROSS-PAPER REASONING</p><h2>跨论文对比与冲突识别</h2></div>
             <span className="evidence-promise">逐篇均衡检索 · 来源隔离 · 冲突保守判定</span>
@@ -947,7 +1192,11 @@ export default function Home() {
           />
         </section>
 
-        <section className="qa-section" id="qa">
+        <section
+          className="qa-section"
+          hidden={activeArea !== "agent" || agentTool !== "chat"}
+          id="qa"
+        >
           <div className="section-heading">
             <div><p className="eyebrow">GROUNDED CONVERSATIONS</p><h2>与文献连续对话</h2></div>
             <span className="evidence-promise">多轮理解 · 每轮重新取证 · SSE 输出</span>
@@ -964,12 +1213,13 @@ export default function Home() {
           />
         </section>
 
-        <div className="section-heading">
-          <div><p className="eyebrow">LIBRARY</p><h2>最近文献</h2></div>
-          <button className="ghost" onClick={() => void refresh()}>刷新</button>
-        </div>
+        <div className="library-panel" hidden={activeArea !== "library"}>
+          <div className="section-heading">
+            <div><p className="eyebrow">LIBRARY</p><h2>最近文献</h2></div>
+            <button className="ghost" onClick={() => void refresh()}>刷新</button>
+          </div>
 
-        <div className="document-list">
+          <div className="document-list">
           {loading && <div className="empty">正在连接文献服务…</div>}
           {!loading && documents.length === 0 && (
             <div className="empty"><strong>文献库还是空的</strong><span>从上方上传比赛测试 PDF，建立第一条解析记录。</span></div>
@@ -1079,8 +1329,10 @@ export default function Home() {
               </article>
             );
           })}
+          </div>
         </div>
-      </section>
+        </section>
+      </div>
 
       <footer>PaperPilot MVP · 所有答案都将绑定可验证的原文证据</footer>
       {referenceExplorer && (
