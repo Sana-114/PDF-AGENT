@@ -101,8 +101,18 @@ services:
   backend:
     build:
       context: ./backend
-    command: uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload
+    command:
+      - uvicorn
+      - app.main:app
+      - --host
+      - 0.0.0.0
+      - --port
+      - "8000"
+      - --workers
+      - "${WEB_CONCURRENCY:-1}"
     environment:
+      APP_ENV: production
+      LOG_LEVEL: ${LOG_LEVEL:-INFO}
       DATABASE_URL: postgresql+psycopg://pdfagent:pdfagent@postgres:5432/pdfagent
       REDIS_URL: redis://redis:6379/0
       QDRANT_URL: http://qdrant:6333
@@ -160,21 +170,29 @@ services:
       GITHUB_CODE_SEARCH_ENABLED: ${GITHUB_CODE_SEARCH_ENABLED:-true}
       GITHUB_CODE_LOOKUP_LIMIT: ${GITHUB_CODE_LOOKUP_LIMIT:-3}
     volumes:
-      - ./backend:/app
       - app_data:/app/data
     ports:
       - "8000:8000"
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8000/api/v1/health', timeout=3).read()"]
+      interval: 15s
+      timeout: 5s
+      retries: 10
+      start_period: 20s
     depends_on:
       postgres:
         condition: service_healthy
       redis:
         condition: service_healthy
+    restart: unless-stopped
 
   worker:
     build:
       context: ./backend
     command: celery -A app.workers.celery_app:celery_app worker --loglevel=INFO --concurrency=2
     environment:
+      APP_ENV: production
+      LOG_LEVEL: ${LOG_LEVEL:-INFO}
       DATABASE_URL: postgresql+psycopg://pdfagent:pdfagent@postgres:5432/pdfagent
       REDIS_URL: redis://redis:6379/0
       QDRANT_URL: http://qdrant:6333
@@ -223,13 +241,19 @@ services:
       LLM_TIMEOUT_SECONDS: ${LLM_TIMEOUT_SECONDS:-60}
       RAG_MIN_SCORE: ${RAG_MIN_SCORE:-0.18}
     volumes:
-      - ./backend:/app
       - app_data:/app/data
+    healthcheck:
+      test: ["CMD-SHELL", "celery -A app.workers.celery_app:celery_app inspect ping --destination celery@$$HOSTNAME --timeout=5 | grep -q pong"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 20s
     depends_on:
       postgres:
         condition: service_healthy
       redis:
         condition: service_healthy
+    restart: unless-stopped
 
   beat:
     build:
@@ -239,7 +263,6 @@ services:
       REDIS_URL: redis://redis:6379/0
       ARXIV_REFRESH_INTERVAL_MINUTES: ${ARXIV_REFRESH_INTERVAL_MINUTES:-360}
     volumes:
-      - ./backend:/app
       - app_data:/app/data
     depends_on:
       redis:
@@ -263,7 +286,8 @@ services:
     ports:
       - "${FRONTEND_HOST_PORT:-3000}:3000"
     depends_on:
-      - backend
+      backend:
+        condition: service_healthy
 
 volumes:
   postgres_data:

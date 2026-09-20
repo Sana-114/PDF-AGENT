@@ -28,6 +28,8 @@
 
 默认 Compose 前端采用多阶段 Docker 构建。依赖层使用锁文件执行 `npm ci`，Builder 执行 Next.js 生产构建，最终 Runner 只包含 standalone 服务与静态资源，并以非 root 用户运行。生产容器不挂载源码、不包含开发期 HMR，也不会在请求过程中编译页面；需要热更新时才显式叠加 `docker-compose.dev.yml`。
 
+Backend、Celery Worker 与 Beat 同样以镜像内代码运行，只挂载共享 `app_data` 数据卷。Backend 使用显式 Uvicorn Worker 数量并暴露 HTTP 健康检查，Worker 通过定向 Celery Ping 检查消息消费链路；Frontend 必须等待 Backend healthy 后启动。开发 Override 才恢复源码挂载与 Uvicorn reload，从部署配置上隔离演示环境与开发环境。
+
 ## Agent-first 前端信息架构
 
 首页默认进入“科研 Agent”，把连续证据问答作为主任务，并在同一区域提供多文对比。其余能力不再纵向平铺，而是按用户目标收敛为五个一级任务区：

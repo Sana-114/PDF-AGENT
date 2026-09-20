@@ -1,4 +1,29 @@
 services:
+  backend:
+    command: uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload
+    environment:
+      APP_ENV: development
+    restart: "no"
+    volumes:
+      - ./backend:/app
+      - app_data:/app/data
+
+  worker:
+    environment:
+      APP_ENV: development
+    restart: "no"
+    volumes:
+      - ./backend:/app
+      - app_data:/app/data
+
+  beat:
+    environment:
+      APP_ENV: development
+    restart: "no"
+    volumes:
+      - ./backend:/app
+      - app_data:/app/data
+
   frontend:
     build:
       context: ./frontend
@@ -14,4 +39,5 @@ services:
       disable: true
 
 volumes:
+  app_data:
   frontend_node_modules:
