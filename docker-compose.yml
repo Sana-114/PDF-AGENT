@@ -4,11 +4,11 @@ services:
   postgres:
     image: postgres:17-alpine
     environment:
-      POSTGRES_DB: pdfagent
-      POSTGRES_USER: pdfagent
-      POSTGRES_PASSWORD: pdfagent
+      POSTGRES_DB: ${POSTGRES_DB:-pdfagent}
+      POSTGRES_USER: ${POSTGRES_USER:-pdfagent}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-pdfagent}
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U pdfagent"]
+      test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB}"]
       interval: 5s
       timeout: 5s
       retries: 10
@@ -42,8 +42,8 @@ services:
     image: minio/minio:latest
     command: server /data --console-address ":9001"
     environment:
-      MINIO_ROOT_USER: pdfagent
-      MINIO_ROOT_PASSWORD: change-me-in-production
+      MINIO_ROOT_USER: ${MINIO_ROOT_USER:-pdfagent}
+      MINIO_ROOT_PASSWORD: ${MINIO_ROOT_PASSWORD:-change-me-in-production}
     volumes:
       - minio_data:/data
     ports:
@@ -113,7 +113,7 @@ services:
     environment:
       APP_ENV: production
       LOG_LEVEL: ${LOG_LEVEL:-INFO}
-      DATABASE_URL: postgresql+psycopg://pdfagent:pdfagent@postgres:5432/pdfagent
+      DATABASE_URL: ${COMPOSE_DATABASE_URL:-postgresql+psycopg://pdfagent:pdfagent@postgres:5432/pdfagent}
       REDIS_URL: redis://redis:6379/0
       QDRANT_URL: http://qdrant:6333
       VECTOR_SEARCH_ENABLED: ${VECTOR_SEARCH_ENABLED:-true}
@@ -138,6 +138,7 @@ services:
       UPLOAD_DIR: /app/data/uploads
       PARSED_DIR: /app/data/parsed
       TRANSLATION_DIR: /app/data/translations
+      MAX_UPLOAD_MB: ${MAX_UPLOAD_MB:-200}
       MAX_CSV_MB: ${MAX_CSV_MB:-10}
       CELERY_TASK_ALWAYS_EAGER: "false"
       PARSE_BATCH_PAGES: ${PARSE_BATCH_PAGES:-25}
@@ -193,7 +194,7 @@ services:
     environment:
       APP_ENV: production
       LOG_LEVEL: ${LOG_LEVEL:-INFO}
-      DATABASE_URL: postgresql+psycopg://pdfagent:pdfagent@postgres:5432/pdfagent
+      DATABASE_URL: ${COMPOSE_DATABASE_URL:-postgresql+psycopg://pdfagent:pdfagent@postgres:5432/pdfagent}
       REDIS_URL: redis://redis:6379/0
       QDRANT_URL: http://qdrant:6333
       VECTOR_SEARCH_ENABLED: ${VECTOR_SEARCH_ENABLED:-true}

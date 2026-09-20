@@ -1,0 +1,86 @@
+x-json-logging: &json-logging
+  driver: json-file
+  options:
+    max-size: "10m"
+    max-file: "5"
+
+services:
+  postgres:
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB:?Set POSTGRES_DB in .env.production}
+      POSTGRES_USER: ${POSTGRES_USER:?Set POSTGRES_USER in .env.production}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?Set POSTGRES_PASSWORD in .env.production}
+    ports: !override []
+    logging: *json-logging
+
+  redis:
+    restart: unless-stopped
+    ports: !override []
+    logging: *json-logging
+
+  qdrant:
+    restart: unless-stopped
+    ports: !override []
+    logging: *json-logging
+
+  minio:
+    restart: unless-stopped
+    environment:
+      MINIO_ROOT_USER: ${MINIO_ROOT_USER:?Set MINIO_ROOT_USER in .env.production}
+      MINIO_ROOT_PASSWORD: ${MINIO_ROOT_PASSWORD:?Set MINIO_ROOT_PASSWORD in .env.production}
+    ports: !override []
+    logging: *json-logging
+
+  bge-embedding:
+    ports: !override []
+    logging: *json-logging
+
+  bge-reranker:
+    ports: !override []
+    logging: *json-logging
+
+  backend:
+    environment:
+      DATABASE_URL: ${COMPOSE_DATABASE_URL:?Set COMPOSE_DATABASE_URL in .env.production}
+      FRONTEND_ORIGIN: ${FRONTEND_ORIGIN:?Set FRONTEND_ORIGIN in .env.production}
+    ports: !override []
+    logging: *json-logging
+
+  worker:
+    environment:
+      DATABASE_URL: ${COMPOSE_DATABASE_URL:?Set COMPOSE_DATABASE_URL in .env.production}
+    logging: *json-logging
+
+  beat:
+    logging: *json-logging
+
+  frontend:
+    ports: !override []
+    logging: *json-logging
+
+  caddy:
+    image: caddy:2.11.4-alpine
+    restart: unless-stopped
+    environment:
+      PUBLIC_DOMAIN: ${PUBLIC_DOMAIN:?Set PUBLIC_DOMAIN in .env.production}
+      DEMO_USERNAME: ${DEMO_USERNAME:?Set DEMO_USERNAME in .env.production}
+      DEMO_PASSWORD_HASH: ${DEMO_PASSWORD_HASH:?Set DEMO_PASSWORD_HASH in .env.production}
+    ports:
+      - "80:80"
+      - "443:443"
+      - "443:443/udp"
+    volumes:
+      - ./deploy/Caddyfile:/etc/caddy/Caddyfile:ro
+      - caddy_data:/data
+      - caddy_config:/config
+    depends_on:
+      frontend:
+        condition: service_healthy
+      backend:
+        condition: service_healthy
+    logging: *json-logging
+
+volumes:
+  caddy_data:
+  caddy_config:

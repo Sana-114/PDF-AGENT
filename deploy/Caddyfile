@@ -1,0 +1,24 @@
+{$PUBLIC_DOMAIN} {
+	encode zstd gzip
+	log
+
+	header {
+		-Server
+		Referrer-Policy "strict-origin-when-cross-origin"
+		X-Content-Type-Options "nosniff"
+		X-Frame-Options "SAMEORIGIN"
+	}
+
+	basic_auth {
+		{$DEMO_USERNAME} {$DEMO_PASSWORD_HASH}
+	}
+
+	@api path /api/*
+	handle @api {
+		reverse_proxy backend:8000
+	}
+
+	handle {
+		reverse_proxy frontend:3000
+	}
+}

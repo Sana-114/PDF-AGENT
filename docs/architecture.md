@@ -41,6 +41,12 @@ Backend、Celery Worker 与 Beat 同样以镜像内代码运行，只挂载共�
 
 轻量模式叠加 `docker-compose.lite.yml`，显式覆盖 Backend 与 Worker 的检索 Provider，并停止已存在的 BGE 容器以释放内存；标准模式叠加 `.env.bge` 与 `local-bge` Profile，按需增加 GPU Override。模式切换不会删除命名卷或模型缓存。启动门禁会检查 Docker、端口、内存、选中镜像与 LLM 配置，运行门禁再核验核心服务、Celery Ping、前后端 HTTP、实际 Provider 签名和 BGE `/info`，避免“容器启动但仍在静默降级”被误认为标准模式成功。
 
+## 公网部署边界
+
+公网单机部署再叠加 `docker-compose.prod.yml`。该 Override 使用 Compose `!override` 移除所有基础宿主机端口，仅由 Caddy 发布 80/443；Caddy 在内部网络把 `/api/*` 转发到 Backend，其余请求转发到 Frontend，并负责自动 HTTPS、共享评审账号门禁和安全响应头。PostgreSQL、Redis、Qdrant、MinIO 与两个 BGE 服务均不可从宿主机端口直接访问。证书状态使用命名卷持久化，容器 JSON 日志设置滚动上限。
+
+生产环境通过被忽略的 `.env.production` 提供域名、数据库/MinIO 密码、评审账号哈希和 LLM Key。部署脚本先核对域名与前端编译期 API URL完全一致、数据库 URL 与服务凭据一致，并拒绝占位秘密。该 Basic Auth 只是比赛入口保护；应用数据库尚未包含 User/Owner 模型，因此多租户所有权与配额仍属于后续安全边界。
+
 ## Agent-first 前端信息架构
 
 首页默认进入“科研 Agent”，把连续证据问答作为主任务，并在同一区域提供多文对比。其余能力不再纵向平铺，而是按用户目标收敛为五个一级任务区：

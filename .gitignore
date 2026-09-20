@@ -1,5 +1,6 @@
 .env
 .env.bge
+.env.production
 .venv/
 __pycache__/
 *.py[cod]

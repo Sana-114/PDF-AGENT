@@ -250,6 +250,29 @@ docker compose --env-file .env.bge exec backend python scripts/check_bge_service
 
 模型保存在 `bge_embedding_cache` 与 `bge_reranker_cache` 命名卷中，重启无需重复下载。`HF_TOKEN` 对这两个公开模型不是必需的；如需配置，只写入被 Git 忽略的 `.env.bge`。详细排障和资源说明见 [`docs/local-bge.md`](docs/local-bge.md)。
 
+### 公网比赛演示部署
+
+公网部署使用独立的生产 Override，只发布 Caddy 的 80/443，数据库、Redis、Qdrant、MinIO、Backend、Frontend 与 BGE 均留在 Docker 内部网络。复制生产环境模板并在服务器本地填写域名、随机密码、新的 LLM Key 与评审账号密码哈希：
+
+```bash
+cp .env.production.example .env.production
+chmod 600 .env.production
+cp .env.bge.example .env.bge
+```
+
+Linux 服务器可通过一个入口启动、检查或停止 Lite、标准 CPU、标准 GPU 三种部署：
+
+```bash
+./scripts/deploy.sh lite start
+./scripts/deploy.sh standard start
+./scripts/deploy.sh standard-gpu start
+
+./scripts/deploy.sh lite status
+./scripts/deploy.sh lite stop
+```
+
+脚本会拒绝示例域名、`CHANGE_ME` 密码、不匹配的 HTTPS 地址、无效评审密码哈希和缺失的 DeepSeek Key，并在启动前执行 Compose 合并校验。Caddy 自动申请/续期证书，并以加密后的共享评审账号保护整个站点；该边缘账号是比赛演示门禁，不等同于应用级多用户所有权。完整服务器准备、DNS、安全组、更新与备份说明见 [公网部署指南](docs/public-deployment.md)。
+
 ## LLM 配置
 
 默认配置不需要任何 API Key：
@@ -568,6 +591,8 @@ Docker 默认前端已切换为 standalone 生产运行时，资源占用、静�
 Backend、Worker 与 Beat 的镜像内代码运行、健康检查、开发 Override 和一键诊断结果见 [生产 Backend 运行时验收](docs/production-backend-runtime-acceptance-2026-09-20.md)。
 
 轻量/标准双运行模式、一键切换、Provider 门禁及当前机器资源实测见 [双运行模式验收](docs/dual-runtime-modes-acceptance-2026-09-20.md)。
+
+生产 Compose 端口隔离、Caddy HTTPS、评审账号门禁、密钥预检和 Linux 部署入口见 [公网部署基线验收](docs/production-deployment-acceptance-2026-09-20.md)。
 
 ## 下一里程碑
 
