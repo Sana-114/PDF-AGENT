@@ -30,6 +30,17 @@
 
 Backend、Celery Worker 与 Beat 同样以镜像内代码运行，只挂载共享 `app_data` 数据卷。Backend 使用显式 Uvicorn Worker 数量并暴露 HTTP 健康检查，Worker 通过定向 Celery Ping 检查消息消费链路；Frontend 必须等待 Backend healthy 后启动。开发 Override 才恢复源码挂载与 Uvicorn reload，从部署配置上隔离演示环境与开发环境。
 
+## 双运行模式
+
+同一套生产编排可通过 `scripts/start.ps1` 切换两种资源档位，两者共用 PostgreSQL、Redis、Qdrant、MinIO、PDF/AST 数据卷和前后端镜像：
+
+| 模式 | Embedding | Reranker | 适用场景 |
+| --- | --- | --- | --- |
+| `lite` | 本地确定性 Hash-Ngram（384 维） | 关闭 | 首次启动、低资源电脑、离线功能演示 |
+| `standard` | TEI 托管的 BGE-M3（1024 维） | TEI 托管的 BGE Reranker | 比赛验收、语义检索与完整 RAG 演示 |
+
+轻量模式叠加 `docker-compose.lite.yml`，显式覆盖 Backend 与 Worker 的检索 Provider，并停止已存在的 BGE 容器以释放内存；标准模式叠加 `.env.bge` 与 `local-bge` Profile，按需增加 GPU Override。模式切换不会删除命名卷或模型缓存。启动门禁会检查 Docker、端口、内存、选中镜像与 LLM 配置，运行门禁再核验核心服务、Celery Ping、前后端 HTTP、实际 Provider 签名和 BGE `/info`，避免“容器启动但仍在静默降级”被误认为标准模式成功。
+
 ## Agent-first 前端信息架构
 
 首页默认进入“科研 Agent”，把连续证据问答作为主任务，并在同一区域提供多文对比。其余能力不再纵向平铺，而是按用户目标收敛为五个一级任务区：

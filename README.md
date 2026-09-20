@@ -116,12 +116,32 @@ scripts/            本地开发脚本
 
 要求：Docker Desktop 和 Docker Compose。
 
+推荐使用仓库内的运行模式脚本。轻量模式不会启动或下载 BGE 模型，适合首次体验、低内存电脑和功能演示：
+
 ```powershell
-Copy-Item .env.example .env
-docker compose up --build -d
+.\scripts\start.ps1 -Mode lite
 ```
 
-启动后访问：
+标准模式会启动 BGE-M3 Embedding 与 BGE Reranker；CPU 是默认推理后端，具备 NVIDIA Container Toolkit 的机器可选择 GPU：
+
+```powershell
+.\scripts\start.ps1 -Mode standard
+.\scripts\start.ps1 -Mode standard -Gpu
+```
+
+脚本会在缺失时由模板创建 `.env`/`.env.bge`，检查 Docker、端口、可用内存、LLM 配置和所选 TEI 镜像，并等待前端、后端、Worker 与检索服务全部健康。重复启动且代码未改变时可添加 `-NoBuild`；该参数只跳过本项目镜像构建，首次使用的外部 TEI 镜像和模型权重仍需下载。
+
+查看状态或停止服务：
+
+```powershell
+.\scripts\status.ps1 -Mode lite
+.\scripts\status.ps1 -Mode standard
+.\scripts\stop.ps1
+```
+
+停止脚本默认保留容器、数据库、PDF、向量数据和模型缓存；确需删除容器与网络时使用 `-RemoveContainers`，命名卷仍会保留。也可直接运行 `docker compose up --build -d` 使用基础生产编排。
+
+启动后访问（实际前端端口以脚本输出和 `.env` 为准）：
 
 - Web：http://localhost:3000
 - API 文档：http://localhost:8000/docs
@@ -130,16 +150,16 @@ docker compose up --build -d
 
 默认 Compose 使用生产镜像运行前后端。前端在镜像构建期执行 `next build`，运行容器只启动 Next.js standalone 服务；Backend 使用固定 Worker 数量运行 Uvicorn，Backend、Celery Worker 与 Beat 均不挂载源码。修改源码后需要重新执行 `docker compose up --build -d`。
 
-运行状态可用一条命令检查；若 `.env` 将前端端口改为 3200，请同步传入参数：
+底层诊断也可单独运行；若 `.env` 将前端端口改为 3200，请同步传入参数：
 
 ```powershell
 .\scripts\check_runtime.ps1 -FrontendPort 3200
 ```
 
-标准 BGE 模式增加严格检查：
+标准 BGE 模式增加运行模式与 Provider 严格检查：
 
 ```powershell
-.\scripts\check_runtime.ps1 -FrontendPort 3200 -RequireBge
+.\scripts\check_runtime.ps1 -FrontendPort 3200 -Mode standard
 ```
 
 需要前端热更新时，显式叠加开发配置：
@@ -546,6 +566,8 @@ Transformer v1 的 Table 1/2 无框表格恢复、表格去重和公式 LaTeX �
 Docker 默认前端已切换为 standalone 生产运行时，资源占用、静态资源加载和真实按钮点击结果见 [生产前端运行时验收](docs/production-frontend-runtime-acceptance-2026-09-18.md)。
 
 Backend、Worker 与 Beat 的镜像内代码运行、健康检查、开发 Override 和一键诊断结果见 [生产 Backend 运行时验收](docs/production-backend-runtime-acceptance-2026-09-20.md)。
+
+轻量/标准双运行模式、一键切换、Provider 门禁及当前机器资源实测见 [双运行模式验收](docs/dual-runtime-modes-acceptance-2026-09-20.md)。
 
 ## 下一里程碑
 

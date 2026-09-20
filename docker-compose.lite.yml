@@ -1,0 +1,16 @@
+services:
+  backend:
+    environment:
+      VECTOR_SEARCH_ENABLED: "true"
+      EMBEDDING_PROVIDER: hash
+      EMBEDDING_MODEL: hash-ngram-v1
+      EMBEDDING_DIMENSIONS: "384"
+      RERANKER_PROVIDER: none
+
+  worker:
+    environment:
+      VECTOR_SEARCH_ENABLED: "true"
+      EMBEDDING_PROVIDER: hash
+      EMBEDDING_MODEL: hash-ngram-v1
+      EMBEDDING_DIMENSIONS: "384"
+      RERANKER_PROVIDER: none

@@ -1,6 +1,10 @@
 param(
     [int]$FrontendPort = 3000,
     [int]$BackendPort = 8000,
+    [int]$BgeEmbeddingPort = 8001,
+    [int]$BgeRerankerPort = 8002,
+    [ValidateSet("any", "lite", "standard")]
+    [string]$Mode = "any",
     [switch]$RequireBge
 )
 
@@ -70,14 +74,34 @@ if ($runningServices -contains "worker") {
     }
 }
 
-if ($RequireBge) {
+$providerJson = docker compose exec -T backend python -c "import json; from app.core.config import settings; print(json.dumps({'embedding': settings.embedding_provider, 'reranker': settings.reranker_provider}))" 2>&1
+if ($LASTEXITCODE -ne 0) {
+    $failures.Add("Unable to read the active retrieval providers from Backend.")
+}
+else {
+    try {
+        $providers = ($providerJson | Select-Object -Last 1) | ConvertFrom-Json
+        Write-Host "[ok] retrieval providers: embedding=$($providers.embedding), reranker=$($providers.reranker)"
+        if ($Mode -eq "lite" -and ($providers.embedding -ne "hash" -or $providers.reranker -ne "none")) {
+            $failures.Add("Lite mode expected embedding=hash and reranker=none.")
+        }
+        if ($Mode -eq "standard" -and ($providers.embedding -ne "openai-compatible" -or $providers.reranker -ne "tei")) {
+            $failures.Add("Standard mode expected embedding=openai-compatible and reranker=tei.")
+        }
+    }
+    catch {
+        $failures.Add("Backend returned invalid retrieval provider metadata.")
+    }
+}
+
+if ($RequireBge -or $Mode -eq "standard") {
     foreach ($service in @("bge-embedding", "bge-reranker")) {
         if ($runningServices -notcontains $service) {
             $failures.Add("Required BGE service '$service' is not running.")
         }
     }
-    Test-HttpEndpoint -Name "BGE embedding" -Uri "http://localhost:8001/info"
-    Test-HttpEndpoint -Name "BGE reranker" -Uri "http://localhost:8002/info"
+    Test-HttpEndpoint -Name "BGE embedding" -Uri "http://localhost:$BgeEmbeddingPort/info"
+    Test-HttpEndpoint -Name "BGE reranker" -Uri "http://localhost:$BgeRerankerPort/info"
 }
 
 if ($failures.Count -gt 0) {
