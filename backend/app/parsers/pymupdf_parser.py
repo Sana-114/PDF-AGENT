@@ -533,6 +533,20 @@ class PyMuPDFParser:
         cleaned = " ".join(title.split())
         if cleaned.casefold() in {"untitled", Path(path).stem.casefold()}:
             return None
+        # Publisher PDFs sometimes retain the TeX/DVI build filename as their
+        # title metadata (for example ``pedregosa11a.dvi``). It is not a human
+        # title, so let the first-page layout heuristic supply the real one.
+        metadata_suffix = Path(cleaned).suffix.casefold()
+        if " " not in cleaned and metadata_suffix in {
+            ".dvi",
+            ".doc",
+            ".docx",
+            ".latex",
+            ".pdf",
+            ".ps",
+            ".tex",
+        }:
+            return None
         return cleaned
 
     @staticmethod

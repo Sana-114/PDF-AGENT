@@ -207,6 +207,39 @@ def test_title_guess_ignores_vertical_arxiv_identifier() -> None:
     assert PyMuPDFParser._guess_title_from_blocks(blocks) == "Attention Is All You Need"
 
 
+def test_text_block_extraction_does_not_split_small_caps_spans() -> None:
+    page_dict = {
+        "blocks": [
+            {
+                "type": 0,
+                "bbox": [50, 40, 500, 80],
+                "lines": [
+                    {
+                        "spans": [
+                            {"text": "A", "size": 17},
+                            {"text": "N", "size": 14},
+                            {"text": " I", "size": 17},
+                            {"text": "MAGE IS", "size": 14},
+                            {"text": " W", "size": 17},
+                            {"text": "ORTH", "size": 14},
+                        ]
+                    }
+                ],
+            }
+        ]
+    }
+
+    assert extract_text_blocks(page_dict, 1)[0].text == "AN IMAGE IS WORTH"
+
+
+def test_metadata_title_rejects_typesetting_build_filename() -> None:
+    assert PyMuPDFParser._clean_metadata_title("pedregosa11a.dvi", "paper.pdf") is None
+    assert (
+        PyMuPDFParser._clean_metadata_title("Scikit-learn: Machine Learning in Python", "paper.pdf")
+        == "Scikit-learn: Machine Learning in Python"
+    )
+
+
 def test_people_extraction_uses_geometry_and_splits_combined_author_blocks() -> None:
     blocks = [
         Block("p1-b1", "title", "Attention Is All You Need", [210, 100, 400, 118], 0),

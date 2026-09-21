@@ -30,6 +30,56 @@
       "expect": {"min_pages": 15, "min_text_chars": 25000, "title_contains": "Retrieval"}
     },
     {
+      "id": "gpt3-v4",
+      "filename": "2005.14165v4.pdf",
+      "source": "https://arxiv.org/pdf/2005.14165v4.pdf",
+      "sha256": "97fd272f1fdfc18677462d0292f5fbf26ca86b4d1b485c2dba03269b643a0e83",
+      "purpose": ["long-paper", "cross-document-rag", "dense-tables", "appendices", "parameter-evolution"],
+      "expect": {"min_pages": 70, "min_text_chars": 100000, "min_extracted_text_chars": 200000, "min_authors": 8, "min_outline_nodes": 40, "min_tables": 2, "min_figures": 20, "min_formulas": 8, "title_contains": "Language Models"}
+    },
+    {
+      "id": "vit-v2",
+      "filename": "2010.11929v2.pdf",
+      "source": "https://arxiv.org/pdf/2010.11929v2.pdf",
+      "sha256": "8ce7b83971a14508ca711a27c875c9b6914c4f6767cf3150fb1ca6c07aa056d6",
+      "purpose": ["cross-domain-rag", "figures", "tables", "appendices", "vision-transformer"],
+      "expect": {"min_pages": 20, "min_text_chars": 30000, "min_extracted_text_chars": 60000, "min_authors": 5, "min_outline_nodes": 12, "min_tables": 8, "min_figures": 20, "min_formulas": 8, "title_contains": "Image is Worth"}
+    },
+    {
+      "id": "resnet-cvpr-2016",
+      "filename": "resnet-cvpr-2016.pdf",
+      "source": "https://openaccess.thecvf.com/content_cvpr_2016/papers/He_Deep_Residual_Learning_CVPR_2016_paper.pdf",
+      "sha256": "51b5de45eb0b558b19c3affe49503cff50cb170a32de602983d6e2ec286942a7",
+      "purpose": ["cvpr-ieee-layout", "two-column", "figures", "dense-tables", "references"],
+      "expect": {"min_pages": 8, "min_text_chars": 15000, "min_extracted_text_chars": 40000, "min_outline_nodes": 10, "min_tables": 10, "min_formulas": 15, "min_references": 2, "title_contains": "Deep Residual"}
+    },
+    {
+      "id": "ddpm-neurips-2020",
+      "filename": "ddpm-neurips-2020.pdf",
+      "source": "https://proceedings.neurips.cc/paper_files/paper/2020/file/4c5bcfec8584af0d967f1ab10179ca4b-Paper.pdf",
+      "sha256": "cb471d4c0063cad56f8d74b6a72fa7dad1677f8423a0a81349487a63bb58d3de",
+      "purpose": ["neurips-layout", "two-column", "figures", "formulas", "references"],
+      "expect": {"min_pages": 10, "min_text_chars": 20000, "min_extracted_text_chars": 40000, "min_outline_nodes": 15, "min_tables": 1, "min_figures": 20, "min_formulas": 40, "min_references": 50, "title_contains": "Denoising Diffusion"}
+    },
+    {
+      "id": "scikit-learn-jmlr-2011",
+      "filename": "scikit-learn-jmlr-2011.pdf",
+      "source": "https://www.jmlr.org/papers/volume12/pedregosa11a/pedregosa11a.pdf",
+      "sha256": "1c338a6b3c6c1dcafda3990a8098b8b50dd6c77616361396fb75f6822c6e0778",
+      "purpose": ["jmlr-layout", "many-authors", "institutions", "figures", "references"],
+      "expect": {"min_pages": 6, "min_text_chars": 10000, "min_extracted_text_chars": 14000, "min_outline_nodes": 6, "title_contains": "Scikit-learn"}
+    },
+    {
+      "id": "nucleotide-transformer-nature-2025",
+      "filename": "nucleotide-transformer-nature-2025.pdf",
+      "source": "https://people.stat.sc.edu/hoyen/STAT718/Papers/Nucleotide_Transformer.pdf",
+      "sha256": "a5510f4b4b0aaf4817140a3b279d69c3a1b163bd986c5282294b9c65c6644b02",
+      "canonical_source": "https://www.nature.com/articles/s41592-024-02523-z.pdf",
+      "source_note": "The publisher PDF requires an interactive authorization cookie for scripted clients; this byte-identical-layout public university mirror is used for reproducible download.",
+      "purpose": ["nature-layout", "single-column", "figures", "tables", "biomedical", "references"],
+      "expect": {"min_pages": 18, "min_text_chars": 30000, "min_extracted_text_chars": 100000, "min_outline_nodes": 20, "min_tables": 10, "min_figures": 20, "min_formulas": 20, "title_contains": "Nucleotide Transformer"}
+    },
+    {
       "id": "understanding-deep-learning-2026",
       "filename": "UnderstandingDeepLearning_02_09_26_C.pdf",
       "source": "https://github.com/udlbook/udlbook/releases/download/v5.0.3/UnderstandingDeepLearning_02_09_26_C.pdf",

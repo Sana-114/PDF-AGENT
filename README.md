@@ -464,7 +464,7 @@ docker compose exec backend python scripts/evaluate_retrieval.py `
 
 ### PDF 回归语料
 
-公开测试文件不提交到 Git。网络可用时，在根目录运行以下命令下载固定版本的 Transformer v1/v7、BERT、RAG 和 500 页以上的 Understanding Deep Learning：
+公开测试文件不提交到 Git。网络可用时，在根目录运行以下命令下载固定版本的 Transformer v1/v7、BERT、RAG、GPT-3、ViT、ResNet、DDPM、Scikit-learn、Nucleotide Transformer 和 500 页以上的 Understanding Deep Learning：
 
 ```powershell
 .\scripts\fetch_pdf_corpus.ps1
@@ -472,6 +472,8 @@ docker compose exec backend python scripts/evaluate_retrieval.py `
 .\scripts\fetch_pdf_corpus.ps1 -Proxy http://127.0.0.1:7890
 # 只下载本轮需要的 Transformer 两个版本：
 .\scripts\fetch_pdf_corpus.ps1 -PaperIds transformer-v1,transformer-v7
+# 只下载 6 篇跨出版商泛化样本：
+.\scripts\fetch_pdf_corpus.ps1 -PaperIds gpt3-v4,vit-v2,resnet-cvpr-2016,ddpm-neurips-2020,scikit-learn-jmlr-2011,nucleotide-transformer-nature-2025
 ```
 
 语料默认保存在 `output/pdf/regression-corpus/`。若已有一篇真实 PDF，可在 backend 容器内派生无文本层扫描版和精确 541 页压力版：
@@ -521,7 +523,7 @@ docker compose exec backend python scripts/evaluate_pdf_corpus.py `
   --strict
 ```
 
-验收清单位于 `docs/pdf-regression-corpus.json`，覆盖页数、文本层、OCR 输出量、标题、结构节点、耗时和 Python 峰值内存。下载 URL 均固定到论文版本；二进制 PDF 和动态报告由 `.gitignore` 排除。
+验收清单位于 `docs/pdf-regression-corpus.json`，覆盖页数、文本层、OCR 输出量、标题、结构节点、耗时和 Python 峰值内存。下载 URL 均固定到论文版本，已登记的文件还会执行 SHA-256 校验；二进制 PDF 和动态报告由 `.gitignore` 排除。2026-09-21 的 6 篇跨出版商样本、标题解析修复、结构指标与已知边界见 [跨出版商 PDF 语料验收](docs/diverse-pdf-corpus-acceptance-2026-09-21.md)。
 
 复现比赛指定的“先上传 v7、再上传 v1”版本判定，可在后端环境执行：
 

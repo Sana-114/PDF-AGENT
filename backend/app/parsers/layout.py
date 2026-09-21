@@ -130,8 +130,12 @@ def extract_text_blocks(page_dict: dict[str, Any], page_number: int) -> list[Raw
             continue
         lines = raw_block.get("lines", [])
         spans = [span for line in lines for span in line.get("spans", [])]
+        # PyMuPDF spans already preserve the spaces that precede/follow a font
+        # change. Adding another separator corrupts small-caps titles such as
+        # ``AN IMAGE`` into ``A N I MAGE`` because every change in glyph size
+        # becomes an artificial word boundary.
         line_texts = [
-            " ".join(str(span.get("text", "")).strip() for span in line.get("spans", []))
+            "".join(str(span.get("text", "")) for span in line.get("spans", [])).strip()
             for line in lines
         ]
         text = _normalize_text_spacing(" ".join(" ".join(line_texts).split()))
