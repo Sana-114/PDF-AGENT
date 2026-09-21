@@ -377,7 +377,7 @@ export default function DataVisualizationWorkbench() {
             <option value="radar3d">三维雷达图</option>
           </select>
         </label>
-        <button disabled={!file || loading} type="submit">{loading ? "正在分析…" : "生成图表"}</button>
+        <button disabled={!file || loading} type="submit">{loading ? "正在计算…" : "绘制图表"}</button>
       </form>
       {error && <p className="csv-error">{error}</p>}
       {result && (

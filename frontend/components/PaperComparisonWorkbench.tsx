@@ -223,7 +223,7 @@ export default function PaperComparisonWorkbench({
             </div>
 
             <details className="comparison-trace">
-              <summary>查看逐篇检索与生成轨迹</summary>
+              <summary>查看逐篇检索轨迹</summary>
               {result.trace.map((step, index) => (
                 <div key={`${step.skill}-${index}`}>
                   <code>{step.skill}</code>

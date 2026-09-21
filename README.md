@@ -588,6 +588,8 @@ Transformer v1 的 Table 1/2 无框表格恢复、表格去重和公式 LaTeX �
 
 首页的 Agent-first 信息架构、五类任务入口、原有深链兼容和响应式布局见 [Agent-first 前端界面验收](docs/agent-first-interface-acceptance-2026-09-18.md)。
 
+2026-09-21 进一步将首页收敛为论文阅读与研究工作台，移除营销式 AI 文案、英文装饰标签和深色功能堆叠，并完成桌面/窄屏复核；详见 [研究工作台界面优化验收](docs/research-ui-polish-2026-09-21.md)。
+
 Docker 默认前端已切换为 standalone 生产运行时，资源占用、静态资源加载和真实按钮点击结果见 [生产前端运行时验收](docs/production-frontend-runtime-acceptance-2026-09-18.md)。
 
 Backend、Worker 与 Beat 的镜像内代码运行、健康检查、开发 Override 和一键诊断结果见 [生产 Backend 运行时验收](docs/production-backend-runtime-acceptance-2026-09-20.md)。

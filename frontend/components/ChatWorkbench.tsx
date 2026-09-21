@@ -115,7 +115,7 @@ export default function ChatWorkbench({
     setQuestion("");
     setPendingQuestion(cleanQuestion);
     setPreview(EMPTY_PREVIEW);
-    setStreamStatus("正在创建会话…");
+    setStreamStatus("正在建立检索范围…");
     try {
       let conversation = active;
       if (!conversation) {
@@ -127,7 +127,7 @@ export default function ChatWorkbench({
       const turn = await streamConversationMessage(conversation.id, cleanQuestion, {
         onStatus: (payload) => setStreamStatus(payload.message),
         onStart: (payload) => {
-          setStreamStatus("正在组织可追溯回答…");
+          setStreamStatus("正在整理回答…");
           setPreview((current) => ({ ...current, model: payload.model || payload.provider }));
         },
         onDelta: (text) =>
@@ -184,7 +184,7 @@ export default function ChatWorkbench({
         <div className="chat-history-list">
           {loading && <p className="chat-empty">正在读取历史…</p>}
           {!loading && conversations.length === 0 && (
-            <p className="chat-empty">尚无历史会话，向文献提出第一个问题吧。</p>
+            <p className="chat-empty">暂无记录。</p>
           )}
           {conversations.map((conversation) => (
             <div
@@ -212,8 +212,8 @@ export default function ChatWorkbench({
       <section className="chat-main">
         <header className="chat-main-heading">
           <div>
-            <strong>{active?.title || "新的科研问答"}</strong>
-            <small>{activeScope || "发送首条问题时固定检索范围"}</small>
+            <strong>{active?.title || "新问题"}</strong>
+            <small>{activeScope || "首次提问时确定检索范围"}</small>
           </div>
           <span>{agentLabel}</span>
         </header>
@@ -221,8 +221,8 @@ export default function ChatWorkbench({
         <div className="chat-transcript" ref={transcriptRef}>
           {!active?.messages.length && !pendingQuestion && (
             <div className="chat-welcome">
-              <strong>基于原文证据进行连续追问</strong>
-              <p>系统会保留最近对话帮助理解“它”“第二个”等指代，但每一轮事实仍会重新检索 PDF 并生成独立引用。</p>
+              <strong>在已解析论文中检索</strong>
+              <p>输入具体问题。回答会附上页码、原文片段和定位信息。</p>
             </div>
           )}
           {active?.messages.map((message) => (
@@ -253,10 +253,10 @@ export default function ChatWorkbench({
           )}
           {sending && (
             <article className="chat-message assistant streaming">
-              <div className="chat-avatar">AI</div>
+              <div className="chat-avatar">答</div>
               <div className="chat-bubble">
                 <small>{preview.model || agentLabel} · {streamStatus || "正在处理…"}</small>
-                <p>{preview.content || "正在查找可验证证据…"}<span className="stream-cursor" /></p>
+                <p>{preview.content || "正在检索原文…"}<span className="stream-cursor" /></p>
                 <ClaimList
                   claims={preview.claims}
                   evidence={preview.evidence}
@@ -294,10 +294,10 @@ export default function ChatWorkbench({
               value={question}
             />
             <button disabled={sending || !question.trim()} type="submit">
-              {sending ? "回答生成中…" : "发送问题"}
+              {sending ? "检索中…" : "检索并回答"}
             </button>
           </div>
-          <small>对话上下文不作为证据；所有事实必须引用本轮检索到的 PDF 原文。</small>
+          <small>对话只用于理解上下文；事实依据始终来自本轮检索到的 PDF 原文。</small>
         </form>
       </section>
     </div>
@@ -313,11 +313,11 @@ function ChatMessage({
 }) {
   return (
     <article className={`chat-message ${message.role}`}>
-      <div className="chat-avatar">{message.role === "user" ? "你" : "AI"}</div>
+      <div className="chat-avatar">{message.role === "user" ? "问" : "答"}</div>
       <div className="chat-bubble">
         {message.role === "assistant" && (
           <small>
-            {message.model || message.provider || "Agent"} · {message.insufficient_evidence ? "证据不足" : "证据约束回答"}
+            {message.model || message.provider || "文献检索"} · {message.insufficient_evidence ? "证据不足" : "已核对原文"}
           </small>
         )}
         <p>{message.content}</p>

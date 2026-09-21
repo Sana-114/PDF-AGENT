@@ -80,38 +80,38 @@ const WORKSPACE_AREAS: Array<{
   label: string;
   description: string;
 }> = [
-  { id: "agent", icon: "AI", label: "科研 Agent", description: "问答与多文推理" },
-  { id: "library", icon: "库", label: "知识库", description: "上传、解析与版本" },
-  { id: "discover", icon: "寻", label: "论文发现", description: "检索、追踪与推荐" },
-  { id: "insights", icon: "析", label: "研究分析", description: "图谱、综述与前沿" },
-  { id: "copilot", icon: "创", label: "创作工具", description: "写作、翻译与制图" },
+  { id: "agent", icon: "01", label: "文献问答", description: "检索原文与多文比较" },
+  { id: "library", icon: "02", label: "文献库", description: "上传、解析与版本" },
+  { id: "discover", icon: "03", label: "查找论文", description: "检索、追踪与推荐" },
+  { id: "insights", icon: "04", label: "研究脉络", description: "引用、综述与方向" },
+  { id: "copilot", icon: "05", label: "研究产出", description: "写作、翻译与制图" },
 ];
 
 const WORKSPACE_META: Record<WorkspaceArea, { eyebrow: string; title: string; description: string }> = {
   agent: {
-    eyebrow: "EVIDENCE-FIRST AGENT",
-    title: "从问题出发，而不是从功能列表出发",
-    description: "连续追问、多论文对比与每条结论的原文证据都集中在这里。",
+    eyebrow: "文献问答",
+    title: "在论文中查找答案",
+    description: "选择检索范围；回答附带页码、原文片段和定位信息。",
   },
   library: {
-    eyebrow: "KNOWLEDGE BASE",
-    title: "管理 Agent 可以信任的研究资料",
-    description: "上传、解析、检查版本差异，并随时回到 PDF 原文。",
+    eyebrow: "文献库",
+    title: "管理 PDF 与解析记录",
+    description: "上传论文，查看解析进度、版本差异和原文。",
   },
   discover: {
-    eyebrow: "PAPER DISCOVERY",
-    title: "从可信来源扩展本地文献库",
-    description: "按题名或标识检索论文，持续追踪 arXiv 研究动态。",
+    eyebrow: "论文检索",
+    title: "查找与追踪论文",
+    description: "按题名、DOI 或 arXiv ID 检索，并保存开放 PDF。",
   },
   insights: {
-    eyebrow: "RESEARCH INTELLIGENCE",
-    title: "从文献集合中提取结构与研究脉络",
-    description: "构建局域引用图谱，生成可追溯综述并梳理 Future Work。",
+    eyebrow: "研究脉络",
+    title: "梳理引用与研究进展",
+    description: "查看局域引用关系，整理综述和待研究方向。",
   },
   copilot: {
-    eyebrow: "ACADEMIC COPILOT",
-    title: "把研究材料转化为可编辑学术产物",
-    description: "论文框架、学术翻译、数据图表与架构图按需启用。",
+    eyebrow: "研究产出",
+    title: "整理可编辑的研究材料",
+    description: "处理论文框架、学术翻译、数据图表和架构图。",
   },
 };
 
@@ -153,7 +153,7 @@ export default function Home() {
   const [dragging, setDragging] = useState(false);
   const [notice, setNotice] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
-  const [agentLabel, setAgentLabel] = useState("正在检测 Agent");
+  const [agentLabel, setAgentLabel] = useState("正在连接服务");
   const [reader, setReader] = useState<ReaderState | null>(null);
   const [referenceExplorer, setReferenceExplorer] = useState<ReferenceExplorerDocument | null>(null);
   const [referenceResults, setReferenceResults] = useState<ReferenceResolveResponse | null>(null);
@@ -224,8 +224,8 @@ export default function Home() {
   useEffect(() => {
     void refresh();
     void getAgentStatus()
-      .then((status) => setAgentLabel(status.model || status.provider))
-      .catch(() => setAgentLabel("Agent 离线"));
+      .then((status) => setAgentLabel(status.model ? `${status.model} 可用` : "服务可用"))
+      .catch(() => setAgentLabel("服务不可用"));
     void refreshRecommendationData();
     const timer = window.setInterval(() => void refresh(true), 3000);
     const recommendationTimer = window.setInterval(() => void refreshRecommendationData(), 15000);
@@ -452,7 +452,7 @@ export default function Home() {
     setError(null);
     try {
       await refreshArxivSubscription(subscriptionId);
-      setNotice("arXiv 刷新任务已提交，推荐列表将自动更新。 ");
+      setNotice("正在更新 arXiv 结果，稍后会显示在列表中。");
       window.setTimeout(() => void refreshRecommendationData(), 1200);
     } catch (refreshError) {
       setError(refreshError instanceof Error ? refreshError.message : "订阅刷新失败");
@@ -512,7 +512,7 @@ export default function Home() {
       .filter((document) => document.status === "ready")
       .map((document) => document.id);
     if (!readyDocumentIds.length) {
-      setError("至少需要一篇已解析文献才能生成证据综述。");
+      setError("请先解析至少一篇文献，再整理证据综述。");
       return;
     }
     setGeneratingResearchReview(true);
@@ -520,7 +520,7 @@ export default function Home() {
     try {
       setResearchReview(await generateResearchReview(readyDocumentIds));
     } catch (reviewError) {
-      setError(reviewError instanceof Error ? reviewError.message : "自动综述生成失败");
+      setError(reviewError instanceof Error ? reviewError.message : "综述整理失败");
     } finally {
       setGeneratingResearchReview(false);
     }
@@ -546,7 +546,7 @@ export default function Home() {
         language: writingLanguage,
       }));
     } catch (outlineError) {
-      setError(outlineError instanceof Error ? outlineError.message : "论文框架生成失败");
+      setError(outlineError instanceof Error ? outlineError.message : "论文框架整理失败");
     } finally {
       setGeneratingWritingOutline(false);
     }
@@ -684,31 +684,31 @@ export default function Home() {
           <span className="brand-mark">P</span>
           <span>PaperPilot</span>
         </a>
-        <div className="topbar-purpose">证据驱动的科研智能体</div>
+        <div className="topbar-purpose">论文阅读与研究工作台</div>
         <div className="system-pill"><span /> {agentLabel}</div>
       </header>
 
       <section className="hero agent-first-hero">
         <div>
-          <p className="eyebrow">YOUR RESEARCH AGENT</p>
-          <h1>先问 Agent，<br /><em>再核对原文。</em></h1>
-          <p className="hero-copy">把论文交给 Agent 完成解析、检索、对比与写作辅助。回答中的每个关键结论都保留页码和坐标，可一键返回 PDF。</p>
+          <p className="eyebrow">论文阅读 · 检索 · 写作</p>
+          <h1>论文阅读，<br /><em>从原文到结论。</em></h1>
+          <p className="hero-copy">上传论文后，可以检索原文、比较多篇研究、整理综述和写作框架。回答附页码与原文位置。</p>
           <div className="hero-actions">
-            <button onClick={() => openWorkspace("agent")} type="button">开始证据问答</button>
-            <button onClick={() => openWorkspace("library")} type="button">添加研究资料</button>
+            <button onClick={() => openWorkspace("agent")} type="button">进入文献问答</button>
+            <button onClick={() => openWorkspace("library")} type="button">上传 PDF</button>
           </div>
         </div>
         <div className="metric-row">
           <div><strong>{documents.filter((item) => item.status === "ready").length}</strong><span>可检索文献</span></div>
           <div><strong>{processingCount}</strong><span>处理中</span></div>
-          <div><strong>{agentLabel === "Agent 离线" ? "—" : "●"}</strong><span>{agentLabel}</span></div>
+          <div><strong>{agentLabel === "服务不可用" ? "—" : "●"}</strong><span>{agentLabel}</span></div>
         </div>
       </section>
 
       <div className="workspace-shell" id="agent-workspace">
         <aside className="workspace-rail" aria-label="工作区导航">
           <div className="workspace-rail-heading">
-            <span>WORKSPACE</span>
+            <span>研究工作台</span>
             <strong>选择任务</strong>
           </div>
           {WORKSPACE_AREAS.map((area) => (
@@ -721,12 +721,12 @@ export default function Home() {
             >
               <span>{area.icon}</span>
               <div>
-                <strong>{area.label}{area.id === "agent" && <em>核心</em>}</strong>
+                <strong>{area.label}</strong>
                 <small>{area.description}</small>
               </div>
             </button>
           ))}
-          <p>功能按研究任务分区，未选中的工作台不会占用页面空间。</p>
+          <p>一次只显示当前任务，减少无关信息干扰。</p>
         </aside>
 
         <section className="workspace agent-workspace">
@@ -769,7 +769,7 @@ export default function Home() {
                 <button aria-pressed={copilotTool === "diagram"} onClick={() => selectCopilotTool("diagram")} type="button">架构图</button>
               </>
             )}
-            {activeArea === "library" && <span>上传与版本管理集中在同一视图</span>}
+            {activeArea === "library" && <span>上传、解析进度与版本记录</span>}
           </div>
 
           {notice && <div className="notice success">{notice}</div>}
@@ -785,8 +785,8 @@ export default function Home() {
         >
           <div className="upload-icon">↑</div>
           <div>
-            <h2>{uploading ? "正在上传…" : "添加研究资料"}</h2>
-            <p>拖入单篇或多篇 PDF，最大 200 MB / 文件</p>
+            <h2>{uploading ? "正在上传…" : "上传 PDF"}</h2>
+            <p>可同时选择多篇，每个文件不超过 200 MB</p>
           </div>
           <button disabled={uploading} onClick={() => fileInputRef.current?.click()}>
             选择 PDF
@@ -801,8 +801,8 @@ export default function Home() {
         >
           <div className="discovery-intro">
             <div>
-              <p className="eyebrow">SCHOLARLY DISCOVERY</p>
-              <h2 id="paper-discovery-title">从学术索引直接入库</h2>
+              <p className="eyebrow">论文检索</p>
+              <h2 id="paper-discovery-title">从学术索引查找论文</h2>
             </div>
             <p>输入完整题名、DOI 或 arXiv ID。服务端只下载可信来源的开放 PDF。</p>
           </div>
@@ -866,8 +866,8 @@ export default function Home() {
           id="recommendations"
         >
           <div className="section-heading">
-            <div><p className="eyebrow">ARXIV RADAR</p><h2>研究动态追踪</h2></div>
-            <span className="evidence-promise">每 6 小时自动刷新 · 代码论文优先</span>
+            <div><p className="eyebrow">论文追踪</p><h2>arXiv 研究动态</h2></div>
+            <span className="evidence-promise">每 6 小时更新 · 优先显示附代码论文</span>
           </div>
           <form className="feed-form" onSubmit={createFeed}>
             <label>
@@ -1003,20 +1003,20 @@ export default function Home() {
           id="citation-graph"
         >
           <div className="section-heading">
-            <div><p className="eyebrow">LOCAL CITATION TOPOLOGY</p><h2>局域引用图谱</h2></div>
+            <div><p className="eyebrow">引用关系</p><h2>局域引用图谱</h2></div>
             <button
               className="ghost"
               disabled={buildingCitationGraph || documents.filter((item) => item.status === "ready").length < 2}
               onClick={() => void generateCitationGraph()}
               type="button"
             >
-              {buildingCitationGraph ? "正在计算…" : citationGraph ? "重新构建" : "生成图谱"}
+              {buildingCitationGraph ? "正在计算…" : citationGraph ? "重新计算" : "计算图谱"}
             </button>
           </div>
           {!citationGraph && (
             <div className="citation-graph-placeholder">
-              <strong>从已解析文献中发现真实互引关系</strong>
-              <span>题名与 arXiv ID 本地匹配，不调用 LLM 猜测；至少需要两篇已就绪论文。</span>
+              <strong>查看已解析文献之间的引用关系</strong>
+              <span>按题名与 arXiv ID 匹配，不推测缺失关系；至少需要两篇论文。</span>
             </div>
           )}
           {citationGraph && (
@@ -1048,19 +1048,19 @@ export default function Home() {
           id="research-review"
         >
           <div className="section-heading">
-            <div><p className="eyebrow">EVIDENCE REVIEW</p><h2>自动综述与前沿探索</h2></div>
+            <div><p className="eyebrow">研究综述</p><h2>证据综述与前沿方向</h2></div>
             <button
               className="ghost"
               disabled={generatingResearchReview || !documents.some((item) => item.status === "ready")}
               onClick={() => void generateReview()}
               type="button"
             >
-              {generatingResearchReview ? "正在提取证据…" : researchReview ? "重新生成" : "生成综述"}
+              {generatingResearchReview ? "正在提取证据…" : researchReview ? "重新整理" : "整理综述"}
             </button>
           </div>
           {!researchReview && (
             <div className="research-review-placeholder">
-              <strong>从原文证据生成研究脉络</strong>
+              <strong>从原文证据梳理研究脉络</strong>
               <span>提取摘要、贡献、Future Work 和较新论文进展，并保留页码锚点。</span>
             </div>
           )}
@@ -1088,8 +1088,8 @@ export default function Home() {
           id="writing-workbench"
         >
           <div className="section-heading">
-            <div><p className="eyebrow">ACADEMIC WRITING COPILOT</p><h2>无幻觉论文框架</h2></div>
-            <span className="evidence-promise">References 仅来自本地文献与来源元数据</span>
+            <div><p className="eyebrow">写作框架</p><h2>基于文献整理论文框架</h2></div>
+            <span className="evidence-promise">参考文献仅取自文献库与来源元数据</span>
           </div>
           <form className="writing-idea-form" onSubmit={generateOutline}>
             <label>
@@ -1115,7 +1115,7 @@ export default function Home() {
               disabled={generatingWritingOutline || writingIdea.trim().length < 8}
               type="submit"
             >
-              {generatingWritingOutline ? "正在检索证据…" : "生成论文框架"}
+              {generatingWritingOutline ? "正在检索证据…" : "整理论文框架"}
             </button>
           </form>
           {writingOutline && (
@@ -1142,7 +1142,7 @@ export default function Home() {
           id="academic-translation"
         >
           <div className="section-heading">
-            <div><p className="eyebrow">ACADEMIC TRANSLATION</p><h2>中英学术翻译与完整性校验</h2></div>
+            <div><p className="eyebrow">学术翻译</p><h2>中英翻译与完整性校验</h2></div>
             <span className="evidence-promise">公式、引用、代码、数字与指定术语受保护</span>
           </div>
           <AcademicTranslationWorkbench />
@@ -1154,8 +1154,8 @@ export default function Home() {
           id="data-visualization"
         >
           <div className="section-heading">
-            <div><p className="eyebrow">SCIENTIFIC DATA COPILOT</p><h2>CSV 数据可视化与学术图注</h2></div>
-            <span className="evidence-promise">结论由实际统计值生成，不推断因果</span>
+            <div><p className="eyebrow">数据图表</p><h2>CSV 可视化与学术图注</h2></div>
+            <span className="evidence-promise">图注基于实际统计值，不推断因果</span>
           </div>
           <DataVisualizationWorkbench />
         </section>
@@ -1166,8 +1166,8 @@ export default function Home() {
           id="architecture-diagram"
         >
           <div className="section-heading">
-            <div><p className="eyebrow">ARCHITECTURE COPILOT</p><h2>科研架构拓扑与多格式脚本</h2></div>
-            <span className="evidence-promise">一份拓扑 · 四种可复现输出</span>
+            <div><p className="eyebrow">架构图</p><h2>科研架构与多格式脚本</h2></div>
+            <span className="evidence-promise">同一结构，导出四种脚本</span>
           </div>
           <ArchitectureDiagramWorkbench />
         </section>
@@ -1178,8 +1178,8 @@ export default function Home() {
           id="paper-comparison"
         >
           <div className="section-heading">
-            <div><p className="eyebrow">CROSS-PAPER REASONING</p><h2>跨论文对比与冲突识别</h2></div>
-            <span className="evidence-promise">逐篇均衡检索 · 来源隔离 · 冲突保守判定</span>
+            <div><p className="eyebrow">文献比较</p><h2>跨论文对比</h2></div>
+            <span className="evidence-promise">逐篇检索 · 区分来源 · 标记差异</span>
           </div>
           <PaperComparisonWorkbench
             documents={documents}
@@ -1198,8 +1198,8 @@ export default function Home() {
           id="qa"
         >
           <div className="section-heading">
-            <div><p className="eyebrow">GROUNDED CONVERSATIONS</p><h2>与文献连续对话</h2></div>
-            <span className="evidence-promise">多轮理解 · 每轮重新取证 · SSE 输出</span>
+            <div><p className="eyebrow">文献问答</p><h2>连续追问</h2></div>
+            <span className="evidence-promise">每轮检索原文 · 回答附证据</span>
           </div>
           <ChatWorkbench
             agentLabel={agentLabel}
@@ -1215,7 +1215,7 @@ export default function Home() {
 
         <div className="library-panel" hidden={activeArea !== "library"}>
           <div className="section-heading">
-            <div><p className="eyebrow">LIBRARY</p><h2>最近文献</h2></div>
+            <div><p className="eyebrow">文献库</p><h2>最近上传</h2></div>
             <button className="ghost" onClick={() => void refresh()}>刷新</button>
           </div>
 
@@ -1352,8 +1352,8 @@ export default function Home() {
           >
             <header>
               <div>
-                <p className="eyebrow">REFERENCE DRILL-DOWN</p>
-                <h2 id="reference-explorer-title">被引论文批量下钻</h2>
+                <p className="eyebrow">参考文献</p>
+                <h2 id="reference-explorer-title">批量查找被引论文</h2>
                 <span>{referenceExplorer.title}</span>
               </div>
               <button

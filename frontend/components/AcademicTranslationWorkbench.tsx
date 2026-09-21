@@ -279,7 +279,7 @@ export default function AcademicTranslationWorkbench() {
       setDraftId(null);
       setDraftTitle(defaultDraftTitle(documentType));
       setDraftStatus("draft");
-      setNotice("译文已生成，可直接编辑、保存或完成审校。");
+      setNotice("翻译完成，可继续编辑、保存或审校。");
     } catch (requestError) {
       setResult(null);
       setTranslatedSource("");
@@ -448,7 +448,7 @@ export default function AcademicTranslationWorkbench() {
           }
           type="submit"
         >
-          {loading ? "正在分段翻译与校验…" : "生成学术译文"}
+          {loading ? "正在分段翻译与校验…" : "翻译并校验"}
         </button>
       </form>
       {error && <p className="academic-translation-error">{error}</p>}
@@ -483,12 +483,12 @@ export default function AcademicTranslationWorkbench() {
           </div>
           <div className="academic-translation-result">
             <article>
-              <header><span>SOURCE</span><small>{translatedSource.length} 字符</small></header>
+              <header><span>原文</span><small>{translatedSource.length} 字符</small></header>
               <p>{translatedSource}</p>
             </article>
             <article>
               <header>
-                <span>ACADEMIC TRANSLATION · EDITABLE</span>
+                <span>译文 · 可编辑</span>
                 <div>
                   <button onClick={() => void copyText("translation")} type="button">{copied === "translation" ? "已复制" : "复制译文"}</button>
                   <button onClick={() => void copyText("bilingual")} type="button">{copied === "bilingual" ? "已复制" : "复制对照"}</button>

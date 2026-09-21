@@ -115,7 +115,7 @@ export default function ArchitectureDiagramWorkbench() {
       setActiveFormat(response.scripts[0]?.format || "mermaid");
     } catch (requestError) {
       setDiagram(null);
-      setError(requestError instanceof Error ? requestError.message : "架构图生成失败");
+      setError(requestError instanceof Error ? requestError.message : "架构图处理失败");
     } finally {
       setLoading(false);
     }
@@ -153,7 +153,7 @@ export default function ArchitectureDiagramWorkbench() {
           <small>每行描述一条路径；重复节点与连接会自动合并，名称不会交给模型改写。</small>
         </label>
         <button disabled={loading || !idea.trim() || !title.trim()} type="submit">
-          {loading ? "正在生成…" : "生成四种脚本"}
+          {loading ? "正在整理…" : "整理四种脚本"}
         </button>
       </form>
       {error && <p className="diagram-error">{error}</p>}
@@ -163,7 +163,7 @@ export default function ArchitectureDiagramWorkbench() {
           <div className="architecture-result-grid">
             <article className="architecture-preview-card">
               <header>
-                <div><span>CANONICAL GRAPH</span><h3>{diagram.title}</h3></div>
+                <div><span>标准拓扑</span><h3>{diagram.title}</h3></div>
                 <small>{diagram.nodes.length} 节点 · {diagram.edges.length} 连接</small>
               </header>
               <DiagramPreview diagram={diagram} />

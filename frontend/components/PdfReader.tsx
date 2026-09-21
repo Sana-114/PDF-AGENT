@@ -622,7 +622,7 @@ export default function PdfReader({
       >
         <header className="pdf-reader-header">
           <div>
-            <span className="pdf-reader-kicker">PDF READER</span>
+            <span className="pdf-reader-kicker">PDF 阅读器</span>
             <h2 title={title}>{title}</h2>
           </div>
           <div className="pdf-reader-controls" aria-label="PDF 阅读控制">
@@ -722,7 +722,7 @@ export default function PdfReader({
             {sidebarTab === "outline" ? (
               <>
                 <div className="pdf-outline-heading">
-                  <div><span>DOCUMENT MAP</span><strong>文档目录</strong></div>
+                  <div><span>页面结构</span><strong>文档目录</strong></div>
                   <small>{flatOutline.length} 个标题</small>
                 </div>
                 {outlineLoading && <div className="pdf-outline-message">正在读取标题树…</div>}
@@ -743,7 +743,7 @@ export default function PdfReader({
             ) : (
               <>
                 <div className="pdf-outline-heading">
-                  <div><span>CITATION MAP</span><strong>参考文献</strong></div>
+                  <div><span>引用位置</span><strong>参考文献</strong></div>
                   <small>{mentions.length} 处正文引用</small>
                 </div>
                 {referencesLoading && <div className="pdf-outline-message">正在建立引用链接…</div>}
@@ -817,7 +817,7 @@ export default function PdfReader({
           <aside className="pdf-bilingual-pane" ref={bilingualRef}>
             <header>
               <div>
-                <span>ALIGNED READING</span>
+                <span>对照阅读</span>
                 <strong>第 {pageNumber} 页译文</strong>
               </div>
               <div className="pdf-bilingual-actions">
@@ -926,7 +926,7 @@ export default function PdfReader({
         {selectionDraft && (translationLoading || translation || translationError) && (
           <aside className="pdf-translation-panel" aria-live="polite">
             <header>
-              <div><span>ACADEMIC TRANSLATION</span><strong>选区翻译</strong></div>
+              <div><span>学术翻译</span><strong>选区翻译</strong></div>
               <button aria-label="关闭翻译" onClick={closeTranslation} type="button">×</button>
             </header>
             <blockquote>{selectionDraft.text}</blockquote>
