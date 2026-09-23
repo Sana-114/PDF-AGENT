@@ -43,14 +43,44 @@ class ComparisonPaperRead(BaseModel):
     title: str
     evidence_ids: list[str]
     evidence_count: int
+    candidate_count: int = 0
+    evidence_page_count: int = 0
+    source_types: list[str] = Field(default_factory=list)
     coverage: Literal["supported", "no_evidence"]
 
 
 class ComparisonClaimRead(BaseModel):
     text: str
+    dimension: str = "综合"
     relation: ComparisonRelation
     evidence_ids: list[str]
     document_ids: list[str]
+
+
+class ComparisonMatrixCellRead(BaseModel):
+    document_id: str
+    title: str
+    status: Literal["cited", "not_cited"]
+    evidence_ids: list[str] = Field(default_factory=list)
+    summary: str = ""
+
+
+class ComparisonMatrixRowRead(BaseModel):
+    dimension: str
+    relation: ComparisonRelation
+    statement: str
+    cells: list[ComparisonMatrixCellRead]
+
+
+class ComparisonAuditRead(BaseModel):
+    generated_claim_count: int = 0
+    accepted_claim_count: int = 0
+    rejected_claim_count: int = 0
+    published_claim_citation_coverage: float = Field(default=0.0, ge=0.0, le=1.0)
+    evidence_utilization: float = Field(default=0.0, ge=0.0, le=1.0)
+    referenced_document_count: int = 0
+    cross_document_claim_count: int = 0
+    rejection_reasons: list[str] = Field(default_factory=list)
 
 
 class ComparisonStatsRead(BaseModel):
@@ -67,8 +97,10 @@ class CrossPaperComparisonRead(BaseModel):
     answer: str
     papers: list[ComparisonPaperRead]
     claims: list[ComparisonClaimRead]
+    matrix: list[ComparisonMatrixRowRead] = Field(default_factory=list)
     evidence: list[EvidenceAnchor]
     stats: ComparisonStatsRead
+    audit: ComparisonAuditRead = Field(default_factory=ComparisonAuditRead)
     insufficient_evidence: bool
     provider: str
     model: str | None = None

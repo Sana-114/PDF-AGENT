@@ -73,8 +73,9 @@ PaperPilot 是一个以原文证据为核心的科研助手 Agent 系统。本�
 - 持久化多轮问答会话、历史恢复与删除，可在创建会话时固定单篇或全库检索范围；
 - 最近对话只用于消解“它”“第二个”等指代，每一轮事实仍重新检索 PDF，历史回答不会被当作证据；
 - 问答界面通过 SSE 逐步呈现状态、回答片段、Claims、Evidence 和执行轨迹，并支持逐条 Claim 跳回原文；
-- 支持选择 2–6 篇论文进行证据对比，每篇独立执行等额召回与重排，避免长文档垄断候选；
-- 跨论文 Claim 区分一致、差异、冲突、单来源和待确认，冲突必须同时引用至少两篇文献的原文；
+- 支持选择 2–6 篇论文进行证据对比，每篇独立扩大候选池，再按跨页、章节和证据类型进行等额去重取样，避免长文档或重复段落垄断上下文；
+- 跨论文 Claim 区分一致、差异、冲突、单来源和待确认；发布答案仅从通过 Evidence ID 白名单及数值原文核验的 Claim 重建，不直接展示模型自由总述；
+- 以“对比维度 × 论文 × 原文证据”矩阵展示结论，并公开候选/入选数量、引用覆盖率、证据利用率和被拒声明原因；
 - 对“某篇没有提到”的情况保守处理，不把信息缺失自动判定为观点冲突；
 - 版本化离线 RAG 评测集，输出 Case Pass Rate、Evidence Recall、MRR、锚点有效率和 P50/P95 延迟；
 - 内置 `search_evidence`、`get_document_outline`、`get_document_structure`、`get_document_table` Skills 和可扩展注册表；
@@ -586,6 +587,8 @@ Transformer v1 的 Table 1/2 无框表格恢复、表格去重和公式 LaTeX �
 ```
 
 脚本会叠加 `.env` 与 `.env.bge`、真实探测两个 BGE 服务、显式重建当前公开论文索引，并强制要求每条返回证据均经过 `reranked`，因此服务故障后静默退回 BM25 不会被误报为 BGE 验收通过。2026-09-18 的 Top-1、延迟、110 个 Point 索引核对和 5/5 DeepSeek 实测见 [BGE + DeepSeek 完整 RAG 验收](docs/bge-deepseek-grounded-acceptance-2026-09-18.md)。
+
+跨论文对比现采用扩大候选池后的逐文献多样化取样，并在服务端重建最终答案；数值门禁、未知 Evidence ID 拒绝、结论—论文—原文矩阵及 ResNet/ViT/DDPM 三篇真实解析语料烟测见 [第 61 阶段多文 RAG 验收](docs/multidoc-grounding-acceptance-2026-09-23.md)。
 
 首页的 Agent-first 信息架构、五类任务入口、原有深链兼容和响应式布局见 [Agent-first 前端界面验收](docs/agent-first-interface-acceptance-2026-09-18.md)。
 

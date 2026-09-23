@@ -512,14 +512,44 @@ export interface ComparisonPaper {
   title: string;
   evidence_ids: string[];
   evidence_count: number;
+  candidate_count: number;
+  evidence_page_count: number;
+  source_types: string[];
   coverage: "supported" | "no_evidence";
 }
 
 export interface ComparisonClaim {
   text: string;
+  dimension: string;
   relation: ComparisonRelation;
   evidence_ids: string[];
   document_ids: string[];
+}
+
+export interface ComparisonMatrixCell {
+  document_id: string;
+  title: string;
+  status: "cited" | "not_cited";
+  evidence_ids: string[];
+  summary: string;
+}
+
+export interface ComparisonMatrixRow {
+  dimension: string;
+  relation: ComparisonRelation;
+  statement: string;
+  cells: ComparisonMatrixCell[];
+}
+
+export interface ComparisonAudit {
+  generated_claim_count: number;
+  accepted_claim_count: number;
+  rejected_claim_count: number;
+  published_claim_citation_coverage: number;
+  evidence_utilization: number;
+  referenced_document_count: number;
+  cross_document_claim_count: number;
+  rejection_reasons: string[];
 }
 
 export interface CrossPaperComparisonResponse {
@@ -527,6 +557,7 @@ export interface CrossPaperComparisonResponse {
   answer: string;
   papers: ComparisonPaper[];
   claims: ComparisonClaim[];
+  matrix: ComparisonMatrixRow[];
   evidence: EvidenceAnchor[];
   stats: {
     agreement_count: number;
@@ -536,6 +567,7 @@ export interface CrossPaperComparisonResponse {
     unclassified_count: number;
     supported_document_count: number;
   };
+  audit: ComparisonAudit;
   insufficient_evidence: boolean;
   provider: string;
   model: string | null;

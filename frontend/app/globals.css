@@ -532,10 +532,35 @@ h1 em { color: var(--green); font-style: italic; }
 .comparison-coverage strong, .comparison-coverage small { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .comparison-coverage strong { font-size: 9px; }
 .comparison-coverage small { color: var(--muted); font-size: 8px; }
+.comparison-audit { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 7px; margin-top: 8px; }
+.comparison-audit span { display: grid; gap: 2px; padding: 8px 9px; color: var(--muted); background: #f7f6ef; border: 1px solid var(--line); border-radius: 7px; font-size: 8px; }
+.comparison-audit strong { color: var(--ink); font: 16px Georgia, serif; }
 .comparison-answer { margin-top: 14px; padding: 16px; background: #f7f6ef; border-left: 3px solid var(--green); }
 .comparison-answer p { margin: 0; white-space: pre-wrap; font-family: Georgia, "Noto Serif SC", serif; font-size: 13px; line-height: 1.75; }
 .comparison-warnings { margin-top: 9px; padding: 8px 10px; color: #76540a; background: #fff4d8; border-radius: 7px; }
 .comparison-warnings p { margin: 3px 0; font-size: 9px; line-height: 1.5; }
+.comparison-matrix { margin-top: 14px; }
+.comparison-matrix > header { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; margin-bottom: 7px; }
+.comparison-matrix > header strong { font-size: 11px; }
+.comparison-matrix > header small { color: var(--muted); font-size: 8px; }
+.comparison-matrix > div { overflow-x: auto; border: 1px solid var(--line); border-radius: 8px; }
+.comparison-matrix table { width: 100%; min-width: 720px; border-collapse: collapse; background: white; table-layout: fixed; }
+.comparison-matrix th, .comparison-matrix td { width: 210px; padding: 9px; border-right: 1px solid var(--line); border-bottom: 1px solid var(--line); vertical-align: top; text-align: left; }
+.comparison-matrix tr:last-child th, .comparison-matrix tr:last-child td { border-bottom: 0; }
+.comparison-matrix th:last-child, .comparison-matrix td:last-child { border-right: 0; }
+.comparison-matrix thead th { color: var(--muted); background: #f3f2eb; font-size: 8px; }
+.comparison-matrix tbody th { background: #faf9f4; }
+.comparison-matrix tbody th > span { display: inline-block; margin-bottom: 5px; padding: 2px 5px; color: #53615a; background: #e8ece9; border-radius: 99px; font-size: 7px; }
+.comparison-matrix tbody th > span.relation-agreement { color: var(--green); background: #e4f0e8; }
+.comparison-matrix tbody th > span.relation-difference { color: #26748f; background: #e4f0f4; }
+.comparison-matrix tbody th > span.relation-conflict { color: var(--orange); background: #fae8df; }
+.comparison-matrix tbody th strong, .comparison-matrix tbody th small { display: block; }
+.comparison-matrix tbody th strong { font-size: 9px; }
+.comparison-matrix tbody th small { margin-top: 5px; color: var(--muted); font-size: 8px; font-weight: 400; line-height: 1.45; }
+.comparison-matrix td p { max-height: 70px; overflow: hidden; margin: 0 0 7px; color: #3d4742; font-size: 8px; line-height: 1.45; }
+.comparison-matrix td > span { color: #9a9e98; font-size: 8px; }
+.comparison-matrix td > div { display: flex; flex-wrap: wrap; gap: 4px; }
+.comparison-matrix td button { padding: 3px 5px; color: var(--green); background: #e4f0e8; border: 1px solid #c8dfd0; border-radius: 4px; font-size: 7px; cursor: pointer; }
 .comparison-claims { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 9px; margin-top: 13px; }
 .comparison-claims article { min-width: 0; padding: 12px; background: white; border: 1px solid var(--line); border-top: 3px solid #9aa49f; border-radius: 8px; }
 .comparison-claims article.relation-agreement { border-top-color: var(--green); }
@@ -1241,6 +1266,7 @@ footer { padding: 28px; color: var(--muted); border-top: 1px solid var(--line); 
   .comparison-form-actions { align-items: stretch; flex-direction: column; }
   .comparison-form-actions > button { width: 100%; }
   .comparison-claims { grid-template-columns: 1fr; }
+  .comparison-audit { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .comparison-result-heading { align-items: flex-start; flex-direction: column; }
   .chat-workbench { width: 100%; max-width: 100%; grid-template-columns: minmax(0, 1fr); }
   .chat-history { border-right: 0; border-bottom: 1px solid var(--line); }

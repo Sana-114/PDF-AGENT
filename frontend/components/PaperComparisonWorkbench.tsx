@@ -179,9 +179,30 @@ export default function PaperComparisonWorkbench({
                 <div className={paper.coverage} key={paper.document_id}>
                   <span>{paper.coverage === "supported" ? "✓" : "!"}</span>
                   <strong>{paper.title}</strong>
-                  <small>{paper.evidence_count} 条强证据</small>
+                  <small>
+                    {paper.candidate_count} 条候选 → {paper.evidence_count} 条证据 · {paper.evidence_page_count} 页
+                  </small>
                 </div>
               ))}
+            </div>
+
+            <div className="comparison-audit">
+              <span>
+                <strong>{result.audit.accepted_claim_count}/{result.audit.generated_claim_count}</strong>
+                声明通过核验
+              </span>
+              <span>
+                <strong>{Math.round(result.audit.published_claim_citation_coverage * 100)}%</strong>
+                发布声明引用覆盖
+              </span>
+              <span>
+                <strong>{result.audit.cross_document_claim_count}</strong>
+                跨文献结论
+              </span>
+              <span>
+                <strong>{Math.round(result.audit.evidence_utilization * 100)}%</strong>
+                证据利用率
+              </span>
             </div>
 
             <article className="comparison-answer">
@@ -194,11 +215,71 @@ export default function PaperComparisonWorkbench({
               </div>
             )}
 
+            {result.matrix.length > 0 && (
+              <section className="comparison-matrix">
+                <header>
+                  <strong>结论—论文—原文矩阵</strong>
+                  <small>每个单元格只展示该论文实际被引用的证据</small>
+                </header>
+                <div>
+                  <table>
+                    <thead>
+                      <tr>
+                        <th>对比维度</th>
+                        {result.papers.map((paper) => (
+                          <th key={paper.document_id}>{paper.title}</th>
+                        ))}
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {result.matrix.map((row, rowIndex) => (
+                        <tr key={`${row.dimension}-${rowIndex}`}>
+                          <th>
+                            <span className={`relation-${row.relation}`}>
+                              {RELATION_LABELS[row.relation]}
+                            </span>
+                            <strong>{row.dimension}</strong>
+                            <small>{row.statement}</small>
+                          </th>
+                          {row.cells.map((cell) => (
+                            <td className={cell.status} key={cell.document_id}>
+                              {cell.status === "not_cited" ? (
+                                <span>本结论未引用该论文</span>
+                              ) : (
+                                <>
+                                  <p>{cell.summary}</p>
+                                  <div>
+                                    {cell.evidence_ids.map((evidenceId) => {
+                                      const evidence = evidenceById.get(evidenceId);
+                                      return (
+                                        <button
+                                          disabled={!evidence}
+                                          key={evidenceId}
+                                          onClick={() => evidence && onOpenEvidence(evidence)}
+                                          type="button"
+                                        >
+                                          {evidenceId} · p.{evidence?.page_number}
+                                        </button>
+                                      );
+                                    })}
+                                  </div>
+                                </>
+                              )}
+                            </td>
+                          ))}
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              </section>
+            )}
+
             <div className="comparison-claims">
               {result.claims.map((claim, index) => (
                 <article className={`relation-${claim.relation}`} key={`${claim.text}-${index}`}>
                   <header>
-                    <span>{RELATION_LABELS[claim.relation]}</span>
+                    <span>{claim.dimension} · {RELATION_LABELS[claim.relation]}</span>
                     <small>{claim.document_ids.length} 个来源</small>
                   </header>
                   <p>{claim.text}</p>
