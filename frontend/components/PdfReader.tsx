@@ -124,7 +124,7 @@ function ReferencePanel({
               title={reference.text}
               type="button"
             >
-              <span><strong>[{reference.label}]</strong><small>第 {reference.page_number} 页</small></span>
+              <span><strong>{reference.label.startsWith("author-year-") ? "文献" : `[${reference.label}]`}</strong><small>第 {reference.page_number} 页</small></span>
               <p>{reference.text}</p>
             </button>
             <div className="pdf-citation-locations">

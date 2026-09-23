@@ -51,9 +51,10 @@ PaperPilot 是一个以原文证据为核心的科研助手 Agent 系统。本�
 - Celery 后台解析和状态跟踪；
 - 长文档按默认 25 页分批解析，页面分片与进度 manifest 原子落盘，失败后从最近完整批次恢复；
 - PyMuPDF 版式感知解析，输出页码、文本块、字体、坐标、栏位和稳定阅读顺序；
-- 抽取标题、作者、机构、摘要和一/二/三级层级目录；
+- 按行级几何抽取标题、跨栏/跨页作者、机构、摘要和一/二/三级层级目录；
 - 抽取有框矢量表格及图注引导的无框表格，并保守续接跨页表格，输出行、单元格、Markdown、分段页码与 BBox 锚点；
-- 识别嵌入图片区域、公式文本和保守规范化 LaTeX 候选、参考文献条目与附录节点；
+- 识别嵌入图片及图注约束的矢量图区域，合并密集小图网格，提取公式文本和保守规范化 LaTeX 候选；
+- 逐条解析数字、字母 BibTeX 键及作者—年份式 References，保留页码、Block ID 和 BBox；数字/字母正文标记支持双向跳转且不伪造书目编号；
 - 自动区分原生文本、扫描图像和混合 PDF，并对低文本页执行中英文 OCR；
 - 从正文识别 arXiv ID/版本并生成紧凑语义指纹；
 - 对同一 arXiv 或高相似标题文献生成版本提醒；
@@ -523,7 +524,7 @@ docker compose exec backend python scripts/evaluate_pdf_corpus.py `
   --strict
 ```
 
-验收清单位于 `docs/pdf-regression-corpus.json`，覆盖页数、文本层、OCR 输出量、标题、结构节点、耗时和 Python 峰值内存。下载 URL 均固定到论文版本，已登记的文件还会执行 SHA-256 校验；二进制 PDF 和动态报告由 `.gitignore` 排除。2026-09-21 的 6 篇跨出版商样本、标题解析修复、结构指标与已知边界见 [跨出版商 PDF 语料验收](docs/diverse-pdf-corpus-acceptance-2026-09-21.md)。
+验收清单位于 `docs/pdf-regression-corpus.json`，覆盖页数、文本层、OCR 输出量、标题、结构节点、内容金标、坐标锚点、耗时和 Python 峰值内存。下载 URL 均固定到论文版本，已登记的文件还会执行 SHA-256 校验；二进制 PDF 和动态报告由 `.gitignore` 排除。2026-09-21 的 6 篇跨出版商样本、标题解析修复、结构指标与已知边界见 [跨出版商 PDF 语料验收](docs/diverse-pdf-corpus-acceptance-2026-09-21.md)；作者/机构、References、矢量图和图块分组的后续内容级验收见 [第 60 阶段验收](docs/academic-metadata-layout-acceptance-2026-09-23.md)。
 
 复现比赛指定的“先上传 v7、再上传 v1”版本判定，可在后端环境执行：
 

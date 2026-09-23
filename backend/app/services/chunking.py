@@ -190,14 +190,17 @@ def _append_structured_drafts(
 
     for reference in parsed.get("references", []):
         label = str(reference.get("label") or "?")
+        is_author_year = label.startswith("author-year-")
+        display_label = "作者—年份" if is_author_year else f"[{label}]"
+        text_prefix = "" if is_author_year else f"[{label}] "
         reference_id = str(reference.get("reference_id", f"ref-{label}"))
         node_ids = [reference_id, *map(str, reference.get("block_ids", []))]
         append(
             page_number=int(reference.get("page_number", 1)),
             node_ids=list(dict.fromkeys(node_ids)),
             bbox=_valid_bbox(reference.get("bbox")),
-            section=f"参考文献 · [{label}]",
-            text=f"[{label}] {reference.get('text', '')}",
+            section=f"参考文献 · {display_label}",
+            text=f"{text_prefix}{reference.get('text', '')}",
         )
 
 

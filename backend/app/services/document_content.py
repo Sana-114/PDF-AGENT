@@ -7,7 +7,7 @@ from typing import Any
 from app.services.storage import storage
 
 CITATION_GROUP = re.compile(
-    r"\[(\d{1,4}(?:\s*(?:,|;|[-–—])\s*\d{1,4})*)\]"
+    r"\[(?:(\d{1,4}(?:\s*(?:,|;|[-–—])\s*\d{1,4})*)|([A-Za-z][A-Za-z0-9+._:-]{0,31}))\]"
 )
 REFERENCE_RANGE = re.compile(r"^(\d{1,4})\s*[-–—]\s*(\d{1,4})$")
 
@@ -30,14 +30,13 @@ def reference_links(
     parsed: dict[str, Any],
 ) -> tuple[list[dict[str, Any]], list[dict[str, Any]]]:
     references = [
-        item for item in parsed.get("references", [])
-        if isinstance(item, dict) and str(item.get("label", "")).isdigit()
+        item
+        for item in parsed.get("references", [])
+        if isinstance(item, dict) and item.get("label")
     ]
     reference_labels = {str(item["label"]) for item in references}
     reference_block_ids = {
-        str(block_id)
-        for item in references
-        for block_id in item.get("block_ids", [])
+        str(block_id) for item in references for block_id in item.get("block_ids", [])
     }
     mentions: list[dict[str, Any]] = []
     for page in parsed.get("pages", []):
@@ -50,14 +49,15 @@ def reference_links(
                 continue
             text = str(block.get("text", ""))
             for match_index, match in enumerate(CITATION_GROUP.finditer(text), start=1):
-                for label in _citation_labels(match.group(1)):
+                labels = [match.group(2)] if match.group(2) else _citation_labels(match.group(1))
+                for label in labels:
+                    if label.startswith("author-year-"):
+                        continue
                     if label not in reference_labels:
                         continue
                     mentions.append(
                         {
-                            "citation_id": (
-                                f"cite-{page_number}-{block_id}-{match_index}-{label}"
-                            ),
+                            "citation_id": (f"cite-{page_number}-{block_id}-{match_index}-{label}"),
                             "label": label,
                             "page_number": page_number,
                             "block_id": block_id,

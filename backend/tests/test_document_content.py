@@ -1,6 +1,27 @@
 from app.services.document_content import outline_items, page_text_segments, reference_links
 
 
+def test_reference_links_exposes_author_year_but_only_links_real_bracket_keys():
+    parsed = {
+        "references": [
+            {"label": "AB+20", "block_ids": ["r1"]},
+            {"label": "author-year-2", "block_ids": ["r2"]},
+        ],
+        "pages": [
+            {
+                "page_number": 1,
+                "blocks": [
+                    {"block_id": "b1", "text": "Prior work [AB+20], [2], [author-year-2]."},
+                    {"block_id": "r1", "text": "Bibliography [AB+20]."},
+                ],
+            }
+        ],
+    }
+    references, mentions = reference_links(parsed)
+    assert len(references) == 2
+    assert [m["label"] for m in mentions] == ["AB+20"]
+
+
 def test_outline_items_preserves_nested_document_ast() -> None:
     nested = [
         {
@@ -128,8 +149,6 @@ def test_page_text_segments_preserve_block_alignment_and_enforce_budget() -> Non
 
     segments, truncated = page_text_segments(parsed, 3, max_characters=10)
 
-    assert segments == [
-        {"block_id": "p3-b1", "bbox": [1, 2, 3, 4], "source_text": "Heading"}
-    ]
+    assert segments == [{"block_id": "p3-b1", "bbox": [1, 2, 3, 4], "source_text": "Heading"}]
     assert truncated is True
     assert page_text_segments(parsed, 9) == ([], False)

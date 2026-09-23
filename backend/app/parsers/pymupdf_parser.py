@@ -26,13 +26,16 @@ from app.parsers.layout import (
     extract_formulas,
     extract_references,
     extract_text_blocks,
+    is_figure_caption,
     is_probable_section_heading,
+    is_table_caption,
     make_figure_nodes,
     make_table_node,
     nearest_caption,
     order_page_blocks,
     snapshot_table,
 )
+from app.parsers.people import extract_front_matter_people
 from app.parsers.table_stitching import (
     is_unlabelled_snapshot_continuation,
     stitch_cross_page_tables,
@@ -44,7 +47,7 @@ class PyMuPDFParser:
     """Layout-aware local parser with page and bounding-box provenance."""
 
     name = "pymupdf-layout"
-    version = fitz.VersionBind
+    version = f"{fitz.VersionBind}-layout60"
 
     def parse(
         self,
@@ -121,9 +124,7 @@ class PyMuPDFParser:
                 batch_payloads = memory_batches
                 warnings = checkpoint_warnings
 
-            raw_pages, page_sizes, page_images, page_tables = self._merge_batches(
-                batch_payloads
-            )
+            raw_pages, page_sizes, page_images, page_tables = self._merge_batches(batch_payloads)
             self._recover_unlabelled_table_continuations(
                 document,
                 raw_pages=raw_pages,
@@ -164,7 +165,9 @@ class PyMuPDFParser:
 
             tables = stitch_cross_page_tables(tables, pages)
 
-            authors, affiliations = extract_first_page_people(pages[0].blocks if pages else [])
+            authors, affiliations = extract_front_matter_people(raw_pages, title)
+            if not authors:
+                authors, affiliations = extract_first_page_people(pages[0].blocks if pages else [])
             outline = build_outline(pages)
             text_parts = [block.text for page in pages for block in page.blocks]
             if not text_parts:
@@ -214,6 +217,7 @@ class PyMuPDFParser:
                     "raw_blocks": [asdict(block) for block in raw_blocks],
                     "images": [
                         *self._extract_image_info(pdf_page, warnings),
+                        *self._extract_vector_info(pdf_page, raw_blocks, warnings),
                         *raster_images,
                     ],
                     "tables": [
@@ -318,9 +322,7 @@ class PyMuPDFParser:
         return expected_start - 1 == completed_pages
 
     @staticmethod
-    def _read_batches(
-        checkpoint_dir: Path, manifest: dict[str, Any]
-    ) -> Iterator[dict[str, Any]]:
+    def _read_batches(checkpoint_dir: Path, manifest: dict[str, Any]) -> Iterator[dict[str, Any]]:
         for batch in manifest.get("batches", []):
             path = checkpoint_dir / str(batch["filename"])
             yield json.loads(path.read_text(encoding="utf-8"))
@@ -340,14 +342,10 @@ class PyMuPDFParser:
         page_tables: list[list[TableSnapshot]] = []
         for payload in batch_payloads:
             for page in payload.get("pages", []):
-                raw_pages.append(
-                    [RawTextBlock(**block) for block in page.get("raw_blocks", [])]
-                )
+                raw_pages.append([RawTextBlock(**block) for block in page.get("raw_blocks", [])])
                 page_sizes.append((float(page["width"]), float(page["height"])))
                 page_images.append(list(page.get("images", [])))
-                page_tables.append(
-                    [TableSnapshot(**table) for table in page.get("tables", [])]
-                )
+                page_tables.append([TableSnapshot(**table) for table in page.get("tables", [])])
         return raw_pages, page_sizes, page_images, page_tables
 
     def _checkpoint_metadata(self) -> dict[str, Any]:
@@ -420,14 +418,10 @@ class PyMuPDFParser:
         try:
             borderless = extract_borderless_tables(page, raw_blocks)
         except Exception as exc:
-            warnings.append(
-                f"第 {page.number + 1} 页无框表格检测跳过：{type(exc).__name__}"
-            )
+            warnings.append(f"第 {page.number + 1} 页无框表格检测跳过：{type(exc).__name__}")
             borderless = []
         for candidate in borderless:
-            if not any(
-                PyMuPDFParser._table_overlap(candidate, table) >= 0.72 for table in tables
-            ):
+            if not any(PyMuPDFParser._table_overlap(candidate, table) >= 0.72 for table in tables):
                 tables.append(candidate)
         return tables
 
@@ -460,9 +454,7 @@ class PyMuPDFParser:
             try:
                 detected = [snapshot_table(table) for table in pdf_page.find_tables().tables]
             except Exception as exc:
-                warnings.append(
-                    f"第 {page_index + 1} 页跨页表格补检跳过：{type(exc).__name__}"
-                )
+                warnings.append(f"第 {page_index + 1} 页跨页表格补检跳过：{type(exc).__name__}")
                 continue
             for candidate in detected:
                 if any(
@@ -527,6 +519,27 @@ class PyMuPDFParser:
             return []
 
     @staticmethod
+    def _extract_vector_info(
+        page: fitz.Page,
+        raw_blocks: list[RawTextBlock],
+        warnings: list[str],
+    ) -> list[dict[str, Any]]:
+        # Caption-gating avoids clustering graphics on every page of a book.
+        if not any(
+            classify_block(b, body_size=10, title=None)[0] == "figure_caption" for b in raw_blocks
+        ):
+            return []
+        try:
+            return [
+                {"bbox": [round(float(v), 2) for v in rect], "vector": True}
+                for rect in page.cluster_drawings()
+                if rect.width >= 20 and rect.height >= 20
+            ]
+        except Exception as exc:
+            warnings.append(f"第 {page.number + 1} 页矢量图检测跳过：{type(exc).__name__}")
+            return []
+
+    @staticmethod
     def _clean_metadata_title(title: str | None, path: str) -> str | None:
         if not title:
             return None
@@ -561,6 +574,8 @@ class PyMuPDFParser:
                 continue
             if is_probable_section_heading(block.text):
                 continue
+            if is_figure_caption(block.text) or is_table_caption(block.text):
+                continue
             # arXiv adds a large, rotated identifier along the page margin. Its
             # font is often larger than the real title, so reject vertical bands.
             if height > 72 or height > width * 1.5:
@@ -578,8 +593,6 @@ class PyMuPDFParser:
         return classify_block(raw, body_size=10.0, title=None)
 
     @staticmethod
-    def _guess_title(
-        first_page: fitz.Page, textpage: fitz.TextPage | None = None
-    ) -> str | None:
+    def _guess_title(first_page: fitz.Page, textpage: fitz.TextPage | None = None) -> str | None:
         page_dict = first_page.get_text("dict", textpage=textpage)
         return PyMuPDFParser._guess_title_from_blocks(extract_text_blocks(page_dict, 1))

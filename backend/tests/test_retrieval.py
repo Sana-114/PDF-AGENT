@@ -154,6 +154,24 @@ def test_chunking_adds_anchored_structured_nodes() -> None:
     assert reference.text.startswith("[7] A. Author")
 
 
+def test_chunking_does_not_render_internal_author_year_id_as_a_citation() -> None:
+    parsed = _structured_document()
+    parsed["references"] = [{
+        "reference_id": "ref-author-year-1",
+        "label": "author-year-1",
+        "text": "Smith, A. Grounded Systems. 2020.",
+        "page_number": 4,
+        "bbox": [20, 100, 500, 130],
+        "block_ids": ["p4-b2"],
+    }]
+    reference = next(
+        draft for draft in build_chunk_drafts(parsed)
+        if "ref-author-year-1" in draft.block_ids
+    )
+    assert reference.section == "参考文献 · 作者—年份"
+    assert reference.text == "Smith, A. Grounded Systems. 2020."
+
+
 def test_chunking_splits_cross_page_table_into_page_anchored_evidence() -> None:
     parsed = _parsed_document()
     parsed["tables"] = [

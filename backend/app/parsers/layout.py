@@ -1,5 +1,6 @@
 import re
-from dataclasses import dataclass
+from collections import Counter
+from dataclasses import dataclass, field
 from typing import Any
 
 from app.parsers.base import (
@@ -22,7 +23,14 @@ KNOWN_HEADING = re.compile(
 ABSTRACT_PREFIX = re.compile(r"^(?:abstract|摘要)\s*[:—-]?\s*", re.IGNORECASE)
 REFERENCE_HEADING = re.compile(r"^(?:references|bibliography|参考文献)$", re.IGNORECASE)
 APPENDIX_HEADING = re.compile(r"^(?:appendix\b|附录)", re.IGNORECASE)
-REFERENCE_ENTRY = re.compile(r"^\s*(?:\[(\d+)\]\s*|(\d+)[.)]\s+)(.+)", re.DOTALL)
+REFERENCE_ENTRY = re.compile(r"^\s*(?:\[([A-Za-z0-9+._:-]{1,32})\]\s*|(\d+)[.)]\s+)(.+)", re.DOTALL)
+REFERENCE_LINE_START = re.compile(r"^\s*(?:\[[A-Za-z0-9+._:-]{1,32}\]|\d+[.)](?:\s|$))")
+REFERENCE_END = re.compile(
+    r"^(?:acknowledg(?:e)?ments?|author contributions|competing interests|"
+    r"additional information|data availability|code availability|methods|"
+    r"appendix(?:\s.*)?|(?-i:[A-Z]\s+[A-Z][A-Z ]{4,}))$",
+    re.I,
+)
 FIGURE_CAPTION = re.compile(r"^(?:fig(?:ure)?\.?\s*\d+|图\s*\d+)", re.IGNORECASE)
 TABLE_CAPTION = re.compile(r"^(?:table\s*\d+|表\s*\d+)", re.IGNORECASE)
 TABLE_PAGE_HINT = re.compile(r"(?:^|\s)(?:table|表)\s*\d+", re.IGNORECASE)
@@ -47,9 +55,7 @@ AUTHOR_WITH_MARKER = re.compile(
 )
 MATH_HINT = re.compile(r"[=∑∫√≈≤≥±×÷∞∂∇α-ωΑ-Ω]|\b(?:argmax|argmin|softmax)\b")
 FORMULA_CORE = re.compile(r"[=∑∫√≈≤≥±∞∂∇]|\b(?:argmax|argmin|softmax)\b")
-FORMULA_TOKEN = re.compile(
-    r"[∑∫√≈≤≥±×÷∞∂∇α-ωΑ-Ω²³⁴⁵⁶⁷⁸⁹ⁱⁿ₀-₉ᵢⱼₖₙ]|[_^][A-Za-z0-9{]"
-)
+FORMULA_TOKEN = re.compile(r"[∑∫√≈≤≥±×÷∞∂∇α-ωΑ-Ω²³⁴⁵⁶⁷⁸⁹ⁱⁿ₀-₉ᵢⱼₖₙ]|[_^][A-Za-z0-9{]")
 
 LATEX_SYMBOLS = {
     "∑": r"\sum",
@@ -113,6 +119,8 @@ class RawTextBlock:
     font_size: float
     line_count: int
     char_weight: int
+    # Preserve front-matter line geometry, not the entire book's span payload.
+    lines: list[dict[str, Any]] = field(default_factory=list)
 
 
 @dataclass(slots=True)
@@ -129,6 +137,58 @@ def extract_text_blocks(page_dict: dict[str, Any], page_number: int) -> list[Raw
         if int(raw_block.get("type", 0)) != 0:
             continue
         lines = raw_block.get("lines", [])
+        line_strings = [
+            "".join(str(s.get("text", "")) for s in line.get("spans", [])).strip() for line in lines
+        ]
+        starts = [i for i, value in enumerate(line_strings) if REFERENCE_LINE_START.match(value)]
+        heading = next(
+            (i for i, value in enumerate(line_strings) if is_reference_heading(value)), None
+        )
+        endings = [i for i, value in enumerate(line_strings) if REFERENCE_END.fullmatch(value)]
+        captions = [
+            i
+            for i, value in enumerate(line_strings)
+            if is_figure_caption(value) or is_table_caption(value)
+        ]
+        # A bibliography column can be a single native block. Split on source
+        # lines so every entry keeps its own page coordinates and block anchor.
+        if (
+            len(starts) >= 2
+            or (heading is not None and starts)
+            or (endings and len(lines) > 1)
+            or any(i > 0 for i in captions)
+        ):
+            cuts = sorted(
+                {
+                    0,
+                    *starts,
+                    *([heading, heading + 1] if heading is not None else []),
+                    *endings,
+                    *captions,
+                    *(i + 1 for i in endings),
+                    len(lines),
+                }
+            )
+            for begin, end in zip(cuts, cuts[1:], strict=False):
+                group = lines[begin:end]
+                if not group:
+                    continue
+                boxes = [line.get("bbox", raw_block.get("bbox", (0, 0, 0, 0))) for line in group]
+                blocks.extend(
+                    extract_text_blocks(
+                        {
+                            "blocks": [
+                                {
+                                    "type": 0,
+                                    "bbox": union_bbox(boxes),
+                                    "lines": group,
+                                }
+                            ]
+                        },
+                        page_number,
+                    )
+                )
+            continue
         spans = [span for line in lines for span in line.get("spans", [])]
         # PyMuPDF spans already preserve the spaces that precede/follow a font
         # change. Adding another separator corrupts small-caps titles such as
@@ -151,6 +211,13 @@ def extract_text_blocks(page_dict: dict[str, Any], page_number: int) -> list[Raw
                 font_size=font_size,
                 line_count=max(1, len(lines)),
                 char_weight=max(1, len(text)),
+                lines=[
+                    {"text": value, "bbox": _round_bbox(line.get("bbox", bbox))}
+                    for value, line in zip(line_texts, lines, strict=False)
+                    if value
+                ]
+                if page_number <= 3
+                else [],
             )
         )
     return blocks
@@ -238,7 +305,18 @@ def classify_block(
     width = max(0.0, raw.bbox[2] - raw.bbox[0])
     height = max(0.0, raw.bbox[3] - raw.bbox[1])
     is_vertical_margin = height > 72 and height > width * 1.5
-    if raw.page_number == 1 and title and _normalise(text) == _normalise(title):
+    if (
+        raw.page_number == 1
+        and title
+        and (
+            _normalise(text) == _normalise(title)
+            or (
+                len(title) > 30
+                and _normalise(title) in _normalise(text)
+                and len(text) < len(title) + 100
+            )
+        )
+    ):
         return "title", None
     if is_figure_caption(text):
         return "figure_caption", None
@@ -375,24 +453,66 @@ def extract_first_page_people(blocks: list[Block]) -> tuple[list[str], list[str]
 def extract_references(pages: list[Any]) -> list[ReferenceNode]:
     references: list[ReferenceNode] = []
     active = False
+    numbered = False
+    running_headers = Counter(
+        block.text for page in pages for block in page.blocks if block.bbox[1] < page.height * 0.08
+    )
     for page in pages:
-        for block in page.blocks:
-            if block.type == "heading" and is_reference_heading(block.text):
+        long_blocks = [b for b in page.blocks if len(b.text) > 100]
+        single_column = (
+            bool(long_blocks)
+            and sum(b.bbox[2] - b.bbox[0] >= page.width * 0.60 for b in long_blocks)
+            > len(long_blocks) / 2
+        )
+        ordered = (
+            sorted(page.blocks, key=lambda b: (b.bbox[1], b.bbox[0]))
+            if single_column
+            else page.blocks
+        )
+        for block in ordered:
+            if (
+                block.bbox[1] < page.height * 0.08
+                and running_headers[block.text] > 1
+                and not is_reference_heading(block.text)
+                and not REFERENCE_ENTRY.match(block.text)
+            ):
+                continue
+            if is_reference_heading(block.text):
                 active = True
                 continue
-            if active and block.type == "heading" and is_appendix_heading(block.text):
+            if (
+                active
+                and (block.type == "heading" or REFERENCE_END.fullmatch(block.text))
+                and not REFERENCE_ENTRY.match(block.text)
+            ):
                 active = False
                 continue
             if not active or block.type in {"figure_caption", "table_caption"}:
                 continue
+            if block.text.strip().isdigit():
+                continue
             match = REFERENCE_ENTRY.match(block.text)
             if match:
-                label = match.group(1) or match.group(2) or str(len(references) + 1)
+                numbered = True
+            author_year = bool(
+                not numbered
+                and re.match(r"^[A-ZÀ-ÖØ-Þ][\w.'’–-]*(?:\s+|,\s*)[A-ZÀ-ÖØ-Þ]", block.text)
+                and re.search(r"\b(?:19|20)\d{2}[a-z]?\b", block.text)
+                and len(block.text) > 40
+            )
+            if match or author_year:
+                label = (
+                    (match.group(1) or match.group(2))
+                    if match
+                    else f"author-year-{len(references) + 1}"
+                )
                 references.append(
                     ReferenceNode(
-                        reference_id=f"ref-{label}",
+                        reference_id=f"ref-{label}"
+                        if not any(r.label == label for r in references)
+                        else f"ref-{label}-{len(references) + 1}",
                         label=label,
-                        text=match.group(3).strip(),
+                        text=match.group(3).strip() if match else block.text.strip(),
                         page_number=page.page_number,
                         bbox=block.bbox,
                         block_ids=[block.block_id],
@@ -400,8 +520,19 @@ def extract_references(pages: list[Any]) -> list[ReferenceNode]:
                 )
             elif references and block.type != "heading":
                 current = references[-1]
+                same_page = current.page_number == page.page_number
+                if same_page:
+                    if (
+                        block.bbox[1] < current.bbox[1]
+                        or block.bbox[1] - current.bbox[3] > 30
+                        or abs(block.bbox[0] - current.bbox[0]) > 40
+                    ):
+                        continue
+                elif current.text.endswith((".", ")")) or block.bbox[1] > page.height * 0.2:
+                    continue
                 current.text = f"{current.text} {block.text}".strip()
-                current.bbox = union_bbox([current.bbox, block.bbox])
+                if current.page_number == page.page_number:
+                    current.bbox = union_bbox([current.bbox, block.bbox])
                 current.block_ids.append(block.block_id)
     return references
 
@@ -447,12 +578,8 @@ def formula_latex_candidate(text: str) -> str:
         lambda match: "_{" + match.group(0).translate(SUBSCRIPT_TRANSLATION) + "}",
         value,
     )
-    value = re.sub(
-        r"(?<!\\)\bsum(?=\s|_|\^|$)", lambda _: r"\sum", value, flags=re.IGNORECASE
-    )
-    value = re.sub(
-        r"(?<!\\)\bsqrt(?=\s|\(|\{|$)", lambda _: r"\sqrt", value, flags=re.IGNORECASE
-    )
+    value = re.sub(r"(?<!\\)\bsum(?=\s|_|\^|$)", lambda _: r"\sum", value, flags=re.IGNORECASE)
+    value = re.sub(r"(?<!\\)\bsqrt(?=\s|\(|\{|$)", lambda _: r"\sqrt", value, flags=re.IGNORECASE)
     value = " ".join(value.split())
     return re.sub(r"\s+([_^]\{)", r"\1", value)
 
@@ -513,9 +640,7 @@ def snapshot_table(table: Any) -> TableSnapshot:
         bbox=_round_bbox(table.bbox),
         rows=rows,
         cells=cells,
-        column_count=int(
-            getattr(table, "col_count", max((len(row) for row in rows), default=0))
-        ),
+        column_count=int(getattr(table, "col_count", max((len(row) for row in rows), default=0))),
     )
 
 
@@ -533,7 +658,11 @@ def rows_to_markdown(rows: list[list[str]]) -> str:
 def nearest_caption(
     blocks: list[Block], bbox: list[float], caption_type: str, max_distance: float = 100
 ) -> Block | None:
-    candidates = [block for block in blocks if block.type == caption_type]
+    candidates = [
+        block
+        for block in blocks
+        if block.type == caption_type and min(block.bbox[2], bbox[2]) > max(block.bbox[0], bbox[0])
+    ]
     if not candidates:
         return None
 
@@ -556,12 +685,27 @@ def make_figure_nodes(
     blocks: list[Block],
 ) -> list[FigureNode]:
     figures: list[FigureNode] = []
-    for image_index, info in enumerate(image_infos, start=1):
+    grouped: dict[str, FigureNode] = {}
+    for image_index, info in enumerate(_group_captioned_tiles(image_infos, blocks), start=1):
         bbox = _round_bbox(info.get("bbox", (0, 0, 0, 0)))
         area = max(0.0, bbox[2] - bbox[0]) * max(0.0, bbox[3] - bbox[1])
         if not area or (page_area and area / page_area >= 0.75):
             continue
         caption = nearest_caption(blocks, bbox, "figure_caption")
+        # Vector rules and table grids are not standalone figures. Only accept
+        # caption-supported vector regions, never a caption in the other column.
+        if info.get("vector") and (
+            caption is None
+            or bbox[1] >= caption.bbox[3]
+            or nearest_caption(blocks, bbox, "table_caption", max_distance=25) is not None
+        ):
+            continue
+        if caption and caption.block_id in grouped:
+            existing = grouped[caption.block_id]
+            existing.bbox = union_bbox([existing.bbox, bbox])
+            # A composed figure cannot be represented by one embedded xref.
+            existing.xref = None
+            continue
         xref = info.get("xref")
         figures.append(
             FigureNode(
@@ -574,7 +718,50 @@ def make_figure_nodes(
                 caption_block_id=caption.block_id if caption else None,
             )
         )
+        if caption:
+            grouped[caption.block_id] = figures[-1]
     return figures
+
+
+def _group_captioned_tiles(
+    infos: list[dict[str, Any]],
+    blocks: list[Block],
+) -> list[dict[str, Any]]:
+    """Join adjacent raster tiles only when their union has a supporting caption.
+
+    This handles attention-map grids made of hundreds of small PDF resources;
+    large scans and uncaptioned assets retain the previous behavior.
+    """
+    fixed = []
+    groups: list[tuple[list[float], list[dict[str, Any]]]] = []
+    for info in sorted(infos, key=lambda i: i.get("bbox", [0, 0])[1]):
+        box = list(info.get("bbox", (0, 0, 0, 0)))
+        if info.get("vector") or max(box[2] - box[0], box[3] - box[1]) > 100:
+            fixed.append(info)
+            continue
+        members = [info]
+        pending = []
+        for other, items in groups:
+            dx = max(other[0] - box[2], box[0] - other[2], 0)
+            dy = max(other[1] - box[3], box[1] - other[3], 0)
+            first_caption = nearest_caption(blocks, box, "figure_caption")
+            other_caption = nearest_caption(blocks, other, "figure_caption")
+            different_captions = (
+                first_caption and other_caption and first_caption.block_id != other_caption.block_id
+            )
+            if dx <= 14 and dy <= 14 and not different_captions:
+                box = union_bbox([box, other])
+                members.extend(items)
+            else:
+                pending.append((other, items))
+        groups = [*pending, (box, members)]
+    for box, members in groups:
+        caption = nearest_caption(blocks, box, "figure_caption")
+        if len(members) > 1 and caption and box[3] <= caption.bbox[1] + 5:
+            fixed.append({"bbox": box, "xref": None})
+        else:
+            fixed.extend(members)
+    return sorted(fixed, key=lambda i: (i["bbox"][1], i["bbox"][0]))
 
 
 def appendix_nodes(outline: list[OutlineNode]) -> list[OutlineNode]:

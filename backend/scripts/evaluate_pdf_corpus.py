@@ -4,6 +4,7 @@ import sys
 import tempfile
 import time
 import tracemalloc
+from collections import Counter
 from pathlib import Path
 from typing import Any
 
@@ -13,6 +14,7 @@ if str(PROJECT_ROOT) not in sys.path:
 
 import fitz  # noqa: E402
 
+from app.parsers.base import ParsedDocument  # noqa: E402
 from app.parsers.diagnostics import inspect_pdf  # noqa: E402
 from app.parsers.registry import get_parser  # noqa: E402
 
@@ -40,9 +42,7 @@ def evaluate_pdf(
                 str(path),
                 checkpoint_dir=checkpoint_dir,
                 batch_size=batch_pages,
-                progress_callback=lambda complete, total: progress_events.append(
-                    (complete, total)
-                ),
+                progress_callback=lambda complete, total: progress_events.append((complete, total)),
             )
             checkpoint_batches = len(list(checkpoint_dir.glob("batch-*.json")))
     else:
@@ -67,6 +67,8 @@ def evaluate_pdf(
         "checkpoint_progress_events": len(progress_events),
         "title": parsed.title,
         "authors": len(parsed.authors),
+        "author_names": parsed.authors,
+        "affiliations": parsed.affiliations,
         "outline_nodes": _count_outline(parsed.outline),
         "tables": len(parsed.tables),
         "figures": len(parsed.figures),
@@ -76,7 +78,7 @@ def evaluate_pdf(
         "ocr_pages": processing.get("ocr_pages", []),
         "warnings": parsed.warnings,
     }
-    failures = _validate(metrics, expectation)
+    failures = [*_validate(metrics, expectation), *_validate_structure(parsed, expectation)]
     return {**metrics, "status": "passed" if not failures else "failed", "failures": failures}
 
 
@@ -99,6 +101,7 @@ def _validate(metrics: dict[str, Any], expected: dict[str, Any]) -> list[str]:
         if minimum is not None and metrics[metric_key] < minimum:
             failures.append(f"{metric_key}={metrics[metric_key]} < {minimum}")
     maximums = {
+        "max_figures": "figures",
         "max_elapsed_seconds": "elapsed_seconds",
         "max_python_peak_memory_mb": "python_peak_memory_mb",
     }
@@ -112,6 +115,47 @@ def _validate(metrics: dict[str, Any], expected: dict[str, Any]) -> list[str]:
     title_contains = expected.get("title_contains")
     if title_contains and title_contains.casefold() not in (metrics["title"] or "").casefold():
         failures.append(f"title does not contain {title_contains!r}")
+    return failures
+
+
+def _validate_structure(parsed: ParsedDocument, expected: dict[str, Any]) -> list[str]:
+    """Content/anchor gates supplement counts; counts alone cannot prove correctness."""
+    failures = []
+    for name in expected.get("required_authors", []):
+        if name not in parsed.authors:
+            failures.append(f"missing author: {name}")
+    if "authors_exact" in expected and parsed.authors != expected["authors_exact"]:
+        failures.append("author list differs from source gold")
+    for fragment in expected.get("required_affiliations", []):
+        if not any(fragment in item for item in parsed.affiliations):
+            failures.append(f"missing affiliation: {fragment}")
+    reference_text = "\n".join(ref.text for ref in parsed.references).casefold()
+    for fragment in expected.get("reference_text_contains", []):
+        if fragment.casefold() not in reference_text:
+            failures.append(f"missing reference text: {fragment}")
+    for fragment in expected.get("reference_text_excludes", []):
+        if fragment.casefold() in reference_text:
+            failures.append(f"non-reference text leaked: {fragment}")
+    labels = {ref.label for ref in parsed.references}
+    for label in expected.get("reference_labels_contains", []):
+        if label not in labels:
+            failures.append(f"missing reference label: {label}")
+    figure_counts = Counter(str(figure.page_number) for figure in parsed.figures)
+    for page, count in expected.get("figure_count_by_page", {}).items():
+        if figure_counts[page] != count:
+            failures.append(f"page {page} figures={figure_counts[page]} != {count}")
+    # Every reference must resolve to actual source blocks on its anchor page.
+    for ref in parsed.references:
+        page = next((page for page in parsed.pages if page.page_number == ref.page_number), None)
+        blocks = [block for block in page.blocks if block.block_id in ref.block_ids] if page else []
+        if not blocks or not all(
+            ref.bbox[0] <= b.bbox[0]
+            and ref.bbox[1] <= b.bbox[1]
+            and ref.bbox[2] >= b.bbox[2]
+            and ref.bbox[3] >= b.bbox[3]
+            for b in blocks
+        ):
+            failures.append(f"invalid reference anchor: {ref.reference_id}")
     return failures
 
 

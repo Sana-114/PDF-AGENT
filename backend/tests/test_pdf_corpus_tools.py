@@ -52,6 +52,24 @@ def test_builds_only_named_scan_fixture(tmp_path) -> None:
     assert inspect_pdf(str(outputs["scan"])).content_kind == PdfContentKind.SCANNED_IMAGE
 
 
+def test_corpus_quality_gates_reject_missing_source_content(tmp_path) -> None:
+    source = tmp_path / "source.pdf"
+    _make_source(source)
+    result = evaluate_pdf(
+        source,
+        {
+            "authors_exact": ["Missing Author"],
+            "required_authors": ["Missing Author"],
+            "required_affiliations": ["Missing University"],
+            "reference_text_contains": ["Missing reference"],
+            "reference_labels_contains": ["AB20"],
+            "figure_count_by_page": {"1": 1},
+        },
+    )
+    assert result["status"] == "failed"
+    assert len(result["failures"]) == 6
+
+
 def test_builds_only_named_long_fixture(tmp_path) -> None:
     source = tmp_path / "source.pdf"
     _make_source(source)
