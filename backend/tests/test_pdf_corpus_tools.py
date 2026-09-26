@@ -70,6 +70,20 @@ def test_corpus_quality_gates_reject_missing_source_content(tmp_path) -> None:
     assert len(result["failures"]) == 6
 
 
+def test_corpus_quality_gates_require_exact_pages_and_affiliations(tmp_path) -> None:
+    source = tmp_path / "source.pdf"
+    _make_source(source)
+
+    result = evaluate_pdf(
+        source,
+        {"exact_pages": 3, "affiliations_exact": ["Missing University"]},
+    )
+
+    assert result["status"] == "failed"
+    assert any("page_count" in item for item in result["failures"])
+    assert "affiliation list differs from source gold" in result["failures"]
+
+
 def test_builds_only_named_long_fixture(tmp_path) -> None:
     source = tmp_path / "source.pdf"
     _make_source(source)

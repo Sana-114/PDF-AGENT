@@ -29,6 +29,7 @@ QUERY_EXPANSIONS = {
     "表格": ["table", "score", "result"],
     "公式": ["formula", "equation"],
     "摘要": ["abstract", "summary"],
+    "context window": ["nctx", "tokens"],
 }
 SOURCE_INTENTS = {
     "abstract": ("摘要", "abstract", "summary"),
@@ -127,10 +128,11 @@ class LexicalRetriever:
 
 
 def _expand_query(question: str) -> str:
+    normalized_question = question.casefold()
     additions = [
         term
         for key, values in QUERY_EXPANSIONS.items()
-        if key in question
+        if key in normalized_question
         for term in values
     ]
     return " ".join([question, *additions])

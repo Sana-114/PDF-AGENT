@@ -9,7 +9,20 @@ from app.services.chunking import (
     build_chunk_drafts,
     replace_document_chunks,
 )
-from app.services.retrieval import LexicalRetriever
+from app.services.retrieval import LexicalRetriever, _expand_query
+from app.services.text_features import tokenize
+
+
+def test_tokenize_recovers_pdf_line_break_words() -> None:
+    terms = tokenize("multi-layer bidirectional Transformer en- coder")
+
+    assert "encoder" in terms
+    assert "en" in terms
+    assert "coder" in terms
+
+
+def test_context_window_query_expands_to_paper_notation() -> None:
+    assert "nctx" in _expand_query("What is the Context Window?")
 
 
 def _parsed_document() -> dict:

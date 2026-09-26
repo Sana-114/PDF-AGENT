@@ -37,6 +37,58 @@ def test_front_matter_splits_names_not_only_starred_authors():
     assert affiliations == ["Microsoft Research"]
 
 
+def test_front_matter_splits_gpt2_style_numbered_author_row() -> None:
+    authors, affiliations = extract_front_matter_people(
+        [
+            [
+                _raw("Language Models are Unsupervised Multitask Learners", 90),
+                _raw(
+                    "Alec Radford * 1 Jeffrey Wu * 1 Rewon Child 1 David Luan 1 "
+                    "Dario Amodei ** 1 Ilya Sutskever ** 1",
+                    140,
+                ),
+                _raw("Abstract", 180),
+                _raw(
+                    "1OpenAI, San Francisco, California, United States.",
+                    660,
+                    lines=[
+                        {
+                            "text": "1OpenAI, San Francisco, California, United States.",
+                            "bbox": [60, 660, 500, 675],
+                        }
+                    ],
+                ),
+            ]
+        ],
+        "Language Models are Unsupervised Multitask Learners",
+    )
+    assert authors == [
+        "Alec Radford",
+        "Jeffrey Wu",
+        "Rewon Child",
+        "David Luan",
+        "Dario Amodei",
+        "Ilya Sutskever",
+    ]
+    assert affiliations == ["OpenAI, San Francisco, California, United States."]
+
+
+def test_book_copyright_department_is_not_an_affiliation() -> None:
+    authors, affiliations = extract_front_matter_people(
+        [
+            [
+                _raw("Understanding Deep Learning", 90),
+                _raw("Simon J.D. Prince", 140),
+                _raw("Copyright in this work is licensed to the MIT Press.", 600),
+                _raw("Department.", 620),
+            ]
+        ],
+        "Understanding Deep Learning",
+    )
+    assert authors == ["Simon J.D. Prince"]
+    assert affiliations == []
+
+
 def test_unlabelled_abstract_stops_author_extraction():
     authors, _ = extract_front_matter_people(
         [

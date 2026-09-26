@@ -14,6 +14,7 @@ NON_NAME = re.compile(
     r"editor|copyright|rights|reserved|journal|proceedings|email|correspondence)\b",
     re.I,
 )
+NUMBERED_AUTHOR_BOUNDARY = re.compile(r"(?<=\w)\s*[*∗†‡]*\s*\d+\s+(?=[A-Z][a-z])")
 
 
 def extract_front_matter_people(
@@ -44,10 +45,11 @@ def extract_front_matter_people(
         ]
         # Numbered affiliations may appear below an unlabelled abstract.
         for line in all_lines:
+            affiliation_text = re.sub(r"^\d+(?=[A-Z])", "", line["text"])
             if re.match(r"^\d\D", line["text"]) and (
-                AFFILIATION_HINT.search(line["text"]) or ORGANIZATION.search(line["text"])
+                AFFILIATION_HINT.search(affiliation_text) or ORGANIZATION.search(affiliation_text)
             ):
-                affiliations.append(line["text"].split("e-mail:")[0].strip())
+                affiliations.append(affiliation_text.split("e-mail:")[0].strip())
         for block in sorted(page, key=lambda b: (b.bbox[1], b.bbox[0])):
             value = " ".join(block.text.casefold().split())
             if not active:
@@ -67,6 +69,10 @@ def extract_front_matter_people(
                 text = line["text"].strip()
                 if "@" in text or NON_NAME.search(text):
                     continue
+                if len(text.split()) == 1 and not ORGANIZATION.search(text):
+                    # A book's copyright paragraph may end with a lone word such
+                    # as "Department."; it is not an institutional affiliation.
+                    continue
                 if AFFILIATION_HINT.search(text) or ORGANIZATION.search(text):
                     affiliations.append(text)
                     continue
@@ -78,15 +84,16 @@ def extract_front_matter_people(
                     continue
                 if text.isupper():
                     continue
-                cleaned = re.sub(r"[\d*∗†‡]+", "", text)
-                for part in re.split(r"\s*(?:[,;、，&]|\band\b)\s*", cleaned):
-                    tokens = part.split()
-                    if not 2 <= len(tokens) <= 5:
-                        continue
-                    if all(
-                        t.lstrip("´`¨^")[0].isupper() or t in {"de", "del", "van", "von", "da"}
-                        for t in tokens
-                        if t.lstrip("´`¨^")
-                    ):
-                        authors.append(" ".join(tokens))
+                for segment in NUMBERED_AUTHOR_BOUNDARY.split(text):
+                    cleaned = re.sub(r"[\d*∗†‡]+", "", segment)
+                    for part in re.split(r"\s*(?:[,;、，&]|\band\b)\s*", cleaned):
+                        tokens = part.split()
+                        if not 2 <= len(tokens) <= 5:
+                            continue
+                        if all(
+                            t.lstrip("´`¨^")[0].isupper() or t in {"de", "del", "van", "von", "da"}
+                            for t in tokens
+                            if t.lstrip("´`¨^")
+                        ):
+                            authors.append(" ".join(tokens))
     return list(dict.fromkeys(authors)), list(dict.fromkeys(affiliations))

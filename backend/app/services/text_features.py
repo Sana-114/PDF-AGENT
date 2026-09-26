@@ -2,11 +2,17 @@ import re
 
 WORD_PATTERN = re.compile(r"[a-zA-Z]+(?:[_-]?\d+)?|\d+(?:\.\d+)?|[α-ωΑ-Ωβ₁₂]+")
 CJK_PATTERN = re.compile(r"[\u3400-\u9fff]+")
+PDF_LINE_BREAK_WORD = re.compile(r"\b([a-zA-Z]+)-\s+([a-zA-Z]+)\b")
 
 
 def tokenize(text: str) -> list[str]:
     normalized = text.casefold().replace("β₁", "beta_1").replace("β₂", "beta_2")
     tokens = [match.group(0) for match in WORD_PATTERN.finditer(normalized)]
+    # PDF line wrapping often turns "encoder" into "en- coder". Keep the
+    # original terms and add a joined form for recall without changing quotes.
+    tokens.extend(
+        f"{match.group(1)}{match.group(2)}" for match in PDF_LINE_BREAK_WORD.finditer(normalized)
+    )
     for match in CJK_PATTERN.finditer(normalized):
         sequence = match.group(0)
         tokens.extend(sequence)

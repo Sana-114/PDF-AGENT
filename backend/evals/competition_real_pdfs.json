@@ -1,0 +1,81 @@
+{
+  "schema_version": "1.0",
+  "dataset_id": "competition-real-pdfs-2026-09",
+  "description": "Source-anchored Transformer/BERT and GPT-1/2/3 facts, plus a real 541-page textbook query. Each paper is retrieved independently before cross-paper coverage is counted.",
+  "thresholds": {
+    "min_case_pass_rate": 1.0,
+    "min_evidence_recall": 1.0,
+    "min_mean_reciprocal_rank": 0.5,
+    "min_anchor_valid_rate": 1.0,
+    "require_bbox": true
+  },
+  "cases": [
+    {
+      "case_id": "transformer-encoder",
+      "question": "What does the Transformer encoder use for self-attention, residual connections and layer normalization?",
+      "documents": [{"filename": "1706.03762v1.pdf"}],
+      "top_k": 12,
+      "expectations": [
+        {"text_contains_any": ["residual connection around each of the two sub-layers"], "page_numbers": [2]},
+        {"text_contains_any": ["LayerNorm(x + Sublayer(x))"], "page_numbers": [2]}
+      ]
+    },
+    {
+      "case_id": "bert-encoder",
+      "question": "How does BERT reuse the Transformer encoder and train bidirectional representations with masked language modeling?",
+      "documents": [{"filename": "1810.04805v2.pdf"}],
+      "top_k": 12,
+      "expectations": [
+        {"text_contains_any": ["multi-layer bidirectional Transformer encoder", "bidirectional Transformer encoder"], "page_numbers": [3]},
+        {"text_contains_any": ["Masked LM", "masked language model"], "page_numbers": [4]}
+      ]
+    },
+    {
+      "case_id": "gpt1-architecture",
+      "question": "What is the GPT-1 decoder-only Transformer architecture and training sequence length?",
+      "documents": [{"filename": "gpt1-openai-2018.pdf"}],
+      "top_k": 12,
+      "expectations": [
+        {"text_contains_any": ["12-layer decoder-only transformer"], "page_numbers": [5]},
+        {"text_contains_any": ["sequences of 512 tokens"], "page_numbers": [5]}
+      ]
+    },
+    {
+      "case_id": "gpt2-architecture",
+      "question": "How many parameters did GPT and GPT-2 have, how did context size change, and where was layer normalization moved?",
+      "documents": [{"filename": "gpt2-openai-2019.pdf"}],
+      "top_k": 12,
+      "expectations": [
+        {"text_contains_any": ["117M"], "page_numbers": [4]},
+        {"text_contains_any": ["1542M"], "page_numbers": [4]},
+        {"text_contains_any": ["context size from 512 to 1024 tokens"], "page_numbers": [4]},
+        {"text_contains_any": ["Layer normalization", "moved to the input of each sub-block"], "page_numbers": [4]}
+      ]
+    },
+    {
+      "case_id": "gpt3-architecture",
+      "question": "What are GPT-3 175B parameter count, context window size, and inherited pre-normalization architecture?",
+      "documents": [{"filename": "2005.14165v4.pdf"}],
+      "top_k": 12,
+      "expectations": [
+        {"text_contains_any": ["175.0B", "175B"], "page_numbers": [8]},
+        {"text_contains_any": ["context window of nctx = 2048 tokens", "nctx = 2048"], "page_numbers": [6, 8]},
+        {"text_contains_any": ["pre-normalization"], "page_numbers": [8]}
+      ]
+    },
+    {
+      "case_id": "udl-graph-chapter",
+      "question": "In the graph neural networks chapter, what does graph partitioning do and what are the layers for graph convolutional networks?",
+      "documents": [{"filename": "UnderstandingDeepLearning_02_09_26_C.pdf"}],
+      "top_k": 16,
+      "expectations": [
+        {"text_contains_any": ["Graph partitioning"], "page_numbers": [270]},
+        {"text_contains_any": ["Layers for graph convolutional networks"], "page_numbers": [270]}
+      ]
+    }
+  ],
+  "comparison_groups": [
+    {"group_id": "bert-vs-transformer", "case_ids": ["transformer-encoder", "bert-encoder"]},
+    {"group_id": "gpt-1-2-3-evolution", "case_ids": ["gpt1-architecture", "gpt2-architecture", "gpt3-architecture"]}
+  ]
+}

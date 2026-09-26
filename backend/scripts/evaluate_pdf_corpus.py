@@ -84,6 +84,9 @@ def evaluate_pdf(
 
 def _validate(metrics: dict[str, Any], expected: dict[str, Any]) -> list[str]:
     failures = []
+    exact_pages = expected.get("exact_pages")
+    if exact_pages is not None and metrics["page_count"] != exact_pages:
+        failures.append(f"page_count={metrics['page_count']} != {exact_pages}")
     minimums = {
         "min_pages": "page_count",
         "min_text_chars": "native_text_chars",
@@ -126,6 +129,8 @@ def _validate_structure(parsed: ParsedDocument, expected: dict[str, Any]) -> lis
             failures.append(f"missing author: {name}")
     if "authors_exact" in expected and parsed.authors != expected["authors_exact"]:
         failures.append("author list differs from source gold")
+    if "affiliations_exact" in expected and parsed.affiliations != expected["affiliations_exact"]:
+        failures.append("affiliation list differs from source gold")
     for fragment in expected.get("required_affiliations", []):
         if not any(fragment in item for item in parsed.affiliations):
             failures.append(f"missing affiliation: {fragment}")

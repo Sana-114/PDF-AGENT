@@ -466,7 +466,7 @@ docker compose exec backend python scripts/evaluate_retrieval.py `
 
 ### PDF 回归语料
 
-公开测试文件不提交到 Git。网络可用时，在根目录运行以下命令下载固定版本的 Transformer v1/v7、BERT、RAG、GPT-3、ViT、ResNet、DDPM、Scikit-learn、Nucleotide Transformer 和 500 页以上的 Understanding Deep Learning：
+公开测试文件不提交到 Git。网络可用时，在根目录运行以下命令下载固定版本的 Transformer v1/v7、BERT、GPT-1/2/3、RAG、ViT、ResNet、DDPM、Scikit-learn、Nucleotide Transformer 和 541 页的 Understanding Deep Learning：
 
 ```powershell
 .\scripts\fetch_pdf_corpus.ps1
@@ -476,6 +476,8 @@ docker compose exec backend python scripts/evaluate_retrieval.py `
 .\scripts\fetch_pdf_corpus.ps1 -PaperIds transformer-v1,transformer-v7
 # 只下载 6 篇跨出版商泛化样本：
 .\scripts\fetch_pdf_corpus.ps1 -PaperIds gpt3-v4,vit-v2,resnet-cvpr-2016,ddpm-neurips-2020,scikit-learn-jmlr-2011,nucleotide-transformer-nature-2025
+# 只补齐本轮比赛场景验收样本：
+.\scripts\fetch_pdf_corpus.ps1 -PaperIds bert-v2,gpt1-openai-2018,gpt2-openai-2019,understanding-deep-learning-2026
 ```
 
 语料默认保存在 `output/pdf/regression-corpus/`。若已有一篇真实 PDF，可在 backend 容器内派生无文本层扫描版和精确 541 页压力版：
@@ -526,6 +528,8 @@ docker compose exec backend python scripts/evaluate_pdf_corpus.py `
 ```
 
 验收清单位于 `docs/pdf-regression-corpus.json`，覆盖页数、文本层、OCR 输出量、标题、结构节点、内容金标、坐标锚点、耗时和 Python 峰值内存。下载 URL 均固定到论文版本，已登记的文件还会执行 SHA-256 校验；二进制 PDF 和动态报告由 `.gitignore` 排除。2026-09-21 的 6 篇跨出版商样本、标题解析修复、结构指标与已知边界见 [跨出版商 PDF 语料验收](docs/diverse-pdf-corpus-acceptance-2026-09-21.md)；作者/机构、References、矢量图和图块分组的后续内容级验收见 [第 60 阶段验收](docs/academic-metadata-layout-acceptance-2026-09-23.md)。
+
+真实 541 页教材、BERT 与 GPT-1/2/3 的固定哈希、解析金标和六篇论文的逐页证据检索结果见 [第 62 阶段真实 PDF 验收](docs/real-competition-pdf-acceptance-2026-09-26.md)。本轮新增的 `backend/scripts/evaluate_competition_pdf_rag.py` 可直接对本地已下载语料执行离线门禁；它不调用 LLM。
 
 复现比赛指定的“先上传 v7、再上传 v1”版本判定，可在后端环境执行：
 
@@ -604,8 +608,8 @@ Backend、Worker 与 Beat 的镜像内代码运行、健康检查、开发 Overr
 
 ## 下一里程碑
 
-1. 获取组委会官方扫描版和 Understanding Deep Learning 后复跑同一套验收，并针对复杂合并/旋转表格、弱续接信号跨页表格和无图注图像增加专用适配器；
-2. 使用 BERT、GPT-1/2/3 等同领域论文扩充跨文献参数演进与冲突标注集，并增加人工确认状态；
+1. 获取组委会**原始扫描版**后复跑 OCR 验收，并针对复杂合并/旋转表格、弱续接信号跨页表格和无图注图像增加专用适配器；真实 541 页教材已通过分批解析与恢复门禁；
+2. 使用已入库的 BERT、GPT-1/2/3 金标推进 DeepSeek + BGE 的跨文献生成与冲突标注端到端验收，并增加人工确认状态；
 3. 为领域综述增加主题聚类、跨论文争议识别和人工确认后的方向状态持久化；
 4. 扩展可编辑图表列选择、统计检验与完整数据导出；
 5. 继续评估保持原位排版的双语 PDF 输出；
