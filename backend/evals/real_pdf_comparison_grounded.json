@@ -1,0 +1,91 @@
+{
+  "schema_version": "1.0",
+  "dataset_id": "real-pdf-bge-deepseek-comparison-2026-09",
+  "expected_provider": "deepseek",
+  "required_retrieval_mode": "reranked",
+  "cases": [
+    {
+      "case_id": "bert-vs-transformer",
+      "question": "Compare BERT and the original Transformer: encoder architecture, residual layer normalization, bidirectional masked-language-model pre-training. Explain inheritance and changes using both original papers and cite the exact evidence.",
+      "documents": ["1706.03762v1.pdf", "1810.04805v2.pdf"],
+      "evidence_per_document": 4,
+      "min_cross_document_claims": 1,
+      "required_claim_facts": [
+        {
+          "fact_id": "bert-bidirectional-encoder",
+          "claim_contains_any": ["bidirectional", "双向"],
+          "source_filename": "1810.04805v2.pdf",
+          "source_text_contains_any": ["multi-layer bidirectional Transformer en- coder", "bidirectional Transformer"],
+          "source_pages": [3]
+        },
+        {
+          "fact_id": "bert-masked-language-model",
+          "claim_contains_any": ["masked language model", "masked LM", "MLM", "掩码语言模型"],
+          "source_filename": "1810.04805v2.pdf",
+          "source_text_contains_any": ["masked language models", "masked language model", "MLM objective", "masked LM", "mask some percentage"],
+          "source_pages": [2, 4]
+        }
+      ]
+    },
+    {
+      "case_id": "gpt-1-2-3-evolution",
+      "question": "Compare GPT-1, GPT-2 and GPT-3 using each original paper: decoder architecture, parameter counts, context window lengths, and layer-normalization placement. State explicit values with citations; do not infer values absent from the cited passages.",
+      "documents": ["gpt1-openai-2018.pdf", "gpt2-openai-2019.pdf", "2005.14165v4.pdf"],
+      "evidence_per_document": 4,
+      "min_cross_document_claims": 2,
+      "required_claim_facts": [
+        {
+          "fact_id": "gpt1-training-sequence-512",
+          "claim_contains_any": ["512"],
+          "source_filename": "gpt1-openai-2018.pdf",
+          "source_text_contains_any": ["sequences of 512 tokens"],
+          "source_pages": [5]
+        },
+        {
+          "fact_id": "gpt2-context-1024",
+          "claim_contains_any": ["1024"],
+          "source_filename": "gpt2-openai-2019.pdf",
+          "source_text_contains_any": ["context size from 512 to 1024 tokens"],
+          "source_pages": [4]
+        },
+        {
+          "fact_id": "gpt2-parameters",
+          "claim_contains_any": ["1542M", "1.542 billion", "1.5 billion", "1.542B"],
+          "source_filename": "gpt2-openai-2019.pdf",
+          "source_text_contains_any": ["1542M"],
+          "source_pages": [4]
+        },
+        {
+          "fact_id": "gpt3-context-2048",
+          "claim_contains_any": ["2048"],
+          "source_filename": "2005.14165v4.pdf",
+          "source_text_contains_any": ["nctx = 2048"],
+          "source_pages": [8]
+        },
+        {
+          "fact_id": "gpt3-parameters-175b",
+          "claim_contains_any": ["175B", "175.0B", "175 billion"],
+          "source_filename": "2005.14165v4.pdf",
+          "source_text_contains_any": ["175.0B", "175 billion"],
+          "source_pages": [5, 8]
+        },
+        {
+          "fact_id": "gpt3-pre-normalization",
+          "claim_contains_any": ["pre-normalization", "pre-normalisation", "预归一化"],
+          "source_filename": "2005.14165v4.pdf",
+          "source_text_contains_any": ["pre-normalization"],
+          "source_pages": [8]
+        }
+      ]
+    },
+    {
+      "case_id": "unsupported-carbon-emissions",
+      "question": "Compare the exact kilograms of CO2-equivalent emitted by the Transformer v1 and BERT training runs: measured emissions in kg CO2e. If the original-paper evidence does not support both numbers, decline the comparison without guessing.",
+      "documents": ["1706.03762v1.pdf", "1810.04805v2.pdf"],
+      "evidence_per_document": 4,
+      "must_refuse": true,
+      "min_cross_document_claims": 0,
+      "required_claim_facts": []
+    }
+  ]
+}

@@ -8,6 +8,7 @@ __pycache__/
 .mypy_cache/
 .ruff_cache/
 backend/data/
+/data/*.db
 backend/htmlcov/
 frontend/.next/
 frontend/node_modules/

@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import re
 from collections import Counter
+from collections.abc import Iterable
 from time import perf_counter
 from typing import Protocol
 
@@ -74,6 +75,7 @@ class PaperComparisonService:
         papers: list[ComparisonPaperRead] = []
         trace: list[AgentTraceStep] = []
         warnings: list[str] = []
+        facets = _comparison_facets(question)
 
         for document in documents:
             started = perf_counter()
@@ -83,8 +85,24 @@ class PaperComparisonService:
                 document_ids=[document.id],
                 top_k=candidate_limit,
             )
-            strong = [item for item in candidates if item.score >= settings.rag_min_score]
-            selected = _select_diverse_evidence(strong, evidence_per_document)
+            facet_candidates = [
+                self.retriever.search(
+                    facet,
+                    document_ids=[document.id],
+                    top_k=max(4, evidence_per_document * 2),
+                )
+                for facet in facets[:evidence_per_document]
+            ]
+            raw_strong = [
+                item
+                for group in [candidates, *facet_candidates]
+                for item in group
+                if item.score >= settings.rag_min_score
+            ]
+            strong = _unique_evidence(raw_strong) if facets else raw_strong
+            selected = _select_faceted_evidence(
+                facet_candidates, strong, evidence_per_document
+            )
             document_evidence: list[EvidenceAnchor] = []
             for item in selected:
                 copy = item.model_copy(deep=True)
@@ -273,9 +291,16 @@ def _comparison_prompt(question: str, papers: list[ComparisonPaperRead]) -> str:
         "is a useful "
         "fact supported by only one paper. Agreement, difference, and conflict claims must cite "
         "evidence from at least two distinct documents. Do not guess missing values or resolve a "
-        "conflict without evidence. Every number, percentage, year, parameter count, context "
+        "conflict without evidence. Absence from the selected passages does not prove a paper "
+        "does not report or use something; describe only what the cited passage establishes. "
+        "Return supported dimensions even when another dimension lacks evidence. Return no claims "
+        "only when every requested dimension lacks direct evidence; never treat silence as proof. "
+        "Every number, percentage, year, parameter count, context "
         "length, "
-        "or metric value in a claim must occur in the cited evidence. Organize the answer by "
+        "or metric value in a claim must occur in the cited evidence. For a requested numeric "
+        "dimension, report each available paper's explicit value and cite the particular evidence "
+        "item containing that value; never cite only a general architecture passage. "
+        "Organize the answer by "
         "comparison dimension rather than merely summarizing papers one after another. The final "
         "published answer will be reconstructed only from claims that pass citation validation."
     )
@@ -371,6 +396,63 @@ def _select_diverse_evidence(evidence: list[EvidenceAnchor], limit: int) -> list
         best = max(remaining, key=diversity_score)
         selected.append(best)
         remaining.remove(best)
+    return selected
+
+
+def _comparison_facets(question: str) -> list[str]:
+    """Split an explicitly enumerated comparison into focused retrieval queries."""
+    _, separator, detail = question.replace("：", ":").partition(":")
+    if not separator:
+        return []
+    detail = re.split(r"[.!?。！？]", detail, maxsplit=1)[0]
+    facets = [
+        item.strip(" ,;，；、")
+        for item in re.split(r"[,，;；、]|\b(?:and|or)\b|以及|与", detail, flags=re.I)
+    ]
+    return list(dict.fromkeys(item for item in facets if len(item) >= 5))[:4]
+
+
+def _unique_evidence(evidence: Iterable[EvidenceAnchor]) -> list[EvidenceAnchor]:
+    unique: dict[str, EvidenceAnchor] = {}
+    for item in evidence:
+        key = item.chunk_id or "|".join(
+            [item.document_id, str(item.page_number), *item.block_ids]
+        )
+        unique.setdefault(key, item)
+    return list(unique.values())
+
+
+def _select_faceted_evidence(
+    facet_candidates: list[list[EvidenceAnchor]],
+    candidates: list[EvidenceAnchor],
+    limit: int,
+) -> list[EvidenceAnchor]:
+    if not facet_candidates:
+        return _select_diverse_evidence(candidates, limit)
+    selected: list[EvidenceAnchor] = []
+    selected_ids: set[str] = set()
+    for group in facet_candidates:
+        for item in group:
+            if item.score < settings.rag_min_score:
+                continue
+            key = item.chunk_id or "|".join(
+                [item.document_id, str(item.page_number), *item.block_ids]
+            )
+            if key not in selected_ids:
+                selected.append(item)
+                selected_ids.add(key)
+                break
+        if len(selected) >= limit:
+            return selected
+    for item in _select_diverse_evidence(candidates, limit):
+        key = item.chunk_id or "|".join(
+            [item.document_id, str(item.page_number), *item.block_ids]
+        )
+        if key not in selected_ids:
+            selected.append(item)
+            selected_ids.add(key)
+        if len(selected) >= limit:
+            break
     return selected
 
 

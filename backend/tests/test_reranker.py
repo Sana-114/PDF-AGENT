@@ -129,6 +129,35 @@ def test_tei_cross_encoder_accepts_wrapped_rank_response() -> None:
     assert results[0].chunk_id == "one"
 
 
+def test_tei_cross_encoder_splits_large_candidate_pool() -> None:
+    batch_sizes: list[int] = []
+
+    def handler(request: httpx.Request) -> httpx.Response:
+        texts = json.loads(request.content)["texts"]
+        batch_sizes.append(len(texts))
+        assert len(texts) <= 16
+        return httpx.Response(
+            200,
+            json=[
+                {"index": index, "score": 0.99 if text == "evidence 35" else 0.1}
+                for index, text in enumerate(texts)
+            ],
+        )
+
+    reranker = TeiReranker(
+        model="reranker",
+        base_url="http://reranker.test",
+        client=httpx.Client(transport=httpx.MockTransport(handler)),
+    )
+    candidates = [_evidence(str(index), f"evidence {index}", 0.5) for index in range(36)]
+
+    results = reranker.rerank("find final evidence", candidates, top_k=3)
+
+    assert batch_sizes == [16, 16, 4]
+    assert results[0].chunk_id == "35"
+    assert all(item.retrieval_mode == "reranked" for item in results)
+
+
 def test_hybrid_retriever_preserves_rank_when_reranker_fails() -> None:
     class FailingReranker:
         name = "failing"

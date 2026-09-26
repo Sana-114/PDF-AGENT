@@ -14,8 +14,49 @@ from app.models.document import Document, DocumentStatus
 from app.schemas.agent import EvidenceAnchor
 from app.services.paper_comparison import (
     PaperComparisonService,
+    _comparison_facets,
+    _select_faceted_evidence,
     _unsupported_numeric_facts,
 )
+
+
+def test_comparison_facets_split_explicit_research_dimensions() -> None:
+    assert _comparison_facets(
+        "Compare GPT papers: decoder architecture, parameter counts, "
+        "context window lengths, and layer-normalization placement."
+    ) == [
+        "decoder architecture",
+        "parameter counts",
+        "context window lengths",
+        "layer-normalization placement",
+    ]
+    assert _comparison_facets("Compare two papers generally") == []
+
+
+def test_faceted_selection_keeps_context_evidence_when_general_rank_misses_it() -> None:
+    general = [
+        EvidenceAnchor(
+            evidence_id="local",
+            chunk_id=f"general-{index}",
+            document_id="paper",
+            page_number=index,
+            quote="generic architecture evidence",
+            score=0.95 - index * 0.01,
+        )
+        for index in range(1, 5)
+    ]
+    context = EvidenceAnchor(
+        evidence_id="local",
+        chunk_id="context-window",
+        document_id="paper",
+        page_number=8,
+        quote="All models use a context window of nctx = 2048 tokens.",
+        score=0.8,
+    )
+
+    selected = _select_faceted_evidence([[general[0]], [context]], [*general, context], 2)
+
+    assert [item.chunk_id for item in selected] == ["general-1", "context-window"]
 
 
 class RecordingComparisonProvider:
