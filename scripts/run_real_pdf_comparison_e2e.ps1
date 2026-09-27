@@ -1,6 +1,8 @@
 param(
     [string]$CorpusDir = "output/pdf/regression-corpus",
     [int]$TimeoutSeconds = 600,
+    [ValidateRange(1, 10)]
+    [int]$Rounds = 1,
     [switch]$Gpu,
     [switch]$Build
 )
@@ -9,9 +11,8 @@ $ErrorActionPreference = "Stop"
 $projectRoot = Split-Path -Parent $PSScriptRoot
 $corpus = (Resolve-Path (Join-Path $projectRoot $CorpusDir)).Path
 $reportDir = Join-Path $projectRoot "backend/tmp/stage63-real-pdf"
-$reportName = "bge-deepseek-comparison-$([DateTimeOffset]::UtcNow.ToUnixTimeSeconds()).json"
-$reportPath = Join-Path $reportDir $reportName
-$containerReport = "/app/$reportName"
+$summaryDir = Join-Path $projectRoot "backend/tmp/stage65-release"
+$runId = [DateTimeOffset]::UtcNow.ToUnixTimeSeconds()
 $manifestPath = Join-Path $projectRoot "docs/pdf-regression-corpus.json"
 $datasetPath = Join-Path $projectRoot "backend/evals/real_pdf_comparison_grounded.json"
 $dataset = Get-Content -Raw -LiteralPath $datasetPath | ConvertFrom-Json
@@ -23,6 +24,7 @@ $composeArgs += @(
 )
 
 New-Item -ItemType Directory -Path $reportDir -Force | Out-Null
+New-Item -ItemType Directory -Path $summaryDir -Force | Out-Null
 Push-Location $projectRoot
 try {
     if ($Build) {
@@ -81,16 +83,46 @@ try {
     & docker cp $manifestPath "${backendContainer}:/app/stage63-pdf-manifest.json"
     if ($LASTEXITCODE -ne 0) { throw "Could not provide pinned PDF manifest." }
 
-    & docker @composeArgs exec -T backend python `
-        scripts/evaluate_real_pdf_comparison.py `
-        --manifest /app/stage63-pdf-manifest.json `
-        --output $containerReport `
-        --strict
-    $evaluationExitCode = $LASTEXITCODE
-    & docker cp "${backendContainer}:$containerReport" $reportPath
-    if ($LASTEXITCODE -ne 0) { throw "Could not copy evaluation report." }
-    if ($evaluationExitCode -ne 0) { throw "Strict comparison evaluation failed: $reportPath" }
-    Write-Host "Real-PDF BGE + DeepSeek evaluation passed. Report: $reportPath"
+    $roundReports = @()
+    for ($round = 1; $round -le $Rounds; $round++) {
+        $reportName = "bge-deepseek-comparison-$runId-round-$round.json"
+        $reportPath = Join-Path $reportDir $reportName
+        $containerReport = "/app/$reportName"
+        & docker @composeArgs exec -T backend python `
+            scripts/evaluate_real_pdf_comparison.py `
+            --manifest /app/stage63-pdf-manifest.json `
+            --output $containerReport `
+            --strict
+        $evaluationExitCode = $LASTEXITCODE
+        & docker cp "${backendContainer}:$containerReport" $reportPath
+        if ($LASTEXITCODE -ne 0) { throw "Could not copy evaluation report for round $round." }
+        $result = Get-Content -Raw -LiteralPath $reportPath | ConvertFrom-Json
+        $caseCount = @($result.cases).Count
+        $passedCases = @($result.cases | Where-Object { $_.passed }).Count
+        $roundReports += [ordered]@{
+            round = $round
+            status = $result.status
+            passed_cases = $passedCases
+            total_cases = $caseCount
+            report = $reportPath
+        }
+        Write-Host "Round $round/$Rounds`: $passedCases/$caseCount cases ($($result.status))"
+        if ($evaluationExitCode -ne 0 -and $result.status -eq "passed") {
+            throw "Evaluation exited with an error despite a passing report: $reportPath"
+        }
+        if ($round -lt $Rounds) { Start-Sleep -Seconds 3 }
+    }
+    $summary = [ordered]@{
+        status = if (@($roundReports | Where-Object { $_.status -ne "passed" }).Count) { "failed" } else { "passed" }
+        rounds_requested = $Rounds
+        rounds_passed = @($roundReports | Where-Object { $_.status -eq "passed" }).Count
+        dataset_id = $dataset.dataset_id
+        reports = $roundReports
+    }
+    $summaryPath = Join-Path $summaryDir "comparison-$runId-summary.json"
+    $summary | ConvertTo-Json -Depth 8 | Set-Content -LiteralPath $summaryPath -Encoding utf8
+    if ($summary.status -ne "passed") { throw "Repeated comparison gate failed: $summaryPath" }
+    Write-Host "Real-PDF BGE + DeepSeek $Rounds/$Rounds rounds passed. Summary: $summaryPath"
 }
 finally {
     Pop-Location

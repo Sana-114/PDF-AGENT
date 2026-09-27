@@ -118,6 +118,10 @@ async function runCase(testCase, backendCase) {
     page.getByRole("button", { name: "开始证据对比" }).click(),
   ]);
   assert.equal(response.status(), 200, `${testCase.case_id}: comparison API failed`);
+  assert.ok(
+    response.request().postDataJSON().evidence_per_document >= testCase.evidence_per_document,
+    `${testCase.case_id}: browser requested fewer passages than the backend gold gate`,
+  );
   const body = await response.json();
   report.current_case = {
     case_id: testCase.case_id,
@@ -165,6 +169,7 @@ async function runCase(testCase, backendCase) {
     const sourceId = backendCase.document_ids[fact.source_filename];
     const passed = body.claims.some((claim) =>
       containsAny(claim.text, fact.claim_contains_any)
+      && (fact.claim_contains_all || []).every((fragment) => containsAny(claim.text, [fragment]))
       && claim.evidence_ids.some((id) => {
         const anchor = evidenceById.get(id);
         return anchor?.document_id === sourceId

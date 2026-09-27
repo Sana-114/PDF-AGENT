@@ -8,16 +8,111 @@ from sqlalchemy.pool import StaticPool
 
 from app.api.routes import agent as agent_routes
 from app.core.database import Base, get_db
-from app.llm.base import GeneratedAnswer, GeneratedClaim, LLMInvalidCitationError
+from app.llm.base import (
+    GeneratedAnswer,
+    GeneratedClaim,
+    LLMInvalidCitationError,
+    LLMTransientError,
+)
 from app.main import app
 from app.models.document import Document, DocumentStatus
 from app.schemas.agent import EvidenceAnchor
+from app.schemas.comparison import (
+    ComparisonClaimRead,
+    ComparisonPaperRead,
+    CrossPaperComparisonRequest,
+)
 from app.services.paper_comparison import (
     PaperComparisonService,
     _comparison_facets,
+    _compose_parallel_claim,
+    _exact_emissions_measurement_missing,
+    _prefer_primary_evidence,
     _select_faceted_evidence,
     _unsupported_numeric_facts,
 )
+
+
+def test_parallel_claim_only_juxtaposes_same_explicit_dimension() -> None:
+    papers = [
+        ComparisonPaperRead(
+            document_id=document_id,
+            title=f"Paper {document_id}",
+            evidence_ids=[evidence_id],
+            evidence_count=1,
+            coverage="supported",
+        )
+        for document_id, evidence_id in [("A", "E1"), ("B", "E2")]
+    ]
+    claims = [
+        ComparisonClaimRead(
+            text=text,
+            dimension=dimension,
+            relation="single_source",
+            evidence_ids=[evidence_id],
+            document_ids=[document_id],
+        )
+        for document_id, evidence_id, dimension, text in [
+            ("A", "E1", "architecture", "Paper A uses an encoder."),
+            ("B", "E2", "architecture", "Paper B uses a decoder."),
+        ]
+    ]
+
+    paired = _compose_parallel_claim(claims, papers, ["architecture"])
+
+    assert paired is not None
+    assert paired.text == "Paper A uses an encoder；Paper B uses a decoder。"
+    assert paired.relation == "unclassified"
+    assert paired.evidence_ids == ["E1", "E2"]
+    assert paired.document_ids == ["A", "B"]
+    assert _compose_parallel_claim(claims, papers, ["training"]) is None
+    claims[1].dimension = "encoder depth/sublayers"
+    related = _compose_parallel_claim(claims, papers, ["architecture", "encoder depth/sublayers"])
+    assert related is not None
+    assert related.dimension == "模型结构"
+    assert related.evidence_ids == ["E1", "E2"]
+
+
+def test_compare_api_accepts_the_same_evidence_budget_as_real_pdf_gate() -> None:
+    request = CrossPaperComparisonRequest(
+        question="Compare architecture",
+        document_ids=["paper-a", "paper-b"],
+    )
+    assert request.evidence_per_document == 5
+    with pytest.raises(ValueError):
+        CrossPaperComparisonRequest(
+            question="Compare architecture",
+            document_ids=["paper-a", "paper-b"],
+            evidence_per_document=7,
+        )
+
+
+def test_exact_emissions_guard_allows_two_measured_source_values() -> None:
+    papers = [
+        ComparisonPaperRead(
+            document_id=document_id,
+            title=f"Paper {document_id}",
+            evidence_ids=[evidence_id],
+            evidence_count=1,
+            coverage="supported",
+        )
+        for document_id, evidence_id in [("A", "E1"), ("B", "E2")]
+    ]
+    evidence = [
+        EvidenceAnchor(
+            evidence_id=evidence_id,
+            document_id=document_id,
+            page_number=1,
+            quote=f"Measured emissions: {value} kg CO2e.",
+            score=0.9,
+        )
+        for document_id, evidence_id, value in [("A", "E1", 12), ("B", "E2", 17)]
+    ]
+    assert not _exact_emissions_measurement_missing(
+        "Compare exact kilograms of CO2-equivalent emissions in kg CO2e",
+        papers,
+        evidence,
+    )
 
 
 def test_comparison_facets_split_explicit_research_dimensions() -> None:
@@ -31,6 +126,15 @@ def test_comparison_facets_split_explicit_research_dimensions() -> None:
         "layer-normalization placement",
     ]
     assert _comparison_facets("Compare two papers generally") == []
+    assert (
+        len(
+            _comparison_facets(
+                "Compare GPT: decoder architecture, parameter counts, training sequence length, "
+                "context window lengths, layer-normalization placement."
+            )
+        )
+        == 5
+    )
 
 
 def test_faceted_selection_keeps_context_evidence_when_general_rank_misses_it() -> None:
@@ -57,6 +161,40 @@ def test_faceted_selection_keeps_context_evidence_when_general_rank_misses_it() 
     selected = _select_faceted_evidence([[general[0]], [context]], [*general, context], 2)
 
     assert [item.chunk_id for item in selected] == ["general-1", "context-window"]
+
+
+def test_method_comparison_prefers_own_method_over_related_work() -> None:
+    background = EvidenceAnchor(
+        evidence_id="local-1",
+        chunk_id="related",
+        document_id="paper",
+        page_number=2,
+        section="2. Related Work",
+        quote="VLAD is a prior representation.",
+        score=0.99,
+    )
+    primary = EvidenceAnchor(
+        evidence_id="local-2",
+        chunk_id="method",
+        document_id="paper",
+        page_number=3,
+        section="3.2 Identity Mapping by Shortcuts",
+        quote="The shortcut adds F(x) and x.",
+        score=0.85,
+    )
+    facets, candidates = _prefer_primary_evidence(
+        "Compare ResNet and ViT methods with citations",
+        [[background, primary]],
+        [background, primary],
+    )
+    assert facets == [[primary]]
+    assert candidates == [primary]
+
+    facets, candidates = _prefer_primary_evidence(
+        "Compare related work citations", [[background, primary]], [background, primary]
+    )
+    assert facets == [[background, primary]]
+    assert candidates == [background, primary]
 
 
 class RecordingComparisonProvider:
@@ -136,6 +274,51 @@ class EmptyThenGroundedProvider:
                     text="[DIFFERENCE][DIMENSION: method] Their methods differ.",
                     evidence_ids=[evidence[0].evidence_id, evidence[2].evidence_id],
                 )
+            ],
+        )
+
+
+class RecoveringTransientProvider(EmptyThenGroundedProvider):
+    async def generate_grounded_answer(self, question, evidence):
+        self.questions.append(question)
+        if len(self.questions) == 1:
+            raise LLMTransientError("temporary disconnect")
+        return GeneratedAnswer(
+            answer="grounded",
+            claims=[
+                GeneratedClaim(
+                    text="[DIFFERENCE][DIMENSION: method] Their methods differ.",
+                    evidence_ids=[evidence[0].evidence_id, evidence[2].evidence_id],
+                )
+            ],
+        )
+
+
+class TransientDuringRecheckProvider(EmptyThenGroundedProvider):
+    async def generate_grounded_answer(self, question, evidence):
+        if len(self.questions) == 1:
+            self.questions.append(question)
+            raise LLMTransientError("temporary disconnect during recheck")
+        return await super().generate_grounded_answer(question, evidence)
+
+
+class TwoSingleSourceProvider:
+    name = "deepseek"
+    model = "deepseek-flash"
+    supports_translation = True
+
+    async def generate_grounded_answer(self, question, evidence):
+        return GeneratedAnswer(
+            answer="parallel facts",
+            claims=[
+                GeneratedClaim(
+                    text="[SINGLE_SOURCE][DIMENSION: method] Paper A uses an encoder.",
+                    evidence_ids=[evidence[0].evidence_id],
+                ),
+                GeneratedClaim(
+                    text="[SINGLE_SOURCE][DIMENSION: method] Paper B uses a decoder.",
+                    evidence_ids=[evidence[2].evidence_id],
+                ),
             ],
         )
 
@@ -327,6 +510,92 @@ async def test_comparison_rechecks_empty_generation_once(always_empty: bool) -> 
     assert "Recheck the supplied passages once" in provider.questions[1]
     assert result.insufficient_evidence is always_empty
     assert any("复核一次" in warning for warning in result.warnings)
+
+
+@pytest.mark.asyncio
+async def test_comparison_retries_transient_provider_failure_once() -> None:
+    engine = create_engine("sqlite://")
+    Base.metadata.create_all(engine)
+    provider = RecoveringTransientProvider()
+    with Session(engine, expire_on_commit=False) as session:
+        first = _document(session, "transient-a", "Paper A")
+        second = _document(session, "transient-b", "Paper B")
+        result = await PaperComparisonService(
+            session,
+            retriever=BalancedRetriever(),
+            provider=provider,  # type: ignore[arg-type]
+        ).compare([first, second], "Compare methods", evidence_per_document=2)
+
+    assert len(provider.questions) == 2
+    assert result.provider == "deepseek"
+    assert result.insufficient_evidence is False
+    assert any("短暂失败" in warning for warning in result.warnings)
+
+
+@pytest.mark.asyncio
+async def test_comparison_retries_transient_failure_during_evidence_recheck() -> None:
+    engine = create_engine("sqlite://")
+    Base.metadata.create_all(engine)
+    provider = TransientDuringRecheckProvider()
+    with Session(engine, expire_on_commit=False) as session:
+        first = _document(session, "recheck-a", "Paper A")
+        second = _document(session, "recheck-b", "Paper B")
+        result = await PaperComparisonService(
+            session,
+            retriever=BalancedRetriever(),
+            provider=provider,  # type: ignore[arg-type]
+        ).compare([first, second], "Compare methods", evidence_per_document=2)
+
+    assert len(provider.questions) == 3
+    assert result.provider == "deepseek"
+    assert result.insufficient_evidence is False
+    assert any("短暂失败" in warning for warning in result.warnings)
+
+
+@pytest.mark.asyncio
+async def test_parallel_claim_audit_separates_derived_from_generated() -> None:
+    engine = create_engine("sqlite://")
+    Base.metadata.create_all(engine)
+    with Session(engine, expire_on_commit=False) as session:
+        first = _document(session, "parallel-a", "Paper A")
+        second = _document(session, "parallel-b", "Paper B")
+        result = await PaperComparisonService(
+            session,
+            retriever=BalancedRetriever(),
+            provider=TwoSingleSourceProvider(),  # type: ignore[arg-type]
+        ).compare([first, second], "Compare methods", evidence_per_document=2)
+
+    assert result.insufficient_evidence is False
+    assert result.audit.generated_claim_count == 2
+    assert result.audit.accepted_claim_count == 2
+    assert result.audit.rejected_claim_count == 0
+    assert result.audit.derived_claim_count == 1
+    assert result.audit.cross_document_claim_count == 1
+    assert len(result.claims) == 3
+
+
+@pytest.mark.asyncio
+async def test_exact_emissions_comparison_requires_measurements_from_both_sources() -> None:
+    engine = create_engine("sqlite://")
+    Base.metadata.create_all(engine)
+    with Session(engine, expire_on_commit=False) as session:
+        first = _document(session, "emissions-a", "Paper A")
+        second = _document(session, "emissions-b", "Paper B")
+        result = await PaperComparisonService(
+            session,
+            retriever=BalancedRetriever(),
+            provider=RecordingComparisonProvider(),  # type: ignore[arg-type]
+        ).compare(
+            [first, second],
+            "Compare exact kilograms of CO2-equivalent emissions in kg CO2e",
+            evidence_per_document=2,
+        )
+
+    assert result.provider == "deepseek"
+    assert result.insufficient_evidence is True
+    assert result.claims == []
+    assert result.audit.cross_document_claim_count == 0
+    assert "requested_measurement_not_supported" in result.audit.rejection_reasons
 
 
 @pytest.mark.asyncio

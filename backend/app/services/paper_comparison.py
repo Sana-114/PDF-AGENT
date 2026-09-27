@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import asyncio
 import re
 from collections import Counter
 from collections.abc import Iterable
@@ -15,6 +16,7 @@ from app.llm.base import (
     LLMInvalidCitationError,
     LLMProvider,
     LLMResponseError,
+    LLMTransientError,
 )
 from app.llm.extractive import ExtractiveProvider
 from app.models.document import Document
@@ -74,7 +76,7 @@ class PaperComparisonService:
         documents: list[Document],
         question: str,
         *,
-        evidence_per_document: int = 4,
+        evidence_per_document: int = 5,
     ) -> CrossPaperComparisonRead:
         evidence: list[EvidenceAnchor] = []
         papers: list[ComparisonPaperRead] = []
@@ -105,6 +107,7 @@ class PaperComparisonService:
                 if item.score >= settings.rag_min_score
             ]
             strong = _unique_evidence(raw_strong) if facets else raw_strong
+            facet_candidates, strong = _prefer_primary_evidence(question, facet_candidates, strong)
             selected = _select_faceted_evidence(facet_candidates, strong, evidence_per_document)
             document_evidence: list[EvidenceAnchor] = []
             for item in selected:
@@ -166,8 +169,20 @@ class PaperComparisonService:
         generation_status = "ok"
         prompt = _comparison_prompt(question, papers)
         generation_attempts = 1
+
+        async def generate_with_retry(request_prompt: str):
+            for attempt in range(3):
+                try:
+                    return await provider.generate_grounded_answer(request_prompt, evidence)
+                except LLMTransientError:
+                    if attempt == 2:
+                        raise
+                    warnings.append(f"模型服务请求短暂失败，正在进行第 {attempt + 1} 次重试。")
+                    await asyncio.sleep(0.5 * (attempt + 1))
+            raise AssertionError("unreachable")
+
         try:
-            generated = await provider.generate_grounded_answer(prompt, evidence)
+            generated = await generate_with_retry(prompt)
         except LLMInvalidCitationError:
             generation_attempts = 2
             warnings.append("模型首次返回的证据编号无效，已按原文白名单重试一次。")
@@ -178,7 +193,7 @@ class PaperComparisonService:
                 + ". Never invent an ID or leave a factual claim uncited."
             )
             try:
-                generated = await provider.generate_grounded_answer(retry_prompt, evidence)
+                generated = await generate_with_retry(retry_prompt)
             except (LLMConfigurationError, LLMResponseError) as exc:
                 warnings.append(f"生成式对比不可用，已退回逐条原文摘录：{exc}")
                 provider = ExtractiveProvider()
@@ -199,7 +214,7 @@ class PaperComparisonService:
                 "from both papers. If the requested fact is not in the passages, return no claims."
             )
             try:
-                generated = await provider.generate_grounded_answer(retry_prompt, evidence)
+                generated = await generate_with_retry(retry_prompt)
             except (LLMConfigurationError, LLMResponseError) as exc:
                 warnings.append(f"生成式对比复核失败，已退回逐条原文摘录：{exc}")
                 provider = ExtractiveProvider()
@@ -209,6 +224,7 @@ class PaperComparisonService:
         allowed = {item.evidence_id: item for item in evidence}
         claims: list[ComparisonClaimRead] = []
         rejection_reasons: list[str] = []
+        explicit_dimensions: list[str] = []
         for generated_claim in generated.claims:
             requested_evidence_ids = list(dict.fromkeys(generated_claim.evidence_ids))
             evidence_ids = [item for item in requested_evidence_ids if item in allowed]
@@ -246,6 +262,22 @@ class PaperComparisonService:
                     document_ids=document_ids,
                 )
             )
+            marker = CLAIM_PREFIX_PATTERN.match(generated_claim.text)
+            if marker and marker.group(2) and dimension not in explicit_dimensions:
+                explicit_dimensions.append(dimension)
+
+        parallel = None
+        if len(papers) == 2 and not any(len(item.document_ids) >= 2 for item in claims):
+            parallel = _compose_parallel_claim(claims, papers, explicit_dimensions)
+            if parallel is not None:
+                claims.append(parallel)
+                warnings.append("已将同维度的两篇原文声明并列成双来源对照，未添加新事实。")
+
+        if _exact_emissions_measurement_missing(question, papers, evidence):
+            claims = []
+            parallel = None
+            rejection_reasons.append("requested_measurement_not_supported")
+            warnings.append("至少一篇论文的入选原文缺少请求的精确 kg CO₂e 测量值，已拒绝数值对比。")
 
         trace.append(
             AgentTraceStep(
@@ -262,10 +294,12 @@ class PaperComparisonService:
             document_id for claim in claims for document_id in claim.document_ids
         }
         generated_count = len(generated.claims)
+        derived_count = int(parallel is not None)
         audit = ComparisonAuditRead(
             generated_claim_count=generated_count,
-            accepted_claim_count=len(claims),
-            rejected_claim_count=max(0, generated_count - len(claims)),
+            accepted_claim_count=len(claims) - derived_count,
+            rejected_claim_count=generated_count - (len(claims) - derived_count),
+            derived_claim_count=derived_count,
             published_claim_citation_coverage=1.0 if claims else 0.0,
             evidence_utilization=round(len(cited_ids) / len(evidence), 4) if evidence else 0.0,
             referenced_document_count=len(referenced_document_ids),
@@ -402,6 +436,86 @@ def _normalise_fact(value: str) -> str:
     )
 
 
+def _exact_emissions_measurement_missing(
+    question: str,
+    papers: list[ComparisonPaperRead],
+    evidence: list[EvidenceAnchor],
+) -> bool:
+    """Require a measured value from each source for exact emissions comparisons."""
+
+    if not (
+        re.search(r"\bexact\b|精确|准确|具体", question, re.I)
+        and re.search(r"CO\s*[₂2]\s*(?:e|equivalent)|二氧化碳当量", question, re.I)
+        and re.search(r"\b(?:kg|kilograms?)\b|公斤|千克", question, re.I)
+    ):
+        return False
+    metric = r"(?:CO\s*[₂2]\s*(?:e|equivalent)|二氧化碳当量)"
+    unit = r"(?:kg|kilograms?|公斤|千克)"
+    number = r"\d+(?:[.,]\d+)?"
+    measured = re.compile(
+        rf"(?:{number}.{{0,32}}{unit}.{{0,32}}{metric}|"
+        rf"{number}.{{0,32}}{metric}.{{0,32}}{unit})",
+        re.I | re.S,
+    )
+    return any(
+        not any(
+            item.document_id == paper.document_id and measured.search(item.quote)
+            for item in evidence
+        )
+        for paper in papers
+    )
+
+
+def _compose_parallel_claim(
+    claims: list[ComparisonClaimRead],
+    papers: list[ComparisonPaperRead],
+    explicit_dimensions: list[str],
+) -> ComparisonClaimRead | None:
+    """Juxtapose two independently validated facts without inferring a relation."""
+
+    if len(papers) != 2:
+        return None
+    first_id, second_id = papers[0].document_id, papers[1].document_id
+    for dimension in explicit_dimensions:
+        family = _dimension_family(dimension)
+        first = next(
+            (
+                item
+                for item in claims
+                if _dimension_family(item.dimension) == family and item.document_ids == [first_id]
+            ),
+            None,
+        )
+        second = next(
+            (
+                item
+                for item in claims
+                if _dimension_family(item.dimension) == family and item.document_ids == [second_id]
+            ),
+            None,
+        )
+        if first is None or second is None:
+            continue
+        return ComparisonClaimRead(
+            text=f"{first.text.rstrip('。.!')}；{second.text.rstrip('。.!')}。",
+            dimension=first.dimension if first.dimension == second.dimension else "模型结构",
+            relation="unclassified",
+            evidence_ids=list(dict.fromkeys([*first.evidence_ids, *second.evidence_ids])),
+            document_ids=[first_id, second_id],
+        )
+    return None
+
+
+def _dimension_family(dimension: str) -> str:
+    normalized = " ".join(dimension.casefold().split())
+    if re.search(
+        r"\b(?:architecture|encoder|decoder|model structure)\b|架构|编码器|解码器",
+        normalized,
+    ):
+        return "model architecture"
+    return normalized
+
+
 def _select_diverse_evidence(evidence: list[EvidenceAnchor], limit: int) -> list[EvidenceAnchor]:
     unique: dict[str, EvidenceAnchor] = {}
     for item in sorted(evidence, key=lambda value: value.score, reverse=True):
@@ -451,7 +565,35 @@ def _comparison_facets(question: str) -> list[str]:
         item.strip(" ,;，；、")
         for item in re.split(r"[,，;；、]|\b(?:and|or)\b|以及|与", detail, flags=re.I)
     ]
-    return list(dict.fromkeys(item for item in facets if len(item) >= 5))[:4]
+    return list(dict.fromkeys(item for item in facets if len(item) >= 5))[:6]
+
+
+def _prefer_primary_evidence(
+    question: str,
+    facet_candidates: list[list[EvidenceAnchor]],
+    candidates: list[EvidenceAnchor],
+) -> tuple[list[list[EvidenceAnchor]], list[EvidenceAnchor]]:
+    """Keep background citations from crowding out a paper's own method evidence."""
+
+    if re.search(
+        r"\b(?:related work|references|bibliography|prior work)\b"
+        r"|相关工作|参考文献",
+        question,
+        flags=re.I,
+    ):
+        return facet_candidates, candidates
+
+    def is_primary(item: EvidenceAnchor) -> bool:
+        section = (item.section or "").casefold()
+        return not any(
+            marker in section
+            for marker in ("related work", "references", "bibliography", "相关工作", "参考文献")
+        )
+
+    primary = [item for item in candidates if is_primary(item)]
+    if not primary:
+        return facet_candidates, candidates
+    return [[item for item in group if is_primary(item)] for group in facet_candidates], primary
 
 
 def _unique_evidence(evidence: Iterable[EvidenceAnchor]) -> list[EvidenceAnchor]:

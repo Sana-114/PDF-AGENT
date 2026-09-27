@@ -6,9 +6,9 @@
   "cases": [
     {
       "case_id": "bert-vs-transformer",
-      "question": "Compare BERT and the original Transformer: encoder architecture, residual layer normalization, bidirectional masked-language-model pre-training. Explain inheritance and changes using both original papers and cite the exact evidence.",
+      "question": "Compare BERT and the original Transformer: explicitly state BERT's multi-layer bidirectional Transformer encoder, then contrast encoder architecture, residual layer normalization, and bidirectional masked-language-model pre-training. Explain inheritance and changes using both original papers and cite the exact evidence.",
       "documents": ["1706.03762v1.pdf", "1810.04805v2.pdf"],
-      "evidence_per_document": 4,
+      "evidence_per_document": 5,
       "min_cross_document_claims": 1,
       "required_claim_facts": [
         {
@@ -29,14 +29,15 @@
     },
     {
       "case_id": "gpt-1-2-3-evolution",
-      "question": "Compare GPT-1, GPT-2 and GPT-3 using each original paper: decoder architecture, parameter counts, context window lengths, and layer-normalization placement. State explicit values with citations; do not infer values absent from the cited passages.",
+      "question": "Compare GPT-1, GPT-2 and GPT-3 using each original paper: decoder architecture, parameter counts, GPT-1's explicit training sequence length, GPT-2/3 context window lengths, and layer-normalization placement. Do not equate a training sequence length with an unstated context-window setting. State explicit values with citations; do not infer values absent from the cited passages.",
       "documents": ["gpt1-openai-2018.pdf", "gpt2-openai-2019.pdf", "2005.14165v4.pdf"],
-      "evidence_per_document": 4,
+      "evidence_per_document": 5,
       "min_cross_document_claims": 2,
       "required_claim_facts": [
         {
           "fact_id": "gpt1-training-sequence-512",
-          "claim_contains_any": ["512"],
+          "claim_contains_any": ["training", "trained", "训练"],
+          "claim_contains_all": ["GPT-1", "512"],
           "source_filename": "gpt1-openai-2018.pdf",
           "source_text_contains_any": ["sequences of 512 tokens"],
           "source_pages": [5]
@@ -60,7 +61,7 @@
           "claim_contains_any": ["2048"],
           "source_filename": "2005.14165v4.pdf",
           "source_text_contains_any": ["nctx = 2048"],
-          "source_pages": [8]
+          "source_pages": [8, 43]
         },
         {
           "fact_id": "gpt3-parameters-175b",
@@ -101,10 +102,10 @@
         },
         {
           "fact_id": "gpt1-decoder-only",
-          "claim_contains_any": ["decoder-only", "decoder only", "仅解码器"],
+          "claim_contains_any": ["decoder-only", "decoder only", "仅解码器", "Transformer 解码器", "Transformer decoder"],
           "source_filename": "gpt1-openai-2018.pdf",
-          "source_text_contains_any": ["12-layer decoder-only transformer"],
-          "source_pages": [5]
+          "source_text_contains_any": ["12-layer decoder-only transformer", "multi-layer Transformer decoder"],
+          "source_pages": [3, 5]
         }
       ]
     },
@@ -118,10 +119,10 @@
       "required_claim_facts": [
         {
           "fact_id": "resnet-identity-shortcut",
-          "claim_contains_any": ["shortcut", "identity", "捷径", "恒等映射"],
+          "claim_contains_any": ["shortcut", "identity", "捷径", "恒等映射", "快捷连接", "恒等快捷"],
           "source_filename": "resnet-cvpr-2016.pdf",
-          "source_text_contains_any": ["identity mapping", "shortcut connections", "F(x) + x"],
-          "source_pages": [2, 3]
+          "source_text_contains_any": ["identity mapping", "identity shortcuts", "shortcut connections", "F(x) + x"],
+          "source_pages": [2, 3, 4]
         },
         {
           "fact_id": "vit-image-patches",

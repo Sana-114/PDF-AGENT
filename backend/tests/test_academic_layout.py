@@ -37,6 +37,31 @@ def test_front_matter_splits_names_not_only_starred_authors():
     assert affiliations == ["Microsoft Research"]
 
 
+def test_ocr_merged_author_grid_stops_at_numbered_abstract() -> None:
+    authors, _ = extract_front_matter_people(
+        [
+            [
+                _raw("Attention Is All You Need", 100),
+                _raw(
+                    "Ashish Vaswani* Noam Shazeer* Google Brain "
+                    "avaswani@google.com noam@google.com "
+                    "Aidan N. Gomez* Illia Polosukhin* illia@gmail.com",
+                    180,
+                ),
+                _raw("5 Abstract", 330),
+            ],
+            [_raw("Model Architecture", 50, page=2)],
+        ],
+        "Attention Is All You Need",
+    )
+    assert authors == [
+        "Ashish Vaswani",
+        "Noam Shazeer",
+        "Aidan N. Gomez",
+        "Illia Polosukhin",
+    ]
+
+
 def test_front_matter_splits_gpt2_style_numbered_author_row() -> None:
     authors, affiliations = extract_front_matter_people(
         [

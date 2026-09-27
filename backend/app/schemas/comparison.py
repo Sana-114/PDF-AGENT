@@ -16,7 +16,7 @@ ComparisonRelation = Literal[
 class CrossPaperComparisonRequest(BaseModel):
     question: str = Field(min_length=2, max_length=4000)
     document_ids: list[str] = Field(min_length=2, max_length=6)
-    evidence_per_document: int = Field(default=4, ge=1, le=4)
+    evidence_per_document: int = Field(default=5, ge=1, le=6)
 
     @field_validator("question")
     @classmethod
@@ -76,6 +76,7 @@ class ComparisonAuditRead(BaseModel):
     generated_claim_count: int = 0
     accepted_claim_count: int = 0
     rejected_claim_count: int = 0
+    derived_claim_count: int = 0
     published_claim_citation_coverage: float = Field(default=0.0, ge=0.0, le=1.0)
     evidence_utilization: float = Field(default=0.0, ge=0.0, le=1.0)
     referenced_document_count: int = 0

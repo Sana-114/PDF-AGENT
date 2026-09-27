@@ -11,6 +11,7 @@ from app.llm.base import (
     LLMConfigurationError,
     LLMInvalidCitationError,
     LLMResponseError,
+    LLMTransientError,
 )
 from app.schemas.agent import EvidenceAnchor
 
@@ -80,10 +81,17 @@ class OpenAIResponsesProvider:
                     json=self._prepare_payload(payload),
                     headers=headers,
                 )
+        except httpx.TransportError as exc:
+            raise LLMTransientError(f"{self.provider_label} 网络请求失败：{exc}") from exc
         except httpx.HTTPError as exc:
             raise LLMResponseError(f"{self.provider_label} 网络请求失败：{exc}") from exc
         if response.is_error:
-            raise LLMResponseError(
+            error_type = (
+                LLMTransientError
+                if response.status_code == 429 or response.status_code >= 500
+                else LLMResponseError
+            )
+            raise error_type(
                 f"{self.provider_label} 返回 HTTP {response.status_code}: {response.text[:500]}"
             )
         try:

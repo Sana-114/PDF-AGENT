@@ -80,6 +80,11 @@ def _check_fact(fact: dict, response, document_ids: dict[str, str]) -> bool:
         if not _contains_any(claim.text, fact["claim_contains_any"]):
             continue
         if any(
+            not _contains_any(claim.text, [fragment])
+            for fragment in fact.get("claim_contains_all", [])
+        ):
+            continue
+        if any(
             anchor is not None
             and anchor.document_id == document_id
             and anchor.page_number in fact["source_pages"]

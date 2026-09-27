@@ -16,6 +16,10 @@ class LLMInvalidCitationError(LLMResponseError):
     """The model generated claims but cited no allowed evidence IDs."""
 
 
+class LLMTransientError(LLMResponseError):
+    """A transport, rate-limit or server failure may succeed on one retry."""
+
+
 @dataclass(slots=True)
 class GeneratedClaim:
     text: str

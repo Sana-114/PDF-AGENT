@@ -202,8 +202,14 @@ export default function PaperComparisonWorkbench({
               </span>
               <span>
                 <strong>{result.audit.cross_document_claim_count}</strong>
-                跨文献结论
+                跨文献声明
               </span>
+              {result.audit.derived_claim_count > 0 && (
+                <span>
+                  <strong>{result.audit.derived_claim_count}</strong>
+                  双来源并列展示
+                </span>
+              )}
               <span>
                 <strong>{Math.round(result.audit.evidence_utilization * 100)}%</strong>
                 证据利用率

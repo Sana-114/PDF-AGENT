@@ -2,7 +2,7 @@
 
 import re
 
-from app.parsers.layout import ABSTRACT_PREFIX, AFFILIATION_HINT, RawTextBlock
+from app.parsers.layout import AFFILIATION_HINT, AUTHOR_WITH_MARKER, RawTextBlock
 
 ORGANIZATION = re.compile(
     r"\b(?:research|OpenAI|Google|Microsoft|INRIA|Nuxeo|UC Berkeley|Universit|"
@@ -56,10 +56,18 @@ def extract_front_matter_people(
                 if normalized_title and normalized_title in value:
                     active = True
                 continue
-            if ABSTRACT_PREFIX.match(block.text) or re.match(
-                r"^(?:1\.?\s+Introduction|Editor:)", block.text, re.I
-            ):
+            if re.match(
+                r"^\s*(?:[§\d]+(?:\.\d+)*\s+)?(?:abstract|摘要)\b", block.text, re.I
+            ) or re.match(r"^(?:1\.?\s+Introduction|Editor:)", block.text, re.I):
                 return list(dict.fromkeys(authors)), list(dict.fromkeys(affiliations))
+            marked_names = [
+                match.group("name") for match in AUTHOR_WITH_MARKER.finditer(block.text)
+            ]
+            if len(marked_names) >= 2 and "@" in block.text:
+                # OCR may merge the entire author grid, affiliations and e-mails
+                # into a single block. Starred names remain source-grounded.
+                authors.extend(marked_names)
+                continue
             if block.bbox[3] - block.bbox[1] > (block.bbox[2] - block.bbox[0]) * 1.5:
                 continue
             # An unlabelled abstract (Nature) still provides a safe boundary.

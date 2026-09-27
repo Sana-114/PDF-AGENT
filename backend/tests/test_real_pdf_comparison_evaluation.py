@@ -37,6 +37,18 @@ def test_claim_fact_requires_the_cited_source_page() -> None:
     assert not _check_fact(_fact(), response, {"bert.pdf": "other-document"})
 
 
+def test_claim_fact_can_require_all_context_terms() -> None:
+    fact = {**_fact(), "claim_contains_all": ["BERT", "train"]}
+    response = SimpleNamespace(
+        evidence=[_source_anchor()],
+        claims=[SimpleNamespace(text="BERT uses masked LM.", evidence_ids=["E1"])],
+    )
+
+    assert not _check_fact(fact, response, {"bert.pdf": "bert-document"})
+    response.claims[0].text = "BERT uses masked LM for training."
+    assert _check_fact(fact, response, {"bert.pdf": "bert-document"})
+
+
 def test_live_comparison_gate_rejects_hybrid_fallback() -> None:
     response = SimpleNamespace(
         provider="deepseek",

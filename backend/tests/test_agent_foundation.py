@@ -6,7 +6,7 @@ from pydantic import BaseModel
 
 from app.agent.registry import SkillContext, SkillDefinition, SkillRegistry
 from app.core.config import Settings
-from app.llm.base import LLMInvalidCitationError
+from app.llm.base import LLMInvalidCitationError, LLMTransientError
 from app.llm.deepseek_responses import DeepSeekResponsesProvider
 from app.llm.extractive import ExtractiveProvider
 from app.llm.factory import get_llm_provider
@@ -191,6 +191,26 @@ async def test_grounded_answer_normalizes_only_allowed_citation_ids() -> None:
     invalid_only = True
     with pytest.raises(LLMInvalidCitationError):
         await provider.generate_grounded_answer("What?", [evidence])
+
+
+@pytest.mark.asyncio
+async def test_responses_adapter_classifies_transport_and_server_failures_as_transient() -> None:
+    def disconnect(request: httpx.Request) -> httpx.Response:
+        raise httpx.RemoteProtocolError("server disconnected", request=request)
+
+    provider = OpenAIResponsesProvider(
+        api_key="test-key",
+        model="test-model",
+        base_url="https://llm.test/v1",
+        timeout_seconds=10,
+        transport=httpx.MockTransport(disconnect),
+    )
+    with pytest.raises(LLMTransientError):
+        await provider._post_response({"model": "test-model"})
+
+    provider.transport = httpx.MockTransport(lambda request: httpx.Response(503))
+    with pytest.raises(LLMTransientError):
+        await provider._post_response({"model": "test-model"})
 
 
 @pytest.mark.asyncio

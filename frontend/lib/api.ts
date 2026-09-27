@@ -545,6 +545,7 @@ export interface ComparisonAudit {
   generated_claim_count: number;
   accepted_claim_count: number;
   rejected_claim_count: number;
+  derived_claim_count: number;
   published_claim_citation_coverage: number;
   evidence_utilization: number;
   referenced_document_count: number;
@@ -1109,7 +1110,7 @@ export async function comparePapers(
       body: JSON.stringify({
         question,
         document_ids: documentIds,
-        evidence_per_document: 4,
+        evidence_per_document: 5,
       }),
     }),
   );

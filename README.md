@@ -598,6 +598,8 @@ Transformer v1 的 Table 1/2 无框表格恢复、表格去重和公式 LaTeX �
 
 第 64 阶段已将同一门禁扩大到七篇论文、五组问答，并用 Edge 浏览器验证重复上传、页面答案、引用按钮到 PDF 原页高亮与拒答。复现命令为 `.\scripts\run_real_pdf_browser_e2e.ps1 -Gpu -Build`；14 条原文事实和浏览器验收边界见 [第 64 阶段真实 PDF 浏览器闭环](docs/real-pdf-browser-expanded-acceptance-2026-09-27.md)。
 
+第 65 阶段建立了核心赛题交付门禁：v7→v1 真实版本去重、15 页扫描替代样本 OCR、真实 541 页教材断点续跑，以及七篇论文的 BGE + DeepSeek 连续三轮 15/15 后端用例验证。完整浏览器五组独立调用仍会偶发漏写已检索到的事实；官方原始扫描件也尚未取得，不能把该阶段成绩等同比赛最终交付。复现命令、失败机器报告与剩余边界见 [核心赛题交付门禁](docs/release-core-gate-acceptance-2026-09-27.md)。
+
 首页的 Agent-first 信息架构、五类任务入口、原有深链兼容和响应式布局见 [Agent-first 前端界面验收](docs/agent-first-interface-acceptance-2026-09-18.md)。
 
 2026-09-21 进一步将首页收敛为论文阅读与研究工作台，移除营销式 AI 文案、英文装饰标签和深色功能堆叠，并完成桌面/窄屏复核；详见 [研究工作台界面优化验收](docs/research-ui-polish-2026-09-21.md)。
