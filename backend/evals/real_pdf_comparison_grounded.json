@@ -1,6 +1,6 @@
 {
   "schema_version": "1.0",
-  "dataset_id": "real-pdf-bge-deepseek-comparison-2026-09",
+  "dataset_id": "real-pdf-bge-deepseek-comparison-2026-09-v2",
   "expected_provider": "deepseek",
   "required_retrieval_mode": "reranked",
   "cases": [
@@ -79,11 +79,73 @@
       ]
     },
     {
+      "case_id": "bert-vs-gpt1-pretraining",
+      "question": "Compare BERT and the original OpenAI GPT using their papers: encoder versus decoder architecture, bidirectional versus left-to-right attention, masked-language-model versus autoregressive pre-training. Cite the specific passages supporting each distinction.",
+      "documents": ["1810.04805v2.pdf", "gpt1-openai-2018.pdf"],
+      "evidence_per_document": 4,
+      "min_cross_document_claims": 1,
+      "required_claim_facts": [
+        {
+          "fact_id": "bert-bidirectional-encoder-vs-gpt1",
+          "claim_contains_any": ["bidirectional", "双向"],
+          "source_filename": "1810.04805v2.pdf",
+          "source_text_contains_any": ["multi-layer bidirectional Transformer en- coder", "bidirectional Transformer"],
+          "source_pages": [3]
+        },
+        {
+          "fact_id": "bert-mlm-vs-gpt1",
+          "claim_contains_any": ["masked language model", "masked LM", "MLM", "掩码语言模型"],
+          "source_filename": "1810.04805v2.pdf",
+          "source_text_contains_any": ["masked language models", "MLM objective", "masked LM"],
+          "source_pages": [2, 4]
+        },
+        {
+          "fact_id": "gpt1-decoder-only",
+          "claim_contains_any": ["decoder-only", "decoder only", "仅解码器"],
+          "source_filename": "gpt1-openai-2018.pdf",
+          "source_text_contains_any": ["12-layer decoder-only transformer"],
+          "source_pages": [5]
+        }
+      ]
+    },
+    {
+      "case_id": "resnet-vs-vit-image-models",
+      "question": "Compare ResNet and Vision Transformer using their original papers: image representation, core computation, residual connections, and normalization. Explain ResNet's identity shortcut mapping versus ViT's patch-token Transformer encoder and self-attention, citing each paper.",
+      "documents": ["resnet-cvpr-2016.pdf", "2010.11929v2.pdf"],
+      "evidence_per_document": 4,
+      "min_cross_document_claims": 1,
+      "forbidden_claim_text_contains_any": ["VLAD", "dictionary"],
+      "required_claim_facts": [
+        {
+          "fact_id": "resnet-identity-shortcut",
+          "claim_contains_any": ["shortcut", "identity", "捷径", "恒等映射"],
+          "source_filename": "resnet-cvpr-2016.pdf",
+          "source_text_contains_any": ["identity mapping", "shortcut connections", "F(x) + x"],
+          "source_pages": [2, 3]
+        },
+        {
+          "fact_id": "vit-image-patches",
+          "claim_contains_any": ["patch", "图像块", "图块"],
+          "source_filename": "2010.11929v2.pdf",
+          "source_text_contains_any": ["fixed-size patches", "flattened 2D patches", "split an image"],
+          "source_pages": [3]
+        },
+        {
+          "fact_id": "vit-self-attention",
+          "claim_contains_any": ["self-attention", "自注意力"],
+          "source_filename": "2010.11929v2.pdf",
+          "source_text_contains_any": ["multiheaded self-attention", "multihead self-attention", "self-attention"],
+          "source_pages": [3]
+        }
+      ]
+    },
+    {
       "case_id": "unsupported-carbon-emissions",
       "question": "Compare the exact kilograms of CO2-equivalent emitted by the Transformer v1 and BERT training runs: measured emissions in kg CO2e. If the original-paper evidence does not support both numbers, decline the comparison without guessing.",
       "documents": ["1706.03762v1.pdf", "1810.04805v2.pdf"],
       "evidence_per_document": 4,
       "must_refuse": true,
+      "forbidden_quantity_pattern": "\\d+(?:[.,]\\d+)?\\s*(?:kg|kilograms|公斤)\\s*(?:CO2|CO₂)",
       "min_cross_document_claims": 0,
       "required_claim_facts": []
     }

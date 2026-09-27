@@ -5,6 +5,7 @@ from __future__ import annotations
 import argparse
 import asyncio
 import json
+import re
 import sys
 import time
 from dataclasses import asdict
@@ -96,8 +97,13 @@ def _check_case(case: dict, response, document_ids: dict[str, str], provider) ->
     if response.provider != "deepseek" or response.model != provider.model:
         failures.append("provider_or_model_mismatch")
     if must_refuse:
-        if not response.insufficient_evidence or response.claims:
+        if not response.insufficient_evidence or response.audit.cross_document_claim_count:
             failures.append("unsupported_question_not_refused")
+        quantity_pattern = case.get("forbidden_quantity_pattern")
+        if quantity_pattern and any(
+            re.search(quantity_pattern, claim.text, flags=re.I) for claim in response.claims
+        ):
+            failures.append("invented_target_quantity")
     else:
         if response.insufficient_evidence:
             failures.append("insufficient_evidence")
@@ -122,6 +128,8 @@ def _check_case(case: dict, response, document_ids: dict[str, str], provider) ->
             continue
         if _unsupported_numeric_facts(claim.text, cited):
             failures.append("published_unsupported_number")
+        if _contains_any(claim.text, case.get("forbidden_claim_text_contains_any", [])):
+            failures.append("forbidden_related_work_attribution")
     fact_checks = {
         fact["fact_id"]: _check_fact(fact, response, document_ids)
         for fact in case["required_claim_facts"]

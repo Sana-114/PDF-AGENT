@@ -9,6 +9,7 @@ from app.llm.base import (
     GeneratedSegmentTranslations,
     GeneratedTranslation,
     LLMConfigurationError,
+    LLMInvalidCitationError,
     LLMResponseError,
 )
 from app.schemas.agent import EvidenceAnchor
@@ -34,13 +35,9 @@ class OpenAIResponsesProvider:
         transport: httpx.AsyncBaseTransport | None = None,
     ) -> None:
         if not api_key:
-            raise LLMConfigurationError(
-                f"LLM_PROVIDER={provider_name} 时必须配置 LLM_API_KEY。"
-            )
+            raise LLMConfigurationError(f"LLM_PROVIDER={provider_name} 时必须配置 LLM_API_KEY。")
         if not model:
-            raise LLMConfigurationError(
-                f"LLM_PROVIDER={provider_name} 时必须配置 LLM_MODEL。"
-            )
+            raise LLMConfigurationError(f"LLM_PROVIDER={provider_name} 时必须配置 LLM_MODEL。")
         self.name = provider_name
         self.api_key = api_key
         self.model = model
@@ -51,9 +48,7 @@ class OpenAIResponsesProvider:
         self.reasoning_effort = reasoning_effort
         self.transport = transport
         self.provider_label = (
-            "DeepSeek Responses API"
-            if provider_name == "deepseek"
-            else "OpenAI Responses API"
+            "DeepSeek Responses API" if provider_name == "deepseek" else "OpenAI Responses API"
         )
 
     def _text_config(self, name: str, schema: dict[str, Any]) -> dict[str, Any]:
@@ -89,8 +84,7 @@ class OpenAIResponsesProvider:
             raise LLMResponseError(f"{self.provider_label} 网络请求失败：{exc}") from exc
         if response.is_error:
             raise LLMResponseError(
-                f"{self.provider_label} 返回 HTTP {response.status_code}: "
-                f"{response.text[:500]}"
+                f"{self.provider_label} 返回 HTTP {response.status_code}: {response.text[:500]}"
             )
         try:
             return response.json()
@@ -151,13 +145,23 @@ class OpenAIResponsesProvider:
         except json.JSONDecodeError as exc:
             raise LLMResponseError("模型未返回有效的结构化 JSON。") from exc
 
+        canonical_ids = {value.upper(): value for value in allowed_ids}
         claims: list[GeneratedClaim] = []
         for item in parsed.get("claims", []):
-            cited = [value for value in item.get("evidence_ids", []) if value in allowed_ids]
+            cited = [
+                canonical_ids[value.strip().strip("[]").upper()]
+                for value in (item.get("evidence_ids") or [])
+                if isinstance(value, str) and value.strip().strip("[]").upper() in canonical_ids
+            ]
             if cited:
-                claims.append(GeneratedClaim(text=str(item.get("text", "")), evidence_ids=cited))
+                claims.append(
+                    GeneratedClaim(
+                        text=str(item.get("text", "")),
+                        evidence_ids=list(dict.fromkeys(cited)),
+                    )
+                )
         if parsed.get("claims") and not claims:
-            raise LLMResponseError("模型答案未引用任何有效证据锚点。")
+            raise LLMInvalidCitationError("模型答案未引用任何有效证据锚点。")
         return GeneratedAnswer(answer=str(parsed.get("answer", "")), claims=claims)
 
     async def translate_text(

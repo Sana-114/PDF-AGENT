@@ -10,7 +10,12 @@ from sqlalchemy.orm import Session
 
 from app.core.config import settings
 from app.llm import get_llm_provider
-from app.llm.base import LLMConfigurationError, LLMProvider, LLMResponseError
+from app.llm.base import (
+    LLMConfigurationError,
+    LLMInvalidCitationError,
+    LLMProvider,
+    LLMResponseError,
+)
 from app.llm.extractive import ExtractiveProvider
 from app.models.document import Document
 from app.schemas.agent import AgentTraceStep, EvidenceAnchor
@@ -100,9 +105,7 @@ class PaperComparisonService:
                 if item.score >= settings.rag_min_score
             ]
             strong = _unique_evidence(raw_strong) if facets else raw_strong
-            selected = _select_faceted_evidence(
-                facet_candidates, strong, evidence_per_document
-            )
+            selected = _select_faceted_evidence(facet_candidates, strong, evidence_per_document)
             document_evidence: list[EvidenceAnchor] = []
             for item in selected:
                 copy = item.model_copy(deep=True)
@@ -162,13 +165,46 @@ class PaperComparisonService:
         generation_started = perf_counter()
         generation_status = "ok"
         prompt = _comparison_prompt(question, papers)
+        generation_attempts = 1
         try:
             generated = await provider.generate_grounded_answer(prompt, evidence)
+        except LLMInvalidCitationError:
+            generation_attempts = 2
+            warnings.append("模型首次返回的证据编号无效，已按原文白名单重试一次。")
+            retry_prompt = (
+                prompt
+                + "\nRetry: each claim's evidence_ids array must contain exact IDs from: "
+                + ", ".join(item.evidence_id for item in evidence)
+                + ". Never invent an ID or leave a factual claim uncited."
+            )
+            try:
+                generated = await provider.generate_grounded_answer(retry_prompt, evidence)
+            except (LLMConfigurationError, LLMResponseError) as exc:
+                warnings.append(f"生成式对比不可用，已退回逐条原文摘录：{exc}")
+                provider = ExtractiveProvider()
+                generated = await provider.generate_grounded_answer(prompt, evidence)
+                generation_status = "fallback"
         except (LLMConfigurationError, LLMResponseError) as exc:
             warnings.append(f"生成式对比不可用，已退回逐条原文摘录：{exc}")
             provider = ExtractiveProvider()
             generated = await provider.generate_grounded_answer(prompt, evidence)
             generation_status = "fallback"
+
+        if not generated.claims and generation_attempts == 1 and provider.name != "extractive":
+            warnings.append("模型首次未给出可核验声明，已对原文证据复核一次。")
+            retry_prompt = (
+                prompt
+                + "\nRecheck the supplied passages once. If each of two papers directly supports "
+                "a requested design or setting, return a DIFFERENCE claim citing exact IDs "
+                "from both papers. If the requested fact is not in the passages, return no claims."
+            )
+            try:
+                generated = await provider.generate_grounded_answer(retry_prompt, evidence)
+            except (LLMConfigurationError, LLMResponseError) as exc:
+                warnings.append(f"生成式对比复核失败，已退回逐条原文摘录：{exc}")
+                provider = ExtractiveProvider()
+                generated = await provider.generate_grounded_answer(prompt, evidence)
+                generation_status = "fallback"
 
         allowed = {item.evidence_id: item for item in evidence}
         claims: list[ComparisonClaimRead] = []
@@ -293,6 +329,9 @@ def _comparison_prompt(question: str, papers: list[ComparisonPaperRead]) -> str:
         "evidence from at least two distinct documents. Do not guess missing values or resolve a "
         "conflict without evidence. Absence from the selected passages does not prove a paper "
         "does not report or use something; describe only what the cited passage establishes. "
+        "A paper's Related Work or References section describes prior work, not necessarily the "
+        "paper's own method; never attribute a cited prior method to the paper's authors, and omit "
+        "unrequested background material from the final comparison. "
         "Return supported dimensions even when another dimension lacks evidence. Return no claims "
         "only when every requested dimension lacks direct evidence; never treat silence as proof. "
         "Every number, percentage, year, parameter count, context "
@@ -300,6 +339,9 @@ def _comparison_prompt(question: str, papers: list[ComparisonPaperRead]) -> str:
         "or metric value in a claim must occur in the cited evidence. For a requested numeric "
         "dimension, report each available paper's explicit value and cite the particular evidence "
         "item containing that value; never cite only a general architecture passage. "
+        "When two papers have direct evidence for different designs, first give one explicit "
+        "DIFFERENCE claim comparing them with at least one cited evidence item from each paper. "
+        "Two separate SINGLE_SOURCE facts do not replace a requested cross-paper conclusion. "
         "Organize the answer by "
         "comparison dimension rather than merely summarizing papers one after another. The final "
         "published answer will be reconstructed only from claims that pass citation validation."
@@ -415,9 +457,7 @@ def _comparison_facets(question: str) -> list[str]:
 def _unique_evidence(evidence: Iterable[EvidenceAnchor]) -> list[EvidenceAnchor]:
     unique: dict[str, EvidenceAnchor] = {}
     for item in evidence:
-        key = item.chunk_id or "|".join(
-            [item.document_id, str(item.page_number), *item.block_ids]
-        )
+        key = item.chunk_id or "|".join([item.document_id, str(item.page_number), *item.block_ids])
         unique.setdefault(key, item)
     return list(unique.values())
 
@@ -445,9 +485,7 @@ def _select_faceted_evidence(
         if len(selected) >= limit:
             return selected
     for item in _select_diverse_evidence(candidates, limit):
-        key = item.chunk_id or "|".join(
-            [item.document_id, str(item.page_number), *item.block_ids]
-        )
+        key = item.chunk_id or "|".join([item.document_id, str(item.page_number), *item.block_ids])
         if key not in selected_ids:
             selected.append(item)
             selected_ids.add(key)

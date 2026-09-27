@@ -8,7 +8,7 @@ from sqlalchemy.pool import StaticPool
 
 from app.api.routes import agent as agent_routes
 from app.core.database import Base, get_db
-from app.llm.base import GeneratedAnswer, GeneratedClaim
+from app.llm.base import GeneratedAnswer, GeneratedClaim, LLMInvalidCitationError
 from app.main import app
 from app.models.document import Document, DocumentStatus
 from app.schemas.agent import EvidenceAnchor
@@ -89,6 +89,53 @@ class RecordingComparisonProvider:
                     text="未标记的跨来源结论。",
                     evidence_ids=["E1", "E3"],
                 ),
+            ],
+        )
+
+
+class RecoveringCitationProvider:
+    name = "deepseek"
+    model = "deepseek-flash"
+    supports_translation = True
+
+    def __init__(self) -> None:
+        self.questions: list[str] = []
+
+    async def generate_grounded_answer(self, question, evidence):
+        self.questions.append(question)
+        if len(self.questions) == 1:
+            raise LLMInvalidCitationError("模型答案未引用任何有效证据锚点。")
+        return GeneratedAnswer(
+            answer="grounded",
+            claims=[
+                GeneratedClaim(
+                    text="[DIFFERENCE][DIMENSION: method] Their methods differ.",
+                    evidence_ids=[evidence[0].evidence_id, evidence[2].evidence_id],
+                )
+            ],
+        )
+
+
+class EmptyThenGroundedProvider:
+    name = "deepseek"
+    model = "deepseek-flash"
+    supports_translation = True
+
+    def __init__(self, *, always_empty: bool = False) -> None:
+        self.questions: list[str] = []
+        self.always_empty = always_empty
+
+    async def generate_grounded_answer(self, question, evidence):
+        self.questions.append(question)
+        if len(self.questions) == 1 or self.always_empty:
+            return GeneratedAnswer(answer="Evidence is insufficient.", claims=[])
+        return GeneratedAnswer(
+            answer="grounded",
+            claims=[
+                GeneratedClaim(
+                    text="[DIFFERENCE][DIMENSION: method] Their methods differ.",
+                    evidence_ids=[evidence[0].evidence_id, evidence[2].evidence_id],
+                )
             ],
         )
 
@@ -236,6 +283,50 @@ def _document(session: Session, suffix: str, title: str) -> Document:
     session.add(document)
     session.commit()
     return document
+
+
+@pytest.mark.asyncio
+async def test_comparison_retries_invalid_citation_ids_once() -> None:
+    engine = create_engine("sqlite://")
+    Base.metadata.create_all(engine)
+    provider = RecoveringCitationProvider()
+    with Session(engine, expire_on_commit=False) as session:
+        first = _document(session, "retry-a", "Paper A")
+        second = _document(session, "retry-b", "Paper B")
+        result = await PaperComparisonService(
+            session,
+            retriever=BalancedRetriever(),
+            provider=provider,  # type: ignore[arg-type]
+        ).compare([first, second], "Compare methods", evidence_per_document=2)
+
+    assert len(provider.questions) == 2
+    assert "Retry:" in provider.questions[1]
+    assert result.provider == "deepseek"
+    assert result.insufficient_evidence is False
+    assert result.audit.cross_document_claim_count == 1
+    assert [step.status for step in result.trace if step.skill == "llm.compare_documents"] == ["ok"]
+    assert any("白名单重试一次" in warning for warning in result.warnings)
+
+
+@pytest.mark.asyncio
+@pytest.mark.parametrize("always_empty", [False, True])
+async def test_comparison_rechecks_empty_generation_once(always_empty: bool) -> None:
+    engine = create_engine("sqlite://")
+    Base.metadata.create_all(engine)
+    provider = EmptyThenGroundedProvider(always_empty=always_empty)
+    with Session(engine, expire_on_commit=False) as session:
+        first = _document(session, "empty-a", "Paper A")
+        second = _document(session, "empty-b", "Paper B")
+        result = await PaperComparisonService(
+            session,
+            retriever=BalancedRetriever(),
+            provider=provider,  # type: ignore[arg-type]
+        ).compare([first, second], "Compare methods", evidence_per_document=2)
+
+    assert len(provider.questions) == 2
+    assert "Recheck the supplied passages once" in provider.questions[1]
+    assert result.insufficient_evidence is always_empty
+    assert any("复核一次" in warning for warning in result.warnings)
 
 
 @pytest.mark.asyncio

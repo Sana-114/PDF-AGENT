@@ -12,6 +12,10 @@ class LLMResponseError(RuntimeError):
     pass
 
 
+class LLMInvalidCitationError(LLMResponseError):
+    """The model generated claims but cited no allowed evidence IDs."""
+
+
 @dataclass(slots=True)
 class GeneratedClaim:
     text: str

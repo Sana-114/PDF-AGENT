@@ -100,8 +100,13 @@ export default function PaperComparisonWorkbench({
           {readyDocuments.map((document, index) => {
             const selected = selectedIds.includes(document.id);
             return (
-              <label className={selected ? "selected" : ""} key={document.id}>
+              <label
+                className={selected ? "selected" : ""}
+                data-document-id={document.id}
+                key={document.id}
+              >
                 <input
+                  aria-label={`${document.title || document.original_filename} (${document.original_filename})`}
                   checked={selected}
                   disabled={!selected && selectedIds.length >= 6}
                   onChange={() => toggleDocument(document.id)}
@@ -253,6 +258,7 @@ export default function PaperComparisonWorkbench({
                                       const evidence = evidenceById.get(evidenceId);
                                       return (
                                         <button
+                                          data-evidence-id={evidenceId}
                                           disabled={!evidence}
                                           key={evidenceId}
                                           onClick={() => evidence && onOpenEvidence(evidence)}
@@ -288,6 +294,7 @@ export default function PaperComparisonWorkbench({
                       const evidence = evidenceById.get(evidenceId);
                       return (
                         <button
+                          data-evidence-id={evidenceId}
                           disabled={!evidence}
                           key={evidenceId}
                           onClick={() => evidence && onOpenEvidence(evidence)}

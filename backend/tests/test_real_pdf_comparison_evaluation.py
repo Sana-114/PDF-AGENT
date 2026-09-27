@@ -105,3 +105,61 @@ def test_live_comparison_gate_rejects_refusal_without_bge_evidence() -> None:
     )
 
     assert result["failures"] == ["retrieval_bypassed_reranker"]
+
+
+def test_refusal_allows_grounded_context_but_rejects_target_quantity() -> None:
+    response = SimpleNamespace(
+        provider="deepseek",
+        model="deepseek-flash",
+        insufficient_evidence=True,
+        audit=SimpleNamespace(cross_document_claim_count=0, referenced_document_count=1),
+        evidence=[_source_anchor()],
+        claims=[
+            SimpleNamespace(
+                text="The paper reports training FLOPs, not kg CO2e.",
+                evidence_ids=["E1"],
+            )
+        ],
+        trace=[SimpleNamespace(skill="llm.compare_documents", status="ok")],
+    )
+    case = {
+        "must_refuse": True,
+        "required_claim_facts": [],
+        "forbidden_quantity_pattern": r"\d+(?:[.,]\d+)?\s*(?:kg|kilograms|公斤)\s*(?:CO2|CO₂)",
+    }
+    documents = {"bert.pdf": "bert-document"}
+    provider = SimpleNamespace(model="deepseek-flash")
+
+    assert _check_case(case, response, documents, provider)["passed"] is True
+    response.claims[0].text = "The paper emitted 100 kg CO2e."
+    assert (
+        "invented_target_quantity" in _check_case(case, response, documents, provider)["failures"]
+    )
+
+
+def test_live_comparison_gate_rejects_related_work_as_own_method() -> None:
+    response = SimpleNamespace(
+        provider="deepseek",
+        model="deepseek-flash",
+        insufficient_evidence=False,
+        audit=SimpleNamespace(cross_document_claim_count=0, referenced_document_count=1),
+        evidence=[_source_anchor()],
+        claims=[
+            SimpleNamespace(text="The paper uses VLAD dictionary vectors.", evidence_ids=["E1"])
+        ],
+        trace=[SimpleNamespace(skill="llm.compare_documents", status="ok")],
+    )
+    case = {
+        "min_cross_document_claims": 0,
+        "required_claim_facts": [],
+        "forbidden_claim_text_contains_any": ["VLAD", "dictionary"],
+    }
+
+    result = _check_case(
+        case,
+        response,
+        {"bert.pdf": "bert-document"},
+        SimpleNamespace(model="deepseek-flash"),
+    )
+
+    assert result["failures"] == ["forbidden_related_work_attribution"]

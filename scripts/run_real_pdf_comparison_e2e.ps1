@@ -13,13 +13,9 @@ $reportName = "bge-deepseek-comparison-$([DateTimeOffset]::UtcNow.ToUnixTimeSeco
 $reportPath = Join-Path $reportDir $reportName
 $containerReport = "/app/$reportName"
 $manifestPath = Join-Path $projectRoot "docs/pdf-regression-corpus.json"
-$filenames = @(
-    "1706.03762v1.pdf",
-    "1810.04805v2.pdf",
-    "gpt1-openai-2018.pdf",
-    "gpt2-openai-2019.pdf",
-    "2005.14165v4.pdf"
-)
+$datasetPath = Join-Path $projectRoot "backend/evals/real_pdf_comparison_grounded.json"
+$dataset = Get-Content -Raw -LiteralPath $datasetPath | ConvertFrom-Json
+$filenames = @($dataset.cases | ForEach-Object { $_.documents } | Select-Object -Unique)
 $composeArgs = @("compose", "-f", "docker-compose.yml")
 if ($Gpu) { $composeArgs += @("-f", "docker-compose.bge-gpu.yml") }
 $composeArgs += @(

@@ -6,6 +6,7 @@ from pydantic import BaseModel
 
 from app.agent.registry import SkillContext, SkillDefinition, SkillRegistry
 from app.core.config import Settings
+from app.llm.base import LLMInvalidCitationError
 from app.llm.deepseek_responses import DeepSeekResponsesProvider
 from app.llm.extractive import ExtractiveProvider
 from app.llm.factory import get_llm_provider
@@ -63,9 +64,7 @@ def test_openai_output_text_extraction() -> None:
         ]
     }
 
-    assert OpenAIResponsesProvider._extract_output_text(response) == (
-        '{"answer":"ok","claims":[]}'
-    )
+    assert OpenAIResponsesProvider._extract_output_text(response) == ('{"answer":"ok","claims":[]}')
 
 
 def test_deepseek_factory_uses_responses_compatibility_mode() -> None:
@@ -133,6 +132,65 @@ async def test_grounded_answer_treats_pdf_evidence_as_untrusted_content() -> Non
     result = await provider.generate_grounded_answer("What beta value was used?", [evidence])
 
     assert result.claims[0].evidence_ids == ["E1"]
+
+
+@pytest.mark.asyncio
+async def test_grounded_answer_normalizes_only_allowed_citation_ids() -> None:
+    invalid_only = False
+
+    def handler(request: httpx.Request) -> httpx.Response:
+        del request
+        return httpx.Response(
+            200,
+            json={
+                "output": [
+                    {
+                        "type": "message",
+                        "content": [
+                            {
+                                "type": "output_text",
+                                "text": json.dumps(
+                                    {
+                                        "answer": "Supported.",
+                                        "claims": [
+                                            {
+                                                "text": "Supported.",
+                                                "evidence_ids": ["E999"]
+                                                if invalid_only
+                                                else [" [e1] ", "E999", "E1"],
+                                            }
+                                        ],
+                                    }
+                                ),
+                            }
+                        ],
+                    }
+                ],
+            },
+        )
+
+    provider = OpenAIResponsesProvider(
+        api_key="test-key",
+        model="test-model",
+        base_url="https://llm.test/v1",
+        timeout_seconds=10,
+        transport=httpx.MockTransport(handler),
+    )
+    evidence = EvidenceAnchor(
+        evidence_id="E1",
+        document_id="doc-1",
+        page_number=1,
+        block_ids=["p1-b1"],
+        quote="Supported.",
+        score=1,
+    )
+
+    result = await provider.generate_grounded_answer("What?", [evidence])
+
+    assert result.claims[0].evidence_ids == ["E1"]
+    invalid_only = True
+    with pytest.raises(LLMInvalidCitationError):
+        await provider.generate_grounded_answer("What?", [evidence])
 
 
 @pytest.mark.asyncio
