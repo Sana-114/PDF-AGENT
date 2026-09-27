@@ -27,8 +27,10 @@ from app.services.paper_comparison import (
     _comparison_facets,
     _compose_parallel_claim,
     _exact_emissions_measurement_missing,
+    _missing_parameter_count_papers,
     _prefer_primary_evidence,
     _select_faceted_evidence,
+    _training_sequence_scope,
     _unsupported_numeric_facts,
 )
 
@@ -113,6 +115,55 @@ def test_exact_emissions_guard_allows_two_measured_source_values() -> None:
         papers,
         evidence,
     )
+
+
+def test_parameter_coverage_requires_each_sources_actual_value() -> None:
+    papers = [
+        ComparisonPaperRead(
+            document_id=document_id,
+            title=f"Paper {document_id}",
+            evidence_ids=[evidence_id],
+            evidence_count=1,
+            coverage="supported",
+        )
+        for document_id, evidence_id in [("A", "E1"), ("B", "E2")]
+    ]
+    evidence = [
+        EvidenceAnchor(
+            evidence_id=evidence_id,
+            document_id=document_id,
+            page_number=4,
+            quote=quote,
+            score=0.9,
+        )
+        for document_id, evidence_id, quote in [
+            ("A", "E1", "Parameters Layers 1542M 48"),
+            ("B", "E2", "175 billion parameters"),
+        ]
+    ]
+    claims = [
+        GeneratedClaim(
+            text="Paper B reports 175 billion parameters.",
+            evidence_ids=["E1", "E2"],
+        )
+    ]
+    missing = _missing_parameter_count_papers("Compare parameter counts", papers, claims, evidence)
+
+    assert [paper.document_id for paper in missing] == ["A"]
+
+
+def test_training_sequence_scope_uses_the_named_paper_only() -> None:
+    engine = create_engine("sqlite://")
+    Base.metadata.create_all(engine)
+    with Session(engine, expire_on_commit=False) as session:
+        first = _document(session, "gpt1-openai-2018", "Improving Language Understanding")
+        second = _document(session, "gpt3-openai-2020", "Language Models are Few-Shot Learners")
+        scope = _training_sequence_scope(
+            "Compare GPT-1's explicit training sequence length and GPT-3 context window",
+            [first, second],
+        )
+
+    assert scope == {first.id}
 
 
 def test_comparison_facets_split_explicit_research_dimensions() -> None:
@@ -321,6 +372,100 @@ class TwoSingleSourceProvider:
                 ),
             ],
         )
+
+
+class ParameterCountProvider:
+    name = "deepseek"
+    model = "deepseek-flash"
+    supports_translation = True
+
+    def __init__(self, *, bad_supplement: bool = False) -> None:
+        self.calls = 0
+        self.bad_supplement = bad_supplement
+
+    async def generate_grounded_answer(self, question, evidence):
+        self.calls += 1
+        if self.calls == 1:
+            return GeneratedAnswer(
+                answer="Both papers report model sizes.",
+                claims=[
+                    GeneratedClaim(
+                        text="[AGREEMENT][DIMENSION: model sizes] Both papers report model sizes.",
+                        evidence_ids=["E1", "E2"],
+                    )
+                ],
+            )
+        assert "parameter count" in question
+        assert [item.evidence_id for item in evidence] == ["E1", "E2"]
+        value = "999B" if self.bad_supplement else "175 billion"
+        return GeneratedAnswer(
+            answer="Parameter counts.",
+            claims=[
+                GeneratedClaim(
+                    text=(
+                        "[DIFFERENCE][DIMENSION: parameter counts] "
+                        f"Paper A reports 1542M parameters; Paper B reports {value} parameters."
+                    ),
+                    evidence_ids=["E1", "E2"],
+                )
+            ],
+        )
+
+
+class TrainingSequenceProvider:
+    name = "deepseek"
+    model = "deepseek-flash"
+    supports_translation = True
+
+    def __init__(self) -> None:
+        self.calls = 0
+
+    async def generate_grounded_answer(self, question, evidence):
+        self.calls += 1
+        if self.calls == 1:
+            return GeneratedAnswer(
+                answer="The architectures are comparable.",
+                claims=[
+                    GeneratedClaim(
+                        text="[AGREEMENT][DIMENSION: architecture] Both use Transformer models.",
+                        evidence_ids=["E1", "E2"],
+                    )
+                ],
+            )
+        assert "training sequence length" in question
+        assert [item.evidence_id for item in evidence] == ["E1"]
+        return GeneratedAnswer(
+            answer="The training sequence is 512 tokens.",
+            claims=[
+                GeneratedClaim(
+                    text=(
+                        "[SINGLE_SOURCE][DIMENSION: training sequence length] "
+                        "Paper A trains on sequences of 512 tokens; "
+                        "this is not a context window claim."
+                    ),
+                    evidence_ids=["E1"],
+                )
+            ],
+        )
+
+
+class ParameterCountRetriever:
+    def __init__(self, quotes: dict[str, str]) -> None:
+        self.quotes = quotes
+
+    def search(self, question, document_ids=None, top_k=6):
+        document_id = document_ids[0]
+        return [
+            EvidenceAnchor(
+                evidence_id="local",
+                document_id=document_id,
+                page_number=4,
+                section="2.3 Model",
+                quote=self.quotes[document_id],
+                score=0.95,
+                retrieval_mode="reranked",
+            )
+        ]
 
 
 class BalancedRetriever:
@@ -572,6 +717,69 @@ async def test_parallel_claim_audit_separates_derived_from_generated() -> None:
     assert result.audit.derived_claim_count == 1
     assert result.audit.cross_document_claim_count == 1
     assert len(result.claims) == 3
+
+
+@pytest.mark.asyncio
+@pytest.mark.parametrize("bad_supplement", [False, True])
+async def test_parameter_count_completeness_rechecks_only_grounded_values(
+    bad_supplement: bool,
+) -> None:
+    engine = create_engine("sqlite://")
+    Base.metadata.create_all(engine)
+    provider = ParameterCountProvider(bad_supplement=bad_supplement)
+    with Session(engine, expire_on_commit=False) as session:
+        first = _document(session, "parameter-a", "Paper A")
+        second = _document(session, "parameter-b", "Paper B")
+        retriever = ParameterCountRetriever(
+            {
+                first.id: "Parameters Layers: 1542M 48. Paper A reports four model sizes.",
+                second.id: "Paper B is a 175 billion parameter language model.",
+            }
+        )
+        result = await PaperComparisonService(
+            session,
+            retriever=retriever,
+            provider=provider,  # type: ignore[arg-type]
+        ).compare(
+            [first, second], "Compare parameter counts of these models", evidence_per_document=1
+        )
+
+    assert provider.calls == 2
+    assert any(step.skill == "llm.audit_numeric_completeness" for step in result.trace)
+    assert result.insufficient_evidence is bad_supplement
+    assert result.audit.accepted_claim_count == (1 if bad_supplement else 2)
+    assert result.audit.rejected_claim_count == (1 if bad_supplement else 0)
+    assert all("999B" not in claim.text for claim in result.claims)
+    if bad_supplement:
+        assert any("未能给出通过引用校验的结果" in warning for warning in result.warnings)
+    else:
+        assert any("1542M" in claim.text and "175 billion" in claim.text for claim in result.claims)
+
+
+@pytest.mark.asyncio
+async def test_training_sequence_length_gets_a_separate_source_grounded_recheck() -> None:
+    engine = create_engine("sqlite://")
+    Base.metadata.create_all(engine)
+    provider = TrainingSequenceProvider()
+    with Session(engine, expire_on_commit=False) as session:
+        first = _document(session, "sequence-a", "Paper A")
+        second = _document(session, "sequence-b", "Paper B")
+        retriever = ParameterCountRetriever(
+            {
+                first.id: "We train on randomly sampled, contiguous sequences of 512 tokens.",
+                second.id: "The Transformer model uses masked self-attention.",
+            }
+        )
+        result = await PaperComparisonService(
+            session,
+            retriever=retriever,
+            provider=provider,  # type: ignore[arg-type]
+        ).compare([first, second], "Compare the training sequence length", evidence_per_document=1)
+
+    assert provider.calls == 2
+    assert result.insufficient_evidence is False
+    assert any("512 tokens" in claim.text for claim in result.claims)
+    assert any(step.skill == "llm.audit_numeric_completeness" for step in result.trace)
 
 
 @pytest.mark.asyncio

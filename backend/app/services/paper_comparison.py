@@ -12,6 +12,8 @@ from sqlalchemy.orm import Session
 from app.core.config import settings
 from app.llm import get_llm_provider
 from app.llm.base import (
+    GeneratedAnswer,
+    GeneratedClaim,
     LLMConfigurationError,
     LLMInvalidCitationError,
     LLMProvider,
@@ -42,6 +44,19 @@ NUMERIC_FACT_PATTERN = re.compile(
     r"(?<![\w-])\d+(?:[.,]\d+)*(?:\s?(?:%|[KMB]|thousand|million|billion))?(?![\w])",
     re.IGNORECASE,
 )
+PARAMETER_COUNT_QUESTION_PATTERN = re.compile(
+    r"\b(?:parameter counts?|number of parameters)\b|参数量|模型参数", re.I
+)
+PARAMETER_VALUE_PATTERN = re.compile(
+    r"(?<![\w-])\d+(?:[.,]\d+)?\s*(?:[MB]|million|billion|亿|万)\b", re.I
+)
+PARAMETER_EVIDENCE_PATTERN = re.compile(r"\bparameters?\b|参数", re.I)
+TRAINING_SEQUENCE_QUESTION_PATTERN = re.compile(
+    r"\btraining sequence(?:s| lengths?)?\b|训练序列(?:长度)?", re.I
+)
+TRAINING_EVIDENCE_PATTERN = re.compile(r"\b(?:train|trained|training)\b|训练", re.I)
+SEQUENCE_EVIDENCE_PATTERN = re.compile(r"\bsequences?\b|序列", re.I)
+TOKEN_VALUE_PATTERN = re.compile(r"(?<![\w-])\d+(?:,\d+)?\s*[- ]?\s*tokens?\b", re.I)
 RELATION_MAP = {
     "agreement": "agreement",
     "difference": "difference",
@@ -170,10 +185,16 @@ class PaperComparisonService:
         prompt = _comparison_prompt(question, papers)
         generation_attempts = 1
 
-        async def generate_with_retry(request_prompt: str):
+        async def generate_with_retry(
+            request_prompt: str,
+            request_evidence: list[EvidenceAnchor] | None = None,
+        ) -> GeneratedAnswer:
             for attempt in range(3):
                 try:
-                    return await provider.generate_grounded_answer(request_prompt, evidence)
+                    return await provider.generate_grounded_answer(
+                        request_prompt,
+                        request_evidence if request_evidence is not None else evidence,
+                    )
                 except LLMTransientError:
                     if attempt == 2:
                         raise
@@ -220,6 +241,83 @@ class PaperComparisonService:
                 provider = ExtractiveProvider()
                 generated = await provider.generate_grounded_answer(prompt, evidence)
                 generation_status = "fallback"
+
+        if provider.name != "extractive":
+            missing_parameter_papers = _missing_parameter_count_papers(
+                question, papers, generated.claims, evidence
+            )
+            missing_sequence_papers = _missing_training_sequence_papers(
+                question, papers, generated.claims, evidence, documents=documents
+            )
+            if missing_parameter_papers or missing_sequence_papers:
+                audit_started = perf_counter()
+                parameter_ids = {paper.document_id for paper in missing_parameter_papers}
+                sequence_ids = {paper.document_id for paper in missing_sequence_papers}
+                target_evidence = [
+                    item
+                    for item in evidence
+                    if (item.document_id in parameter_ids and _has_parameter_value(item.quote))
+                    or (
+                        item.document_id in sequence_ids
+                        and _has_training_sequence_value(item.quote)
+                    )
+                ]
+                target_evidence_ids = {item.evidence_id for item in target_evidence}
+                target_descriptions = [
+                    *(f"{paper.title}: parameter count" for paper in missing_parameter_papers),
+                    *(
+                        f"{paper.title}: training sequence length"
+                        for paper in missing_sequence_papers
+                    ),
+                ]
+                audit_prompt = (
+                    "Complete only these missing requested numeric facts: "
+                    f"{'; '.join(target_descriptions)}. Original question: {question}\n"
+                    "The prior answer omitted explicit values in the supplied passages. "
+                    "Return only new claims containing the exact source-stated parameter count or "
+                    "training sequence length, with the corresponding evidence IDs. "
+                    "Do not equate training sequence length with context window. "
+                    "Do not infer or convert values or repeat unrelated facts. "
+                    "If no value is stated, return no claims."
+                )
+                try:
+                    supplemental = await generate_with_retry(audit_prompt, target_evidence)
+                except (LLMConfigurationError, LLMResponseError) as exc:
+                    warnings.append(f"数值事实完整性复核未完成，保留已核验声明：{exc}")
+                    audit_status = "failed"
+                else:
+                    existing_keys = {
+                        (claim.text.strip().casefold(), tuple(claim.evidence_ids))
+                        for claim in generated.claims
+                    }
+                    additions = [
+                        claim
+                        for claim in supplemental.claims
+                        if (
+                            PARAMETER_VALUE_PATTERN.search(claim.text)
+                            or TOKEN_VALUE_PATTERN.search(claim.text)
+                        )
+                        and any(item in target_evidence_ids for item in claim.evidence_ids)
+                        and (claim.text.strip().casefold(), tuple(claim.evidence_ids))
+                        not in existing_keys
+                    ]
+                    generated = GeneratedAnswer(
+                        answer=generated.answer,
+                        claims=[*generated.claims, *additions],
+                    )
+                    audit_status = "ok" if additions else "insufficient"
+                    warnings.append(
+                        f"数值事实完整性复核：针对 {len(target_descriptions)} 项有原文数值的要求"
+                        f"补充 {len(additions)} 条候选声明，仍需引用校验。"
+                    )
+                trace.append(
+                    AgentTraceStep(
+                        skill="llm.audit_numeric_completeness",
+                        status=audit_status,
+                        summary="对已检索到但首轮回答未覆盖的数值事实做定向复核。",
+                        duration_ms=_elapsed_ms(audit_started),
+                    )
+                )
 
         allowed = {item.evidence_id: item for item in evidence}
         claims: list[ComparisonClaimRead] = []
@@ -279,6 +377,23 @@ class PaperComparisonService:
             rejection_reasons.append("requested_measurement_not_supported")
             warnings.append("至少一篇论文的入选原文缺少请求的精确 kg CO₂e 测量值，已拒绝数值对比。")
 
+        still_missing_parameters = _missing_parameter_count_papers(
+            question, papers, claims, evidence
+        )
+        still_missing_sequences = _missing_training_sequence_papers(
+            question, papers, claims, evidence, documents=documents
+        )
+        if still_missing_parameters or still_missing_sequences:
+            warnings.append(
+                "以下请求虽有原文数值，但回答未能给出通过引用校验的结果："
+                + "、".join(
+                    [
+                        *(f"{paper.title} 参数量" for paper in still_missing_parameters),
+                        *(f"{paper.title} 训练序列长度" for paper in still_missing_sequences),
+                    ]
+                )
+            )
+
         trace.append(
             AgentTraceStep(
                 skill="llm.compare_documents",
@@ -328,7 +443,9 @@ class PaperComparisonService:
                 supported_document_count=supported_count,
             ),
             audit=audit,
-            insufficient_evidence=not claims or not cross_document_claim_count,
+            insufficient_evidence=bool(still_missing_parameters or still_missing_sequences)
+            or not claims
+            or not cross_document_claim_count,
             provider=provider.name,
             model=provider.model,
             trace=trace,
@@ -434,6 +551,141 @@ def _normalise_fact(value: str) -> str:
         .replace("billion", "b")
         .replace(" ", "")
     )
+
+
+def _has_parameter_value(quote: str) -> bool:
+    return bool(PARAMETER_EVIDENCE_PATTERN.search(quote) and PARAMETER_VALUE_PATTERN.search(quote))
+
+
+def _has_training_sequence_value(quote: str) -> bool:
+    return bool(
+        TRAINING_EVIDENCE_PATTERN.search(quote)
+        and SEQUENCE_EVIDENCE_PATTERN.search(quote)
+        and TOKEN_VALUE_PATTERN.search(quote)
+    )
+
+
+def _missing_parameter_count_papers(
+    question: str,
+    papers: list[ComparisonPaperRead],
+    claims: Iterable[GeneratedClaim | ComparisonClaimRead],
+    evidence: list[EvidenceAnchor],
+) -> list[ComparisonPaperRead]:
+    """Find requested parameter counts present in source passages but absent from claims."""
+
+    return _missing_requested_numeric_papers(
+        question,
+        papers,
+        claims,
+        evidence,
+        question_pattern=PARAMETER_COUNT_QUESTION_PATTERN,
+        value_pattern=PARAMETER_VALUE_PATTERN,
+        source_patterns=(PARAMETER_EVIDENCE_PATTERN,),
+    )
+
+
+def _missing_training_sequence_papers(
+    question: str,
+    papers: list[ComparisonPaperRead],
+    claims: Iterable[GeneratedClaim | ComparisonClaimRead],
+    evidence: list[EvidenceAnchor],
+    *,
+    documents: list[Document] | None = None,
+) -> list[ComparisonPaperRead]:
+    """Require a cited token count when a training sequence length is requested."""
+
+    return _missing_requested_numeric_papers(
+        question,
+        papers,
+        claims,
+        evidence,
+        question_pattern=TRAINING_SEQUENCE_QUESTION_PATTERN,
+        value_pattern=TOKEN_VALUE_PATTERN,
+        source_patterns=(TRAINING_EVIDENCE_PATTERN, SEQUENCE_EVIDENCE_PATTERN),
+        document_scope=_training_sequence_scope(question, documents),
+    )
+
+
+def _training_sequence_scope(question: str, documents: list[Document] | None) -> set[str] | None:
+    if not documents:
+        return None
+    match = re.search(
+        r"\b([A-Za-z][A-Za-z0-9_-]{1,24})['’]s\s+(?:explicit\s+)?training sequence",
+        question,
+        re.I,
+    )
+    if not match:
+        return None
+    label = re.sub(r"[^a-z0-9]", "", match.group(1).casefold())
+    matched = {
+        document.id
+        for document in documents
+        if label
+        in re.sub(
+            r"[^a-z0-9]",
+            "",
+            f"{document.original_filename} {document.title or ''}".casefold(),
+        )
+    }
+    return matched or None
+
+
+def _normalise_numeric_value(value: str) -> str:
+    return _normalise_fact(value.replace("-", " ")).replace("tokens", "token")
+
+
+def _missing_requested_numeric_papers(
+    question: str,
+    papers: list[ComparisonPaperRead],
+    claims: Iterable[GeneratedClaim | ComparisonClaimRead],
+    evidence: list[EvidenceAnchor],
+    *,
+    question_pattern: re.Pattern[str],
+    value_pattern: re.Pattern[str],
+    source_patterns: tuple[re.Pattern[str], ...],
+    document_scope: set[str] | None = None,
+) -> list[ComparisonPaperRead]:
+    if not question_pattern.search(question):
+        return []
+    allowed = {item.evidence_id: item for item in evidence}
+    claims_list = list(claims)
+    missing: list[ComparisonPaperRead] = []
+    for paper in papers:
+        if document_scope is not None and paper.document_id not in document_scope:
+            continue
+        value_sources = [
+            item
+            for item in evidence
+            if item.document_id == paper.document_id
+            and all(pattern.search(item.quote) for pattern in source_patterns)
+            and value_pattern.search(item.quote)
+        ]
+        if not value_sources:
+            continue
+        source_ids = {item.evidence_id for item in value_sources}
+        source_values = {
+            _normalise_numeric_value(value)
+            for item in value_sources
+            for value in value_pattern.findall(item.quote)
+        }
+        covered = False
+        for claim in claims_list:
+            claim_values = {
+                _normalise_numeric_value(value) for value in value_pattern.findall(claim.text)
+            }
+            if not claim_values.intersection(source_values):
+                continue
+            if not any(item in source_ids for item in claim.evidence_ids):
+                continue
+            cited = [allowed.get(item) for item in claim.evidence_ids]
+            if not cited or any(item is None for item in cited):
+                continue
+            if not _unsupported_numeric_facts(claim.text, cited):
+                covered = True
+                break
+        if not covered:
+            missing.append(paper)
+    return missing
 
 
 def _exact_emissions_measurement_missing(

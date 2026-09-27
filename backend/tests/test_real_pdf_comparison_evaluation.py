@@ -1,7 +1,30 @@
 from types import SimpleNamespace
 
+import pytest
+
+from app.llm.base import GeneratedAnswer, GeneratedClaim
 from app.schemas.agent import EvidenceAnchor
-from scripts.evaluate_real_pdf_comparison import _check_case, _check_fact
+from scripts.evaluate_real_pdf_comparison import RecordingProvider, _check_case, _check_fact
+
+
+@pytest.mark.asyncio
+async def test_recording_provider_keeps_initial_and_supplemental_claims() -> None:
+    class StubProvider:
+        name = "deepseek"
+        model = "deepseek-flash"
+        supports_translation = True
+
+        async def generate_grounded_answer(self, question, evidence):
+            return GeneratedAnswer(
+                answer=question,
+                claims=[GeneratedClaim(text=question, evidence_ids=["E1"])],
+            )
+
+    provider = RecordingProvider(StubProvider())
+    await provider.generate_grounded_answer("initial", [_source_anchor()])
+    await provider.generate_grounded_answer("supplement", [_source_anchor()])
+
+    assert [claim.text for claim in provider.generated_claims] == ["initial", "supplement"]
 
 
 def _source_anchor(mode: str = "reranked") -> EvidenceAnchor:

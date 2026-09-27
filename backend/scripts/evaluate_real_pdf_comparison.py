@@ -43,7 +43,7 @@ class RecordingProvider:
 
     async def generate_grounded_answer(self, question, evidence):
         result = await self.delegate.generate_grounded_answer(question, evidence)
-        self.generated_claims = result.claims
+        self.generated_claims.extend(result.claims)
         return result
 
 

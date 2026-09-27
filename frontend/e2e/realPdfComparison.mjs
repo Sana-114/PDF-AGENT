@@ -189,6 +189,9 @@ async function runCase(testCase, backendCase) {
     retrieval_modes: [...new Set(body.evidence.map((item) => item.retrieval_mode))],
     insufficient_evidence: body.insufficient_evidence,
     facts: factChecks,
+    numeric_audit: body.trace
+      .filter((step) => step.skill === "llm.audit_numeric_completeness")
+      .map((step) => step.status),
     reader: null,
   };
   if (testCase.must_refuse) {
