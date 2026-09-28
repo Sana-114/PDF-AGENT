@@ -614,6 +614,8 @@ Backend、Worker 与 Beat 的镜像内代码运行、健康检查、开发 Overr
 
 生产 Compose 端口隔离、Caddy HTTPS、评审账号门禁、密钥预检和 Linux 部署入口见 [公网部署基线验收](docs/production-deployment-acceptance-2026-09-20.md)。
 
+第 67 阶段已把第 66 阶段快进合入 `main`，并新增公网地址验收脚本与完整比赛交付清单。部署后可从外部网络运行 `./scripts/verify_public_demo.sh https://你的域名 standard`，检查 HTTPS、评审门禁、前后端、DeepSeek 与 BGE 配置；真实服务器尚未提供，因此当前只完成交付门禁，不宣称已经上线。详见 [公网演示交付门禁](docs/public-demo-release-gate-acceptance-2026-09-28.md) 和 [比赛交付清单](docs/competition-delivery-checklist.md)。
+
 ## 下一里程碑
 
 1. 获取组委会**原始扫描版**后复跑 OCR 验收，并针对复杂合并/旋转表格、弱续接信号跨页表格和无图注图像增加专用适配器；真实 541 页教材已通过分批解析与恢复门禁；

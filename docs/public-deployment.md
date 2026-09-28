@@ -129,6 +129,18 @@ https://paper.your-domain.com/
 
 随后完成一次真实业务验收：上传 PDF、等待 Worker 解析、执行带证据问答、打开 PDF 页码锚点，并在标准模式下确认回答 Trace 使用 BGE 重排结果。
 
+可以从另一台不在服务器内网的机器运行公网传输与配置门禁。密码文件仅包含一行评审密码，并应设置为仅当前用户可读；脚本不会把密码写入日志或报告：
+
+```bash
+chmod +x scripts/verify_public_demo.sh
+export PUBLIC_DEMO_USERNAME=reviewer
+export PUBLIC_DEMO_PASSWORD_FILE=/secure/path/reviewer-password.txt
+chmod 600 "$PUBLIC_DEMO_PASSWORD_FILE"
+./scripts/verify_public_demo.sh https://paper.your-domain.com standard
+```
+
+脚本会验证 HTTP→HTTPS 跳转、未认证请求返回 401、认证后的前后端、三项安全响应头、DeepSeek Flash 配置，以及所选 Lite/标准检索模式。它不会上传文件或调用生成接口，因此通过后仍须人工完成一次核心业务闭环，并删除密码临时文件。
+
 ## 7. 更新、备份与恢复
 
 更新前先保存当前 Git 提交号并备份。拉取代码后，用原模式重新执行 `start`，脚本会重建发生变化的镜像：
