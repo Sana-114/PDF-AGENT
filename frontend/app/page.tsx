@@ -135,6 +135,14 @@ function formatBytes(bytes: number): string {
   return `${(bytes / 1024 / 1024).toFixed(1)} MB`;
 }
 
+function readableRequestError(error: unknown, fallback: string): string {
+  if (!(error instanceof Error) || !error.message.trim()) return fallback;
+  if (/failed to fetch|networkerror|load failed/i.test(error.message)) {
+    return "无法连接后端服务，请确认服务已启动。";
+  }
+  return error.message;
+}
+
 export default function Home() {
   const [activeArea, setActiveArea] = useState<WorkspaceArea>("agent");
   const [agentTool, setAgentTool] = useState<AgentTool>("chat");
@@ -202,7 +210,7 @@ export default function Home() {
       );
       if (!quiet) setError(null);
     } catch (requestError) {
-      if (!quiet) setError(requestError instanceof Error ? requestError.message : "文献列表加载失败");
+      if (!quiet) setError(readableRequestError(requestError, "文献列表加载失败"));
     } finally {
       if (!quiet) setLoading(false);
     }
@@ -310,7 +318,7 @@ export default function Home() {
       );
       await refresh(true);
     } catch (uploadError) {
-      setError(uploadError instanceof Error ? uploadError.message : "上传失败");
+      setError(readableRequestError(uploadError, "上传失败"));
     } finally {
       setUploading(false);
       if (fileInputRef.current) fileInputRef.current.value = "";
@@ -342,7 +350,7 @@ export default function Home() {
     } catch (searchError) {
       setPaperResults([]);
       setPaperWarnings([]);
-      setError(searchError instanceof Error ? searchError.message : "论文检索失败");
+      setError(readableRequestError(searchError, "论文检索失败"));
     } finally {
       setSearchingPapers(false);
     }
@@ -357,7 +365,7 @@ export default function Home() {
       setNotice(result.message);
       await refresh(true);
     } catch (importError) {
-      setError(importError instanceof Error ? importError.message : "论文导入失败");
+      setError(readableRequestError(importError, "论文导入失败"));
     } finally {
       setImportingPaper(null);
     }
@@ -378,7 +386,7 @@ export default function Home() {
       setReferenceResults(response);
       setReferenceSelections(defaultReferenceSelections(response.items));
     } catch (resolveError) {
-      setError(resolveError instanceof Error ? resolveError.message : "参考文献解析失败");
+      setError(readableRequestError(resolveError, "参考文献解析失败"));
     } finally {
       setResolvingReferences(false);
     }
@@ -441,7 +449,7 @@ export default function Home() {
       setNotice("arXiv 追踪已创建，首次刷新任务已提交。 ");
       await refreshRecommendationData();
     } catch (feedError) {
-      setError(feedError instanceof Error ? feedError.message : "arXiv 追踪创建失败");
+      setError(readableRequestError(feedError, "arXiv 追踪创建失败"));
     } finally {
       setSavingFeed(false);
     }
@@ -455,7 +463,7 @@ export default function Home() {
       setNotice("正在更新 arXiv 结果，稍后会显示在列表中。");
       window.setTimeout(() => void refreshRecommendationData(), 1200);
     } catch (refreshError) {
-      setError(refreshError instanceof Error ? refreshError.message : "订阅刷新失败");
+      setError(readableRequestError(refreshError, "订阅刷新失败"));
     } finally {
       setRefreshingFeed(null);
     }
@@ -467,7 +475,7 @@ export default function Home() {
       await deleteArxivSubscription(subscription.id);
       await refreshRecommendationData();
     } catch (deleteError) {
-      setError(deleteError instanceof Error ? deleteError.message : "订阅删除失败");
+      setError(readableRequestError(deleteError, "订阅删除失败"));
     }
   }
 
@@ -484,7 +492,7 @@ export default function Home() {
         item.id === updated.id ? updated : item
       )));
     } catch (feedbackError) {
-      setError(feedbackError instanceof Error ? feedbackError.message : "反馈保存失败");
+      setError(readableRequestError(feedbackError, "反馈保存失败"));
     }
   }
 
@@ -501,7 +509,7 @@ export default function Home() {
     try {
       setCitationGraph(await buildCitationGraph(readyDocumentIds));
     } catch (graphError) {
-      setError(graphError instanceof Error ? graphError.message : "引用图谱构建失败");
+      setError(readableRequestError(graphError, "引用图谱构建失败"));
     } finally {
       setBuildingCitationGraph(false);
     }
@@ -520,7 +528,7 @@ export default function Home() {
     try {
       setResearchReview(await generateResearchReview(readyDocumentIds));
     } catch (reviewError) {
-      setError(reviewError instanceof Error ? reviewError.message : "综述整理失败");
+      setError(readableRequestError(reviewError, "综述整理失败"));
     } finally {
       setGeneratingResearchReview(false);
     }
@@ -546,7 +554,7 @@ export default function Home() {
         language: writingLanguage,
       }));
     } catch (outlineError) {
-      setError(outlineError instanceof Error ? outlineError.message : "论文框架整理失败");
+      setError(readableRequestError(outlineError, "论文框架整理失败"));
     } finally {
       setGeneratingWritingOutline(false);
     }
@@ -564,7 +572,7 @@ export default function Home() {
       setNotice(result.message);
       await refresh(true);
     } catch (importError) {
-      setError(importError instanceof Error ? importError.message : "推荐论文导入失败");
+      setError(readableRequestError(importError, "推荐论文导入失败"));
     } finally {
       setImportingRecommendation(null);
     }
@@ -576,7 +584,7 @@ export default function Home() {
       await deleteDocument(document.id);
       setDocuments((current) => current.filter((item) => item.id !== document.id));
     } catch (deleteError) {
-      setError(deleteError instanceof Error ? deleteError.message : "删除失败");
+      setError(readableRequestError(deleteError, "删除失败"));
     }
   }
 
@@ -598,7 +606,7 @@ export default function Home() {
       setNotice(result.message);
       await refresh(true);
     } catch (resolveError) {
-      setError(resolveError instanceof Error ? resolveError.message : "版本处理失败");
+      setError(readableRequestError(resolveError, "版本处理失败"));
     } finally {
       setResolvingDuplicate(null);
     }
@@ -619,7 +627,7 @@ export default function Home() {
       const result = await getDocumentVersionDifference(document.id);
       setVersionDifferences((current) => ({ ...current, [document.id]: result }));
     } catch (compareError) {
-      setError(compareError instanceof Error ? compareError.message : "版本差异分析失败");
+      setError(readableRequestError(compareError, "版本差异分析失败"));
     } finally {
       setComparingVersion(null);
     }
@@ -684,15 +692,15 @@ export default function Home() {
           <span className="brand-mark">P</span>
           <span>PaperPilot</span>
         </a>
-        <div className="topbar-purpose">论文阅读与研究工作台</div>
+        <div className="topbar-purpose">本地文献库 · 研究工作区</div>
         <div className="system-pill"><span /> {agentLabel}</div>
       </header>
 
       <section className="hero agent-first-hero">
         <div>
-          <p className="eyebrow">论文阅读 · 检索 · 写作</p>
-          <h1>论文阅读，<br /><em>从原文到结论。</em></h1>
-          <p className="hero-copy">上传论文后，可以检索原文、比较多篇研究、整理综述和写作框架。回答附页码与原文位置。</p>
+          <p className="eyebrow">原文证据 · 本地文献库</p>
+          <h1>论文研究工作台</h1>
+          <p className="hero-copy">管理 PDF，检索原文证据，比较多篇研究并整理写作材料。回答保留页码与原文位置。</p>
           <div className="hero-actions">
             <button onClick={() => openWorkspace("agent")} type="button">进入文献问答</button>
             <button onClick={() => openWorkspace("library")} type="button">上传 PDF</button>
@@ -783,7 +791,7 @@ export default function Home() {
           onDragLeave={() => setDragging(false)}
           onDrop={onDrop}
         >
-          <div className="upload-icon">↑</div>
+          <div className="upload-icon">PDF</div>
           <div>
             <h2>{uploading ? "正在上传…" : "上传 PDF"}</h2>
             <p>可同时选择多篇，每个文件不超过 200 MB</p>
@@ -1334,7 +1342,7 @@ export default function Home() {
         </section>
       </div>
 
-      <footer>PaperPilot MVP · 所有答案都将绑定可验证的原文证据</footer>
+      <footer>PaperPilot · 回答附原文证据与页码位置</footer>
       {referenceExplorer && (
         <div
           className="reference-explorer-backdrop"
