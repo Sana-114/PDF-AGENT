@@ -9,6 +9,7 @@ import {
   DocumentRecord,
   EvidenceAnchor,
 } from "../lib/api";
+import { readableRequestError } from "../lib/requestError";
 
 interface PaperComparisonWorkbenchProps {
   documents: DocumentRecord[];
@@ -73,7 +74,7 @@ export default function PaperComparisonWorkbench({
     try {
       setResult(await comparePapers(cleanQuestion, selectedIds));
     } catch (requestError) {
-      setError(requestError instanceof Error ? requestError.message : "跨论文对比失败");
+      setError(readableRequestError(requestError, "跨论文对比失败"));
     } finally {
       setRunning(false);
     }

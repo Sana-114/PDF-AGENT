@@ -8,6 +8,7 @@ import {
   DiagramLayout,
   generateArchitectureDiagram,
 } from "../lib/api";
+import { readableRequestError } from "../lib/requestError";
 
 const EXAMPLE_TOPOLOGY = `PDF 上传 -> 版式解析 -> Document AST
 Document AST -> 混合检索 -> 证据门控 -> LLM 回答
@@ -115,7 +116,7 @@ export default function ArchitectureDiagramWorkbench() {
       setActiveFormat(response.scripts[0]?.format || "mermaid");
     } catch (requestError) {
       setDiagram(null);
-      setError(requestError instanceof Error ? requestError.message : "架构图处理失败");
+      setError(readableRequestError(requestError, "架构图处理失败"));
     } finally {
       setLoading(false);
     }

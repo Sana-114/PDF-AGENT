@@ -10,6 +10,7 @@ import {
   CsvVisualizationResponse,
   ScientificChart,
 } from "../lib/api";
+import { readableRequestError } from "../lib/requestError";
 
 const PALETTE = ["#25734f", "#d77a2b", "#3e7fa3", "#8c5aa6"];
 
@@ -293,7 +294,7 @@ export default function DataVisualizationWorkbench() {
       setAggregation(next.chart.aggregation);
       setErrorMode(next.chart.error_mode);
     } catch (requestError) {
-      setError(requestError instanceof Error ? requestError.message : "CSV 分析失败");
+      setError(readableRequestError(requestError, "CSV 分析失败"));
     } finally {
       setLoading(false);
     }

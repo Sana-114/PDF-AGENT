@@ -26,6 +26,7 @@ import {
   translateSelection,
   TranslationResponse,
 } from "../lib/api";
+import { readableRequestError } from "../lib/requestError";
 import { bboxToPercentRect } from "../lib/pdfGeometry";
 import {
   adjacentCitationLocation,
@@ -277,7 +278,7 @@ export default function PdfReader({
       if (translationRequestRef.current === cacheKey) setPageTranslation(result);
     } catch (error) {
       if (translationRequestRef.current === cacheKey) {
-        setPageTranslationError(error instanceof Error ? error.message : "当前页翻译失败");
+        setPageTranslationError(readableRequestError(error, "当前页翻译失败"));
       }
     } finally {
       if (translationRequestRef.current === cacheKey) setPageTranslationLoading(false);
@@ -294,7 +295,7 @@ export default function PdfReader({
       })
       .catch((error: unknown) => {
         if (!active) return;
-        setOutlineError(error instanceof Error ? error.message : "目录加载失败");
+        setOutlineError(readableRequestError(error, "目录加载失败"));
       })
       .finally(() => {
         if (active) setOutlineLoading(false);
@@ -316,7 +317,7 @@ export default function PdfReader({
       })
       .catch((error: unknown) => {
         if (!active) return;
-        setReferencesError(error instanceof Error ? error.message : "参考文献加载失败");
+        setReferencesError(readableRequestError(error, "参考文献加载失败"));
       })
       .finally(() => {
         if (active) setReferencesLoading(false);
@@ -574,7 +575,7 @@ export default function PdfReader({
     try {
       setTranslation(await translateSelection(selectionDraft.text, targetLanguage));
     } catch (error) {
-      setTranslationError(error instanceof Error ? error.message : "翻译请求失败");
+      setTranslationError(readableRequestError(error, "翻译请求失败"));
     } finally {
       setTranslationLoading(false);
     }
@@ -605,7 +606,7 @@ export default function PdfReader({
       const status = await startDocumentTranslation(documentId, bilingualTarget);
       setTranslationJob(status);
     } catch (error) {
-      setPageTranslationError(error instanceof Error ? error.message : "整篇翻译任务创建失败");
+      setPageTranslationError(readableRequestError(error, "整篇翻译任务创建失败"));
     } finally {
       setTranslationJobStarting(false);
     }

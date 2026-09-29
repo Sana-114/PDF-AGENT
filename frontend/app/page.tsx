@@ -36,6 +36,7 @@ import {
   uploadDocument,
   WritingOutlineResponse,
 } from "../lib/api";
+import { readableRequestError } from "../lib/requestError";
 import CitationGraph from "../components/CitationGraph";
 import PaperComparisonWorkbench from "../components/PaperComparisonWorkbench";
 import ResearchReview from "../components/ResearchReview";
@@ -76,15 +77,14 @@ type CopilotTool = "writing" | "translation" | "visualization" | "diagram";
 
 const WORKSPACE_AREAS: Array<{
   id: WorkspaceArea;
-  icon: string;
   label: string;
   description: string;
 }> = [
-  { id: "agent", icon: "01", label: "文献问答", description: "检索原文与多文比较" },
-  { id: "library", icon: "02", label: "文献库", description: "上传、解析与版本" },
-  { id: "discover", icon: "03", label: "查找论文", description: "检索、追踪与推荐" },
-  { id: "insights", icon: "04", label: "研究脉络", description: "引用、综述与方向" },
-  { id: "copilot", icon: "05", label: "研究产出", description: "写作、翻译与制图" },
+  { id: "agent", label: "文献问答", description: "检索原文与多文比较" },
+  { id: "library", label: "文献库", description: "上传、解析与版本" },
+  { id: "discover", label: "查找论文", description: "检索、追踪与推荐" },
+  { id: "insights", label: "研究脉络", description: "引用、综述与方向" },
+  { id: "copilot", label: "研究产出", description: "写作、翻译与制图" },
 ];
 
 const WORKSPACE_META: Record<WorkspaceArea, { eyebrow: string; title: string; description: string }> = {
@@ -133,14 +133,6 @@ const STATUS_LABEL: Record<DocumentRecord["status"], string> = {
 function formatBytes(bytes: number): string {
   if (bytes < 1024 * 1024) return `${(bytes / 1024).toFixed(1)} KB`;
   return `${(bytes / 1024 / 1024).toFixed(1)} MB`;
-}
-
-function readableRequestError(error: unknown, fallback: string): string {
-  if (!(error instanceof Error) || !error.message.trim()) return fallback;
-  if (/failed to fetch|networkerror|load failed/i.test(error.message)) {
-    return "无法连接后端服务，请确认服务已启动。";
-  }
-  return error.message;
 }
 
 export default function Home() {
@@ -696,28 +688,28 @@ export default function Home() {
         <div className="system-pill"><span /> {agentLabel}</div>
       </header>
 
-      <section className="hero agent-first-hero">
-        <div>
-          <p className="eyebrow">原文证据 · 本地文献库</p>
-          <h1>论文研究工作台</h1>
-          <p className="hero-copy">管理 PDF，检索原文证据，比较多篇研究并整理写作材料。回答保留页码与原文位置。</p>
-          <div className="hero-actions">
-            <button onClick={() => openWorkspace("agent")} type="button">进入文献问答</button>
-            <button onClick={() => openWorkspace("library")} type="button">上传 PDF</button>
-          </div>
+      <section className="workspace-overview" aria-labelledby="workspace-overview-title">
+        <div className="workspace-overview-copy">
+          <h1 id="workspace-overview-title">研究工作区</h1>
+          <p>管理本地 PDF，检索原文，比较研究并整理写作材料。</p>
         </div>
-        <div className="metric-row">
-          <div><strong>{documents.filter((item) => item.status === "ready").length}</strong><span>可检索文献</span></div>
-          <div><strong>{processingCount}</strong><span>处理中</span></div>
-          <div><strong>{agentLabel === "服务不可用" ? "—" : "●"}</strong><span>{agentLabel}</span></div>
+        <div className="workspace-overview-side">
+          <div className="workspace-overview-actions">
+            <button onClick={() => openWorkspace("agent")} type="button">开始问答</button>
+            <button onClick={() => openWorkspace("library")} type="button">导入 PDF</button>
+          </div>
+          <dl className="workspace-summary">
+            <div><dt>可检索</dt><dd>{documents.filter((item) => item.status === "ready").length} 篇</dd></div>
+            <div><dt>处理中</dt><dd>{processingCount} 项</dd></div>
+            <div><dt>服务</dt><dd>{agentLabel}</dd></div>
+          </dl>
         </div>
       </section>
 
       <div className="workspace-shell" id="agent-workspace">
         <aside className="workspace-rail" aria-label="工作区导航">
           <div className="workspace-rail-heading">
-            <span>研究工作台</span>
-            <strong>选择任务</strong>
+            <strong>工作区</strong>
           </div>
           {WORKSPACE_AREAS.map((area) => (
             <button
@@ -727,14 +719,12 @@ export default function Home() {
               onClick={() => openWorkspace(area.id)}
               type="button"
             >
-              <span>{area.icon}</span>
               <div>
                 <strong>{area.label}</strong>
                 <small>{area.description}</small>
               </div>
             </button>
           ))}
-          <p>一次只显示当前任务，减少无关信息干扰。</p>
         </aside>
 
         <section className="workspace agent-workspace">
@@ -745,8 +735,8 @@ export default function Home() {
               <span>{activeWorkspaceMeta.description}</span>
             </div>
             <div className="workspace-context">
-              <strong>{documents.filter((item) => item.status === "ready").length}</strong>
-              <span>篇文献已就绪</span>
+              <span>文献库</span>
+              <strong>{documents.filter((item) => item.status === "ready").length} 篇已就绪</strong>
             </div>
           </header>
 

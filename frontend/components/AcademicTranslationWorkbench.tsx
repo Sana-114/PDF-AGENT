@@ -15,6 +15,7 @@ import {
   translateAcademicText,
   updateTranslationDraft,
 } from "../lib/api";
+import { readableRequestError } from "../lib/requestError";
 import {
   buildTranslationMarkdown,
   safeTranslationFilename,
@@ -132,7 +133,7 @@ export default function AcademicTranslationWorkbench() {
       })
       .catch((requestError) => {
         if (!cancelled) {
-          setError(requestError instanceof Error ? requestError.message : "翻译工作区加载失败");
+          setError(readableRequestError(requestError, "翻译工作区加载失败"));
         }
       });
     return () => {
@@ -182,7 +183,7 @@ export default function AcademicTranslationWorkbench() {
       setSelectedGlossaryId(saved.id);
       setNotice(`术语库“${saved.name}”已持久保存。`);
     } catch (requestError) {
-      setError(requestError instanceof Error ? requestError.message : "术语库保存失败");
+      setError(readableRequestError(requestError, "术语库保存失败"));
     } finally {
       setLibraryAction(false);
     }
@@ -203,7 +204,7 @@ export default function AcademicTranslationWorkbench() {
       startNewGlossary();
       setNotice("术语库已删除，已保存译稿仍然保留。");
     } catch (requestError) {
-      setError(requestError instanceof Error ? requestError.message : "术语库删除失败");
+      setError(readableRequestError(requestError, "术语库删除失败"));
     } finally {
       setLibraryAction(false);
     }
@@ -246,7 +247,7 @@ export default function AcademicTranslationWorkbench() {
       setResult(null);
       setNotice("译稿已删除。");
     } catch (requestError) {
-      setError(requestError instanceof Error ? requestError.message : "译稿删除失败");
+      setError(readableRequestError(requestError, "译稿删除失败"));
     } finally {
       setLibraryAction(false);
     }
@@ -284,7 +285,7 @@ export default function AcademicTranslationWorkbench() {
       setResult(null);
       setTranslatedSource("");
       setEditedTranslation("");
-      setError(requestError instanceof Error ? requestError.message : "学术翻译失败");
+      setError(readableRequestError(requestError, "学术翻译失败"));
     } finally {
       setLoading(false);
     }
@@ -318,7 +319,7 @@ export default function AcademicTranslationWorkbench() {
       setDrafts((current) => [saved, ...current.filter((item) => item.id !== saved.id)]);
       setNotice(status === "reviewed" ? "译稿已标记为人工审校完成。" : "译稿已保存。 ");
     } catch (requestError) {
-      setError(requestError instanceof Error ? requestError.message : "译稿保存失败");
+      setError(readableRequestError(requestError, "译稿保存失败"));
     } finally {
       setLibraryAction(false);
     }

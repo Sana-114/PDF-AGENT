@@ -14,6 +14,7 @@ import {
   listConversations,
   streamConversationMessage,
 } from "../lib/api";
+import { readableRequestError } from "../lib/requestError";
 
 interface ChatWorkbenchProps {
   agentLabel: string;
@@ -58,7 +59,7 @@ export default function ChatWorkbench({
     try {
       setConversations(await listConversations());
     } catch (requestError) {
-      setError(requestError instanceof Error ? requestError.message : "会话历史加载失败");
+      setError(readableRequestError(requestError, "会话历史加载失败"));
     } finally {
       setLoading(false);
     }
@@ -81,7 +82,7 @@ export default function ChatWorkbench({
     try {
       setActive(await getConversation(conversationId));
     } catch (requestError) {
-      setError(requestError instanceof Error ? requestError.message : "会话读取失败");
+      setError(readableRequestError(requestError, "会话读取失败"));
     }
   }
 
@@ -101,7 +102,7 @@ export default function ChatWorkbench({
       if (active?.id === conversation.id) startConversation();
       await refreshHistory();
     } catch (requestError) {
-      setError(requestError instanceof Error ? requestError.message : "会话删除失败");
+      setError(readableRequestError(requestError, "会话删除失败"));
     }
   }
 
@@ -149,7 +150,7 @@ export default function ChatWorkbench({
       setStreamStatus("");
       await refreshHistory();
     } catch (requestError) {
-      setError(requestError instanceof Error ? requestError.message : "流式问答失败");
+      setError(readableRequestError(requestError, "流式问答失败"));
       setQuestion(cleanQuestion);
       setPendingQuestion(null);
       setPreview(EMPTY_PREVIEW);
