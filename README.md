@@ -622,6 +622,8 @@ Backend、Worker 与 Beat 的镜像内代码运行、健康检查、开发 Overr
 
 第 70 阶段已形成 [比赛技术文档初稿](docs/competition-technical-report-draft.md) 和 [约 6 分 55 秒的演示视频脚本](docs/demo-video-script-draft.md)。技术初稿按 24–26 页规划六模块实现、AI 选型、测试证据、创新点与边界；视频脚本给出逐段画面、普通话解说、录制准备和失败备用方案。现有公网 Compose、Caddy 与验收脚本保持不变，服务器和域名将在临近提交时购置并完成最终上线验收。
 
+第 71 阶段为技术文档增加了可复现的 PDF 排版流水线。安装 `requirements-docs.txt` 后运行 `python scripts/build_technical_report.py`，即可从 Markdown 初稿生成带封面、目录、页眉页脚、矢量架构图和截图规划的 A4 PDF；当前无正式截图版本为 17 页，完整渲染验收见 [技术文档排版草稿验收](docs/technical-report-layout-acceptance-2026-09-30.md)。
+
 ## 下一里程碑
 
 1. 获取组委会**原始扫描版**后复跑 OCR 验收，并针对复杂合并/旋转表格、弱续接信号跨页表格和无图注图像增加专用适配器；真实 541 页教材已通过分批解析与恢复门禁；
