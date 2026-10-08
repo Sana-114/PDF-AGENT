@@ -1,6 +1,6 @@
 # PaperPilot
 
-PaperPilot 是一个以原文证据为核心的科研助手 Agent 系统。本仓库当前处于 `0.2.0` 开发阶段，已打通 PDF 入库、精确内容去重、异步解析、版式感知 Document AST、arXiv 版本识别、相似版本提醒，以及带页码和坐标锚点的第一版文献问答。
+PaperPilot 是一个以原文证据为核心的科研助手 Agent 系统。本仓库当前处于 `0.2.0` 开发阶段，已实现六大模块的基础流程，并开展真实 PDF、BGE 检索与 DeepSeek 问答验收。各模块已验证范围、剩余功能缺口与交付状态见 [2026-10-08 项目进度核对](docs/competition-progress-audit-2026-10-08.md)。
 
 ## 当前能力
 
@@ -625,6 +625,8 @@ Backend、Worker 与 Beat 的镜像内代码运行、健康检查、开发 Overr
 第 71 阶段为技术文档增加了可复现的 PDF 排版流水线。安装 `requirements-docs.txt` 后运行 `python scripts/build_technical_report.py`，即可从 Markdown 初稿生成带封面、目录、页眉页脚、矢量架构图和截图规划的 A4 PDF；当前无正式截图版本为 17 页，完整渲染验收见 [技术文档排版草稿验收](docs/technical-report-layout-acceptance-2026-09-30.md)。
 
 第 72 阶段将跨论文评测扩大为五组正向比较、两组拒答问题，并增加同一声明的双来源引用门禁以及多轮事实遗漏／安全拒答统计。19 项单元测试已通过；新版七案例尚未执行真实三轮模型评测。实现、复现方式和边界见 [跨文献稳定性评测门禁](docs/comparison-stability-gate-acceptance-2026-10-08.md)。
+
+第 73 阶段修复了扫描作者网格中的机构丢失、单个带星号作者漏检和邮箱误入机构的问题。15 页扫描替代样本已恢复三家机构的精确列表，六篇／144 页原生论文回归和全部 222 项后端测试通过；扫描姓名仍存在一个字符误识别，不能宣称全名全部准确。报告与复现方式见 [扫描元数据验收](docs/scanned-metadata-acceptance-2026-10-08.md)。
 
 ## 下一里程碑
 

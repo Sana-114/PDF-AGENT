@@ -47,7 +47,7 @@ class PyMuPDFParser:
     """Layout-aware local parser with page and bounding-box provenance."""
 
     name = "pymupdf-layout"
-    version = f"{fitz.VersionBind}-layout60"
+    version = f"{fitz.VersionBind}-layout73"
 
     def parse(
         self,

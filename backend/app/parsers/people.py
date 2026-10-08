@@ -15,6 +15,41 @@ NON_NAME = re.compile(
     re.I,
 )
 NUMBERED_AUTHOR_BOUNDARY = re.compile(r"(?<=\w)\s*[*∗†‡]*\s*\d+\s+(?=[A-Z][a-z])")
+FRONT_MATTER_END = re.compile(
+    r"^\s*(?:(?:[§\d]+(?:\.\d+)*\.?\s+)?(?:abstract|摘要)\b|"
+    r"1\.?\s+Introduction\b|Editor:)",
+    re.I,
+)
+
+
+def _affiliation_line(text: str) -> str | None:
+    """Keep an institutional source line; never infer one from an e-mail."""
+    text = text.strip()
+    if "@" in text or NON_NAME.search(text):
+        return None
+    text = re.sub(r"^\d+\s*(?=[A-Z])", "", text)
+    if len(text.split()) < 2 and not ORGANIZATION.search(text):
+        return None
+    if AFFILIATION_HINT.search(text) or ORGANIZATION.search(text):
+        return text
+    return None
+
+
+def _unmarked_row_names(text: str) -> list[str]:
+    """Only accept name-shaped segments on an independently verified author row."""
+    names = []
+    for segment in NUMBERED_AUTHOR_BOUNDARY.split(text):
+        cleaned = re.sub(r"[\d*∗†‡]+", "", segment)
+        for part in re.split(r"\s*(?:[,;、，&]|\band\b)\s*", cleaned):
+            tokens = part.split()
+            if 2 <= len(tokens) <= 5 and all(
+                token.lstrip("´`¨^")[0].isupper()
+                or token in {"de", "del", "van", "von", "da"}
+                for token in tokens
+                if token.lstrip("´`¨^")
+            ):
+                names.append(" ".join(tokens))
+    return names
 
 
 def extract_front_matter_people(
@@ -45,28 +80,56 @@ def extract_front_matter_people(
         ]
         # Numbered affiliations may appear below an unlabelled abstract.
         for line in all_lines:
-            affiliation_text = re.sub(r"^\d+(?=[A-Z])", "", line["text"])
-            if re.match(r"^\d\D", line["text"]) and (
-                AFFILIATION_HINT.search(affiliation_text) or ORGANIZATION.search(affiliation_text)
-            ):
-                affiliations.append(affiliation_text.split("e-mail:")[0].strip())
+            if re.match(r"^\d+\s*\D", line["text"]):
+                affiliation_text = _affiliation_line(line["text"])
+                if affiliation_text:
+                    affiliations.append(affiliation_text)
         for block in sorted(page, key=lambda b: (b.bbox[1], b.bbox[0])):
             value = " ".join(block.text.casefold().split())
             if not active:
                 if normalized_title and normalized_title in value:
                     active = True
                 continue
-            if re.match(
-                r"^\s*(?:[§\d]+(?:\.\d+)*\s+)?(?:abstract|摘要)\b", block.text, re.I
-            ) or re.match(r"^(?:1\.?\s+Introduction|Editor:)", block.text, re.I):
+            if FRONT_MATTER_END.match(block.text):
                 return list(dict.fromkeys(authors)), list(dict.fromkeys(affiliations))
             marked_names = [
                 match.group("name") for match in AUTHOR_WITH_MARKER.finditer(block.text)
             ]
-            if len(marked_names) >= 2 and "@" in block.text:
+            if marked_names and "@" in block.text:
                 # OCR may merge the entire author grid, affiliations and e-mails
-                # into a single block. Starred names remain source-grounded.
-                authors.extend(marked_names)
+                # into a single block, including a single author in its last row.
+                # Extract independent source lines before discarding the grid;
+                # the whole merged text is not a valid affiliation string.
+                if block.lines:
+                    marked_rows = [
+                        line["bbox"][3]
+                        for line in block.lines
+                        if "bbox" in line and AUTHOR_WITH_MARKER.search(line["text"])
+                    ]
+                    for line in block.lines:
+                        text = line["text"].strip()
+                        if FRONT_MATTER_END.match(text):
+                            return list(dict.fromkeys(authors)), list(dict.fromkeys(affiliations))
+                        affiliation_text = _affiliation_line(text)
+                        if affiliation_text:
+                            affiliations.append(affiliation_text)
+                            continue
+                        if "@" in text or NON_NAME.search(text):
+                            continue
+                        line_names = [
+                            match.group("name") for match in AUTHOR_WITH_MARKER.finditer(text)
+                        ]
+                        if line_names:
+                            authors.extend(line_names)
+                        elif "bbox" in line and any(
+                            abs(line["bbox"][3] - y) < 3 for y in marked_rows
+                        ):
+                            # Equal-contribution stars often mark only some of
+                            # the authors. Keep unstarred names on the same row,
+                            # without turning a postal-address row into names.
+                            authors.extend(_unmarked_row_names(text))
+                else:
+                    authors.extend(marked_names)
                 continue
             if block.bbox[3] - block.bbox[1] > (block.bbox[2] - block.bbox[0]) * 1.5:
                 continue
@@ -81,8 +144,9 @@ def extract_front_matter_people(
                     # A book's copyright paragraph may end with a lone word such
                     # as "Department."; it is not an institutional affiliation.
                     continue
-                if AFFILIATION_HINT.search(text) or ORGANIZATION.search(text):
-                    affiliations.append(text)
+                affiliation_text = _affiliation_line(text)
+                if affiliation_text:
+                    affiliations.append(affiliation_text)
                     continue
                 if re.match(r"^\d{2,}\b", text) or len(text) > 240:
                     continue
