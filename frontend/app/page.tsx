@@ -1071,6 +1071,7 @@ export default function Home() {
                 <p className="citation-warning" key={warning}>{warning}</p>
               ))}
               <ResearchReview
+                onSearchDirection={(text) => { openWorkspace("discover"); setPaperQuery(text.slice(0, 500)); }}
                 review={researchReview}
                 onOpenEvidence={(evidence) => openReader(
                   evidence.document_id,

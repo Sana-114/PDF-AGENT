@@ -6,10 +6,28 @@ from sqlalchemy.orm import Session
 
 from app.core.database import get_db
 from app.models.document import Document, DocumentStatus
-from app.schemas.review import ResearchReviewRead, ResearchReviewRequest
+from app.schemas.review import (
+    FutureWorkDecisionRead,
+    FutureWorkDecisionRequest,
+    ResearchReviewRead,
+    ResearchReviewRequest,
+)
 from app.services.evidence_review import EvidenceReviewService
+from app.services.future_work_review import save_decision
 
 router = APIRouter()
+
+
+@router.put("/future-directions/{direction_id}/decision", response_model=FutureWorkDecisionRead)
+def confirm_future_direction(
+    direction_id: str,
+    request: FutureWorkDecisionRequest,
+    db: Annotated[Session, Depends(get_db)],
+) -> FutureWorkDecisionRead:
+    try:
+        return save_decision(db, direction_id, request)
+    except ValueError as exc:
+        raise HTTPException(status_code=422, detail=str(exc)) from exc
 
 
 @router.post("/generate", response_model=ResearchReviewRead)

@@ -307,11 +307,40 @@ export interface FutureDirection {
   source_title: string;
   source_year: number | null;
   source_evidence_id: string;
-  status: "open" | "possibly_addressed";
+  status: "open" | "possibly_addressed" | "confirmed_addressed";
   possibly_addressed_by_document_ids: string[];
   progress_evidence_ids: string[];
   exploration_score: number;
   reason: string;
+  confirmation: FutureWorkConfirmation | null;
+}
+
+export interface FutureWorkConfirmation {
+  direction_id: string;
+  decision: "open" | "needs_review" | "confirmed_addressed";
+  reason: string;
+  progress_evidence: EvidenceAnchor[];
+  updated_at: string;
+}
+
+export async function saveFutureWorkDecision(
+  directionId: string,
+  source: ReviewEvidence,
+  decision: FutureWorkConfirmation["decision"],
+  reason: string,
+  progress: ReviewEvidence[],
+): Promise<FutureWorkConfirmation> {
+  const passage = (item: ReviewEvidence) => ({
+    document_id: item.document_id, page_number: item.page_number,
+    block_ids: item.block_ids, quote: item.quote,
+  });
+  const response = await assertResponse(await fetch(
+    `${API_BASE_URL}/reviews/future-directions/${directionId}/decision`, {
+      method: "PUT", headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ source: passage(source), decision, reason, progress: progress.map(passage) }),
+    },
+  ));
+  return response.json();
 }
 
 export interface ResearchReviewResponse {

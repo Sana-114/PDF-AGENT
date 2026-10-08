@@ -13,6 +13,7 @@ from app.llm import get_llm_provider
 from app.llm.base import LLMConfigurationError, LLMProvider, LLMResponseError
 from app.llm.extractive import ExtractiveProvider
 from app.models.document import Document
+from app.models.future_work import FutureWorkDecision
 from app.models.paper_source import PaperSource
 from app.schemas.agent import AnswerClaim, EvidenceAnchor
 from app.schemas.review import (
@@ -23,6 +24,7 @@ from app.schemas.review import (
 )
 from app.services.citation_graph import CitationGraphService
 from app.services.document_content import read_parsed_document
+from app.services.future_work_review import decision_read, direction_key
 
 FUTURE_HEADING = re.compile(
     r"(?:future\s+(?:work|research|direction)|limitations?|open\s+(?:questions?|problems?)|"
@@ -184,9 +186,7 @@ def _extract_drafts(
                         document_title=title,
                         publication_year=publication_year,
                         page_number=max(1, int(page.get("page_number") or 1)),
-                        block_ids=[str(block.get("block_id"))]
-                        if block.get("block_id")
-                        else [],
+                        block_ids=[str(block.get("block_id"))] if block.get("block_id") else [],
                         bbox=_valid_bbox(block.get("bbox")),
                         section=None,
                         quote=text[:1600],
@@ -344,9 +344,7 @@ class EvidenceReviewService:
                 -item.foundation_score,
             )
         )
-        graph_edges = {
-            (item.source_document_id, item.target_document_id) for item in graph.edges
-        }
+        graph_edges = {(item.source_document_id, item.target_document_id) for item in graph.edges}
         directions: list[FutureDirectionRead] = []
         for item in evidence:
             if item.evidence_kind != "future_work":
@@ -375,7 +373,9 @@ class EvidenceReviewService:
             )
             directions.append(
                 FutureDirectionRead(
-                    direction_id=f"F{len(directions) + 1}",
+                    direction_id=direction_key(
+                        item.document_id, item.page_number, item.block_ids, item.quote
+                    ),
                     text=direction,
                     source_document_id=item.document_id,
                     source_title=item.document_title or item.document_id,
@@ -388,6 +388,21 @@ class EvidenceReviewService:
                     reason=reason,
                 )
             )
+        for direction in directions:
+            saved = self.session.get(FutureWorkDecision, direction.direction_id)
+            if saved is None:
+                continue
+            try:
+                direction.confirmation = decision_read(self.session, saved)
+            except ValueError:
+                warnings.append("已保存的方向核验证据已变更或移除，请重新核验。")
+                continue
+            if saved.decision == "confirmed_addressed":
+                direction.status = "confirmed_addressed"
+                direction.exploration_score = 0
+            elif saved.decision == "open":
+                direction.status = "open"
+            direction.reason = f"人工核验记录：{saved.reason}"
         directions.sort(
             key=lambda item: (
                 item.status == "possibly_addressed",

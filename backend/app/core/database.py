@@ -28,6 +28,7 @@ def init_db() -> None:
         AgentConversationMessage,
     )
     from app.models.document import Document  # noqa: F401
+    from app.models.future_work import FutureWorkDecision  # noqa: F401
     from app.models.paper_source import PaperSource  # noqa: F401
     from app.models.recommendation import ArxivSubscription, PaperRecommendation  # noqa: F401
     from app.models.translation import (  # noqa: F401
