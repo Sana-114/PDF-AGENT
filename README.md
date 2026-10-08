@@ -624,6 +624,8 @@ Backend、Worker 与 Beat 的镜像内代码运行、健康检查、开发 Overr
 
 第 71 阶段为技术文档增加了可复现的 PDF 排版流水线。安装 `requirements-docs.txt` 后运行 `python scripts/build_technical_report.py`，即可从 Markdown 初稿生成带封面、目录、页眉页脚、矢量架构图和截图规划的 A4 PDF；当前无正式截图版本为 17 页，完整渲染验收见 [技术文档排版草稿验收](docs/technical-report-layout-acceptance-2026-09-30.md)。
 
+第 72 阶段将跨论文评测扩大为五组正向比较、两组拒答问题，并增加同一声明的双来源引用门禁以及多轮事实遗漏／安全拒答统计。19 项单元测试已通过；新版七案例尚未执行真实三轮模型评测。实现、复现方式和边界见 [跨文献稳定性评测门禁](docs/comparison-stability-gate-acceptance-2026-10-08.md)。
+
 ## 下一里程碑
 
 1. 获取组委会**原始扫描版**后复跑 OCR 验收，并针对复杂合并/旋转表格、弱续接信号跨页表格和无图注图像增加专用适配器；真实 541 页教材已通过分批解析与恢复门禁；

@@ -4,7 +4,12 @@ import pytest
 
 from app.llm.base import GeneratedAnswer, GeneratedClaim
 from app.schemas.agent import EvidenceAnchor
-from scripts.evaluate_real_pdf_comparison import RecordingProvider, _check_case, _check_fact
+from scripts.evaluate_real_pdf_comparison import (
+    RecordingProvider,
+    _check_case,
+    _check_cross_document_fact,
+    _check_fact,
+)
 
 
 @pytest.mark.asyncio
@@ -40,6 +45,24 @@ def _source_anchor(mode: str = "reranked") -> EvidenceAnchor:
     )
 
 
+def _comparison_anchor(
+    evidence_id: str,
+    document_id: str,
+    page_number: int,
+    quote: str,
+) -> EvidenceAnchor:
+    return EvidenceAnchor(
+        evidence_id=evidence_id,
+        document_id=document_id,
+        page_number=page_number,
+        block_ids=[f"p{page_number}-b1"],
+        bbox=[72.0, 65.0, 290.0, 455.0],
+        quote=quote,
+        retrieval_mode="reranked",
+        score=0.9,
+    )
+
+
 def _fact() -> dict:
     return {
         "fact_id": "masked-lm",
@@ -70,6 +93,113 @@ def test_claim_fact_can_require_all_context_terms() -> None:
     assert not _check_fact(fact, response, {"bert.pdf": "bert-document"})
     response.claims[0].text = "BERT uses masked LM for training."
     assert _check_fact(fact, response, {"bert.pdf": "bert-document"})
+
+
+def test_cross_document_fact_requires_both_sources_on_one_claim() -> None:
+    transformer = _comparison_anchor(
+        "E1",
+        "transformer-document",
+        2,
+        "We employ a residual connection followed by layer normalization: "
+        "LayerNorm(x + Sublayer(x)).",
+    )
+    gpt2 = _comparison_anchor(
+        "E2",
+        "gpt2-document",
+        4,
+        "Layer normalization was moved to the input of each sub-block.",
+    )
+    fact = {
+        "fact_id": "two-source-layernorm",
+        "claim_contains_any_groups": [
+            ["Transformer"],
+            ["GPT-2"],
+            ["layer normalization", "LayerNorm"],
+        ],
+        "sources": [
+            {
+                "source_filename": "transformer.pdf",
+                "source_text_contains_any": ["LayerNorm(x + Sublayer(x))"],
+                "source_pages": [2],
+            },
+            {
+                "source_filename": "gpt2.pdf",
+                "source_text_contains_any": ["input of each sub-block"],
+                "source_pages": [4],
+            },
+        ],
+    }
+    response = SimpleNamespace(
+        evidence=[transformer, gpt2],
+        claims=[
+            SimpleNamespace(
+                text=(
+                    "The original Transformer applies layer normalization after the residual "
+                    "addition, whereas GPT-2 moves it to each sub-block input."
+                ),
+                evidence_ids=["E1", "E2"],
+            )
+        ],
+    )
+    document_ids = {
+        "transformer.pdf": "transformer-document",
+        "gpt2.pdf": "gpt2-document",
+    }
+
+    assert _check_cross_document_fact(fact, response, document_ids)
+    response.claims[0].evidence_ids = ["E1"]
+    assert not _check_cross_document_fact(fact, response, document_ids)
+
+
+def test_cross_document_fact_does_not_combine_separate_claim_citations() -> None:
+    response = SimpleNamespace(
+        evidence=[
+            _comparison_anchor(
+                "E1",
+                "transformer-document",
+                2,
+                "LayerNorm(x + Sublayer(x)).",
+            ),
+            _comparison_anchor(
+                "E2",
+                "gpt2-document",
+                4,
+                "Layer normalization was moved to the input of each sub-block.",
+            ),
+        ],
+        claims=[
+            SimpleNamespace(
+                text="Transformer uses LayerNorm after its residual addition.",
+                evidence_ids=["E1"],
+            ),
+            SimpleNamespace(
+                text="GPT-2 moves layer normalization to the sub-block input.",
+                evidence_ids=["E2"],
+            ),
+        ],
+    )
+    fact = {
+        "fact_id": "two-source-layernorm",
+        "claim_contains_any_groups": [["Transformer"], ["GPT-2"], ["LayerNorm"]],
+        "sources": [
+            {
+                "source_filename": "transformer.pdf",
+                "source_text_contains_any": ["LayerNorm(x + Sublayer(x))"],
+                "source_pages": [2],
+            },
+            {
+                "source_filename": "gpt2.pdf",
+                "source_text_contains_any": ["input of each sub-block"],
+                "source_pages": [4],
+            },
+        ],
+    }
+
+    assert not _check_cross_document_fact(
+        fact,
+        response,
+        {"transformer.pdf": "transformer-document", "gpt2.pdf": "gpt2-document"},
+    )
 
 
 def test_live_comparison_gate_rejects_hybrid_fallback() -> None:

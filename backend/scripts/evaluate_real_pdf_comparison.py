@@ -95,6 +95,38 @@ def _check_fact(fact: dict, response, document_ids: dict[str, str]) -> bool:
     return False
 
 
+def _anchor_matches_source(anchor, source: dict, document_ids: dict[str, str]) -> bool:
+    return bool(
+        anchor is not None
+        and anchor.document_id == document_ids[source["source_filename"]]
+        and anchor.page_number in source["source_pages"]
+        and _contains_any(anchor.quote, source["source_text_contains_any"])
+    )
+
+
+def _check_cross_document_fact(
+    fact: dict,
+    response,
+    document_ids: dict[str, str],
+) -> bool:
+    """Require one published claim to express and cite both sides of a comparison."""
+
+    anchors = {item.evidence_id: item for item in response.evidence}
+    for claim in response.claims:
+        if any(
+            not _contains_any(claim.text, term_group)
+            for term_group in fact.get("claim_contains_any_groups", [])
+        ):
+            continue
+        cited = [anchors.get(evidence_id) for evidence_id in claim.evidence_ids]
+        if all(
+            any(_anchor_matches_source(anchor, source, document_ids) for anchor in cited)
+            for source in fact["sources"]
+        ):
+            return True
+    return False
+
+
 def _check_case(case: dict, response, document_ids: dict[str, str], provider) -> dict:
     failures: list[str] = []
     must_refuse = case.get("must_refuse", False)
@@ -139,6 +171,12 @@ def _check_case(case: dict, response, document_ids: dict[str, str], provider) ->
         fact["fact_id"]: _check_fact(fact, response, document_ids)
         for fact in case["required_claim_facts"]
     }
+    fact_checks.update(
+        {
+            fact["fact_id"]: _check_cross_document_fact(fact, response, document_ids)
+            for fact in case.get("required_cross_document_facts", [])
+        }
+    )
     failures.extend(f"missing_fact:{key}" for key, passed in fact_checks.items() if not passed)
     return {"passed": not failures, "failures": list(dict.fromkeys(failures)), "facts": fact_checks}
 

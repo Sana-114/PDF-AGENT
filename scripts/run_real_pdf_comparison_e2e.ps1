@@ -1,3 +1,5 @@
+#Requires -Version 7.0
+
 param(
     [string]$CorpusDir = "output/pdf/regression-corpus",
     [int]$TimeoutSeconds = 600,
@@ -84,6 +86,7 @@ try {
     if ($LASTEXITCODE -ne 0) { throw "Could not provide pinned PDF manifest." }
 
     $roundReports = @()
+    $containerReports = @()
     for ($round = 1; $round -le $Rounds; $round++) {
         $reportName = "bge-deepseek-comparison-$runId-round-$round.json"
         $reportPath = Join-Path $reportDir $reportName
@@ -106,22 +109,27 @@ try {
             total_cases = $caseCount
             report = $reportPath
         }
+        $containerReports += $containerReport
         Write-Host "Round $round/$Rounds`: $passedCases/$caseCount cases ($($result.status))"
         if ($evaluationExitCode -ne 0 -and $result.status -eq "passed") {
             throw "Evaluation exited with an error despite a passing report: $reportPath"
         }
         if ($round -lt $Rounds) { Start-Sleep -Seconds 3 }
     }
-    $summary = [ordered]@{
-        status = if (@($roundReports | Where-Object { $_.status -ne "passed" }).Count) { "failed" } else { "passed" }
-        rounds_requested = $Rounds
-        rounds_passed = @($roundReports | Where-Object { $_.status -eq "passed" }).Count
-        dataset_id = $dataset.dataset_id
-        reports = $roundReports
-    }
     $summaryPath = Join-Path $summaryDir "comparison-$runId-summary.json"
-    $summary | ConvertTo-Json -Depth 8 | Set-Content -LiteralPath $summaryPath -Encoding utf8
-    if ($summary.status -ne "passed") { throw "Repeated comparison gate failed: $summaryPath" }
+    $containerSummary = "/app/comparison-$runId-summary.json"
+    $stabilityArgs = @(
+        "scripts/summarize_comparison_stability.py",
+        "--dataset", "/app/evals/real_pdf_comparison_grounded.json",
+        "--reports"
+    )
+    $stabilityArgs += $containerReports
+    $stabilityArgs += @("--output", $containerSummary, "--strict")
+    & docker @composeArgs exec -T backend python @stabilityArgs
+    $summaryExitCode = $LASTEXITCODE
+    & docker cp "${backendContainer}:$containerSummary" $summaryPath
+    if ($LASTEXITCODE -ne 0) { throw "Could not copy comparison stability summary." }
+    if ($summaryExitCode -ne 0) { throw "Repeated comparison stability gate failed: $summaryPath" }
     Write-Host "Real-PDF BGE + DeepSeek $Rounds/$Rounds rounds passed. Summary: $summaryPath"
 }
 finally {

@@ -1,8 +1,15 @@
 {
   "schema_version": "1.0",
-  "dataset_id": "real-pdf-bge-deepseek-comparison-2026-09-v2",
+  "dataset_id": "real-pdf-bge-deepseek-comparison-2026-09-v3",
   "expected_provider": "deepseek",
   "required_retrieval_mode": "reranked",
+  "stability_thresholds": {
+    "min_round_pass_rate": 1.0,
+    "min_case_pass_rate": 1.0,
+    "min_fact_pass_rate": 1.0,
+    "max_fact_omission_rate": 0.0,
+    "min_refusal_rate": 1.0
+  },
   "cases": [
     {
       "case_id": "bert-vs-transformer",
@@ -147,6 +154,60 @@
       "evidence_per_document": 4,
       "must_refuse": true,
       "forbidden_quantity_pattern": "\\d+(?:[.,]\\d+)?\\s*(?:kg|kilograms|公斤)\\s*(?:CO2|CO₂)",
+      "min_cross_document_claims": 0,
+      "required_claim_facts": []
+    },
+    {
+      "case_id": "transformer-vs-gpt2-layernorm-conflict",
+      "question": "Compare the exact layer-normalization placement in the original Transformer and GPT-2. Contrast the original Transformer's LayerNorm(x + Sublayer(x)) arrangement with GPT-2 moving layer normalization to the input of each sub-block. Publish the contrast only if one claim cites both original papers.",
+      "documents": ["1706.03762v1.pdf", "gpt2-openai-2019.pdf"],
+      "evidence_per_document": 5,
+      "min_cross_document_claims": 1,
+      "required_claim_facts": [
+        {
+          "fact_id": "transformer-layernorm-after-residual",
+          "claim_contains_any": ["LayerNorm(x + Sublayer(x))", "post-norm", "post normalization", "残差后", "后归一化"],
+          "source_filename": "1706.03762v1.pdf",
+          "source_text_contains_any": ["LayerNorm(x + Sublayer(x))", "residual connection around each of the two sub-layers"],
+          "source_pages": [2]
+        },
+        {
+          "fact_id": "gpt2-layernorm-input",
+          "claim_contains_any": ["input of each sub-block", "pre-norm", "pre-normalization", "预归一化", "移到每个子块的输入"],
+          "source_filename": "gpt2-openai-2019.pdf",
+          "source_text_contains_any": ["Layer normalization was moved to the input of each sub-block", "moved to the input of each sub-block"],
+          "source_pages": [4]
+        }
+      ],
+      "required_cross_document_facts": [
+        {
+          "fact_id": "layernorm-placement-two-source-contrast",
+          "claim_contains_any_groups": [
+            ["Transformer", "原始 Transformer"],
+            ["GPT-2"],
+            ["LayerNorm", "layer normalization", "归一化"]
+          ],
+          "sources": [
+            {
+              "source_filename": "1706.03762v1.pdf",
+              "source_text_contains_any": ["LayerNorm(x + Sublayer(x))", "residual connection around each of the two sub-layers"],
+              "source_pages": [2]
+            },
+            {
+              "source_filename": "gpt2-openai-2019.pdf",
+              "source_text_contains_any": ["Layer normalization was moved to the input of each sub-block", "moved to the input of each sub-block"],
+              "source_pages": [4]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "case_id": "unsupported-bert-gpt1-exact-gpu-hardware",
+      "question": "Compare the exact GPU model and exact GPU count used for the original BERT pre-training and the original GPT-1 pre-training. If both original papers do not provide those exact GPU facts, explicitly decline the comparison without converting TPU information or outside knowledge into GPU claims.",
+      "documents": ["1810.04805v2.pdf", "gpt1-openai-2018.pdf"],
+      "evidence_per_document": 5,
+      "must_refuse": true,
       "min_cross_document_claims": 0,
       "required_claim_facts": []
     }
