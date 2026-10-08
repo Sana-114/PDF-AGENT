@@ -5,6 +5,7 @@ from sqlalchemy import select
 from sqlalchemy.orm import Session
 
 from app.core.database import get_db
+from app.llm.extractive import ExtractiveProvider
 from app.models.document import Document, DocumentStatus
 from app.schemas.review import (
     FutureWorkDecisionRead,
@@ -51,7 +52,8 @@ async def generate_research_review(
         documents.sort(key=lambda item: order[item.id])
     if not documents:
         raise HTTPException(status_code=409, detail="文献库中没有已解析论文。")
-    return await EvidenceReviewService(db).generate(
+    provider = ExtractiveProvider() if request.generation_mode == "extractive" else None
+    return await EvidenceReviewService(db, provider=provider).generate(
         documents,
         match_threshold=request.match_threshold,
         max_evidence=request.max_evidence,

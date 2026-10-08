@@ -11,6 +11,7 @@ class ResearchReviewRequest(BaseModel):
     document_ids: list[str] = Field(default_factory=list, max_length=100)
     match_threshold: float = Field(default=0.72, ge=0.5, le=1.0)
     max_evidence: int = Field(default=30, ge=4, le=60)
+    generation_mode: Literal["configured", "extractive"] = "configured"
 
     @field_validator("document_ids")
     @classmethod

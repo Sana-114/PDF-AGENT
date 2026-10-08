@@ -845,6 +845,7 @@ export async function buildCitationGraph(
 
 export async function generateResearchReview(
   documentIds: string[] = [],
+  generationMode: "configured" | "extractive" = "configured",
 ): Promise<ResearchReviewResponse> {
   const response = await assertResponse(
     await fetch(`${API_BASE_URL}/reviews/generate`, {
@@ -854,6 +855,7 @@ export async function generateResearchReview(
         document_ids: documentIds,
         match_threshold: 0.72,
         max_evidence: 30,
+        generation_mode: generationMode,
       }),
     }),
   );

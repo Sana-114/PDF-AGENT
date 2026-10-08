@@ -45,7 +45,7 @@ function Invoke-Docker {
 
 function Test-PortFree {
     param([int]$Port)
-    $listener = [System.Net.Sockets.TcpListener]::new([System.Net.IPAddress]::Loopback, $Port)
+    $listener = [System.Net.Sockets.TcpListener]::new([System.Net.IPAddress]::Any, $Port)
     try {
         $listener.Start()
         return $true
@@ -87,6 +87,9 @@ try {
     }
 
     $runningServices = @(docker compose --profile local-bge ps --status running --services 2>$null)
+    if ("frontend" -notin $runningServices -and -not (Test-PortFree -Port $frontendPort)) {
+        throw "Frontend port $frontendPort is unavailable (occupied or Windows-reserved). Set FRONTEND_HOST_PORT and FRONTEND_ORIGIN in .env to a free port. Inspect Windows reservations with: netsh interface ipv4 show excludedportrange protocol=tcp"
+    }
     if ($runningServices.Count -eq 0) {
         $ports = @(
             $frontendPort, $backendPort, $redisPort,
@@ -98,7 +101,7 @@ try {
         }
         $occupiedPorts = @($ports | Sort-Object -Unique | Where-Object { -not (Test-PortFree -Port $_) })
         if ($occupiedPorts.Count -gt 0) {
-            throw "Required host ports are already occupied: $($occupiedPorts -join ', ')."
+            throw "Required host ports are unavailable (occupied or Windows-reserved): $($occupiedPorts -join ', ')."
         }
     }
 

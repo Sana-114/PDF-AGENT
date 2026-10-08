@@ -158,3 +158,25 @@ def test_whitespace_note_is_not_a_confirmation():
         FutureWorkDecisionRequest(source=_source(), decision="open", reason=" " * 20)
     with pytest.raises(ValueError):
         _source("new", " " * 20)
+
+
+def test_explicit_extractive_review_never_initializes_external_provider(corpus, monkeypatch):
+    from app.api.routes.reviews import generate_research_review
+    from app.schemas.review import ResearchReviewRequest
+    from app.services import evidence_review
+
+    def forbidden_provider():
+        raise AssertionError("An extractive review must not initialize the configured LLM")
+
+    monkeypatch.setattr(evidence_review, "get_llm_provider", forbidden_provider)
+    db, documents, _ = corpus
+    review = asyncio.run(
+        generate_research_review(
+            ResearchReviewRequest(
+                document_ids=[item.id for item in documents], generation_mode="extractive"
+            ),
+            db,
+        )
+    )
+    assert review.provider == "extractive"
+    assert review.future_directions

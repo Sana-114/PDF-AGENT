@@ -37,6 +37,7 @@ import {
   WritingOutlineResponse,
 } from "../lib/api";
 import { readableRequestError } from "../lib/requestError";
+import { agentConfigurationLabel } from "../lib/agentStatus";
 import CitationGraph from "../components/CitationGraph";
 import PaperComparisonWorkbench from "../components/PaperComparisonWorkbench";
 import ResearchReview from "../components/ResearchReview";
@@ -176,6 +177,7 @@ export default function Home() {
   const [buildingCitationGraph, setBuildingCitationGraph] = useState(false);
   const [researchReview, setResearchReview] = useState<ResearchReviewResponse | null>(null);
   const [generatingResearchReview, setGeneratingResearchReview] = useState(false);
+  const [extractiveReview, setExtractiveReview] = useState(false);
   const [writingIdea, setWritingIdea] = useState("");
   const [writingLanguage, setWritingLanguage] = useState<"zh" | "en">("zh");
   const [writingOutline, setWritingOutline] = useState<WritingOutlineResponse | null>(null);
@@ -224,7 +226,7 @@ export default function Home() {
   useEffect(() => {
     void refresh();
     void getAgentStatus()
-      .then((status) => setAgentLabel(status.model ? `${status.model} 可用` : "服务可用"))
+      .then((status) => setAgentLabel(agentConfigurationLabel(status)))
       .catch(() => setAgentLabel("服务不可用"));
     void refreshRecommendationData();
     const timer = window.setInterval(() => void refresh(true), 3000);
@@ -521,7 +523,7 @@ export default function Home() {
     setGeneratingResearchReview(true);
     setError(null);
     try {
-      setResearchReview(await generateResearchReview(readyDocumentIds));
+      setResearchReview(await generateResearchReview(readyDocumentIds, extractiveReview ? "extractive" : "configured"));
     } catch (reviewError) {
       setError(readableRequestError(reviewError, "综述整理失败"));
     } finally {
@@ -1050,14 +1052,15 @@ export default function Home() {
         >
           <div className="section-heading">
             <div><p className="eyebrow">研究综述</p><h2>证据综述与前沿方向</h2></div>
-            <button
-              className="ghost"
-              disabled={generatingResearchReview || !documents.some((item) => item.status === "ready")}
-              onClick={() => void generateReview()}
-              type="button"
-            >
-              {generatingResearchReview ? "正在提取证据…" : researchReview ? "重新整理" : "整理综述"}
-            </button>
+            <div>
+              <label className="review-local-mode"><input type="checkbox" checked={extractiveReview}
+                onChange={(event) => setExtractiveReview(event.target.checked)} />仅整理原文（不调用 LLM）</label>
+              <button className="ghost"
+                disabled={generatingResearchReview || !documents.some((item) => item.status === "ready")}
+                onClick={() => void generateReview()} type="button">
+                {generatingResearchReview ? "正在提取证据…" : researchReview ? "重新整理" : "整理综述"}
+              </button>
+            </div>
           </div>
           {!researchReview && (
             <div className="research-review-placeholder">

@@ -276,6 +276,7 @@ h1 { margin: 0; color: var(--ink); font-size: 24px; line-height: 1.2; letter-spa
 .future-decision-editor q { display: block; margin: 8px 0; font-family: Georgia, serif; }
 .future-decision-editor small { display: block; color: var(--muted); margin: 8px 0; }
 .future-decision-note { font-size: 11px; color: var(--muted); }
+.review-local-mode { font-size: 11px; color: var(--muted); margin-right: 12px; }
 
 .writing-section { scroll-margin-top: 24px; }
 .writing-idea-form { display: grid; grid-template-columns: minmax(0, 1fr) 130px auto; gap: 11px; align-items: end; padding: 19px; color: white; background: #162720; border-radius: 14px; }
