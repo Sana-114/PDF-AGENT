@@ -15,6 +15,7 @@ from app.schemas.discovery import (
     ReferenceResolveResponse,
 )
 from app.schemas.document import DocumentRead
+from app.services.citation_value import citation_values
 from app.services.document_content import read_parsed_document, reference_links
 from app.services.document_ingestion import dispatch_document_parse, persist_staged_document
 from app.services.paper_discovery import (
@@ -53,9 +54,7 @@ async def search_papers(
 async def resolve_document_references(
     request: ReferenceResolveRequest,
     db: Annotated[Session, Depends(get_db)],
-    service: Annotated[
-        ReferenceDiscoveryService, Depends(get_reference_discovery_service)
-    ],
+    service: Annotated[ReferenceDiscoveryService, Depends(get_reference_discovery_service)],
 ) -> ReferenceResolveResponse:
     document = db.get(Document, request.document_id)
     if document is None:
@@ -66,24 +65,34 @@ async def resolve_document_references(
     if parsed is None:
         raise HTTPException(status_code=404, detail="结构化解析结果不存在。")
     references, _ = reference_links(parsed)
+    values = citation_values(parsed)
     total_references = len(references)
+    references = [item for item in references if item.get("reference_id") in values]
     if request.reference_ids:
         requested = set(request.reference_ids)
         references = [item for item in references if item.get("reference_id") in requested]
+    excluded = 0
+    if request.selection_mode == "recommended" and not request.reference_ids:
+        excluded = sum(values[item["reference_id"]].role == "incidental" for item in references)
+        references = [
+            item for item in references if values[item["reference_id"]].role != "incidental"
+        ]
+        references.sort(key=lambda item: not values[item["reference_id"]].recommended)
     references = references[: request.limit]
     items = await service.resolve_many(
         references,
         candidates_per_reference=request.candidates_per_reference,
     )
+    for item in items:
+        item.citation_value = values.get(item.reference_id)
     return ReferenceResolveResponse(
         document_id=document.id,
         total_references=total_references,
         attempted=len(items),
         matched=sum(item.status == "matched" for item in items),
-        importable=sum(
-            any(match.paper.importable for match in item.candidates) for item in items
-        ),
+        importable=sum(any(match.paper.importable for match in item.candidates) for item in items),
         items=items,
+        excluded_incidental=excluded,
     )
 
 

@@ -55,6 +55,24 @@ class ReferenceResolveRequest(BaseModel):
     reference_ids: list[str] = Field(default_factory=list, max_length=20)
     limit: int = Field(default=8, ge=1, le=20)
     candidates_per_reference: int = Field(default=3, ge=1, le=5)
+    selection_mode: Literal["recommended", "all"] = "recommended"
+
+
+class CitationContextRead(BaseModel):
+    citation_id: str
+    page_number: int = Field(ge=1)
+    block_id: str
+    bbox: list[float] | None = None
+    quote: str
+    role: Literal["method", "baseline", "background", "incidental", "unknown"]
+
+
+class CitationValueRead(BaseModel):
+    role: Literal["method", "baseline", "background", "incidental", "unknown"]
+    recommended: bool
+    reason: str
+    mention_count: int = Field(ge=0)
+    contexts: list[CitationContextRead] = Field(default_factory=list)
 
 
 class ReferenceCandidateMatch(BaseModel):
@@ -72,6 +90,7 @@ class ReferenceResolution(BaseModel):
     query_kind: QueryKind | None = None
     candidates: list[ReferenceCandidateMatch] = Field(default_factory=list)
     warnings: list[str] = Field(default_factory=list)
+    citation_value: CitationValueRead | None = None
 
 
 class ReferenceResolveResponse(BaseModel):
@@ -81,3 +100,4 @@ class ReferenceResolveResponse(BaseModel):
     matched: int
     importable: int
     items: list[ReferenceResolution]
+    excluded_incidental: int = 0

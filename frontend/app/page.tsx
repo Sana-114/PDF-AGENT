@@ -363,7 +363,10 @@ export default function Home() {
     }
   }
 
-  async function openReferenceExplorer(document: DocumentRecord) {
+  async function openReferenceExplorer(
+    document: Pick<DocumentRecord, "id" | "title" | "original_filename">,
+    selectionMode: "recommended" | "all" = "recommended",
+  ) {
     setReferenceExplorer({
       documentId: document.id,
       title: document.title || document.original_filename,
@@ -374,7 +377,7 @@ export default function Home() {
     setResolvingReferences(true);
     setError(null);
     try {
-      const response = await resolveDocumentReferences(document.id);
+      const response = await resolveDocumentReferences(document.id, 12, selectionMode);
       setReferenceResults(response);
       setReferenceSelections(defaultReferenceSelections(response.items));
     } catch (resolveError) {
@@ -1364,7 +1367,7 @@ export default function Home() {
               </button>
             </header>
             {resolvingReferences && (
-              <div className="reference-explorer-state">正在分析前 12 条参考文献并匹配论文…</div>
+              <div className="reference-explorer-state">正在核对正文引用语境，优先匹配有实质作用的参考文献（最多 12 条）…</div>
             )}
             {!resolvingReferences && referenceResults && (
               <>
@@ -1373,6 +1376,10 @@ export default function Home() {
                   <span>本次分析 <strong>{referenceResults.attempted}</strong> 条</span>
                   <span>可信匹配 <strong>{referenceResults.matched}</strong> 条</span>
                   <span>可下载 <strong>{referenceResults.importable}</strong> 条</span>
+                  {referenceResults.excluded_incidental > 0 && <span>暂不下钻 {referenceResults.excluded_incidental} 条泛指引用</span>}
+                  <button type="button" disabled={importingReferences} onClick={() => void openReferenceExplorer({
+                    id: referenceExplorer.documentId, title: referenceExplorer.title, original_filename: "",
+                  }, "all")}>按原顺序查看（含泛指引用）</button>
                 </div>
                 <div className="reference-resolution-list">
                   {referenceResults.items.map((resolution) => (
@@ -1380,6 +1387,22 @@ export default function Home() {
                       <div className="reference-original">
                         <span>[{resolution.label}] · 第 {resolution.page_number} 页</span>
                         <p>{resolution.text}</p>
+                        {resolution.citation_value && (
+                          <div className="reference-value">
+                            <small>{resolution.citation_value.reason}</small>
+                            {resolution.citation_value.contexts.slice(0, 2).map((context) => (
+                              <button key={context.citation_id} type="button" onClick={() => {
+                                openReader(referenceExplorer.documentId, referenceExplorer.title, context.page_number, {
+                                  evidence_id: context.citation_id, chunk_id: null,
+                                  document_id: referenceExplorer.documentId, document_title: referenceExplorer.title,
+                                  page_number: context.page_number, block_ids: [context.block_id], bbox: context.bbox,
+                                  section: null, source_type: "text", retrieval_mode: "lexical", quote: context.quote, score: 1,
+                                });
+                                setReferenceExplorer(null);
+                              }}><span>正文第 {context.page_number} 页 ↗</span><q>{context.quote}</q></button>
+                            ))}
+                          </div>
+                        )}
                       </div>
                       <div className="reference-candidates">
                         {resolution.candidates.length === 0 && (

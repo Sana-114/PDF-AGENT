@@ -169,6 +169,20 @@ export interface ReferenceResolution {
   query_kind: "title" | "doi" | "arxiv" | null;
   candidates: ReferenceCandidateMatch[];
   warnings: string[];
+  citation_value?: {
+    role: "method" | "baseline" | "background" | "incidental" | "unknown";
+    recommended: boolean;
+    reason: string;
+    mention_count: number;
+    contexts: Array<{
+      citation_id: string;
+      page_number: number;
+      block_id: string;
+      bbox: number[] | null;
+      quote: string;
+      role: string;
+    }>;
+  } | null;
 }
 
 export interface ReferenceResolveResponse {
@@ -178,6 +192,7 @@ export interface ReferenceResolveResponse {
   matched: number;
   importable: number;
   items: ReferenceResolution[];
+  excluded_incidental: number;
 }
 
 interface PaperImportResponse extends UploadResponse {
@@ -1018,6 +1033,7 @@ export async function deleteTranslationDraft(draftId: string): Promise<void> {
 export async function resolveDocumentReferences(
   documentId: string,
   limit = 12,
+  selectionMode: "recommended" | "all" = "recommended",
 ): Promise<ReferenceResolveResponse> {
   const response = await assertResponse(
     await fetch(`${API_BASE_URL}/discovery/references/resolve`, {
@@ -1027,6 +1043,7 @@ export async function resolveDocumentReferences(
         document_id: documentId,
         limit,
         candidates_per_reference: 3,
+        selection_mode: selectionMode,
       }),
     }),
   );

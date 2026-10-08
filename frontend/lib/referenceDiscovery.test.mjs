@@ -32,3 +32,11 @@ test("deduplicates the same paper selected from multiple references", () => {
   assert.equal(uniqueSelectedPapers(selections).length, 1);
   assert.equal(paperCandidateKey(paper), "arxiv:1706.03762v7");
 });
+
+test("identity match alone does not select background or uncertain citation uses", () => {
+  const values = [true, false, false].map((recommended, index) => ({
+    reference_id: `ref-${index}`, status: "matched", candidates: [{ paper }],
+    citation_value: { recommended },
+  }));
+  assert.deepEqual(Object.keys(defaultReferenceSelections(values)), ["ref-0"]);
+});

@@ -12,7 +12,8 @@ export function defaultReferenceSelections(
   return Object.fromEntries(
     resolutions.flatMap((resolution) => {
       const candidate = resolution.candidates[0]?.paper;
-      return resolution.status === "matched" && candidate?.importable
+      const recommended = !resolution.citation_value || resolution.citation_value.recommended;
+      return resolution.status === "matched" && candidate?.importable && recommended
         ? [[resolution.reference_id, candidate]]
         : [];
     }),

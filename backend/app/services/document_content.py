@@ -63,6 +63,8 @@ def reference_links(
                             "block_id": block_id,
                             "bbox": block.get("bbox"),
                             "context": text[:500],
+                            "start_offset": match.start(),
+                            "end_offset": match.end(),
                         }
                     )
     return references, mentions
