@@ -4,8 +4,8 @@ PaperPilot 是一个以原文证据为核心的科研助手 Agent 系统。本�
 
 ## 当前能力
 
-- 首页采用 Agent-first 信息架构，默认直接进入带原文证据的连续问答，而非平铺全部功能；
-- 将完整能力收敛为“科研 Agent、知识库、论文发现、研究分析、创作工具”五个任务区，复杂功能通过区内二级标签按需展开；
+- 首页默认进入带原文证据的文献问答，其他工具通过任务入口展开；
+- 按“文献问答、文献库、查找论文、研究脉络、研究产出”五个工作区组织功能，区内二级标签按需展开；
 - 保留原有 URL Hash 深链，引用图谱、综述、写作、翻译、数据可视化等链接可直接定位到对应工作台；
 - 单篇或批量 PDF 上传，校验真实 PDF 内容和大小限制；
 - 按完整题名、DOI 或 arXiv ID 检索 Semantic Scholar、arXiv 和 Crossref，并一键导入开放 PDF；
@@ -630,11 +630,21 @@ Backend、Worker 与 Beat 的镜像内代码运行、健康检查、开发 Overr
 
 ## 下一里程碑
 
+截至第 77 阶段，最新代码基线为第 76 阶段 `a26acbc`，进度分支按阶段累积，`main` 仍为第 67–70 阶段。已补充 [引用语境筛选](docs/citation-context-acceptance-2026-10-08.md)、[Future Work 人工核验](docs/future-work-review-acceptance-2026-10-08.md) 和 [本地录制检查](docs/recording-readiness-acceptance-2026-10-08.md)。新版七案例真实模型三轮尚未执行：需要明确授权仅公开论文摘录发送到 DeepSeek，不能把历史五案例成绩当成新版成绩。
+
+可使用 [技术内容核对版](docs/competition-technical-report.md)、[带真实截图的技术 PDF](output/pdf/PaperPilot-technical-report.pdf) 和 [录制脚本](docs/demo-video-script.md)。旧初稿保留为历史材料。本机端口现为 `http://localhost:3300/`（原 3200 被 Windows 保留）；其他机器以 `.env` 配置为准。公网配置不变，未宣称已上线。
+
+技术 PDF 可复现构建（安装 `requirements-docs.txt`）：
+
+```powershell
+python scripts/build_technical_report.py --source docs/competition-technical-report.md --output output/pdf/PaperPilot-technical-report.pdf --release --revision a26acbc
+```
+
 1. 获取组委会**原始扫描版**后复跑 OCR 验收，并针对复杂合并/旋转表格、弱续接信号跨页表格和无图注图像增加专用适配器；真实 541 页教材已通过分批解析与恢复门禁；
-2. 继续量化 BGE + DeepSeek 生成的重复运行稳定性、困难负例和真实争议的冲突标注，并增加人工确认状态；
-3. 为领域综述增加主题聚类、跨论文争议识别和人工确认后的方向状态持久化；
+2. 在明确公开论文摘录外发授权后，完成七案例三轮 BGE + DeepSeek；只复测失败相关项；
+3. 人工审校引用作用、跨论文结论和 Future Work 后续证据；持久化流程已实现；
 4. 扩展可编辑图表列选择、统计检验与完整数据导出；
 5. 继续评估保持原位排版的双语 PDF 输出；
-6. 临近提交时购置服务器和域名，完成公网部署、技术文档 PDF 排版、5–8 分钟视频录制与最终材料冻结。
+6. 录制已核验的本地部分；临近提交购置服务器和域名，完成公网验收、补录上线镜头、更新文档真实信息和最终冻结。
 
 更完整的边界说明见 [docs/architecture.md](docs/architecture.md)。

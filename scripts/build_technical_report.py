@@ -5,6 +5,7 @@ from __future__ import annotations
 import argparse
 import html
 import re
+from datetime import date
 from pathlib import Path
 
 from reportlab.graphics.shapes import Drawing, Line, Polygon, Rect, String
@@ -18,6 +19,7 @@ from reportlab.pdfbase.cidfonts import UnicodeCIDFont
 from reportlab.pdfbase.ttfonts import TTFont
 from reportlab.platypus import (
     HRFlowable,
+    Image,
     CondPageBreak,
     KeepTogether,
     ListFlowable,
@@ -94,6 +96,8 @@ def make_styles(regular: str, bold: str, mono: str) -> dict[str, ParagraphStyle]
             alignment=TA_JUSTIFY,
             wordWrap="CJK",
             spaceAfter=6,
+            allowWidows=0,
+            allowOrphans=0,
         ),
         "small": ParagraphStyle(
             "SmallCJK",
@@ -113,6 +117,7 @@ def make_styles(regular: str, bold: str, mono: str) -> dict[str, ParagraphStyle]
             textColor=BLUE_DARK,
             spaceAfter=12,
             wordWrap="CJK",
+            keepWithNext=True,
         ),
         "h2": ParagraphStyle(
             "H2CJK",
@@ -123,6 +128,7 @@ def make_styles(regular: str, bold: str, mono: str) -> dict[str, ParagraphStyle]
             textColor=BLUE_DARK,
             spaceAfter=9,
             wordWrap="CJK",
+            keepWithNext=True,
         ),
         "h3": ParagraphStyle(
             "H3CJK",
@@ -134,6 +140,7 @@ def make_styles(regular: str, bold: str, mono: str) -> dict[str, ParagraphStyle]
             spaceBefore=6,
             spaceAfter=6,
             wordWrap="CJK",
+            keepWithNext=True,
         ),
         "quote": ParagraphStyle(
             "QuoteCJK",
@@ -318,9 +325,14 @@ def screenshot_plan(title: str, styles: dict[str, ParagraphStyle]):
 def table_flow(rows: list[list[str]], styles: dict[str, ParagraphStyle], mono: str) -> Table:
     max_columns = max(len(row) for row in rows)
     normalized = [row + [""] * (max_columns - len(row)) for row in rows]
+    header_style = ParagraphStyle(
+        "TableHeaderCJK", parent=styles["small"],
+        fontName=styles["h3"].fontName, textColor=colors.white,
+    )
     data = [
-        [Paragraph(inline_markup(cell, mono), styles["small"]) for cell in row]
-        for row in normalized
+        [Paragraph(inline_markup(cell, mono), header_style if index == 0 else styles["small"])
+         for cell in row]
+        for index, row in enumerate(normalized)
     ]
     total_width = 166 * mm
     raw_weights = []
@@ -354,7 +366,8 @@ SCREENSHOT_AFTER = {
 }
 
 
-def parse_markdown(text: str, styles: dict[str, ParagraphStyle], regular: str, bold: str, mono: str):
+def parse_markdown(text: str, styles: dict[str, ParagraphStyle], regular: str, bold: str, mono: str,
+                   *, release: bool = False):
     lines = text.splitlines()
     story = []
     paragraph: list[str] = []
@@ -403,12 +416,18 @@ def parse_markdown(text: str, styles: dict[str, ParagraphStyle], regular: str, b
                     mermaid_index += 1
                     story.append(architecture_diagram(regular, bold) if mermaid_index == 1 else dataflow_diagram(regular, bold))
                     story.append(Paragraph(
-                        f"图 {mermaid_index}：{'系统总体架构' if mermaid_index == 1 else '核心数据流'}（矢量绘制）。",
+                        f"图 {mermaid_index + 1 if release else mermaid_index}："
+                        f"{'系统总体架构' if mermaid_index == 1 else '核心数据流'}（矢量绘制）。",
                         styles["caption"],
                     ))
                 else:
                     code = "<br/>".join(html.escape(item) if item else " " for item in code_lines)
-                    story.append(Paragraph(code, styles["code"]))
+                    code_style = styles["code"]
+                    if re.search(r"[\u3400-\u9fff]", "\n".join(code_lines)):
+                        code_style = ParagraphStyle(
+                            "CJKCode", parent=code_style, fontName=regular,
+                        )
+                    story.append(Paragraph(code, code_style))
                 in_code = False
                 code_language = ""
                 code_lines = []
@@ -418,21 +437,36 @@ def parse_markdown(text: str, styles: dict[str, ParagraphStyle], regular: str, b
             code_lines.append(line)
             index += 1
             continue
+        image_match = re.fullmatch(r"!\[([^]]*)\]\(([^)]+)\)", stripped)
+        if image_match:
+            flush_paragraph()
+            flush_list()
+            image_path = (ROOT / image_match.group(2)).resolve()
+            if not image_path.is_relative_to(ROOT) or not image_path.is_file():
+                raise ValueError(f"Screenshot is missing or outside repository: {image_path}")
+            picture = Image(str(image_path))
+            scale = min(166 * mm / picture.imageWidth, 96 * mm / picture.imageHeight)
+            picture.drawWidth = picture.imageWidth * scale
+            picture.drawHeight = picture.imageHeight * scale
+            story.append(KeepTogether([picture, Spacer(1, 4),
+                Paragraph(inline_markup(image_match.group(1), mono), styles["caption"])]))
+            index += 1
+            continue
         if stripped.startswith("## "):
             flush_paragraph()
             flush_list()
             title = stripped[3:].strip()
-            if section_count and title in {
+            if section_count and (release or title in {
                 "4. 抗幻觉 RAG 与多文推理",
                 "5. 版式感知阅读与翻译",
-            }:
+            }):
                 story.append(CondPageBreak(105 * mm))
             elif section_count:
                 story.append(PageBreak())
             section_count += 1
             story.append(Paragraph(inline_markup(title, mono), styles["h1"]))
             story.append(HRFlowable(width="100%", thickness=0.8, color=LINE, spaceAfter=10))
-            if title in SCREENSHOT_AFTER:
+            if title in SCREENSHOT_AFTER and not release:
                 story.append(screenshot_plan(SCREENSHOT_AFTER[title], styles))
                 story.append(Spacer(1, 8))
             index += 1
@@ -442,7 +476,7 @@ def parse_markdown(text: str, styles: dict[str, ParagraphStyle], regular: str, b
             flush_list()
             title = stripped[4:].strip()
             story.append(Paragraph(inline_markup(title, mono), styles["h2"]))
-            if title in SCREENSHOT_AFTER:
+            if title in SCREENSHOT_AFTER and not release:
                 story.append(screenshot_plan(SCREENSHOT_AFTER[title], styles))
                 story.append(Spacer(1, 8))
             index += 1
@@ -495,12 +529,13 @@ def parse_markdown(text: str, styles: dict[str, ParagraphStyle], regular: str, b
     return story
 
 
-def cover(styles: dict[str, ParagraphStyle], regular: str, bold: str):
+def cover(styles: dict[str, ParagraphStyle], regular: str, bold: str, *, release: bool = False,
+          revision: str = ""):
     meta = Table([
-        ["文档状态", "比赛技术文档排版草稿"],
+        ["文档状态", "技术内容核对版（公网待上线）" if release else "比赛技术文档排版草稿"],
         ["仓库", "github.com/Sana-114/PDF-AGENT"],
-        ["在线演示", "临近提交时部署并补充"],
-        ["版本说明", "正式提交前记录 Git Tag 与 Commit SHA"],
+        ["在线演示", "本地演示已检查；公网部署未验收" if release else "临近提交时部署并补充"],
+        ["代码基线", revision[:12] if release else "正式提交前记录 Git Tag 与 Commit SHA"],
     ], colWidths=[35 * mm, 115 * mm])
     meta.setStyle(TableStyle([
         ("FONTNAME", (0, 0), (-1, -1), regular),
@@ -528,12 +563,13 @@ def cover(styles: dict[str, ParagraphStyle], regular: str, bold: str):
         HRFlowable(width="100%", thickness=1.2, color=BLUE_DARK, spaceAfter=7 * mm),
         meta,
         Spacer(1, 25 * mm),
-        Paragraph("2026 年 9 月 · 排版初稿", styles["small"]),
+        Paragraph(f"{date.today().isoformat()} · 技术内容核对版" if release else "2026 年 9 月 · 排版初稿", styles["small"]),
         PageBreak(),
     ]
 
 
-def toc(styles: dict[str, ParagraphStyle]):
+def toc(styles: dict[str, ParagraphStyle], markdown: str | None = None,
+        page_numbers: dict[str, int] | None = None):
     sections = [
         "摘要", "1. 项目概述", "2. 系统总体架构", "3. PDF 管理与细粒度解析",
         "4. 抗幻觉 RAG 与多文推理", "5. 版式感知阅读与翻译",
@@ -542,10 +578,17 @@ def toc(styles: dict[str, ParagraphStyle]):
         "11. 创新点", "12. 已知边界与后续计划", "13. 成品 PDF 编排建议",
         "14. 仓库内参考资料",
     ]
+    if markdown is not None:
+        sections = [line[3:].strip() for line in markdown.splitlines() if line.startswith("## ")]
     rows = []
     for index, section in enumerate(sections):
-        rows.append([Paragraph(f"{index + 1:02d}", styles["small"]), Paragraph(section, styles["toc"])])
-    table = Table(rows, colWidths=[14 * mm, 145 * mm], rowHeights=[8.5 * mm] * len(rows))
+        if markdown is not None:
+            page = str(page_numbers[section]) if page_numbers else "—"
+            rows.append([Paragraph(section, styles["toc"]), Paragraph(page, styles["small"])])
+        else:
+            rows.append([Paragraph(f"{index + 1:02d}", styles["small"]), Paragraph(section, styles["toc"])])
+    widths = [145 * mm, 14 * mm] if markdown is not None else [14 * mm, 145 * mm]
+    table = Table(rows, colWidths=widths, rowHeights=[8.5 * mm] * len(rows))
     table.setStyle(TableStyle([
         ("LINEBELOW", (0, 0), (-1, -1), 0.35, LINE),
         ("VALIGN", (0, 0), (-1, -1), "MIDDLE"),
@@ -554,10 +597,22 @@ def toc(styles: dict[str, ParagraphStyle]):
     return [Paragraph("目录", styles["h1"]), Spacer(1, 3 * mm), table, PageBreak()]
 
 
-def draw_page(canvas, doc, regular: str, bold: str) -> None:
+class ReportDocTemplate(SimpleDocTemplate):
+    """Capture actual section positions for the release report's second pass."""
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.section_pages: dict[str, int] = {}
+
+    def afterFlowable(self, flowable) -> None:
+        if isinstance(flowable, Paragraph) and flowable.style.name == "H1CJK":
+            self.section_pages[flowable.getPlainText()] = self.page
+
+
+def draw_page(canvas, doc, regular: str, bold: str, *, release: bool = False) -> None:
     page = canvas.getPageNumber()
     canvas.saveState()
-    canvas.setTitle("PaperPilot 比赛技术文档初稿")
+    canvas.setTitle("PaperPilot 科研助手技术文档" if release else "PaperPilot 比赛技术文档初稿")
     canvas.setAuthor("PaperPilot")
     if page > 1:
         canvas.setStrokeColor(LINE)
@@ -565,40 +620,48 @@ def draw_page(canvas, doc, regular: str, bold: str) -> None:
         canvas.line(20 * mm, A4[1] - 14 * mm, A4[0] - 20 * mm, A4[1] - 14 * mm)
         canvas.setFont(regular, 7)
         canvas.setFillColor(MUTED)
-        canvas.drawString(20 * mm, A4[1] - 10.5 * mm, "PaperPilot · 比赛技术文档排版草稿")
+        canvas.drawString(20 * mm, A4[1] - 10.5 * mm, "PaperPilot · 技术内容核对版" if release else "PaperPilot · 比赛技术文档排版草稿")
         canvas.drawRightString(A4[0] - 20 * mm, 11 * mm, f"{page:02d}")
         canvas.setFont(bold, 6.7)
         canvas.drawString(20 * mm, 11 * mm, "原文证据驱动的科研助手 Agent 系统")
     canvas.restoreState()
 
 
-def build(source: Path, output: Path) -> None:
+def build(source: Path, output: Path, *, release: bool = False, revision: str = "") -> None:
+    if release and not re.fullmatch(r"[a-f0-9]{7,40}", revision):
+        raise ValueError("Release reports require a real Git baseline SHA")
     regular, bold, mono = register_fonts()
     styles = make_styles(regular, bold, mono)
     output.parent.mkdir(parents=True, exist_ok=True)
-    doc = SimpleDocTemplate(
+    doc = ReportDocTemplate(
         str(output),
         pagesize=A4,
         leftMargin=22 * mm,
         rightMargin=22 * mm,
         topMargin=20 * mm,
         bottomMargin=19 * mm,
-        title="PaperPilot 比赛技术文档初稿",
+        title="PaperPilot 科研助手技术文档" if release else "PaperPilot 比赛技术文档初稿",
         author="PaperPilot",
         subject="科研助手 Agent 系统技术方案",
     )
     markdown = source.read_text(encoding="utf-8")
-    story = cover(styles, regular, bold)
-    story.extend(toc(styles))
-    story.extend(parse_markdown(markdown, styles, regular, bold, mono))
-    doc.build(
-        story,
-        onFirstPage=lambda canvas, current_doc: draw_page(canvas, current_doc, regular, bold),
-        onLaterPages=lambda canvas, current_doc: draw_page(canvas, current_doc, regular, bold),
-    )
+    page_numbers = None
+    for _ in range(2 if release else 1):
+        doc.section_pages = {}
+        story = cover(styles, regular, bold, release=release, revision=revision)
+        story.extend(toc(styles, markdown if release else None, page_numbers))
+        story.extend(parse_markdown(markdown, styles, regular, bold, mono, release=release))
+        doc.build(
+            story,
+            onFirstPage=lambda canvas, current_doc: draw_page(canvas, current_doc, regular, bold, release=release),
+            onLaterPages=lambda canvas, current_doc: draw_page(canvas, current_doc, regular, bold, release=release),
+        )
+        if page_numbers is not None and page_numbers != doc.section_pages:
+            raise RuntimeError("Table-of-contents page positions changed between passes")
+        page_numbers = dict(doc.section_pages)
     reader = PdfReader(str(output))
-    if not (16 <= len(reader.pages) <= 30):
-        raise RuntimeError(f"Unexpected page count: {len(reader.pages)} (expected 16-30 for the draft)")
+    if not (1 <= len(reader.pages) <= 30):
+        raise RuntimeError(f"Unexpected page count: {len(reader.pages)} (competition maximum: 30)")
     print(f"Built {output} ({len(reader.pages)} pages, {output.stat().st_size} bytes)")
 
 
@@ -606,8 +669,10 @@ def main() -> None:
     parser = argparse.ArgumentParser()
     parser.add_argument("--source", type=Path, default=DEFAULT_SOURCE)
     parser.add_argument("--output", type=Path, default=DEFAULT_OUTPUT)
+    parser.add_argument("--release", action="store_true", help="Use verified content without screenshot placeholders")
+    parser.add_argument("--revision", default="", help="Runtime code baseline SHA, required for --release")
     args = parser.parse_args()
-    build(args.source.resolve(), args.output.resolve())
+    build(args.source.resolve(), args.output.resolve(), release=args.release, revision=args.revision)
 
 
 if __name__ == "__main__":

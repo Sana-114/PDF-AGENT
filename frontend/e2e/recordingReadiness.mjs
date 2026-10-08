@@ -69,7 +69,7 @@ try {
   await page.locator(".future-work-board").waitFor();
   report.future_direction_count = review.future_directions.length;
   await page.locator(".future-work-board").evaluate((element) => {
-    window.scrollTo(0, window.scrollY + element.getBoundingClientRect().top - 24);
+    window.scrollTo({ top: window.scrollY + element.getBoundingClientRect().top - 24, behavior: "instant" });
   });
   await capture("04-future-work");
   const unreviewed = review.future_directions[0];
@@ -101,7 +101,7 @@ try {
   await page.getByRole("button", { name: "整理四种脚本", exact: true }).click();
   await page.locator(".architecture-preview-svg").waitFor();
   await page.locator(".architecture-result-grid").evaluate((element) => {
-    window.scrollTo(0, window.scrollY + element.getBoundingClientRect().top - 24);
+    window.scrollTo({ top: window.scrollY + element.getBoundingClientRect().top - 24, behavior: "instant" });
   });
   await capture("06-architecture-diagram");
   assert.deepEqual(errors, []);
