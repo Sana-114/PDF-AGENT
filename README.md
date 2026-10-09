@@ -1,6 +1,6 @@
 # PaperPilot
 
-PaperPilot 是一个以原文证据为核心的科研助手 Agent 系统。本仓库当前处于 `0.2.0` 开发阶段，已实现六大模块的基础流程，并开展真实 PDF、BGE 检索与 DeepSeek 问答验收。各模块已验证范围、剩余功能缺口与交付状态见 [2026-10-08 项目进度核对](docs/competition-progress-audit-2026-10-08.md)。
+PaperPilot 是一个以原文证据为核心的科研助手 Agent 系统。本仓库当前处于 `0.2.0` 开发阶段，已实现六大模块的基础流程，并开展真实 PDF、BGE 检索与 DeepSeek 问答验收。各模块已验证范围、剩余功能缺口与交付状态见 [2026-10-09 项目进度核对](docs/competition-progress-audit-2026-10-09.md)。
 
 ## 当前能力
 
@@ -640,16 +640,16 @@ Backend、Worker 与 Beat 的镜像内代码运行、健康检查、开发 Overr
 
 第 81 阶段为证据保留 `recall_mode`，标准门禁同时检查混合召回、重排和中间查询降级。真实 Edge 浏览器一轮 7/7、17/17 事实通过；LayerNorm 两来源另行完成真实页图像素与高亮定向复查。284 项后端、26 项前端测试通过。范围与限制见 [召回来源及浏览器闭环](docs/retrieval-provenance-acceptance-2026-10-09.md)。
 
-可使用 [技术内容核对版](docs/competition-technical-report.md)、[带真实截图的技术 PDF](output/pdf/PaperPilot-technical-report.pdf) 和 [录制脚本](docs/demo-video-script.md)。旧初稿保留为历史材料。本机端口现为 `http://localhost:3300/`（原 3200 被 Windows 保留）；其他机器以 `.env` 配置为准。公网配置不变，未宣称已上线。
+第 82 阶段同步 [技术内容核对版](docs/competition-technical-report.md)、[带真实截图的技术 PDF](output/pdf/PaperPilot-technical-report.pdf)、[录制脚本](docs/demo-video-script.md) 和 [本地录制操作卡](docs/demo-recording-quickstart.md)。最终 PDF 为 14 页，已全页渲染检查，哈希与范围见 [材料同步验收](docs/submission-materials-acceptance-2026-10-09.md)。旧初稿保留为历史材料，完整 MP4 尚未录制。本机端口为 `http://localhost:3300/`（原 3200 被 Windows 保留）；其他机器以 `.env` 配置为准。公网配置不变，未宣称已上线。`main` 仍为第 67-70 阶段，最新版位于累积阶段分支。
 
 技术 PDF 可复现构建（安装 `requirements-docs.txt`）：
 
 ```powershell
-python scripts/build_technical_report.py --source docs/competition-technical-report.md --output output/pdf/PaperPilot-technical-report.pdf --release --revision a26acbc
+python scripts/build_technical_report.py --source docs/competition-technical-report.md --output output/pdf/PaperPilot-technical-report.pdf --release --revision 8b888cf
 ```
 
 1. 获取组委会**原始扫描版**后复跑 OCR 验收，并针对复杂合并/旋转表格、弱续接信号跨页表格和无图注图像增加专用适配器；真实 541 页教材已通过分批解析与恢复门禁；
-2. 在明确公开论文摘录外发授权后，完成七案例三轮 BGE + DeepSeek；只复测失败相关项；
+2. 七案例内容和一轮严格浏览器已验收；只对待录翻译、生成式综述／写作做有限质量审校，并在最终环境复查新增召回来源门禁；
 3. 人工审校引用作用、跨论文结论和 Future Work 后续证据；持久化流程已实现；
 4. 扩展可编辑图表列选择、统计检验与完整数据导出；
 5. 继续评估保持原位排版的双语 PDF 输出；
