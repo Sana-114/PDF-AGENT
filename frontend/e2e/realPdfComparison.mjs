@@ -5,6 +5,7 @@ import path from "node:path";
 
 import { chromium } from "playwright-core";
 import { getComparisonFactChecks } from "../lib/comparisonFacts.mjs";
+import { waitForPaintedPdfPage } from "./pdfRenderReady.mjs";
 
 const repoRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "../..");
 const argumentsByName = Object.fromEntries(
@@ -46,7 +47,9 @@ const report = {
   cases: [],
   page_errors: pageErrors,
 };
-const screenshotDir = path.join(path.dirname(outputPath), "screenshots");
+const screenshotDir = path.join(path.dirname(outputPath), "screenshots",
+  path.basename(outputPath, path.extname(outputPath)));
+report.screenshot_dir = path.resolve(screenshotDir);
 
 function containsAny(value, options) {
   const normalize = (text) => text.normalize("NFKC").toLowerCase().replace(/[^\p{L}\p{N}]/gu, "");
@@ -99,11 +102,13 @@ async function verifyReader(evidence, caseId) {
   await dialog.waitFor({ state: "visible" });
   assert.equal(await dialog.locator("#pdf-page-number").inputValue(), String(evidence.page_number));
   await dialog.locator(".pdf-evidence-status", { hasText: "已高亮原文证据" }).waitFor({ timeout: 45_000 });
+  await waitForPaintedPdfPage(dialog, evidence.page_number);
   assert.equal(await dialog.locator(".pdf-reader-state.error").count(), 0);
   await page.screenshot({ path: path.join(screenshotDir, `${caseId}-source.png`), fullPage: false });
   await dialog.getByRole("button", { name: "关闭阅读器" }).click();
   await dialog.waitFor({ state: "hidden" });
-  return { evidence_id: evidence.evidence_id, document_id: evidence.document_id, page: evidence.page_number };
+  return { evidence_id: evidence.evidence_id, document_id: evidence.document_id,
+    page: evidence.page_number, painted_canvas: true };
 }
 
 async function runCase(testCase, backendCase) {

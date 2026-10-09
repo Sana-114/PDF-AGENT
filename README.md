@@ -638,6 +638,8 @@ Backend、Worker 与 Beat 的镜像内代码运行、健康检查、开发 Overr
 
 第 80 阶段加入来源覆盖复核，v5 实际三轮为 20/21，其中一项是“子模块／子块”等义词误报。v6 对同一批原回答离线重新计分为 21/21、事实 51/51、拒答 6/6；不是新增三轮模型调用。日志出现一次向量召回降级，故仍不能声称每次都完整使用 BGE-M3。278 项后端测试通过，详见 [来源完整性与评测核对](docs/comparison-coverage-acceptance-2026-10-09.md)。
 
+第 81 阶段为证据保留 `recall_mode`，标准门禁同时检查混合召回、重排和中间查询降级。真实 Edge 浏览器一轮 7/7、17/17 事实通过；LayerNorm 两来源另行完成真实页图像素与高亮定向复查。284 项后端、26 项前端测试通过。范围与限制见 [召回来源及浏览器闭环](docs/retrieval-provenance-acceptance-2026-10-09.md)。
+
 可使用 [技术内容核对版](docs/competition-technical-report.md)、[带真实截图的技术 PDF](output/pdf/PaperPilot-technical-report.pdf) 和 [录制脚本](docs/demo-video-script.md)。旧初稿保留为历史材料。本机端口现为 `http://localhost:3300/`（原 3200 被 Windows 保留）；其他机器以 `.env` 配置为准。公网配置不变，未宣称已上线。
 
 技术 PDF 可复现构建（安装 `requirements-docs.txt`）：

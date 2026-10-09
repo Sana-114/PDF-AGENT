@@ -3,6 +3,7 @@ import assert from "node:assert/strict";
 import { mkdir, writeFile } from "node:fs/promises";
 import path from "node:path";
 import { chromium } from "playwright-core";
+import { waitForPaintedPdfPage } from "./pdfRenderReady.mjs";
 
 const baseUrl = process.env.PDFAGENT_DEMO_URL || "http://localhost:3300";
 assert.ok(["localhost", "127.0.0.1", "[::1]"].includes(new URL(baseUrl).hostname), "This check supports local demo URLs only");
@@ -48,7 +49,7 @@ try {
   await capture("01-library");
   await transformer.getByRole("button", { name: "在线阅读", exact: true }).click();
   const reader = page.getByRole("dialog", { name: /阅读/ });
-  await reader.locator(".react-pdf__Page__canvas").waitFor();
+  await waitForPaintedPdfPage(reader, 1);
   assert.equal(await reader.locator(".pdf-reader-state.error").count(), 0);
   await capture("02-pdf-reader");
   await reader.getByRole("button", { name: "关闭阅读器" }).click();
