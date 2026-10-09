@@ -634,6 +634,8 @@ Backend、Worker 与 Beat 的镜像内代码运行、健康检查、开发 Overr
 
 2026-10-09，第 78 阶段已实际执行七案例三轮 BGE + DeepSeek：旧 v3 门禁 17/21，未达到发布要求。定位到 GPU 缺失信息被错误拼成已回答、以及 GPT-1 `trains` 词形导致的评测误报；旧结果完整保留，后续只针对失败项修复。见 [真实模型基线验收](docs/real-model-baseline-acceptance-2026-10-09.md)。第 77 阶段 PDF 的待验收说明是当时快照，待新成绩核对后更新。
 
+第 79 阶段修复后，262 项后端离线测试通过，v4 真实三轮为 20/21、安全拒答 6/6；LayerNorm 偶发只回答一篇，发布门禁仍未通过。见 [GPU 拒答与词形修复验收](docs/grounded-gpu-refusal-acceptance-2026-10-09.md)。
+
 可使用 [技术内容核对版](docs/competition-technical-report.md)、[带真实截图的技术 PDF](output/pdf/PaperPilot-technical-report.pdf) 和 [录制脚本](docs/demo-video-script.md)。旧初稿保留为历史材料。本机端口现为 `http://localhost:3300/`（原 3200 被 Windows 保留）；其他机器以 `.env` 配置为准。公网配置不变，未宣称已上线。
 
 技术 PDF 可复现构建（安装 `requirements-docs.txt`）：
