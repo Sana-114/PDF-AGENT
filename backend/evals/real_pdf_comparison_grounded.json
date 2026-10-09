@@ -1,6 +1,6 @@
 {
   "schema_version": "1.0",
-  "dataset_id": "real-pdf-bge-deepseek-comparison-2026-10-v5",
+  "dataset_id": "real-pdf-bge-deepseek-comparison-2026-10-v6",
   "expected_provider": "deepseek",
   "required_retrieval_mode": "reranked",
   "stability_thresholds": {
@@ -173,7 +173,7 @@
         },
         {
           "fact_id": "gpt2-layernorm-input",
-          "claim_contains_any": ["input of each sub-block", "pre-norm", "pre-normalization", "预归一化", "移到每个子块的输入"],
+          "claim_contains_any": ["input of each sub-block", "pre-norm", "pre-normalization", "预归一化", "移到每个子块的输入", "移到每个子模块的输入"],
           "source_filename": "gpt2-openai-2019.pdf",
           "source_text_contains_any": ["Layer normalization was moved to the input of each sub-block", "moved to the input of each sub-block"],
           "source_pages": [4]

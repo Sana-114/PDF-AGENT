@@ -210,6 +210,12 @@ def summarize(dataset: dict, reports: list[dict], report_paths: list[str] | None
         "rounds_requested": len(reports),
         "rounds_passed": rounds_passed,
         "report_paths": report_paths or [],
+        "evaluation_kinds": sorted({
+            report.get("evaluation_kind", "live_model_run") for report in reports
+        }),
+        "regrade_sources": [
+            report["regrade_source"] for report in reports if "regrade_source" in report
+        ],
         "thresholds": thresholds,
         "threshold_checks": threshold_checks,
         "metrics": metrics,

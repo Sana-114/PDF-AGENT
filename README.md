@@ -590,7 +590,7 @@ Transformer v1 的 Table 1/2 无框表格恢复、表格去重和公式 LaTeX �
   -Gpu
 ```
 
-脚本会叠加 `.env` 与 `.env.bge`、真实探测两个 BGE 服务、显式重建当前公开论文索引，并强制要求每条返回证据均经过 `reranked`，因此服务故障后静默退回 BM25 不会被误报为 BGE 验收通过。2026-09-18 的 Top-1、延迟、110 个 Point 索引核对和 5/5 DeepSeek 实测见 [BGE + DeepSeek 完整 RAG 验收](docs/bge-deepseek-grounded-acceptance-2026-09-18.md)。
+脚本会叠加 `.env` 与 `.env.bge`、真实探测两个 BGE 服务、显式重建当前公开论文索引，并要求每条返回证据经过 `reranked`。重排标记只能证明重排执行，不能排除向量召回失败后使用 BM25 候选；完整链路还需核查第一阶段召回来源。2026-09-18 的 Top-1、延迟、110 个 Point 索引核对和 5/5 DeepSeek 实测见 [BGE + DeepSeek 完整 RAG 验收](docs/bge-deepseek-grounded-acceptance-2026-09-18.md)。
 
 跨论文对比现采用扩大候选池后的逐文献多样化取样，并在服务端重建最终答案；数值门禁、未知 Evidence ID 拒绝、结论—论文—原文矩阵及 ResNet/ViT/DDPM 三篇真实解析语料烟测见 [第 61 阶段多文 RAG 验收](docs/multidoc-grounding-acceptance-2026-09-23.md)。
 
@@ -635,6 +635,8 @@ Backend、Worker 与 Beat 的镜像内代码运行、健康检查、开发 Overr
 2026-10-09，第 78 阶段已实际执行七案例三轮 BGE + DeepSeek：旧 v3 门禁 17/21，未达到发布要求。定位到 GPU 缺失信息被错误拼成已回答、以及 GPT-1 `trains` 词形导致的评测误报；旧结果完整保留，后续只针对失败项修复。见 [真实模型基线验收](docs/real-model-baseline-acceptance-2026-10-09.md)。第 77 阶段 PDF 的待验收说明是当时快照，待新成绩核对后更新。
 
 第 79 阶段修复后，262 项后端离线测试通过，v4 真实三轮为 20/21、安全拒答 6/6；LayerNorm 偶发只回答一篇，发布门禁仍未通过。见 [GPU 拒答与词形修复验收](docs/grounded-gpu-refusal-acceptance-2026-10-09.md)。
+
+第 80 阶段加入来源覆盖复核，v5 实际三轮为 20/21，其中一项是“子模块／子块”等义词误报。v6 对同一批原回答离线重新计分为 21/21、事实 51/51、拒答 6/6；不是新增三轮模型调用。日志出现一次向量召回降级，故仍不能声称每次都完整使用 BGE-M3。278 项后端测试通过，详见 [来源完整性与评测核对](docs/comparison-coverage-acceptance-2026-10-09.md)。
 
 可使用 [技术内容核对版](docs/competition-technical-report.md)、[带真实截图的技术 PDF](output/pdf/PaperPilot-technical-report.pdf) 和 [录制脚本](docs/demo-video-script.md)。旧初稿保留为历史材料。本机端口现为 `http://localhost:3300/`（原 3200 被 Windows 保留）；其他机器以 `.env` 配置为准。公网配置不变，未宣称已上线。
 

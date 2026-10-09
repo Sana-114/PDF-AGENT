@@ -20,7 +20,9 @@ from app.services.paper_comparison import (
 )
 from scripts.evaluate_real_pdf_comparison import (
     _check_cross_document_fact,
+    _check_fact,
     _select_evaluation_cases,
+    regrade_report,
 )
 
 
@@ -148,3 +150,35 @@ def test_canonical_title_alias_keeps_two_source_constraints(text, gpt2_page, exp
         case["required_cross_document_facts"][0], response,
         {"1706.03762v1.pdf": "A", "gpt2-openai-2019.pdf": "B"},
     ) is expected
+
+
+@pytest.mark.parametrize(
+    ("text", "page", "ids", "expected"),
+    [
+        ("GPT-2 将层归一化移到每个子模块的输入处。", 4, ["E2"], True),
+        ("GPT-2 将层归一化移到每个子模块的输入处。", 3, ["E2"], False),
+        ("GPT-2 将层归一化移到每个子模块的输入处。", 4, ["E1"], False),
+        ("GPT-2 将层归一化放在残差之后。", 4, ["E2"], False),
+    ],
+)
+def test_submodule_wording_still_requires_input_placement_and_cited_page(text, page, ids, expected):
+    dataset = json.loads((Path(__file__).parents[1] / "evals/real_pdf_comparison_grounded.json")
+                         .read_text(encoding="utf-8"))
+    case = next(item for item in dataset["cases"]
+                if item["case_id"] == "transformer-vs-gpt2-layernorm-conflict")
+    response = SimpleNamespace(
+        claims=[GeneratedClaim(text=text, evidence_ids=ids)],
+        evidence=[EvidenceAnchor(evidence_id="E2", document_id="B", page_number=page,
+                                 quote="moved to the input of each sub-block", score=0.9)],
+    )
+    assert _check_fact(case["required_claim_facts"][1], response,
+                       {"gpt2-openai-2019.pdf": "B"}) is expected
+
+
+def test_regrade_rejects_changed_case_scope_before_parsing_answers():
+    with pytest.raises(ValueError, match="exactly the selected cases"):
+        regrade_report(
+            {"expected_provider": "deepseek", "cases": [{"case_id": "changed"}]},
+            {"provider": "deepseek", "model": "deepseek-flash", "cases": []},
+            source_path="original.json", source_sha256="a" * 64,
+        )

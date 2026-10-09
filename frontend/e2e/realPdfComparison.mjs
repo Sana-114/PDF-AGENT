@@ -4,6 +4,7 @@ import { fileURLToPath } from "node:url";
 import path from "node:path";
 
 import { chromium } from "playwright-core";
+import { getComparisonFactChecks } from "../lib/comparisonFacts.mjs";
 
 const repoRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "../..");
 const argumentsByName = Object.fromEntries(
@@ -31,7 +32,7 @@ const browser = await chromium.launch({
   channel: process.env.PDFAGENT_BROWSER_CHANNEL || (process.platform === "win32" ? "msedge" : "chrome"),
   headless: true,
 });
-const context = await browser.newContext({ viewport: { width: 1440, height: 1000 } });
+const context = await browser.newContext({ viewport: { width: 1920, height: 1080 } });
 const page = await context.newPage();
 page.setDefaultTimeout(30_000);
 const pageErrors = [];
@@ -165,20 +166,7 @@ async function runCase(testCase, backendCase) {
       `${testCase.case_id}: published related-work content ${forbidden}`,
     );
   }
-  const factChecks = Object.fromEntries((testCase.required_claim_facts || []).map((fact) => {
-    const sourceId = backendCase.document_ids[fact.source_filename];
-    const passed = body.claims.some((claim) =>
-      containsAny(claim.text, fact.claim_contains_any)
-      && (fact.claim_contains_all || []).every((fragment) => containsAny(claim.text, [fragment]))
-      && claim.evidence_ids.some((id) => {
-        const anchor = evidenceById.get(id);
-        return anchor?.document_id === sourceId
-          && fact.source_pages.includes(anchor.page_number)
-          && containsAny(anchor.quote, fact.source_text_contains_any);
-      }),
-    );
-    return [fact.fact_id, passed];
-  }));
+  const factChecks = getComparisonFactChecks(testCase, body, backendCase.document_ids);
   assert.ok(Object.values(factChecks).every(Boolean),
     `${testCase.case_id}: missing source-anchored facts ${JSON.stringify(factChecks)}`);
   const result = {
@@ -193,6 +181,7 @@ async function runCase(testCase, backendCase) {
       .filter((step) => step.skill === "llm.audit_numeric_completeness")
       .map((step) => step.status),
     reader: null,
+    additional_readers: [],
   };
   if (testCase.must_refuse) {
     assert.equal(body.insufficient_evidence, true);
@@ -212,6 +201,20 @@ async function runCase(testCase, backendCase) {
       .map((id) => evidenceById.get(id)).find(Boolean);
     assert.ok(firstCitedEvidence, "A published claim must link to original PDF evidence");
     result.reader = await verifyReader(firstCitedEvidence, testCase.case_id);
+    for (const fact of testCase.required_cross_document_facts || []) {
+      for (const source of fact.sources) {
+        const requiredAnchor = body.evidence.find((anchor) =>
+          anchor.document_id === backendCase.document_ids[source.source_filename]
+          && source.source_pages.includes(anchor.page_number)
+          && containsAny(anchor.quote, source.source_text_contains_any)
+          && body.claims.some((claim) => claim.evidence_ids.includes(anchor.evidence_id)),
+        );
+        assert.ok(requiredAnchor, "The displayed comparison must link each required source");
+        if (requiredAnchor.evidence_id !== firstCitedEvidence.evidence_id) {
+          result.additional_readers.push(await verifyReader(requiredAnchor, `${testCase.case_id}-${source.source_filename}`));
+        }
+      }
+    }
   }
   await page.screenshot({ path: path.join(screenshotDir, `${testCase.case_id}.png`), fullPage: false });
   delete report.current_case;
