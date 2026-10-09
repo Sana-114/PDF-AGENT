@@ -239,9 +239,11 @@ def main() -> None:
         default=PROJECT_ROOT.parent / "docs/pdf-regression-corpus.json",
     )
     parser.add_argument("--output", type=Path)
+    parser.add_argument("--case-id", action="append", help="Run only selected existing cases")
     parser.add_argument("--strict", action="store_true")
     args = parser.parse_args()
     dataset = json.loads(args.dataset.read_text(encoding="utf-8"))
+    dataset = _select_evaluation_cases(dataset, args.case_id)
     manifest = json.loads(args.manifest.read_text(encoding="utf-8"))
     report = asyncio.run(evaluate(dataset, manifest))
     if args.output:
@@ -274,6 +276,16 @@ def main() -> None:
     )
     if args.strict and report["status"] != "passed":
         raise SystemExit(1)
+
+
+def _select_evaluation_cases(dataset: dict, case_ids: list[str] | None) -> dict:
+    """Select a targeted run; full-dataset stability still rejects missing cases."""
+    if case_ids is None:
+        return dataset
+    known_ids = {case["case_id"] for case in dataset["cases"]}
+    if not case_ids or set(case_ids) - known_ids or len(case_ids) != len(set(case_ids)):
+        raise ValueError("Targeted case IDs must be non-empty, unique and present in the dataset")
+    return {**dataset, "cases": [case for case in dataset["cases"] if case["case_id"] in case_ids]}
 
 
 if __name__ == "__main__":

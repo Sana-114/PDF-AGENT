@@ -241,21 +241,45 @@ class PaperComparisonService:
             generated = await provider.generate_grounded_answer(prompt, evidence)
             generation_status = "fallback"
 
-        if not generated.claims and generation_attempts == 1 and provider.name != "extractive":
-            warnings.append("模型首次未给出可核验声明，已对原文证据复核一次。")
+        missing_source_papers = _missing_generated_source_papers(papers, generated.claims, evidence)
+        source_recheck = bool(generated.claims and missing_source_papers)
+        if (
+            (not generated.claims or source_recheck)
+            and generation_attempts == 1 and provider.name != "extractive"
+        ):
+            recheck_started = perf_counter()
+            warnings.append(
+                "模型首次未覆盖所有入选论文，已对原文证据复核一次。" if source_recheck else
+                "模型首次未给出可核验声明，已对原文证据复核一次。"
+            )
+            generation_attempts = 2
             retry_prompt = (
                 prompt
                 + "\nRecheck the supplied passages once. If each of two papers directly supports "
                 "a requested design or setting, return a DIFFERENCE claim citing exact IDs "
-                "from both papers. If the requested fact is not in the passages, return no claims."
+                "from both papers. Specifically inspect these missing sources: "
+                + "; ".join(paper.title for paper in missing_source_papers)
+                + ". Do not respond using only the already covered paper. "
+                "If the requested fact is not in the passages, return no claims."
             )
             try:
-                generated = await generate_with_retry(retry_prompt)
+                rechecked = await generate_with_retry(retry_prompt)
+                if rechecked.claims or not generated.claims:
+                    generated = rechecked
             except (LLMConfigurationError, LLMResponseError) as exc:
                 warnings.append(f"生成式对比复核失败，已退回逐条原文摘录：{exc}")
                 provider = ExtractiveProvider()
                 generated = await provider.generate_grounded_answer(prompt, evidence)
                 generation_status = "fallback"
+            if source_recheck:
+                trace.append(AgentTraceStep(
+                    skill="llm.audit_source_coverage",
+                    status="ok" if not _missing_generated_source_papers(
+                        papers, generated.claims, evidence
+                    ) else "insufficient",
+                    summary="首轮遗漏部分论文，只对同一批原文复核一次，不注入预置结论。",
+                    duration_ms=_elapsed_ms(recheck_started),
+                ))
 
         if provider.name != "extractive":
             missing_parameter_papers = _missing_parameter_count_papers(
@@ -435,6 +459,12 @@ class PaperComparisonService:
         referenced_document_ids = {
             document_id for claim in claims for document_id in claim.document_ids
         }
+        incomplete_sources = any(
+            paper.coverage == "supported" and paper.document_id not in referenced_document_ids
+            for paper in papers
+        )
+        if incomplete_sources:
+            warnings.append("当前核验声明仍未覆盖全部入选论文，不能作为完整多文对比。")
         generated_count = len(generated.claims)
         derived_count = int(parallel is not None)
         audit = ComparisonAuditRead(
@@ -476,6 +506,7 @@ class PaperComparisonService:
             ),
             audit=audit,
             insufficient_evidence=bool(still_missing_parameters or still_missing_sequences)
+            or incomplete_sources
             or not claims
             or not cross_document_claim_count,
             provider=provider.name,
@@ -753,6 +784,21 @@ def _exact_emissions_measurement_missing(
     )
 
 
+def _missing_generated_source_papers(
+    papers: list[ComparisonPaperRead], claims: list[GeneratedClaim],
+    evidence: list[EvidenceAnchor],
+) -> list[ComparisonPaperRead]:
+    allowed = {anchor.evidence_id: anchor.document_id for anchor in evidence}
+    cited = {
+        allowed[evidence_id] for claim in claims for evidence_id in claim.evidence_ids
+        if evidence_id in allowed
+    }
+    return [
+        paper for paper in papers
+        if paper.coverage == "supported" and paper.document_id not in cited
+    ]
+
+
 def _requested_gpu_fields(question: str) -> set[str]:
     if not re.search(r"(?<![A-Za-z])GPUs?(?![A-Za-z])|显卡", question, re.I):
         return set()
@@ -919,7 +965,11 @@ def _comparison_facets(question: str) -> list[str]:
     )
     _, separator, detail = question.replace("：", ":").partition(":")
     if not separator:
-        return hardware
+        normalization = (
+            ["layer normalization placement residual connection input sub-block"]
+            if re.search(r"layer[\s-]*norm|层归一化|层标准化", question, re.I) else []
+        )
+        return [*hardware, *normalization]
     detail = re.split(r"[.!?。！？]", detail, maxsplit=1)[0]
     facets = [
         item.strip(" ,;，；、")

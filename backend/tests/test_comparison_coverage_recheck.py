@@ -1,0 +1,112 @@
+from __future__ import annotations
+
+import pytest
+from sqlalchemy import create_engine
+from sqlalchemy.orm import Session
+
+from app.core.database import Base
+from app.llm.base import GeneratedAnswer, GeneratedClaim
+from app.models.document import Document, DocumentStatus
+from app.schemas.agent import EvidenceAnchor
+from app.schemas.comparison import ComparisonPaperRead
+from app.services.paper_comparison import (
+    PaperComparisonService,
+    _comparison_facets,
+    _missing_generated_source_papers,
+)
+from scripts.evaluate_real_pdf_comparison import _select_evaluation_cases
+
+
+class CoverageRetriever:
+    def search(self, question, document_ids=None, top_k=6):
+        return [EvidenceAnchor(
+            evidence_id="local", document_id=document_ids[0], page_number=2,
+            quote="The model uses layer normalization.", score=0.95,
+            section="Model", block_ids=[document_ids[0]], bbox=[10, 10, 100, 100],
+            retrieval_mode="reranked",
+        )]
+
+
+class OneSidedThenCompleteProvider:
+    name = "deepseek"
+    model = "deepseek-flash"
+    supports_translation = True
+
+    def __init__(self, *, remain_partial=False):
+        self.prompts = []
+        self.remain_partial = remain_partial
+
+    async def generate_grounded_answer(self, question, evidence):
+        self.prompts.append(question)
+        if len(self.prompts) == 1 or self.remain_partial:
+            claims = [GeneratedClaim(
+                text="[SINGLE_SOURCE][DIMENSION: normalization] Paper A uses layer normalization.",
+                evidence_ids=["E1"],
+            )]
+        else:
+            claims = [GeneratedClaim(
+                text="[AGREEMENT][DIMENSION: normalization] Both papers use layer normalization.",
+                evidence_ids=["E1", "E2"],
+            )]
+        return GeneratedAnswer(answer="grounded", claims=claims)
+
+
+@pytest.mark.asyncio
+@pytest.mark.parametrize("remain_partial", [False, True])
+async def test_one_source_omission_is_rechecked_only_once(remain_partial):
+    engine = create_engine("sqlite://")
+    Base.metadata.create_all(engine)
+    provider = OneSidedThenCompleteProvider(remain_partial=remain_partial)
+    with Session(engine, expire_on_commit=False) as session:
+        documents = [Document(
+            original_filename=f"coverage-{index}.pdf", storage_key=f"coverage-{index}.pdf",
+            size_bytes=100, sha256=str(index) * 64, status=DocumentStatus.READY,
+            title=f"Paper {index}",
+        ) for index in (1, 2)]
+        session.add_all(documents)
+        session.commit()
+        result = await PaperComparisonService(
+            session, retriever=CoverageRetriever(), provider=provider,
+        ).compare(documents, "Compare exact layer-normalization placement")
+    assert len(provider.prompts) == 2
+    assert "Paper 2" in provider.prompts[1]
+    assert "Recheck the supplied passages once" in provider.prompts[1]
+    assert result.insufficient_evidence is remain_partial
+    assert result.audit.cross_document_claim_count == (0 if remain_partial else 1)
+    assert [step.status for step in result.trace if step.skill == "llm.audit_source_coverage"] == [
+        "insufficient" if remain_partial else "ok"
+    ]
+    assert result.evidence and result.provider == "deepseek"
+
+
+def test_normalization_query_without_colon_gets_a_focused_retrieval_facet():
+    assert _comparison_facets("Compare Transformer and GPT-2 layer normalization placement") == [
+        "layer normalization placement residual connection input sub-block"
+    ]
+
+
+def test_unknown_evidence_id_cannot_cover_a_missing_paper():
+    papers = [ComparisonPaperRead(
+        document_id=doc, title=doc, evidence_count=1, evidence_ids=[eid], coverage="supported",
+    ) for doc, eid in [("A", "E1"), ("B", "E2")]]
+    evidence = [EvidenceAnchor(
+        evidence_id=eid, document_id=doc, page_number=1, quote="Evidence", score=0.9,
+    ) for doc, eid in [("A", "E1"), ("B", "E2")]]
+    missing = _missing_generated_source_papers(
+        papers, [GeneratedClaim(text="Both papers", evidence_ids=["E1", "unknown"])], evidence,
+    )
+    assert [paper.document_id for paper in missing] == ["B"]
+
+
+@pytest.mark.parametrize("case_ids", [[], ["missing"], ["a", "a"]])
+def test_targeted_evaluation_rejects_invalid_selection(case_ids):
+    with pytest.raises(ValueError):
+        _select_evaluation_cases({"cases": [{"case_id": "a"}]}, case_ids)
+
+
+def test_targeted_evaluation_does_not_mutate_the_full_dataset():
+    dataset = {"dataset_id": "test", "cases": [{"case_id": "a"}, {"case_id": "b"}]}
+    assert _select_evaluation_cases(dataset, None) is dataset
+    targeted = _select_evaluation_cases(dataset, ["b"])
+    assert targeted["cases"] == [{"case_id": "b"}]
+    assert len(dataset["cases"]) == 2
