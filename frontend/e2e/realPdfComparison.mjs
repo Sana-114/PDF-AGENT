@@ -135,6 +135,8 @@ async function runCase(testCase, backendCase) {
       evidence_id: item.evidence_id,
       document_id: item.document_id,
       page_number: item.page_number,
+      recall_mode: item.recall_mode,
+      retrieval_mode: item.retrieval_mode,
       quote: item.quote,
     })),
   };
@@ -144,6 +146,10 @@ async function runCase(testCase, backendCase) {
   assert.equal(body.model, "deepseek-flash");
   assert.ok(body.evidence.length > 0);
   assert.ok(body.evidence.every((item) => item.retrieval_mode === "reranked"));
+  assert.ok(body.evidence.every((item) => item.recall_mode === "hybrid"),
+    "BGE reranking alone must not conceal lexical-only recall");
+  assert.ok(body.trace.every((step) => step.skill !== "search_evidence" || step.status !== "degraded"),
+    "A failed intermediate vector query must not count as standard-mode success");
   assert.equal(
     (await page.locator(".comparison-answer").innerText()).trim(),
     body.answer.trim(),
@@ -175,6 +181,7 @@ async function runCase(testCase, backendCase) {
     claim_count: body.claims.length,
     evidence_count: body.evidence.length,
     retrieval_modes: [...new Set(body.evidence.map((item) => item.retrieval_mode))],
+    recall_modes: [...new Set(body.evidence.map((item) => item.recall_mode))],
     insufficient_evidence: body.insufficient_evidence,
     facts: factChecks,
     numeric_audit: body.trace

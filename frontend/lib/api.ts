@@ -530,6 +530,7 @@ export interface EvidenceAnchor {
   section: string | null;
   source_type: "text" | "abstract" | "table" | "figure" | "formula" | "reference";
   retrieval_mode: "lexical" | "vector" | "hybrid" | "reranked";
+  recall_mode?: "lexical" | "vector" | "hybrid" | null;
   quote: string;
   score: number;
 }

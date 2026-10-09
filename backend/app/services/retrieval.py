@@ -209,6 +209,11 @@ class HybridRetriever:
         top_k: int,
         fallback_mode: str,
     ) -> list[EvidenceAnchor]:
+        self.last_recall_mode = fallback_mode
+        evidence = [
+            item.model_copy(update={"recall_mode": fallback_mode}, deep=True)
+            for item in evidence
+        ]
         if not self.reranker.enabled:
             return _renumber(evidence[:top_k], fallback_mode)
         try:

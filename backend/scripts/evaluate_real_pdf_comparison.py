@@ -130,7 +130,10 @@ def _check_cross_document_fact(
     return False
 
 
-def _check_case(case: dict, response, document_ids: dict[str, str], provider) -> dict:
+def _check_case(
+    case: dict, response, document_ids: dict[str, str], provider,
+    *, require_hybrid_recall: bool = False,
+) -> dict:
     failures: list[str] = []
     must_refuse = case.get("must_refuse", False)
     expected_mode = "reranked"
@@ -155,6 +158,12 @@ def _check_case(case: dict, response, document_ids: dict[str, str], provider) ->
         item.retrieval_mode != expected_mode for item in response.evidence
     ):
         failures.append("retrieval_bypassed_reranker")
+    if require_hybrid_recall and (
+        any(item.recall_mode != "hybrid" for item in response.evidence)
+        or any(step.skill == "search_evidence" and step.status == "degraded"
+               for step in response.trace)
+    ):
+        failures.append("retrieval_bypassed_hybrid_recall")
     if any(not _anchor_is_valid(item, require_bbox=True) for item in response.evidence):
         failures.append("invalid_pdf_anchor")
     generation_steps = [item for item in response.trace if item.skill == "llm.compare_documents"]
@@ -206,7 +215,9 @@ async def evaluate(dataset: dict, manifest: dict) -> dict:
                 case["question"],
                 evidence_per_document=case.get("evidence_per_document", 4),
             )
-            checks = _check_case(case, response, document_ids, provider)
+            checks = _check_case(
+                case, response, document_ids, provider, require_hybrid_recall=True,
+            )
             results.append(
                 {
                     "case_id": case["case_id"],
@@ -225,6 +236,7 @@ async def evaluate(dataset: dict, manifest: dict) -> dict:
         "provider": delegate.name,
         "model": delegate.model,
         "required_retrieval_mode": dataset["required_retrieval_mode"],
+        "required_recall_mode": "hybrid",
         "cases": results,
     }
 

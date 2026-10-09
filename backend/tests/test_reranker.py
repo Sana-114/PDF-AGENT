@@ -181,6 +181,26 @@ def test_hybrid_retriever_preserves_rank_when_reranker_fails() -> None:
     assert results[0].chunk_id == "first"
     assert results[0].retrieval_mode == "hybrid"
     assert results[0].evidence_id == "E1"
+    assert results[0].recall_mode == "hybrid"
+
+
+@pytest.mark.parametrize("recall_mode", ["hybrid", "lexical"])
+def test_successful_reranker_preserves_first_stage_provenance(recall_mode):
+    class CopyingReranker:
+        enabled = True
+
+        def rerank(self, question, evidence, top_k):
+            return [item.model_copy(update={"retrieval_mode": "reranked"})
+                    for item in evidence[:top_k]]
+
+    retriever = object.__new__(HybridRetriever)
+    retriever.reranker = CopyingReranker()
+    original = _evidence("one", "grounded text", 0.9)
+    results = retriever._rerank("question", [original], 1, recall_mode)
+    assert results[0].retrieval_mode == "reranked"
+    assert results[0].recall_mode == recall_mode
+    assert retriever.last_recall_mode == recall_mode
+    assert original.recall_mode is None
 
 
 def test_reranker_is_disabled_by_default_and_configurable() -> None:

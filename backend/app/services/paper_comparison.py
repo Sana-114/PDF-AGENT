@@ -122,14 +122,15 @@ class PaperComparisonService:
                 document_ids=[document.id],
                 top_k=candidate_limit,
             )
-            facet_candidates = [
-                self.retriever.search(
+            recall_modes = {getattr(self.retriever, "last_recall_mode", None)}
+            facet_candidates = []
+            for facet in facets[:evidence_per_document]:
+                facet_candidates.append(self.retriever.search(
                     facet,
                     document_ids=[document.id],
                     top_k=max(4, evidence_per_document * 2),
-                )
-                for facet in facets[:evidence_per_document]
-            ]
+                ))
+                recall_modes.add(getattr(self.retriever, "last_recall_mode", None))
             raw_strong = [
                 item
                 for group in [candidates, *facet_candidates]
@@ -148,6 +149,9 @@ class PaperComparisonService:
                 evidence.append(copy)
                 document_evidence.append(copy)
             title = _document_title(document)
+            recall_degraded = settings.vector_search_enabled and "lexical" in recall_modes
+            if recall_degraded:
+                warnings.append(f"《{title}》部分查询仅使用词法召回，不计为完整向量检索链路。")
             papers.append(
                 ComparisonPaperRead(
                     document_id=document.id,
@@ -165,7 +169,8 @@ class PaperComparisonService:
             trace.append(
                 AgentTraceStep(
                     skill="search_evidence",
-                    status="ok" if document_evidence else "insufficient",
+                    status=("degraded" if recall_degraded else "ok")
+                    if document_evidence else "insufficient",
                     summary=(
                         f"《{title}》从 {len(strong)} 条强候选中保留 "
                         f"{len(document_evidence)} 条跨页/类型去重证据。"
