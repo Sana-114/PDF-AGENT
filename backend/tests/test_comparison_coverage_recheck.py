@@ -1,5 +1,9 @@
 from __future__ import annotations
 
+import json
+from pathlib import Path
+from types import SimpleNamespace
+
 import pytest
 from sqlalchemy import create_engine
 from sqlalchemy.orm import Session
@@ -14,7 +18,10 @@ from app.services.paper_comparison import (
     _comparison_facets,
     _missing_generated_source_papers,
 )
-from scripts.evaluate_real_pdf_comparison import _select_evaluation_cases
+from scripts.evaluate_real_pdf_comparison import (
+    _check_cross_document_fact,
+    _select_evaluation_cases,
+)
 
 
 class CoverageRetriever:
@@ -110,3 +117,34 @@ def test_targeted_evaluation_does_not_mutate_the_full_dataset():
     targeted = _select_evaluation_cases(dataset, ["b"])
     assert targeted["cases"] == [{"case_id": "b"}]
     assert len(dataset["cases"]) == 2
+
+
+@pytest.mark.parametrize(
+    ("text", "gpt2_page", "expected"),
+    [
+        ("Attention Is All You Need and GPT-2 differ in LayerNorm placement.", 4, True),
+        ("Attention Is All You Need and GPT-2 differ in LayerNorm placement.", 3, False),
+        ("Attention Is All You Need uses LayerNorm.", 4, False),
+    ],
+)
+def test_canonical_title_alias_keeps_two_source_constraints(text, gpt2_page, expected):
+    dataset_path = Path(__file__).parents[1] / "evals/real_pdf_comparison_grounded.json"
+    dataset = json.loads(dataset_path.read_text(encoding="utf-8"))
+    case = next(
+        item for item in dataset["cases"]
+        if item["case_id"] == "transformer-vs-gpt2-layernorm-conflict"
+    )
+    response = SimpleNamespace(
+        claims=[GeneratedClaim(text=text, evidence_ids=["E1", "E2"])],
+        evidence=[
+            EvidenceAnchor(evidence_id="E1", document_id="A", page_number=2,
+                           quote="LayerNorm(x + Sublayer(x))", score=0.9),
+            EvidenceAnchor(evidence_id="E2", document_id="B", page_number=gpt2_page,
+                           quote="Layer normalization was moved to the input of each sub-block",
+                           score=0.9),
+        ],
+    )
+    assert _check_cross_document_fact(
+        case["required_cross_document_facts"][0], response,
+        {"1706.03762v1.pdf": "A", "gpt2-openai-2019.pdf": "B"},
+    ) is expected

@@ -1,6 +1,6 @@
 {
   "schema_version": "1.0",
-  "dataset_id": "real-pdf-bge-deepseek-comparison-2026-10-v4",
+  "dataset_id": "real-pdf-bge-deepseek-comparison-2026-10-v5",
   "expected_provider": "deepseek",
   "required_retrieval_mode": "reranked",
   "stability_thresholds": {
@@ -183,7 +183,7 @@
         {
           "fact_id": "layernorm-placement-two-source-contrast",
           "claim_contains_any_groups": [
-            ["Transformer", "原始 Transformer"],
+            ["Transformer", "原始 Transformer", "Attention Is All You Need"],
             ["GPT-2"],
             ["LayerNorm", "layer normalization", "归一化"]
           ],
