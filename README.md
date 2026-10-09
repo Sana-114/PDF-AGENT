@@ -630,7 +630,9 @@ Backend、Worker 与 Beat 的镜像内代码运行、健康检查、开发 Overr
 
 ## 下一里程碑
 
-截至第 77 阶段，最新代码基线为第 76 阶段 `a26acbc`，进度分支按阶段累积，`main` 仍为第 67–70 阶段。已补充 [引用语境筛选](docs/citation-context-acceptance-2026-10-08.md)、[Future Work 人工核验](docs/future-work-review-acceptance-2026-10-08.md) 和 [本地录制检查](docs/recording-readiness-acceptance-2026-10-08.md)。新版七案例真实模型三轮尚未执行：需要明确授权仅公开论文摘录发送到 DeepSeek，不能把历史五案例成绩当成新版成绩。
+第 74–77 阶段已补充 [引用语境筛选](docs/citation-context-acceptance-2026-10-08.md)、[Future Work 人工核验](docs/future-work-review-acceptance-2026-10-08.md)、[本地录制检查](docs/recording-readiness-acceptance-2026-10-08.md) 和技术内容核对版。分支按阶段累积，`main` 仍为第 67–70 阶段。
+
+2026-10-09，第 78 阶段已实际执行七案例三轮 BGE + DeepSeek：旧 v3 门禁 17/21，未达到发布要求。定位到 GPU 缺失信息被错误拼成已回答、以及 GPT-1 `trains` 词形导致的评测误报；旧结果完整保留，后续只针对失败项修复。见 [真实模型基线验收](docs/real-model-baseline-acceptance-2026-10-09.md)。第 77 阶段 PDF 的待验收说明是当时快照，待新成绩核对后更新。
 
 可使用 [技术内容核对版](docs/competition-technical-report.md)、[带真实截图的技术 PDF](output/pdf/PaperPilot-technical-report.pdf) 和 [录制脚本](docs/demo-video-script.md)。旧初稿保留为历史材料。本机端口现为 `http://localhost:3300/`（原 3200 被 Windows 保留）；其他机器以 `.env` 配置为准。公网配置不变，未宣称已上线。
 
