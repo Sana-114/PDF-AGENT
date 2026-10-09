@@ -1,6 +1,6 @@
 {
   "schema_version": "1.0",
-  "dataset_id": "real-pdf-bge-deepseek-comparison-2026-09-v3",
+  "dataset_id": "real-pdf-bge-deepseek-comparison-2026-10-v4",
   "expected_provider": "deepseek",
   "required_retrieval_mode": "reranked",
   "stability_thresholds": {
@@ -43,7 +43,7 @@
       "required_claim_facts": [
         {
           "fact_id": "gpt1-training-sequence-512",
-          "claim_contains_any": ["training", "trained", "训练"],
+          "claim_contains_any": ["training", "trained", "trains", "训练"],
           "claim_contains_all": ["GPT-1", "512"],
           "source_filename": "gpt1-openai-2018.pdf",
           "source_text_contains_any": ["sequences of 512 tokens"],

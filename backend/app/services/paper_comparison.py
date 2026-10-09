@@ -57,6 +57,21 @@ TRAINING_SEQUENCE_QUESTION_PATTERN = re.compile(
 TRAINING_EVIDENCE_PATTERN = re.compile(r"\b(?:train|trained|training)\b|训练", re.I)
 SEQUENCE_EVIDENCE_PATTERN = re.compile(r"\bsequences?\b|序列", re.I)
 TOKEN_VALUE_PATTERN = re.compile(r"(?<![\w-])\d+(?:,\d+)?\s*[- ]?\s*tokens?\b", re.I)
+GPU_MODEL_TOKEN = (
+    r"(?:[AVPHK]\d{2,3}(?:[SX])?|L\d{2}S?|(?:RTX|GTX)[\s-]?\d{3,4}"
+    r"(?:\s*Ti)?|MI\d{2,3}X?|GB\d{2,3})"
+)
+GPU_MODEL_PATTERN = re.compile(rf"(?<![\w]){GPU_MODEL_TOKEN}(?![\w])", re.I)
+GPU_NUMBER_TOKEN = r"(?:\d+|one|two|three|four|five|six|seven|eight|nine|ten|sixteen)"
+GPU_COUNT_BEFORE_PATTERN = re.compile(
+    rf"(?<![\w])({GPU_NUMBER_TOKEN})\s*(?:张|块|台)?\s*(?:[x×]\s*)?"
+    rf"(?:NVIDIA\s*|AMD\s*)?(?:Tesla\s*|GeForce\s*)?"
+    rf"(?:{GPU_MODEL_TOKEN}\s*)?GPUs?(?![A-Za-z])", re.I,
+)
+GPU_COUNT_AFTER_PATTERN = re.compile(
+    rf"(?:GPU\s*(?:count|number)|number\s+of\s+GPUs|GPU\s*数量)"
+    rf"\s*(?:[:=]|is|为|是)?\s*({GPU_NUMBER_TOKEN})(?![\w])", re.I,
+)
 RELATION_MAP = {
     "agreement": "agreement",
     "difference": "difference",
@@ -377,6 +392,18 @@ class PaperComparisonService:
             rejection_reasons.append("requested_measurement_not_supported")
             warnings.append("至少一篇论文的入选原文缺少请求的精确 kg CO₂e 测量值，已拒绝数值对比。")
 
+        missing_gpu_papers = _missing_requested_gpu_papers(question, papers, claims, evidence)
+        if missing_gpu_papers:
+            # Two cited architecture/absence statements are not hardware evidence.
+            claims = []
+            parallel = None
+            rejection_reasons.append("requested_gpu_hardware_not_supported")
+            warnings.append(
+                "入选原文或核验声明未覆盖所请求的 GPU 型号/数量，已拒绝完整硬件对比："
+                + "、".join(paper.title for paper in missing_gpu_papers)
+                + "。不将 TPU、层数或注意力头数转换为 GPU 配置，也不推断整篇论文未报告。"
+            )
+
         still_missing_parameters = _missing_parameter_count_papers(
             question, papers, claims, evidence
         )
@@ -424,6 +451,11 @@ class PaperComparisonService:
         answer = _render_validated_answer(question, claims)
         if not claims:
             answer = "模型没有返回带有效原文引用的跨论文声明，当前结果不足以回答该问题。"
+            if missing_gpu_papers:
+                answer = (
+                    "当前原文证据与核验声明不足以提供各篇论文所请求的 GPU 型号或数量，"
+                    "因此不能完成这项硬件对比；不会用 TPU 信息或其他模型配置推测 GPU。"
+                )
             warnings.append("生成结果未通过 Evidence ID 白名单校验，已隐藏未验证回答。")
         elif not cross_document_claim_count:
             warnings.append("声明均为单篇论文事实，尚未形成由多篇原文共同支持的对比结论。")
@@ -496,6 +528,9 @@ def _comparison_prompt(question: str, papers: list[ComparisonPaperRead]) -> str:
         "Organize the answer by "
         "comparison dimension rather than merely summarizing papers one after another. The final "
         "published answer will be reconstructed only from claims that pass citation validation."
+        " For GPU hardware questions, architecture details, TPU specifications and statements "
+        "about missing information do not supply the requested GPU model or count. "
+        "If no requested hardware field has direct source evidence, return no claims."
     )
 
 
@@ -718,6 +753,76 @@ def _exact_emissions_measurement_missing(
     )
 
 
+def _requested_gpu_fields(question: str) -> set[str]:
+    if not re.search(r"(?<![A-Za-z])GPUs?(?![A-Za-z])|显卡", question, re.I):
+        return set()
+    fields = set()
+    if re.search(r"\bmodel\b|型号", question, re.I):
+        fields.add("model")
+    if re.search(r"\b(?:count|number|how many)\b|数量|多少|几(?:张|块|台)", question, re.I):
+        fields.add("count")
+    return fields
+
+
+def _gpu_hardware_values(quote: str, *, training_only: bool = False) -> dict[str, set[str]]:
+    """Conservative explicit GPU fields; never convert TPU or architecture numbers."""
+    values: dict[str, set[str]] = {"model": set(), "count": set()}
+    for sentence in re.split(r"[.;。；!?！？]", " ".join(quote.split())):
+        if not re.search(r"GPUs?(?![A-Za-z])|显卡", sentence, re.I):
+            continue
+        if training_only and not TRAINING_EVIDENCE_PATTERN.search(sentence):
+            continue
+        if re.search(
+            r"\b(?:not|no|without|unknown|unspecified|unreported)\b|未|没有|未知|缺少|不使用",
+            sentence, re.I,
+        ):
+            continue
+        values["model"].update(
+            re.sub(r"\s+", "", match.group().casefold())
+            for match in GPU_MODEL_PATTERN.finditer(sentence)
+        )
+        for pattern in (GPU_COUNT_BEFORE_PATTERN, GPU_COUNT_AFTER_PATTERN):
+            values["count"].update(
+                match.group(1).casefold() for match in pattern.finditer(sentence)
+            )
+    return values
+
+
+def _missing_requested_gpu_papers(
+    question: str, papers: list[ComparisonPaperRead],
+    claims: list[ComparisonClaimRead], evidence: list[EvidenceAnchor],
+) -> list[ComparisonPaperRead]:
+    fields = _requested_gpu_fields(question)
+    if not fields:
+        return []
+    training_only = bool(
+        re.search(r"\b(?:pre-?training|train|trained|training)\b|训练", question, re.I)
+    )
+    missing = []
+    for paper in papers:
+        covered: set[str] = set()
+        for anchor in evidence:
+            if anchor.document_id != paper.document_id:
+                continue
+            if re.search(
+                r"related work|references|bibliography|相关工作|参考文献",
+                anchor.section or "", re.I,
+            ):
+                continue
+            source_values = _gpu_hardware_values(anchor.quote, training_only=training_only)
+            for claim in claims:
+                if anchor.evidence_id not in claim.evidence_ids:
+                    continue
+                claim_values = _gpu_hardware_values(claim.text)
+                covered.update(
+                    field for field in fields
+                    if source_values[field].intersection(claim_values[field])
+                )
+        if not fields.issubset(covered):
+            missing.append(paper)
+    return missing
+
+
 def _compose_parallel_claim(
     claims: list[ComparisonClaimRead],
     papers: list[ComparisonPaperRead],
@@ -809,15 +914,18 @@ def _select_diverse_evidence(evidence: list[EvidenceAnchor], limit: int) -> list
 
 def _comparison_facets(question: str) -> list[str]:
     """Split an explicitly enumerated comparison into focused retrieval queries."""
+    hardware = (
+        ["training hardware GPU model number of GPUs"] if _requested_gpu_fields(question) else []
+    )
     _, separator, detail = question.replace("：", ":").partition(":")
     if not separator:
-        return []
+        return hardware
     detail = re.split(r"[.!?。！？]", detail, maxsplit=1)[0]
     facets = [
         item.strip(" ,;，；、")
         for item in re.split(r"[,，;；、]|\b(?:and|or)\b|以及|与", detail, flags=re.I)
     ]
-    return list(dict.fromkeys(item for item in facets if len(item) >= 5))[:6]
+    return list(dict.fromkeys([*hardware, *(item for item in facets if len(item) >= 5)]))[:6]
 
 
 def _prefer_primary_evidence(
