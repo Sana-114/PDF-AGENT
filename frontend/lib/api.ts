@@ -845,7 +845,7 @@ export async function buildCitationGraph(
 }
 
 export async function generateResearchReview(
-  documentIds: string[] = [],
+  documentIds: string[],
   generationMode: "configured" | "extractive" = "configured",
 ): Promise<ResearchReviewResponse> {
   const response = await assertResponse(
@@ -865,7 +865,7 @@ export async function generateResearchReview(
 
 export async function generateWritingOutline(input: {
   idea: string;
-  documentIds?: string[];
+  documentIds: string[];
   language?: "zh" | "en";
 }): Promise<WritingOutlineResponse> {
   const response = await assertResponse(

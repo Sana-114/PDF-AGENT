@@ -646,6 +646,8 @@ Backend、Worker 与 Beat 的镜像内代码运行、健康检查、开发 Overr
 
 第 83 阶段补齐单篇问答／综述的正文发布校验、抽取式降级标记和阅读器翻译保留门禁；296 项后端、26 项前端测试及类型检查通过，尚不等于新增真实模型验收。见 [生成与翻译门禁验收](docs/generation-safeguards-acceptance-2026-10-10.md)。
 
+第 84 阶段为综述与写作新增明确文献选择，空范围不允许生成，避免默认外发全库；302 项后端、29 项前端测试及真实浏览器零生成调用检查通过。范围与复现见 [生成文献范围验收](docs/generation-scope-acceptance-2026-10-10.md)。
+
 ```powershell
 python scripts/build_technical_report.py --source docs/competition-technical-report.md --output output/pdf/PaperPilot-technical-report.pdf --release --revision 8b888cf
 ```

@@ -46,6 +46,8 @@ import DataVisualizationWorkbench from "../components/DataVisualizationWorkbench
 import ArchitectureDiagramWorkbench from "../components/ArchitectureDiagramWorkbench";
 import AcademicTranslationWorkbench from "../components/AcademicTranslationWorkbench";
 import ChatWorkbench from "../components/ChatWorkbench";
+import DocumentScopePicker from "../components/DocumentScopePicker";
+import { selectedReadyDocumentIds } from "../lib/documentScope";
 import {
   defaultReferenceSelections,
   paperCandidateKey,
@@ -176,6 +178,8 @@ export default function Home() {
   const [citationGraph, setCitationGraph] = useState<CitationGraphResponse | null>(null);
   const [buildingCitationGraph, setBuildingCitationGraph] = useState(false);
   const [researchReview, setResearchReview] = useState<ResearchReviewResponse | null>(null);
+  const [reviewDocumentIds, setReviewDocumentIds] = useState<string[]>([]);
+  const [writingDocumentIds, setWritingDocumentIds] = useState<string[]>([]);
   const [generatingResearchReview, setGeneratingResearchReview] = useState(false);
   const [extractiveReview, setExtractiveReview] = useState(false);
   const [writingIdea, setWritingIdea] = useState("");
@@ -513,11 +517,9 @@ export default function Home() {
   }
 
   async function generateReview() {
-    const readyDocumentIds = documents
-      .filter((document) => document.status === "ready")
-      .map((document) => document.id);
+    const readyDocumentIds = selectedReadyDocumentIds(documents, reviewDocumentIds);
     if (!readyDocumentIds.length) {
-      setError("请先解析至少一篇文献，再整理证据综述。");
+      setError("请选择至少一篇已解析文献，再整理证据综述。");
       return;
     }
     setGeneratingResearchReview(true);
@@ -535,11 +537,9 @@ export default function Home() {
     event.preventDefault();
     const idea = writingIdea.trim();
     if (!idea) return;
-    const readyDocumentIds = documents
-      .filter((document) => document.status === "ready")
-      .map((document) => document.id);
+    const readyDocumentIds = selectedReadyDocumentIds(documents, writingDocumentIds);
     if (!readyDocumentIds.length) {
-      setError("请先上传并解析至少一篇与 idea 相关的论文。");
+      setError("请选择至少一篇与 idea 相关的已解析论文。");
       return;
     }
     setGeneratingWritingOutline(true);
@@ -1056,7 +1056,7 @@ export default function Home() {
               <label className="review-local-mode"><input type="checkbox" checked={extractiveReview}
                 onChange={(event) => setExtractiveReview(event.target.checked)} />仅整理原文（不调用 LLM）</label>
               <button className="ghost"
-                disabled={generatingResearchReview || !documents.some((item) => item.status === "ready")}
+                disabled={generatingResearchReview || !selectedReadyDocumentIds(documents, reviewDocumentIds).length}
                 onClick={() => void generateReview()} type="button">
                 {generatingResearchReview ? "正在提取证据…" : researchReview ? "重新整理" : "整理综述"}
               </button>
@@ -1068,6 +1068,8 @@ export default function Home() {
               <span>提取摘要、贡献、Future Work 和较新论文进展，并保留页码锚点。</span>
             </div>
           )}
+          <DocumentScopePicker documents={documents} selectedIds={reviewDocumentIds}
+            onChange={setReviewDocumentIds} label="综述文献范围" />
           {researchReview && (
             <>
               {researchReview.warnings.map((warning) => (
@@ -1097,6 +1099,8 @@ export default function Home() {
             <span className="evidence-promise">参考文献仅取自文献库与来源元数据</span>
           </div>
           <form className="writing-idea-form" onSubmit={generateOutline}>
+            <DocumentScopePicker documents={documents} selectedIds={writingDocumentIds}
+              onChange={setWritingDocumentIds} label="写作文献范围" />
             <label>
               研究 idea
               <textarea
@@ -1117,7 +1121,7 @@ export default function Home() {
               </select>
             </label>
             <button
-              disabled={generatingWritingOutline || writingIdea.trim().length < 8}
+              disabled={generatingWritingOutline || writingIdea.trim().length < 8 || !selectedReadyDocumentIds(documents, writingDocumentIds).length}
               type="submit"
             >
               {generatingWritingOutline ? "正在检索证据…" : "整理论文框架"}

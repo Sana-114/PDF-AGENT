@@ -1538,3 +1538,11 @@ textarea:focus-visible {
   .pdf-reader-footer { justify-content: flex-end; }
   .pdf-reader-location { margin-right: auto; }
 }
+.document-scope-picker { margin: 14px 0; border-block: 1px solid var(--line); padding: 10px 0; }
+.document-scope-picker summary { cursor: pointer; font-size: 14px; }
+.document-scope-picker fieldset { border: 0; padding: 10px 0 0; min-width: 0; }
+.document-scope-picker legend { color: var(--muted); font-size: 12px; }
+.document-scope-picker fieldset > div { max-height: 220px; overflow-y: auto; }
+.document-scope-picker fieldset label { display: flex; gap: 10px; align-items: flex-start; padding: 6px 0; }
+.document-scope-picker small { display: block; color: var(--muted); font-size: 12px; overflow-wrap: anywhere; }
+.writing-idea-form > .document-scope-picker { grid-column: 1 / -1; }

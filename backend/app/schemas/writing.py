@@ -7,7 +7,7 @@ from app.schemas.agent import AnswerClaim, EvidenceAnchor
 
 class WritingOutlineRequest(BaseModel):
     idea: str = Field(min_length=8, max_length=3000)
-    document_ids: list[str] = Field(default_factory=list, max_length=100)
+    document_ids: list[str] = Field(min_length=1, max_length=100)
     top_k: int = Field(default=12, ge=4, le=20)
     language: Literal["zh", "en"] = "zh"
 

@@ -1,6 +1,6 @@
 // Local-only recording smoke check: never invoke a configured external LLM.
 import assert from "node:assert/strict";
-import { mkdir, writeFile } from "node:fs/promises";
+import { mkdir, readFile, writeFile } from "node:fs/promises";
 import path from "node:path";
 import { chromium } from "playwright-core";
 import { waitForPaintedPdfPage } from "./pdfRenderReady.mjs";
@@ -60,6 +60,14 @@ try {
   await capture("03-citation-graph");
   await page.getByRole("button", { name: "证据综述", exact: true }).click();
   await page.getByRole("checkbox", { name: "仅整理原文（不调用 LLM）" }).check();
+  const corpus = JSON.parse(await readFile(path.resolve("../docs/pdf-regression-corpus.json"), "utf8"));
+  const allowed = new Set(corpus.downloads.filter((item) => item.sha256).map((item) => item.filename));
+  await page.locator("#research-review .document-scope-picker summary").click();
+  const scope = page.getByRole("group", { name: "综述文献范围" });
+  const library = await (await page.request.get("http://localhost:8000/api/v1/documents")).json();
+  for (const doc of library.items.filter((item) => item.status === "ready" && allowed.has(item.original_filename))) {
+    await scope.getByRole("checkbox", { name: new RegExp(doc.original_filename.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")) }).check();
+  }
   const [reviewResponse] = await Promise.all([
     page.waitForResponse((response) => response.url().endsWith("/reviews/generate") && response.request().method() === "POST"),
     page.getByRole("button", { name: "整理综述", exact: true }).click(),

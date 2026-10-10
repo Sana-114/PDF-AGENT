@@ -1,7 +1,7 @@
 from datetime import datetime
 from typing import Literal
 
-from pydantic import BaseModel, Field, field_validator
+from pydantic import BaseModel, Field, field_validator, model_validator
 
 from app.schemas.agent import AnswerClaim, EvidenceAnchor
 from app.schemas.citation_graph import CitationGraphStatsRead
@@ -17,6 +17,12 @@ class ResearchReviewRequest(BaseModel):
     @classmethod
     def deduplicate_document_ids(cls, value: list[str]) -> list[str]:
         return list(dict.fromkeys(value))
+
+    @model_validator(mode="after")
+    def require_explicit_generation_scope(self) -> "ResearchReviewRequest":
+        if self.generation_mode == "configured" and not self.document_ids:
+            raise ValueError("生成式综述必须明确选择文献，不允许默认发送整库内容。")
+        return self
 
 
 class ReviewEvidenceRead(EvidenceAnchor):
