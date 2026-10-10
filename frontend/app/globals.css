@@ -1285,6 +1285,14 @@ footer { padding: 28px; color: var(--muted); border-top: 1px solid var(--line); 
   border-bottom: 1px solid var(--line);
 }
 .writing-toolbar small { color: var(--muted); }
+.writing-toolbar span { color: var(--ink); font-size: 13px; letter-spacing: 0; }
+.writing-toolbar small { font-size: 12px; }
+.writing-draft pre { font-size: 13px; }
+.verified-references > h3 { font-size: 13px; }
+.verified-references article > p { font-size: 12px; }
+.verified-references article > small { font-size: 11px; }
+.verified-references article > div button,
+.verified-references article > div a { font-size: 11px; }
 .writing-toolbar button { color: white; background: var(--green); border-radius: 3px; }
 
 .comparison-selector {

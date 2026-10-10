@@ -185,6 +185,7 @@ try {
     await download.saveAs(exportedPath);
     const exported = await readFile(exportedPath, "utf8");
     assert.ok(exported.includes(payload.translation) && exported.includes(sourceText));
+    await translation.locator(".academic-translation-result").scrollIntoViewIfNeeded();
     result.screenshot = await capture("generated-translation");
     result.export = exportedPath;
     result.status = "passed";
