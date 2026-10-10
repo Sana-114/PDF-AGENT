@@ -1,8 +1,9 @@
 import fitz
 
 from app.parsers import SelectiveOcrParser, get_parser
-from app.parsers.layout import extract_text_blocks
+from app.parsers.layout import RawTextBlock, extract_text_blocks
 from app.parsers.raster_layout import detect_raster_layout
+from app.parsers.text_table import extract_borderless_tables
 
 
 def _save_layout_source(path) -> None:
@@ -86,3 +87,48 @@ def test_selective_ocr_parser_exposes_scanned_table_and_figure(tmp_path) -> None
     assert parsed.figures[0].caption.casefold().startswith("figure 1")
     assert parsed.figures[0].xref is None
     assert any("扫描版式恢复" in warning for warning in parsed.warnings)
+    assert any("复杂单元格、小数点" in warning for warning in parsed.warnings)
+
+
+def test_borderless_detector_reads_supplied_ocr_textpage_not_empty_native_layer(tmp_path):
+    source = tmp_path / "borderless.pdf"
+    scan = tmp_path / "borderless-scan.pdf"
+    with fitz.open() as document:
+        page = document.new_page(width=600, height=800)
+        page.insert_text((60, 72), "Table 1. Borderless accuracy results", fontsize=11)
+        for y, model, score in [(100, "Model", "Score"), (124, "Alpha", "91.5"),
+                                (148, "Beta", "93.2")]:
+            page.insert_text((60, y), model, fontsize=11)
+            page.insert_text((300, y), score, fontsize=11)
+        document.save(source)
+    _save_raster_copy(source, scan)
+    from app.core.config import settings
+
+    with fitz.open(scan) as document:
+        page = document[0]
+        assert not page.get_text().strip()
+        textpage = page.get_textpage_ocr(language=settings.ocr_languages, dpi=settings.ocr_dpi,
+                                       full=True, tessdata=settings.ocr_tessdata or None)
+        raw = extract_text_blocks(page.get_text("dict", textpage=textpage), 1)
+        tables = extract_borderless_tables(page, raw, textpage=textpage)
+        assert len(tables) == 1
+        assert any("93.2" in row for row in tables[0].rows)
+        assert extract_borderless_tables(page, raw) == []
+
+
+def test_caption_and_table_in_one_ocr_block_are_recovered_without_caption_rows():
+    with fitz.open() as document:
+        page = document.new_page(width=600, height=800)
+        page.insert_text((60, 72), "Table 4. Shared caption and data block", fontsize=11)
+        for y, model, score in [(100, "Model", "Score"), (124, "Alpha", "91.5"),
+                                (148, "Beta", "93.2"), (172, "Gamma", "94.3")]:
+            page.insert_text((60, y), model, fontsize=11)
+            page.insert_text((300, y), score, fontsize=11)
+        textpage = page.get_textpage()
+        merged = RawTextBlock(1, [55, 59, 400, 177],
+                              "Table 4. Shared caption data Alpha91.5 Beta93.2 Gamma94.3",
+                              11, 5, 100)
+        tables = extract_borderless_tables(page, [merged], textpage=textpage)
+        assert len(tables) == 1
+        assert tables[0].rows[0] == ["Model", "Score"]
+        assert tables[0].rows[-1] == ["Gamma", "94.3"]

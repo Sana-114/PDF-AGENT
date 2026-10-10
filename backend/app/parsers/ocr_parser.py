@@ -6,6 +6,7 @@ from app.parsers.diagnostics import PdfDiagnostics
 from app.parsers.layout import RawTextBlock, TableSnapshot
 from app.parsers.pymupdf_parser import PyMuPDFParser
 from app.parsers.raster_layout import detect_raster_layout
+from app.parsers.text_table import extract_borderless_tables
 
 
 class OcrUnavailableError(RuntimeError):
@@ -16,6 +17,7 @@ class SelectiveOcrParser(PyMuPDFParser):
     """Use native extraction when possible and Tesseract only for low-text pages."""
 
     name = "pymupdf+tesseract"
+    version = f"{fitz.VersionBind}-ocr-layout92"
 
     def __init__(
         self,
@@ -50,6 +52,11 @@ class SelectiveOcrParser(PyMuPDFParser):
                 "扫描版式恢复："
                 f"表格候选 {len(self.raster_table_pages)} 页，"
                 f"图区域候选 {len(self.raster_figure_pages)} 页。"
+            )
+        if self.raster_table_pages:
+            parsed.warnings.append(
+                "扫描表格为 OCR 候选，复杂单元格、小数点及公式尚未逐项校验；"
+                "精确数值请核对原页，不以候选数量代表内容准确率。"
             )
         return parsed
 
@@ -102,6 +109,15 @@ class SelectiveOcrParser(PyMuPDFParser):
                 textpage=textpage,
                 raw_blocks=raw_blocks,
             )
+            for candidate in extract_borderless_tables(page, raw_blocks, textpage=textpage):
+                overlaps = [index for index, table in enumerate(tables)
+                            if self._table_overlap(candidate, table) >= 0.72]
+                if not overlaps:
+                    tables.append(candidate)
+                elif candidate.column_count > 1 and tables[overlaps[0]].column_count == 1:
+                    # Broken ruling lines may form a false single-column grid.
+                    # Prefer independently aligned OCR columns in the same region.
+                    tables[overlaps[0]] = candidate
             self._fill_empty_table_cells(page, tables, warnings)
             if tables:
                 self.raster_table_pages.append(page.number + 1)

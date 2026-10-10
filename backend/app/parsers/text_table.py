@@ -1,4 +1,4 @@
-"""Caption-gated recovery for borderless native-text tables."""
+"""Caption-gated recovery for borderless native and OCR text tables."""
 
 from __future__ import annotations
 
@@ -26,6 +26,8 @@ class TextCell:
 def extract_borderless_tables(
     page: fitz.Page,
     raw_blocks: list[RawTextBlock],
+    *,
+    textpage: fitz.TextPage | None = None,
 ) -> list[TableSnapshot]:
     """Recover aligned text tables below numbered captions.
 
@@ -41,7 +43,7 @@ def extract_borderless_tables(
             bbox=[round(float(value), 2) for value in word[:4]],
             text=str(word[4]).strip(),
         )
-        for word in page.get_text("words", sort=True)
+        for word in page.get_text("words", textpage=textpage, sort=True)
         if str(word[4]).strip()
     ]
     results: list[TableSnapshot] = []
@@ -61,6 +63,12 @@ def _candidate_region(
     raw_blocks: list[RawTextBlock],
     page_width: float,
 ) -> list[float] | None:
+    # OCR can put the caption and the entire table into ONE block. Use its
+    # own bounded region only when it contains several data lines; the row
+    # alignment gate still rejects ordinary prose and long captions.
+    if (caption.line_count >= 4 and caption.bbox[3] - caption.bbox[1] >= 50
+            and sum(character.isdigit() for character in caption.text) >= 4):
+        return list(caption.bbox)
     below = sorted(
         (
             block
@@ -75,7 +83,7 @@ def _candidate_region(
         if is_table_caption(block.text):
             break
         gap = block.bbox[1] - cursor
-        if gap > (30 if not selected else 24):
+        if gap > (60 if not selected else 24):
             break
         if _horizontal_overlap(block.bbox, caption.bbox, page_width) < 0.15:
             continue
@@ -86,7 +94,7 @@ def _candidate_region(
     content_bbox = union_bbox([block.bbox for block in selected])
     return [
         max(0.0, content_bbox[0] - 3),
-        max(caption.bbox[3], content_bbox[1] - 2),
+        caption.bbox[3],
         min(page_width, content_bbox[2] + 3),
         content_bbox[3] + 2,
     ]
@@ -95,6 +103,10 @@ def _candidate_region(
 def _snapshot_from_words(words: list[PositionedWord]) -> TableSnapshot | None:
     rows = _group_rows(words)
     split_rows = [_split_cells(row) for row in rows]
+    first_multicell = next((index for index, row in enumerate(split_rows) if len(row) >= 2), None)
+    if first_multicell is None:
+        return None
+    split_rows = split_rows[first_multicell:]
     eligible_counts = [len(row) for row in split_rows if 2 <= len(row) <= 16]
     if not eligible_counts:
         return None
