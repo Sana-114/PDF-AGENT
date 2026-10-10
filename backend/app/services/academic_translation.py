@@ -2,7 +2,12 @@ import re
 from collections import Counter
 from dataclasses import dataclass
 
-from app.llm.base import LLMProvider, LLMResponseError
+from app.llm.base import (
+    GeneratedSegmentTranslations,
+    GeneratedTranslation,
+    LLMProvider,
+    LLMResponseError,
+)
 from app.schemas.academic_translation import (
     AcademicTranslationRead,
     AcademicTranslationRequest,
@@ -18,6 +23,7 @@ PROTECTED_SPAN_RE = re.compile(
     r"|\\begin\{[^{}]+\}[\s\S]*?\\end\{[^{}]+\}"
     r"|\\\[[\s\S]*?\\\]"
     r"|\\\([\s\S]*?\\\)"
+    r"|(?<!\\)\$\$[\s\S]*?(?<!\\)\$\$"
     r"|(?<!\\)\$[^$\n]+(?<!\\)\$"
     r"|`[^`\n]+`"
     r"|\[(?:\d{1,4})(?:\s*[-,–]\s*\d{1,4})*\]"
@@ -84,9 +90,7 @@ def _protect_source(
         count = protected.count(source)
         if not count:
             continue
-        applications.append(
-            GlossaryApplicationRead(source=source, target=target, count=count)
-        )
+        applications.append(GlossaryApplicationRead(source=source, target=target, count=count))
         for _ in range(count):
             protected = protected.replace(source, protect(target, "glossary"), 1)
     return protected, spans, applications
@@ -111,12 +115,9 @@ def _batch_segments(segments: list[tuple[str, str]]) -> list[list[tuple[str, str
     current_characters = 0
     for segment in segments:
         segment_characters = len(segment[1])
-        exceeds_budget = (
-            current
-            and (
-                len(current) >= MAX_SEGMENTS_PER_REQUEST
-                or current_characters + segment_characters > MAX_CHARACTERS_PER_REQUEST
-            )
+        exceeds_budget = current and (
+            len(current) >= MAX_SEGMENTS_PER_REQUEST
+            or current_characters + segment_characters > MAX_CHARACTERS_PER_REQUEST
         )
         if exceeds_budget:
             batches.append(current)
@@ -134,11 +135,42 @@ def _restore_spans(translation: str, spans: list[ProtectedSpan]) -> str:
     for span in spans:
         occurrence_count = restored.count(span.token)
         if occurrence_count != 1:
-            raise LLMResponseError(
-                "翻译结果未完整保留公式、代码、引用、数字或术语占位符。"
-            )
+            raise LLMResponseError("翻译结果未完整保留公式、代码、引用、数字或术语占位符。")
         restored = restored.replace(span.token, span.value)
     return restored
+
+
+async def translate_protected_text(
+    provider: LLMProvider, text: str, source_language: str, target_language: str
+) -> GeneratedTranslation:
+    protected, spans, _ = _protect_source(text, [])
+    result = await provider.translate_text(protected, source_language, target_language)
+    return GeneratedTranslation(text=_restore_spans(result.text, spans))
+
+
+async def translate_protected_segments(
+    provider: LLMProvider,
+    segments: list[tuple[str, str]],
+    source_language: str,
+    target_language: str,
+) -> GeneratedSegmentTranslations:
+    protected_segments: list[tuple[str, str]] = []
+    protections: dict[str, list[ProtectedSpan]] = {}
+    for block_id, text in segments:
+        protected, spans, _ = _protect_source(text, [])
+        protected_segments.append((block_id, protected))
+        protections[block_id] = spans
+    result = await provider.translate_segments(protected_segments, source_language, target_language)
+    if set(result.items) != set(protections) or any(
+        not value.strip() for value in result.items.values()
+    ):
+        raise LLMResponseError("翻译结果缺少文本块、包含未知文本块或空译文。")
+    return GeneratedSegmentTranslations(
+        items={
+            block_id: _restore_spans(value, protections[block_id])
+            for block_id, value in result.items.items()
+        }
+    )
 
 
 class AcademicTranslationService:
@@ -187,8 +219,7 @@ class AcademicTranslationService:
             warnings.append("译文与原文完全相同，请核对源语言、目标语言和模型配置。")
         kind_counts = Counter(span.kind for span in spans if span.kind != "glossary")
         preservation_checks = [
-            PreservationCheckRead(kind=kind, count=count)
-            for kind, count in kind_counts.items()
+            PreservationCheckRead(kind=kind, count=count) for kind, count in kind_counts.items()
         ]
         return AcademicTranslationRead(
             translation=restored,

@@ -277,6 +277,10 @@ class WritingOutlineService:
         )
         proposed_title = idea[:120]
         warnings: list[str] = []
+        if grounded.provider == "extractive":
+            warnings.append("当前框架使用抽取式原文整理，不是成功的生成式模型输出。")
+        if grounded.insufficient_evidence:
+            warnings.append("当前证据不足，框架仅供组织研究问题，不应视作已支持的论文论证。")
         incomplete = [
             item.citation_key
             for item in references

@@ -32,16 +32,14 @@ from app.schemas.comparison import (
     ComparisonStatsRead,
     CrossPaperComparisonRead,
 )
+from app.services.grounded_text import normalise_fact as _normalise_fact
+from app.services.grounded_text import unsupported_numeric_facts as _unsupported_numeric_facts
 from app.services.retrieval import HybridRetriever
 from app.services.text_features import tokenize
 
 CLAIM_PREFIX_PATTERN = re.compile(
     r"^\s*\[(AGREEMENT|DIFFERENCE|CONFLICT|SINGLE_SOURCE)\]\s*"
     r"(?:\[(?:DIMENSION|维度)\s*:\s*([^\]]{1,80})\]\s*)?",
-    re.IGNORECASE,
-)
-NUMERIC_FACT_PATTERN = re.compile(
-    r"(?<![\w-])\d+(?:[.,]\d+)*(?:\s?(?:%|[KMB]|thousand|million|billion))?(?![\w])",
     re.IGNORECASE,
 )
 PARAMETER_COUNT_QUESTION_PATTERN = re.compile(
@@ -595,33 +593,6 @@ def _evidence_dimension(evidence: list[EvidenceAnchor]) -> str:
         if item.section and len(item.section.strip()) <= 80
     ]
     return Counter(sections).most_common(1)[0][0] if sections else "综合"
-
-
-def _unsupported_numeric_facts(text: str, evidence: list[EvidenceAnchor]) -> list[str]:
-    facts = list(
-        dict.fromkeys(_normalise_fact(item) for item in NUMERIC_FACT_PATTERN.findall(text))
-    )
-    if not facts:
-        return []
-    source = " ".join(
-        [
-            *(item.quote for item in evidence),
-            *(item.document_title or "" for item in evidence),
-            *(item.section or "" for item in evidence),
-        ]
-    )
-    source_facts = {_normalise_fact(item) for item in NUMERIC_FACT_PATTERN.findall(source)}
-    return [fact for fact in facts if fact not in source_facts]
-
-
-def _normalise_fact(value: str) -> str:
-    normalised = " ".join(value.casefold().replace(",", "").split())
-    return (
-        normalised.replace("thousand", "k")
-        .replace("million", "m")
-        .replace("billion", "b")
-        .replace(" ", "")
-    )
 
 
 def _has_parameter_value(quote: str) -> bool:

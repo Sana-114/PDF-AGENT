@@ -171,7 +171,7 @@ def test_review_discards_claims_without_valid_evidence_ids(tmp_path, monkeypatch
             EvidenceReviewService(session, provider=FakeProvider()).generate([document])
         )
 
-    assert result.review == "Evidence-grounded review."
+    assert result.review == "Supported [R1]"
     assert result.provider == "fake"
     assert [claim.text for claim in result.claims] == ["Supported"]
     assert result.claims[0].evidence_ids == ["R1"]

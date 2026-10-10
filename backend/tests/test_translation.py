@@ -24,10 +24,12 @@ class StubTranslationProvider:
     async def translate_text(
         self, text: str, source_language: str, target_language: str
     ) -> GeneratedTranslation:
-        assert text == "注意力机制保留公式 beta_2 = 0.98。"
+        assert text == "注意力机制保留公式 beta_2 = `__PAPERPILOT_A__`。"
         assert source_language == "auto"
         assert target_language == "en"
-        return GeneratedTranslation(text="The attention mechanism preserves beta_2 = 0.98.")
+        return GeneratedTranslation(
+            text="The attention mechanism preserves beta_2 = `__PAPERPILOT_A__`."
+        )
 
     async def translate_segments(
         self,

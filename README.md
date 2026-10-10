@@ -644,6 +644,8 @@ Backend、Worker 与 Beat 的镜像内代码运行、健康检查、开发 Overr
 
 技术 PDF 可复现构建（安装 `requirements-docs.txt`）：
 
+第 83 阶段补齐单篇问答／综述的正文发布校验、抽取式降级标记和阅读器翻译保留门禁；296 项后端、26 项前端测试及类型检查通过，尚不等于新增真实模型验收。见 [生成与翻译门禁验收](docs/generation-safeguards-acceptance-2026-10-10.md)。
+
 ```powershell
 python scripts/build_technical_report.py --source docs/competition-technical-report.md --output output/pdf/PaperPilot-technical-report.pdf --release --revision 8b888cf
 ```

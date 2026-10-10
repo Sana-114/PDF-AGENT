@@ -34,6 +34,7 @@ from app.schemas.conversation import (
     ConversationSummary,
     ConversationTurnRead,
 )
+from app.services.academic_translation import translate_protected_text
 from app.services.conversations import (
     ConversationNotFoundError,
     ConversationService,
@@ -260,7 +261,8 @@ def _sse_event(event: str, payload: dict) -> str:
 async def translate_selection(request: TranslateRequest) -> TranslateResponse:
     try:
         provider = get_llm_provider()
-        result = await provider.translate_text(
+        result = await translate_protected_text(
+            provider,
             request.text,
             request.source_language,
             request.target_language,

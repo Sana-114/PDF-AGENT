@@ -3,6 +3,7 @@
 from typing import Any
 
 from app.llm.base import LLMProvider
+from app.services.academic_translation import translate_protected_segments
 from app.services.document_content import page_text_segments
 from app.services.translation_store import TranslationStore, translation_store
 
@@ -71,7 +72,8 @@ async def run_document_translation(
                 continue
             segments, truncated = page_text_segments(parsed, page_number)
             if segments:
-                result = await provider.translate_segments(
+                result = await translate_protected_segments(
+                    provider,
                     [(item["block_id"], item["source_text"]) for item in segments],
                     "auto",
                     target_language,

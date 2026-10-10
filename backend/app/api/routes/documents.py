@@ -29,6 +29,7 @@ from app.schemas.document import (
     TranslationJobRequest,
     UploadResult,
 )
+from app.services.academic_translation import translate_protected_segments
 from app.services.document_content import (
     outline_items,
     page_text_segments,
@@ -325,7 +326,8 @@ async def translate_document_page(
             raise LLMConfigurationError(
                 "双语阅读需要生成式 LLM；请在 .env 中配置 LLM_PROVIDER、LLM_MODEL 和 LLM_API_KEY。"
             )
-        translated = await provider.translate_segments(
+        translated = await translate_protected_segments(
+            provider,
             [(item["block_id"], item["source_text"]) for item in segments],
             "auto",
             request.target_language,

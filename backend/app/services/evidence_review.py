@@ -15,7 +15,7 @@ from app.llm.extractive import ExtractiveProvider
 from app.models.document import Document
 from app.models.future_work import FutureWorkDecision
 from app.models.paper_source import PaperSource
-from app.schemas.agent import AnswerClaim, EvidenceAnchor
+from app.schemas.agent import EvidenceAnchor
 from app.schemas.review import (
     FutureDirectionRead,
     ResearchReviewRead,
@@ -25,6 +25,7 @@ from app.schemas.review import (
 from app.services.citation_graph import CitationGraphService
 from app.services.document_content import read_parsed_document
 from app.services.future_work_review import decision_read, direction_key
+from app.services.grounded_text import checked_claims, render_checked_claims
 
 FUTURE_HEADING = re.compile(
     r"(?:future\s+(?:work|research|direction)|limitations?|open\s+(?:questions?|problems?)|"
@@ -430,18 +431,12 @@ class EvidenceReviewService:
             warnings.append(f"生成式综述不可用，已使用抽取式综述：{exc}")
             provider = ExtractiveProvider()
             generated = await provider.generate_grounded_answer(question, grounding)
-        allowed_ids = {item.evidence_id for item in evidence}
-        claims = [
-            AnswerClaim(
-                text=claim.text,
-                evidence_ids=[item for item in claim.evidence_ids if item in allowed_ids],
-            )
-            for claim in generated.claims
-            if claim.text and any(item in allowed_ids for item in claim.evidence_ids)
-        ]
+        claims, rejected = checked_claims(generated.claims, grounding)
+        if rejected:
+            warnings.append(f"已移除 {rejected} 条无有效引用或含无依据数值的声明。")
         return ResearchReviewRead(
             generated_at=datetime.now(UTC),
-            review=generated.answer,
+            review=render_checked_claims(claims),
             claims=claims,
             papers=papers,
             future_directions=directions,

@@ -10,10 +10,10 @@ from app.llm.base import LLMConfigurationError, LLMProvider, LLMResponseError
 from app.llm.extractive import ExtractiveProvider
 from app.schemas.agent import (
     AgentTraceStep,
-    AnswerClaim,
     AskRequest,
     AskResponse,
 )
+from app.services.grounded_text import checked_claims, render_checked_claims
 
 
 class ResearchAgent:
@@ -70,25 +70,21 @@ class ResearchAgent:
         generation_started = perf_counter()
         generation_status = "ok"
         generation_summary = f"使用 {self.provider.name} 生成受证据约束的回答。"
+        used_provider = self.provider
         try:
             generated = await self.provider.generate_grounded_answer(
                 request.question, strong_evidence
             )
         except (LLMConfigurationError, LLMResponseError) as exc:
             fallback = ExtractiveProvider()
+            used_provider = fallback
             generated = await fallback.generate_grounded_answer(request.question, strong_evidence)
             generation_status = "fallback"
             generation_summary = f"模型调用不可用，已切换抽取式回答：{exc}"
 
-        allowed_ids = {item.evidence_id for item in strong_evidence}
-        claims = [
-            AnswerClaim(
-                text=claim.text,
-                evidence_ids=[item for item in claim.evidence_ids if item in allowed_ids],
-            )
-            for claim in generated.claims
-            if claim.text and any(item in allowed_ids for item in claim.evidence_ids)
-        ]
+        claims, rejected = checked_claims(generated.claims, strong_evidence)
+        if rejected:
+            generation_summary += f" 已移除 {rejected} 条无有效引用或含无依据数值的声明。"
         trace.append(
             AgentTraceStep(
                 skill="llm.generate_grounded_answer",
@@ -98,12 +94,12 @@ class ResearchAgent:
             )
         )
         return AskResponse(
-            answer=generated.answer,
+            answer=render_checked_claims(claims),
             claims=claims,
             evidence=strong_evidence,
             insufficient_evidence=not claims,
-            provider=self.provider.name,
-            model=self.provider.model,
+            provider=used_provider.name,
+            model=used_provider.model,
             trace=trace,
         )
 
