@@ -56,6 +56,7 @@ if __name__ == "__main__":
         "tables": [{"caption": table.caption, "page": table.page_number, "bbox": table.bbox,
                     "rows": table.rows} for table in parsed.tables],
         "warnings": parsed.warnings,
+        "front_matter_refinements": processing.get("front_matter_refinements", []),
     }
     args.output.parent.mkdir(parents=True, exist_ok=True)
     args.output.write_text(json.dumps(report, ensure_ascii=False, indent=2), encoding="utf-8")

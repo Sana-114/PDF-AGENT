@@ -51,6 +51,7 @@ class Settings(BaseSettings):
     ocr_dpi: int = 300
     ocr_min_text_chars: int = 32
     ocr_tessdata: str = ""
+    ocr_front_matter_languages: str = "eng+pol"
 
     llm_provider: str = "mock"
     llm_model: str = ""

@@ -1,9 +1,16 @@
+import hashlib
+import json
 from pathlib import Path
 
 import fitz
 
 from app.parsers.diagnostics import PdfDiagnostics
-from app.parsers.layout import RawTextBlock, TableSnapshot
+from app.parsers.front_matter_ocr import (
+    author_grid_region,
+    compatible_people,
+    project_crop_blocks,
+)
+from app.parsers.layout import RawTextBlock, TableSnapshot, extract_text_blocks
 from app.parsers.pymupdf_parser import PyMuPDFParser
 from app.parsers.raster_layout import detect_raster_layout
 from app.parsers.text_table import extract_borderless_tables
@@ -17,7 +24,7 @@ class SelectiveOcrParser(PyMuPDFParser):
     """Use native extraction when possible and Tesseract only for low-text pages."""
 
     name = "pymupdf+tesseract"
-    version = f"{fitz.VersionBind}-ocr-layout92"
+    version = f"{fitz.VersionBind}-ocr-layout93"
 
     def __init__(
         self,
@@ -27,12 +34,17 @@ class SelectiveOcrParser(PyMuPDFParser):
         dpi: int,
         min_text_chars: int,
         tessdata: str | None = None,
+        front_matter_languages: str = "",
     ) -> None:
         self.diagnostics = diagnostics
         self.languages = languages
         self.dpi = dpi
         self.min_text_chars = min_text_chars
         self.tessdata = tessdata or None
+        self.front_matter_languages = front_matter_languages
+        self.front_matter_refinements: list[dict] = []
+        signature = json.dumps([languages, dpi, min_text_chars, front_matter_languages])
+        self.version += "-" + hashlib.sha256(signature.encode()).hexdigest()[:10]
         self.ocr_pages: list[int] = []
         self.raster_table_pages: list[int] = []
         self.raster_figure_pages: list[int] = []
@@ -41,6 +53,7 @@ class SelectiveOcrParser(PyMuPDFParser):
         self.ocr_pages = []
         self.raster_table_pages = []
         self.raster_figure_pages = []
+        self.front_matter_refinements = []
         parsed = super().parse(path, **kwargs)
         if self.ocr_pages:
             parsed.warnings.append(
@@ -91,7 +104,58 @@ class SelectiveOcrParser(PyMuPDFParser):
             "raster_table_page_count": len(self.raster_table_pages),
             "raster_figure_pages": self.raster_figure_pages,
             "raster_figure_page_count": len(self.raster_figure_pages),
+            "front_matter_refinements": self.front_matter_refinements,
         }
+
+    def _refine_text_blocks(
+        self, page: fitz.Page, *, textpage: fitz.TextPage | None,
+        raw_blocks: list[RawTextBlock], warnings: list[str],
+    ) -> list[RawTextBlock]:
+        if textpage is None or page.number != 0 or not self.front_matter_languages:
+            return raw_blocks
+        title = self._guess_title_from_blocks(raw_blocks)
+        if not title:
+            return raw_blocks
+        for index, block in enumerate(raw_blocks):
+            region = author_grid_region(block, page.rect)
+            if region is None:
+                continue
+            if validate_tessdata(self.tessdata, self.front_matter_languages):
+                warnings.append("首页作者区补充 OCR 缺少语言包，已保留页级原始识别结果。")
+                return raw_blocks
+            try:
+                # Fixed bounded resolution: enlarging raster text alone does not
+                # guarantee improved recognition, and cannot add source detail.
+                dpi = 300
+                pixmap = page.get_pixmap(clip=region, dpi=dpi, colorspace=fitz.csRGB,
+                                        alpha=False, annots=False)
+                payload = pixmap.pdfocr_tobytes(language=self.front_matter_languages,
+                                               tessdata=self.tessdata)
+                with fitz.open("pdf", payload) as cropped:
+                    crop_page = cropped[0]
+                    refined = project_crop_blocks(
+                        extract_text_blocks(crop_page.get_text("dict"), 1),
+                        origin=(pixmap.x * 72 / dpi, pixmap.y * 72 / dpi),
+                        scale=(pixmap.width * 72 / dpi / crop_page.rect.width,
+                               pixmap.height * 72 / dpi / crop_page.rect.height),
+                    )
+            except RuntimeError:
+                warnings.append("首页作者区补充 OCR 不可用，已保留页级原始识别结果。")
+                return raw_blocks
+            candidate = [*raw_blocks[:index], *refined, *raw_blocks[index + 1:]]
+            if not compatible_people(raw_blocks, candidate, title):
+                warnings.append("首页作者区补充 OCR 名单不兼容，未替换原始识别结果。")
+                return raw_blocks
+            self.front_matter_refinements.append({
+                "page_number": 1, "bbox": list(region), "dpi": dpi,
+                "languages": self.front_matter_languages,
+                "original_text": block.text,
+                "refined_text": "\n".join(item.text for item in refined),
+                "source": "original_page_crop_ocr",
+            })
+            warnings.append("首页作者区已补充局部 OCR，原识别文本及原页坐标保存在解析记录。")
+            return candidate
+        return raw_blocks
 
     def _extract_raster_layout(
         self,
@@ -176,6 +240,7 @@ class SelectiveOcrParser(PyMuPDFParser):
             "ocr_pages": self.ocr_pages,
             "raster_table_pages": self.raster_table_pages,
             "raster_figure_pages": self.raster_figure_pages,
+            "front_matter_refinements": self.front_matter_refinements,
         }
 
     def _restore_checkpoint_metadata(self, metadata: dict) -> None:
@@ -188,6 +253,9 @@ class SelectiveOcrParser(PyMuPDFParser):
         figure_pages = metadata.get("raster_figure_pages", [])
         if isinstance(figure_pages, list):
             self.raster_figure_pages = [int(value) for value in figure_pages]
+        refinements = metadata.get("front_matter_refinements", [])
+        if isinstance(refinements, list):
+            self.front_matter_refinements = refinements
 
 
 def validate_tessdata(tessdata: str | None, languages: str) -> list[str]:

@@ -148,6 +148,7 @@ services:
       OCR_DPI: ${OCR_DPI:-300}
       OCR_MIN_TEXT_CHARS: ${OCR_MIN_TEXT_CHARS:-32}
       OCR_TESSDATA: ${OCR_TESSDATA:-/usr/share/tesseract-ocr/5/tessdata}
+      OCR_FRONT_MATTER_LANGUAGES: ${OCR_FRONT_MATTER_LANGUAGES-eng+pol}
       LLM_PROVIDER: ${LLM_PROVIDER:-mock}
       LLM_MODEL: ${LLM_MODEL:-}
       LLM_API_KEY: ${LLM_API_KEY:-}
@@ -235,6 +236,7 @@ services:
       OCR_DPI: ${OCR_DPI:-300}
       OCR_MIN_TEXT_CHARS: ${OCR_MIN_TEXT_CHARS:-32}
       OCR_TESSDATA: ${OCR_TESSDATA:-/usr/share/tesseract-ocr/5/tessdata}
+      OCR_FRONT_MATTER_LANGUAGES: ${OCR_FRONT_MATTER_LANGUAGES-eng+pol}
       LLM_PROVIDER: ${LLM_PROVIDER:-mock}
       LLM_MODEL: ${LLM_MODEL:-}
       LLM_API_KEY: ${LLM_API_KEY:-}

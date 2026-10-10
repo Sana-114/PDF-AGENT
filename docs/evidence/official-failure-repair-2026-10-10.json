@@ -1,0 +1,57 @@
+{
+  "schema_version": "1.0",
+  "date": "2026-10-10",
+  "scope": "Implementation, offline saved-response replay and real PDF parsing; not fresh LLM QA",
+  "new_deepseek_calls": 0,
+  "official_first_round_strict_score_unchanged": "4/9",
+  "backend_tests": 365,
+  "frontend_tests": 29,
+  "main_merged": false,
+  "complex_scan_cells_fully_verified": false,
+  "reports": [
+    {
+      "path": "backend/tmp/stage89-authors/official-v1.json",
+      "sha256": "696ea2f67da5356116aee9b93482b4fd4e3c9661fa0c730d1431d0ebc30ad532",
+      "kind": "real_pdf_lexical_author_retrieval"
+    },
+    {
+      "path": "backend/tmp/stage90-numeric/replay.json",
+      "sha256": "04c8a5617be30549ec3703f7f8b2719014829c90f0937eb7bd8aec80678ca773",
+      "kind": "offline_publication_numeric_guard"
+    },
+    {
+      "path": "backend/tmp/stage91-completeness/replay.json",
+      "sha256": "3cd2fbfb05382fb6755006c8f5bc2175939fbce78c76b9d3bb6e91a87352abe8",
+      "kind": "offline_source_table_proof_and_field_coverage"
+    },
+    {
+      "path": "backend/tmp/stage92-scanned/official-full-first.json",
+      "sha256": "4d12a7b2f8eb8b4d28e52eaebab2120a4ddcf01ba9948c60ae2ec2fff0028851",
+      "kind": "real_official_scan",
+      "status": "failed_author_gold",
+      "table_candidates": 4
+    },
+    {
+      "path": "backend/tmp/stage93-ocr/official-full-crop.json",
+      "sha256": "37974d04a1ad49dbf564b56f90935027a2d6b83ba505942727539e359cea89fc",
+      "kind": "real_official_scan_host",
+      "exact_author_gold": "8/8",
+      "selected_bleu_rows": "2/2",
+      "memory_peak_measured": false
+    },
+    {
+      "path": "backend/tmp/stage93-ocr/official-container.json",
+      "sha256": "140914bb94c136fc379f58d3729479847cf7bf80e926aff15eb990b1f4c127eb",
+      "kind": "real_official_scan_container",
+      "exact_author_gold": "8/8",
+      "selected_bleu_rows": "2/2",
+      "memory_peak_measured": false
+    },
+    {
+      "path": "backend/tmp/stage93-native/regression-unsandboxed.json",
+      "sha256": "4c11c92e6cbe5682222fb403e31664f1fbffdf3c213783b97f08051677876c7e",
+      "kind": "real_native_v1_v7_regression",
+      "result": "2/2"
+    }
+  ]
+}

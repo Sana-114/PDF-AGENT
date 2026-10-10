@@ -47,7 +47,7 @@ class PyMuPDFParser:
     """Layout-aware local parser with page and bounding-box provenance."""
 
     name = "pymupdf-layout"
-    version = f"{fitz.VersionBind}-layout73"
+    version = f"{fitz.VersionBind}-layout93"
 
     def parse(
         self,
@@ -203,6 +203,9 @@ class PyMuPDFParser:
             textpage = self._get_textpage(pdf_page, page_number)
             page_dict = pdf_page.get_text("dict", sort=False, textpage=textpage)
             raw_blocks = extract_text_blocks(page_dict, page_number)
+            raw_blocks = self._refine_text_blocks(
+                pdf_page, textpage=textpage, raw_blocks=raw_blocks, warnings=warnings,
+            )
             raster_tables, raster_images = self._extract_raster_layout(
                 pdf_page,
                 textpage=textpage,
@@ -358,6 +361,12 @@ class PyMuPDFParser:
     def _source_identity(path: Path) -> str:
         stat = path.stat()
         return f"{stat.st_size}:{stat.st_mtime_ns}"
+
+    def _refine_text_blocks(
+        self, page: fitz.Page, *, textpage: fitz.TextPage | None,
+        raw_blocks: list[RawTextBlock], warnings: list[str],
+    ) -> list[RawTextBlock]:
+        return raw_blocks
 
     def _get_textpage(self, page: fitz.Page, page_number: int) -> fitz.TextPage | None:
         del page, page_number

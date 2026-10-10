@@ -43,5 +43,6 @@ def get_parser(path: str | None = None) -> DocumentParser:
             dpi=settings.ocr_dpi,
             min_text_chars=settings.ocr_min_text_chars,
             tessdata=settings.ocr_tessdata or None,
+            front_matter_languages=settings.ocr_front_matter_languages,
         )
     return RoutedParser(parser, diagnostics)

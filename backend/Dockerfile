@@ -17,6 +17,11 @@ ENV TESSDATA_PREFIX=/usr/share/tesseract-ocr/5/tessdata
 COPY requirements.txt .
 RUN pip install --upgrade pip && pip install -r requirements.txt
 
+# Small supplementary alphabet model for source-backed author-grid OCR.
+RUN DEBIAN_FRONTEND=noninteractive apt-get update \
+    && apt-get install -y --no-install-recommends tesseract-ocr-pol \
+    && rm -rf /var/lib/apt/lists/*
+
 COPY . .
 RUN mkdir -p /app/data/uploads /app/data/parsed
 
