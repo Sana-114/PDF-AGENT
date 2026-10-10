@@ -13,7 +13,14 @@ from app.schemas.agent import (
     AskRequest,
     AskResponse,
 )
+from app.services.answer_completeness import (
+    contract_kind,
+    contract_prompt,
+    current_question,
+    missing_fields,
+)
 from app.services.grounded_text import checked_claims, render_checked_claims
+from app.services.table_comparison import table_bleu_claims
 
 
 class ResearchAgent:
@@ -34,6 +41,10 @@ class ResearchAgent:
     async def ask(self, request: AskRequest, *, diversify_documents: bool = False) -> AskResponse:
         trace: list[AgentTraceStep] = []
         started = perf_counter()
+        diversify_documents = diversify_documents or bool(
+            request.document_ids and len(request.document_ids) > 1
+            and contract_kind(request.question)
+        )
         if diversify_documents and request.document_ids:
             pools = []
             for document_id in request.document_ids:
@@ -101,7 +112,7 @@ class ResearchAgent:
         used_provider = self.provider
         try:
             generated = await self.provider.generate_grounded_answer(
-                request.question, strong_evidence
+                contract_prompt(request.question), strong_evidence
             )
         except (LLMConfigurationError, LLMResponseError) as exc:
             fallback = ExtractiveProvider()
@@ -110,7 +121,8 @@ class ResearchAgent:
             generation_status = "fallback"
             generation_summary = f"模型调用不可用，已切换抽取式回答：{exc}"
 
-        claims, rejected = checked_claims(generated.claims, strong_evidence)
+        table_claims = table_bleu_claims(current_question(request.question), strong_evidence)
+        claims, rejected = checked_claims([*generated.claims, *table_claims], strong_evidence)
         if rejected:
             generation_summary += f" 已移除 {rejected} 条无有效引用或含无依据数值的声明。"
         trace.append(
@@ -121,11 +133,32 @@ class ResearchAgent:
                 duration_ms=_elapsed_ms(generation_started),
             )
         )
+        if table_claims:
+            trace.append(AgentTraceStep(
+                skill="calculate_table_comparison", status="ok",
+                summary="同一原文表格、同一 BLEU 任务的模型行与参照行确定性比较；差值标为推导。",
+                duration_ms=0,
+            ))
+        missing = missing_fields(request.question, claims, strong_evidence,
+                                 bleu_proof_published=bool(table_claims) and all(
+                                     any(claim.text == derived.text for claim in claims)
+                                     for derived in table_claims
+                                 ))
+        if contract_kind(request.question):
+            trace.append(AgentTraceStep(
+                skill="audit_answer_completeness", status="incomplete" if missing else "ok",
+                summary=("尚未完整回答：" + "；".join(missing)) if missing else
+                "请求字段通过来源及完整性规则检查；不等于独立科学审稿。",
+                duration_ms=0,
+            ))
+        answer = render_checked_claims(claims)
+        if missing and claims:
+            answer += "\n\n尚未完整回答：" + "；".join(missing) + "。以上仅为有据的部分结果。"
         return AskResponse(
-            answer=render_checked_claims(claims),
+            answer=answer,
             claims=claims,
             evidence=strong_evidence,
-            insufficient_evidence=not claims,
+            insufficient_evidence=not claims or bool(missing),
             provider=used_provider.name,
             model=used_provider.model,
             trace=trace,

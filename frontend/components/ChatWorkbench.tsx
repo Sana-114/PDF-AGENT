@@ -318,7 +318,11 @@ function ChatMessage({
       <div className="chat-bubble">
         {message.role === "assistant" && (
           <small>
-            {message.model || message.provider || "文献检索"} · {message.insufficient_evidence ? "证据不足" : "已核对原文"}
+            {message.model || message.provider || "文献检索"} · {
+              message.trace.some((step) => step.skill === "audit_answer_completeness"
+                && step.status === "incomplete") ? "部分回答" :
+                message.insufficient_evidence ? "证据不足" : "附原文引用"
+            }
           </small>
         )}
         <p>{message.content}</p>
