@@ -8,6 +8,7 @@ from sqlalchemy.orm import Session
 from app.models.chunk import DocumentChunk
 from app.models.document import Document, DocumentStatus
 from app.parsers.layout import rows_to_markdown
+from app.services.author_evidence import author_evidence_nodes
 from app.services.storage import storage
 
 
@@ -77,6 +78,8 @@ def build_chunk_drafts(parsed: dict[str, Any], target_chars: int = 1200) -> list
         flush(page_number, current_section, texts, block_ids, boxes)
 
     _append_structured_drafts(parsed, drafts, chunk_index)
+    for node in author_evidence_nodes(parsed):
+        drafts.append(ChunkDraft(chunk_index=len(drafts), **node))
     return drafts
 
 
@@ -241,6 +244,26 @@ def ensure_document_chunks(session: Session, document_ids: list[str] | None = No
             )
         )
         if count and not _needs_structured_backfill(session, document.id, parsed):
+            # Append the new author evidence without invalidating existing chunk
+            # IDs (and their vector payloads). Vector backfill is explicitly separate.
+            author_nodes = author_evidence_nodes(parsed)
+            existing_ids = {value for row in session.scalars(
+                select(DocumentChunk.block_ids_json).where(DocumentChunk.document_id == document.id)
+            ).all() for value in json.loads(row)}
+            next_index = session.scalar(select(func.max(DocumentChunk.chunk_index)).where(
+                DocumentChunk.document_id == document.id
+            )) + 1
+            for node in author_nodes:
+                if node["block_ids"][0] in existing_ids:
+                    continue
+                session.add(DocumentChunk(
+                    document_id=document.id, chunk_index=next_index,
+                    page_number=node["page_number"], block_ids_json=json.dumps(node["block_ids"]),
+                    bbox_json=json.dumps(node["bbox"]), section=node["section"], text=node["text"],
+                    char_count=len(node["text"]),
+                ))
+                next_index += 1
+                created += 1
             continue
         created += replace_document_chunks(session, document.id, parsed)
     if created:

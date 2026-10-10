@@ -11,6 +11,7 @@ from app.models.chunk import DocumentChunk
 from app.models.document import Document
 from app.rerankers.base import Reranker
 from app.schemas.agent import EvidenceAnchor
+from app.services.author_evidence import AUTHOR_QUERY, AUTHOR_SECTION
 from app.services.chunking import ensure_document_chunks
 from app.services.text_features import infer_source_type, tokenize
 
@@ -80,12 +81,14 @@ class LexicalRetriever:
         ]
         intents = _query_source_intents(question)
         raw_scores = []
-        for terms, source_type in zip(documents, source_types, strict=True):
+        for terms, source_type, row in zip(documents, source_types, rows, strict=True):
             score = _bm25_score(
                 query_terms, terms, document_frequency, len(documents), average_length
             )
             if source_type in intents:
                 score *= 1.6
+            if AUTHOR_QUERY.search(question) and row.DocumentChunk.section == AUTHOR_SECTION:
+                score *= 4
             raw_scores.append(score)
         ranked = sorted(
             (
