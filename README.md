@@ -642,11 +642,13 @@ Backend、Worker 与 Beat 的镜像内代码运行、健康检查、开发 Overr
 
 第 82 阶段同步 [技术内容核对版](docs/competition-technical-report.md)、[带真实截图的技术 PDF](output/pdf/PaperPilot-technical-report.pdf)、[录制脚本](docs/demo-video-script.md) 和 [本地录制操作卡](docs/demo-recording-quickstart.md)。最终 PDF 为 14 页，已全页渲染检查，哈希与范围见 [材料同步验收](docs/submission-materials-acceptance-2026-10-09.md)。旧初稿保留为历史材料，完整 MP4 尚未录制。本机端口为 `http://localhost:3300/`（原 3200 被 Windows 保留）；其他机器以 `.env` 配置为准。公网配置不变，未宣称已上线。`main` 仍为第 67-70 阶段，最新版位于累积阶段分支。
 
-技术 PDF 可复现构建（安装 `requirements-docs.txt`）：
-
 第 83 阶段补齐单篇问答／综述的正文发布校验、抽取式降级标记和阅读器翻译保留门禁；296 项后端、26 项前端测试及类型检查通过，尚不等于新增真实模型验收。见 [生成与翻译门禁验收](docs/generation-safeguards-acceptance-2026-10-10.md)。
 
 第 84 阶段为综述与写作新增明确文献选择，空范围不允许生成，避免默认外发全库；302 项后端、29 项前端测试及真实浏览器零生成调用检查通过。范围与复现见 [生成文献范围验收](docs/generation-scope-acceptance-2026-10-10.md)。
+
+第 85 阶段在授权的公开语料及合成文本范围内完成真实综述、修复后的双论文写作框架、摘要翻译和 Markdown 下载验收；首次写作失败报告保留，三个类型分别通过，不宣称多轮稳定性。304 项后端测试通过，详见 [真实生成小样本验收](docs/real-generation-acceptance-2026-10-10.md)。
+
+技术 PDF 可复现构建（安装 `requirements-docs.txt`；下面是第 82 阶段快照）：
 
 ```powershell
 python scripts/build_technical_report.py --source docs/competition-technical-report.md --output output/pdf/PaperPilot-technical-report.pdf --release --revision 8b888cf

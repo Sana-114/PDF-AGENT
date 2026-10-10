@@ -31,18 +31,46 @@ class ResearchAgent:
         self.registry = registry
         self.provider = provider or get_llm_provider()
 
-    async def ask(self, request: AskRequest) -> AskResponse:
+    async def ask(self, request: AskRequest, *, diversify_documents: bool = False) -> AskResponse:
         trace: list[AgentTraceStep] = []
         started = perf_counter()
-        evidence = await self.registry.execute(
-            "search_evidence",
-            {
-                "question": request.retrieval_query or request.question,
-                "document_ids": request.document_ids,
-                "top_k": request.top_k,
-            },
-            SkillContext(db=self.session),
-        )
+        if diversify_documents and request.document_ids:
+            pools = []
+            for document_id in request.document_ids:
+                candidates = await self.registry.execute(
+                    "search_evidence",
+                    {
+                        "question": request.retrieval_query or request.question,
+                        "document_ids": [document_id],
+                        "top_k": 20,
+                    },
+                    SkillContext(db=self.session),
+                )
+                pools.append(
+                    [
+                        item
+                        for item in candidates
+                        if item.document_id == document_id and item.source_type != "reference"
+                    ]
+                )
+            evidence = []
+            for rank in range(20):
+                for pool in pools:
+                    if rank < len(pool) and len(evidence) < request.top_k:
+                        item = pool[rank].model_copy(
+                            update={"evidence_id": f"E{len(evidence) + 1}"}
+                        )
+                        evidence.append(item)
+        else:
+            evidence = await self.registry.execute(
+                "search_evidence",
+                {
+                    "question": request.retrieval_query or request.question,
+                    "document_ids": request.document_ids,
+                    "top_k": request.top_k,
+                },
+                SkillContext(db=self.session),
+            )
         trace.append(
             AgentTraceStep(
                 skill="search_evidence",

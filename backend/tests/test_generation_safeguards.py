@@ -92,6 +92,40 @@ class EchoTranslator:
 
 
 @pytest.mark.asyncio
+async def test_balanced_writing_retrieval_keeps_each_paper_and_excludes_references():
+    queries = []
+
+    class Registry:
+        async def execute(self, name, args, context):
+            document_id = args["document_ids"][0]
+            queries.append(document_id)
+            return [
+                anchor().model_copy(
+                    update={"document_id": document_id, "source_type": "reference"}
+                ),
+                anchor().model_copy(update={"document_id": document_id}),
+            ]
+
+    class Provider:
+        name = "test"
+        model = None
+
+        async def generate_grounded_answer(self, question, evidence):
+            assert [item.document_id for item in evidence] == ["first", "second"]
+            assert [item.evidence_id for item in evidence] == ["E1", "E2"]
+            return GeneratedAnswer(
+                answer="unchecked", claims=[GeneratedClaim(text="8 GPUs", evidence_ids=["E1"])]
+            )
+
+    result = await ResearchAgent(None, registry=Registry(), provider=Provider()).ask(
+        AskRequest(question="Architecture?", document_ids=["first", "second"]),
+        diversify_documents=True,
+    )
+    assert queries == ["first", "second"]
+    assert all(item.source_type != "reference" for item in result.evidence)
+
+
+@pytest.mark.asyncio
 async def test_reader_translation_preserves_display_math_code_citations_and_numbers():
     text = "Method $$y = x^2\n+ 1$$ uses `beta_2=0.98`, 91.5% [11] and https://example.org/paper."
     result = await translate_protected_segments(EchoTranslator(), [("block-1", text)], "en", "zh")

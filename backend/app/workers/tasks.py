@@ -1,4 +1,5 @@
 import asyncio
+import json
 import logging
 import time
 from pathlib import Path
@@ -106,6 +107,7 @@ def parse_document(document_id: str) -> dict[str, str]:
             )
 
             document.title = parsed.title
+            document.authors_json = json.dumps(parsed.authors, ensure_ascii=False)
             document.page_count = len(parsed.pages)
             document.arxiv_id = arxiv_id
             document.arxiv_version = arxiv_version

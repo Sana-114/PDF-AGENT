@@ -16,6 +16,7 @@ from app.schemas.writing import (
     WritingOutlineRead,
     WritingSectionRead,
 )
+from app.services.document_content import read_parsed_document
 
 YEAR = re.compile(r"(?:19|20)\d{2}")
 
@@ -105,10 +106,13 @@ def _reference_records(
             continue
         source = sources.get(document_id)
         metadata = _source_metadata(source)
+        parsed = read_parsed_document(document.id) or {}
         title = document.title or document.original_filename
-        authors = _json_list(document.authors_json) or [
-            str(item) for item in metadata.get("authors", []) if str(item).strip()
-        ]
+        authors = (
+            _json_list(document.authors_json)
+            or [str(item) for item in metadata.get("authors", []) if str(item).strip()]
+            or [str(item) for item in parsed.get("authors", []) if str(item).strip()]
+        )
         publication_year = _year(document, metadata)
         venue = str(metadata.get("venue") or "").strip() or None
         doi = (source.doi if source else None) or str(metadata.get("doi") or "").strip() or None
@@ -168,9 +172,7 @@ def _section_content(
     evidence_by_document: dict[str, list[EvidenceAnchor]] = defaultdict(list)
     for item in evidence:
         evidence_by_document[item.document_id].append(item)
-    supported_claims = [
-        f"- {item.text} [{' '.join(item.evidence_ids)}]" for item in claims[:6]
-    ]
+    supported_claims = [f"- {item.text} [{' '.join(item.evidence_ids)}]" for item in claims[:6]]
     if language == "en":
         abstract_lines = [
             f"This proposed study investigates: {idea}",
@@ -203,12 +205,8 @@ def _section_content(
     for reference in references:
         items = evidence_by_document[reference.document_id][:2]
         related_evidence_ids.extend(item.evidence_id for item in items)
-        snippets = " ".join(
-            f"{item.quote[:360]} [{item.evidence_id}]" for item in items
-        )
-        related_lines.append(
-            f"- **[{reference.citation_key}] {reference.title}**：{snippets}"
-        )
+        snippets = " ".join(f"{item.quote[:360]} [{item.evidence_id}]" for item in items)
+        related_lines.append(f"- **[{reference.citation_key}] {reference.title}**：{snippets}")
     if not related_lines:
         related_lines.append(
             "- 当前文献库没有检索到可引用证据，请先补充相关论文。"
@@ -224,9 +222,7 @@ def _section_content(
             title=titles[0],
             content_markdown="\n\n".join(abstract_lines),
             evidence_ids=list(
-                dict.fromkeys(
-                    item for claim in claims[:2] for item in claim.evidence_ids
-                )
+                dict.fromkeys(item for claim in claims[:2] for item in claim.evidence_ids)
             ),
         ),
         WritingSectionRead(
@@ -262,11 +258,13 @@ class WritingOutlineService:
             question=(
                 f"围绕以下研究 idea 提取可用于论文框架的已有事实、研究缺口和相关工作：{idea}。"
                 f"请使用{language_instruction}，只依据证据，不要生成或猜测参考文献。"
+                "分别提取每篇所选论文相关的架构或方法事实，不把参考文献条目当作本文贡献。"
             ),
             document_ids=[item.id for item in documents],
+            retrieval_query=idea,
             top_k=top_k,
         )
-        grounded = await self.agent.ask(request)
+        grounded = await self.agent.ask(request, diversify_documents=True)
         references = _reference_records(self.session, grounded.evidence)
         sections = _section_content(
             idea,
@@ -277,6 +275,17 @@ class WritingOutlineService:
         )
         proposed_title = idea[:120]
         warnings: list[str] = []
+        claimed_ids = {item for claim in grounded.claims for item in claim.evidence_ids}
+        covered_documents = {
+            item.document_id for item in grounded.evidence if item.evidence_id in claimed_ids
+        }
+        uncovered = [
+            item.title or item.original_filename
+            for item in documents
+            if item.id not in covered_documents
+        ]
+        if uncovered:
+            warnings.append("以下文献尚无模型声明支持，请补充或审校：" + "、".join(uncovered))
         if grounded.provider == "extractive":
             warnings.append("当前框架使用抽取式原文整理，不是成功的生成式模型输出。")
         if grounded.insufficient_evidence:
@@ -287,9 +296,7 @@ class WritingOutlineService:
             if not item.authors or item.publication_year is None
         ]
         if incomplete:
-            warnings.append(
-                f"{', '.join(incomplete)} 的作者或年份不完整，引用中仅保留已核验字段。"
-            )
+            warnings.append(f"{', '.join(incomplete)} 的作者或年份不完整，引用中仅保留已核验字段。")
         return WritingOutlineRead(
             proposed_title=proposed_title,
             idea=idea,

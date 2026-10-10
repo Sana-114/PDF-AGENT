@@ -149,6 +149,8 @@ try {
     const [payload, result] = await submit("/writing/outline", writing.getByRole("button", { name: "整理论文框架", exact: true }));
     const evidence = checkGrounding(payload);
     assert.deepEqual(payload.sections.map((item) => item.title), ["Abstract", "Introduction", "Related Work"]);
+    assert.deepEqual(new Set(payload.claims.flatMap((claim) => claim.evidence_ids.map((id) => evidence.get(id).document_id))), new Set(allowedIds));
+    assert.ok(payload.evidence.every((item) => item.source_type !== "reference"));
     assert.ok(payload.references.length);
     for (const reference of payload.references) {
       const document = docs.find((item) => item.id === reference.document_id);

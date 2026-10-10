@@ -70,8 +70,10 @@ class _FakeAgent:
     def __init__(self, answer: AskResponse) -> None:
         self.answer = answer
 
-    async def ask(self, request):
+    async def ask(self, request, **kwargs):
         assert "不要生成或猜测参考文献" in request.question
+        assert kwargs["diversify_documents"] is True
+        assert request.retrieval_query
         return self.answer
 
 
@@ -140,3 +142,25 @@ def test_outline_marks_missing_evidence_without_fabricating_references() -> None
     assert result.references == []
     assert result.claims == []
     assert "No citable evidence" in result.sections[2].content_markdown
+
+
+def test_outline_recovers_legacy_authors_from_persisted_pdf_metadata(monkeypatch):
+    from app.services import writing_outline as module
+
+    engine = create_engine("sqlite://")
+    Base.metadata.create_all(engine)
+    document = _document("legacy", "A Parsed Public Paper")
+    document.authors_json = None
+    monkeypatch.setattr(
+        module, "read_parsed_document", lambda _: {"authors": ["Verified PDF Author"]}
+    )
+    with Session(engine) as session:
+        session.add(document)
+        session.commit()
+        result = asyncio.run(
+            WritingOutlineService(session, agent=_FakeAgent(_answer(document))).generate(
+                "An evidence grounded idea", [document]
+            )
+        )
+    assert result.references[0].authors == ["Verified PDF Author"]
+    assert "Verified PDF Author" in result.references[0].formatted_citation
