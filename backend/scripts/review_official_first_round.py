@@ -55,7 +55,13 @@ def review(report_path: Path, dataset_path: Path, policy_path: Path, output: Pat
     if dataset_sha != source["dataset_sha256"]:
         raise ValueError("Original dataset SHA differs from the preserved generation run")
     originals = {item["case_id"]: item for item in source["cases"]}
-    expected = {item["case_id"] for item in dataset["cases"]}
+    all_cases = {item["case_id"]: item for item in dataset["cases"]}
+    selected_ids = source.get("selected_case_ids", list(all_cases))
+    if not selected_ids or len(set(selected_ids)) != len(selected_ids) or any(
+        case_id not in all_cases for case_id in selected_ids
+    ):
+        raise ValueError("Invalid declared selection of original questions")
+    expected = set(selected_ids)
     if len(originals) != len(source["cases"]) or set(originals) != expected:
         raise ValueError("Original results must contain each dataset case exactly once")
     inspections = policy["source_inspection"]["cases"]
@@ -63,7 +69,8 @@ def review(report_path: Path, dataset_path: Path, policy_path: Path, output: Pat
         raise ValueError("Source inspection must explicitly cover every case")
     document_ids = {item["filename"]: item["id"] for item in source["documents"]}
     results = []
-    for case in dataset["cases"]:
+    for case_id in selected_ids:
+        case = all_cases[case_id]
         original = originals[case["case_id"]]
         failures = [item for item in original["failures"]
                     if not item.startswith("missing_or_wrong_source:")]
@@ -98,6 +105,8 @@ def review(report_path: Path, dataset_path: Path, policy_path: Path, output: Pat
         "review_policy_sha256": hashlib.sha256(policy_bytes).hexdigest(),
         "review_script_sha256": hashlib.sha256(Path(__file__).read_bytes()).hexdigest(),
         "policy_id": policy["policy_id"],
+        "selected_case_ids": selected_ids,
+        "original_dataset_case_count": len(dataset["cases"]),
         "inspection_reviewer": policy["source_inspection"]["reviewer"],
         "inspection_scope": policy["source_inspection"]["scope"],
         "summary": {

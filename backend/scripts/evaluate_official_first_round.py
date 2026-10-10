@@ -55,13 +55,31 @@ def write_report(path: Path, report: dict) -> None:
     path.write_text(json.dumps(report, ensure_ascii=False, indent=2), encoding="utf-8")
 
 
+def select_cases(dataset: dict, case_ids: list[str] | None, max_model_calls: int) -> list[dict]:
+    """Select unchanged original questions before indexing or any cloud call."""
+    originals = dataset["cases"]
+    lookup = {case["case_id"]: case for case in originals}
+    if len(lookup) != len(originals):
+        raise ValueError("Original case IDs must be unique")
+    if case_ids is None:
+        selected = originals
+    else:
+        if not case_ids or len(set(case_ids)) != len(case_ids):
+            raise ValueError("Case selection must be nonempty and unique")
+        if any(case_id not in lookup for case_id in case_ids):
+            raise ValueError("Case selection contains unknown original questions")
+        selected = [lookup[case_id] for case_id in case_ids]
+    if not 1 <= max_model_calls <= 9 or len(selected) > max_model_calls:
+        raise ValueError("Selected questions exceed the authorized one-attempt model budget")
+    return selected
+
+
 async def run(args) -> dict:
     if not args.allow_cloud:
         raise ValueError("--allow-cloud requires explicit user authorization")
     dataset_bytes = args.dataset.read_bytes()
     dataset = json.loads(dataset_bytes)
-    if len(dataset["cases"]) > args.max_model_calls or args.max_model_calls > 9:
-        raise ValueError("At most nine one-attempt questions; reserve the tenth for UI translation")
+    cases = select_cases(dataset, args.case_ids, args.max_model_calls)
     if args.output.exists():
         raise ValueError("Existing reports cannot be overwritten")
     args.output.parent.mkdir(parents=True, exist_ok=True)
@@ -91,6 +109,8 @@ async def run(args) -> dict:
         "dataset_sha256": hashlib.sha256(dataset_bytes).hexdigest(),
         "model": delegate.model, "provider": delegate.name,
         "max_model_calls": args.max_model_calls, "model_calls": 0,
+        "selected_case_ids": [case["case_id"] for case in cases],
+        "original_dataset_case_count": len(dataset["cases"]),
         "automatic_retries": False, "production_library_modified": False,
         "temporary_vector_collection": collection, "documents": [], "cases": [],
     }
@@ -100,6 +120,7 @@ async def run(args) -> dict:
     with Session(engine, expire_on_commit=False) as session:
         ids = {}
         index = get_vector_index()
+        report["temporary_vector_collection_actual"] = index.collection_name
         for entry in dataset["files"]:
             name = entry["filename"]
             print(f"Parsing and indexing {name}", flush=True)
@@ -125,7 +146,7 @@ async def run(args) -> dict:
             report["documents"].append({**entry, "id": doc.id, "title": parsed.title,
                                         "pages": doc.page_count, "chunks": chunks})
             write_report(args.output, report)
-        for case in dataset["cases"]:
+        for case in cases:
             if report["model_calls"] >= args.max_model_calls:
                 raise ValueError("Model call budget exhausted")
             print(f"Running one attempt: {case['case_id']}", flush=True)
@@ -196,6 +217,7 @@ if __name__ == "__main__":
     parser.add_argument("--dataset", required=True, type=Path)
     parser.add_argument("--output", required=True, type=Path)
     parser.add_argument("--max-model-calls", type=int, default=9)
+    parser.add_argument("--case-ids", nargs="+", help="Unchanged original case IDs to retest")
     parser.add_argument("--allow-cloud", action="store_true")
     arguments = parser.parse_args()
     outcome = asyncio.run(run(arguments))

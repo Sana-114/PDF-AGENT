@@ -1,0 +1,54 @@
+{
+  "stage": 94,
+  "date": "2026-10-10",
+  "branch": "codex/stage94-official-failed-qa-retest",
+  "runtime_code_stage": 93,
+  "evaluation_kind": "official_original_questions_production_ask_harness",
+  "run_started_at": "2026-10-10T12:13:26.929103+08:00",
+  "provider": "deepseek",
+  "model": "deepseek-flash",
+  "authorization": {
+    "max_model_calls": 5,
+    "actual_model_calls": 5,
+    "attempts_per_question": 1,
+    "automatic_retries": false,
+    "offline_review_model_calls": 0,
+    "private_papers_sent": false,
+    "production_library_modified": false
+  },
+  "original_dataset_case_count": 9,
+  "selected_case_ids": ["sixth-author", "bleu-improvement", "bert-inheritance", "gpt-parameter-evolution", "context-evolution"],
+  "summary": {
+    "total": 5,
+    "original_machine_passed": 3,
+    "reviewed_machine_passed": 3,
+    "accepted": 2,
+    "status": "failed",
+    "is_full_nine_question_rerun": false,
+    "historical_stage88_accepted": "4/9",
+    "historical_stage88_unchanged": true
+  },
+  "temporary_vector_collection_actual": "official_first_round_20f8c2b7840b456fac6b3b044d7375c4_semantic_d790e73745_1024",
+  "index": {"parsed_chunks": 1085, "points_count": 1085, "indexed_vectors_count": 1085, "status": "green", "collection_retained_for_diagnostics": true},
+  "evidence": {"total": 74, "hybrid": 74, "reranked": 74, "machine_anchor_failures": 0},
+  "cases": [
+    {"case_id": "sixth-author", "model_calls": 1, "machine_passed": true, "source_inspection_passed": true, "accepted": true, "evidence_count": 5, "note": "Paper-listed affiliation; current employment not verified."},
+    {"case_id": "bleu-improvement", "model_calls": 1, "machine_passed": true, "source_inspection_passed": true, "accepted": true, "evidence_count": 15, "note": "Exact 2.04 supplied by evidence-backed deterministic subtraction, not solely the model."},
+    {"case_id": "bert-inheritance", "model_calls": 1, "machine_passed": false, "source_inspection_passed": true, "accepted": false, "evidence_count": 18, "reason": "Two separately dual-source relational claims are rejected by an overstrict same-claim completeness rule; production incomplete status preserved."},
+    {"case_id": "gpt-parameter-evolution", "model_calls": 1, "machine_passed": true, "source_inspection_passed": false, "accepted": false, "evidence_count": 18, "reason": "Additional claim reverses second-smallest to second-largest; another contradicts the actual cited paper attribution."},
+    {"case_id": "context-evolution", "model_calls": 1, "machine_passed": false, "source_inspection_passed": false, "accepted": false, "evidence_count": 18, "reason": "GPT-3 context paragraph on physical page 8 or 43 absent from final evidence; safe incomplete response retained."}
+  ],
+  "tests": {"backend_offline_passed": 373, "ruff": "passed", "frontend_rerun_this_stage": false, "frontend_historical_stage93_passed": 29},
+  "runtime_health": {"backend": "healthy", "worker": "healthy", "frontend": "healthy", "bge_embedding": "healthy", "bge_reranker": "healthy", "backend_http_status": 200, "frontend_http_status": 200, "frontend_url": "http://localhost:3300/"},
+  "sha256": {
+    "backend/evals/official_first_round.json": "ca541357c2fa1ee545f90ff8d334874104e466eb786b403f8fb80cfb06470cbc",
+    "backend/tmp/stage88-official/first-round.json": "a6af3ee9bc5e36371e0d5dad76ce08daf640aa702f556872c8a966355ee89049",
+    "backend/tmp/stage88-official/first-round-reviewed.json": "c8003f6e2dd2606230f70ccda778163e3ac268e7fa7721c470ffb48eb0a4b7bb",
+    "backend/tmp/stage94-official/targeted-retest.json": "2809e5a7c904a9b69fc054d61b85fd7d70e00778376001d1495ecd7de6ca0679",
+    "backend/tmp/stage94-official/targeted-reviewed.json": "c61e80d1f82be1e22b566a12f60d2c1981d034e00a453dd3ee683cdb8527900b",
+    "backend/evals/official_failed_retest_review.json": "7810e788d442001859bd2be7612c54c3a4282bd426d81ff233854b21d3f35a09",
+    "backend/scripts/review_official_first_round.py": "57d78237ce565e58f6e050485ae76e275ef4ac52c8188aabbc9db18d4d2bede9",
+    "backend/scripts/evaluate_official_first_round.py": "19f124564cc7d73f0dc7334f6b8612ec430882bdff89c64cb9100dd040f98fec"
+  },
+  "limits": ["Fresh five-question subset only, no pooled nine-question score.", "Source review by coding assistant, not independent expert peer review.", "Raw answers and PDFs remain ignored local artifacts.", "No production functional fix or extra model call after this run.", "Technical PDF, video and public deployment are not declared finally accepted."]
+}

@@ -1,0 +1,45 @@
+{
+  "policy_id": "official-failed-five-retest-source-review-stage94",
+  "notes": "Fresh inspection of the five new one-attempt answers only. Preserve the original nine-question dataset, first-round reports and new raw responses. Machine fact matches do not validate every additional claim. Retain production no_successful_model_answer failures even when source inspection finds the factual comparison adequate.",
+  "fact_overrides": {
+    "gpt-parameter-evolution": {
+      "gpt1-from-gpt2-baseline-table": {"claim_contains_any_groups": [["GPT-1", "GPT1", "原始 GPT", "原始GPT"]]},
+      "gpt2-largest": {"claim_contains_any_groups": [["GPT-2", "GPT2"]]},
+      "gpt3-largest": {"claim_contains_any_groups": [["GPT-3", "GPT3"]]}
+    },
+    "context-evolution": {
+      "gpt1-context-from-gpt2-report": {"claim_contains_any_groups": [["GPT-1", "GPT1", "原始 GPT", "原始GPT"]]},
+      "gpt2-context": {"claim_contains_any_groups": [["GPT-2", "GPT2"]]},
+      "gpt3-context": {"claim_contains_any_groups": [["GPT-3", "GPT3"]]}
+    },
+    "bleu-improvement": {
+      "difference-derived-not-source-quote": {"source_text_contains_all": ["28.4", "26.36"]}
+    }
+  },
+  "source_inspection": {
+    "reviewer": "code_assistant_fresh_source_and_published_answer_inspection",
+    "scope": "Stage94 five-question subset. Check published claims against their cited excerpts and physical PDF pages, including author footnotes, table headings and adjacent context. Not independent expert peer review or a nine-question rerun.",
+    "cases": {
+      "sixth-author": {
+        "passed": true,
+        "reason": "The complete ordered author evidence answers Aidan N. Gomez and University of Toronto, matching Transformer v1 physical page 1. This is the paper-listed affiliation, not verified current employment. The page also has a work-performed-at-Google-Brain footnote; the answer does not publish a conflicting employment assertion."
+      },
+      "bleu-improvement": {
+        "passed": true,
+        "reason": "Published claims include Transformer big EN-DE 28.4, prior ConvS2S Ensemble 26.36, and the explicitly derived difference 2.04. All operands are in Table 2 on Transformer v1 physical page 8. The exact difference is supplied by the deterministic evidence tool after the model's Unicode-minus derivation is filtered; mixed English/Chinese and redundancy remain presentation issues."
+      },
+      "bert-inheritance": {
+        "passed": true,
+        "reason": "The new answer gives an inheritance claim citing BERT page 3 and Transformer v1 page 2, and a separate removal claim citing both sources plus BERT page 13 and Transformer page 5. The encoder-only versus encoder-decoder conclusion is explicitly qualified as inference. The factual pair is source-supported, unlike the first-round answer. Production completeness still requires inheritance and removal in one claim, so it publishes an incomplete flag; retain that failed end-to-end outcome rather than silently override it."
+      },
+      "gpt-parameter-evolution": {
+        "passed": false,
+        "reason": "The required 117M, 1542M and 175B/1750 yi values survive publication, with GPT-1 explicitly inferred from GPT-2. However, an additional published claim changes GPT-2 page 4's second smallest model to second largest. Another attributes the GPT-3-versus-GPT-2 scale comparison to the GPT-2 paper before contradicting itself in parentheses; its actual E9 source is GPT-3 page 31. Correct numeric matches cannot excuse these semantic and source-attribution errors."
+      },
+      "context-evolution": {
+        "passed": false,
+        "reason": "The answer distinguishes GPT-1's training sequences from a direct maximum-window declaration and cites GPT-2 page 4's 512-to-1024 context change. It explicitly declines GPT-3's window because its selected evidence lacks the relevant paragraph. GPT-3 physical page 8 below Table 2.1 and appendix page 43 both state n_ctx=2048, but neither passage reaches the final evidence set. Table 2.1's 2048 is a d_model cell, not proof of window size. This is a missing retrieval fact and safe incomplete answer, not a verified three-model conclusion."
+      }
+    }
+  }
+}

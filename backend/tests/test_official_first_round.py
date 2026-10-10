@@ -5,7 +5,7 @@ from types import SimpleNamespace
 import pytest
 
 from app.llm.base import GeneratedAnswer, LLMResponseError
-from scripts.evaluate_official_first_round import OneAttemptProvider
+from scripts.evaluate_official_first_round import OneAttemptProvider, select_cases
 from scripts.review_official_first_round import check_reviewed_fact, review
 
 
@@ -125,3 +125,40 @@ def test_offline_review_rejects_changed_original_gold(tmp_path):
     with pytest.raises(ValueError, match="dataset SHA differs"):
         review(report, dataset, policy, output)
     assert not output.exists()
+
+
+def test_selected_retest_preserves_original_cases_and_budget():
+    dataset = {"cases": [{"case_id": "a", "question": "original A"},
+                         {"case_id": "b", "question": "original B"}]}
+    selected = select_cases(dataset, ["b"], 1)
+    assert selected == [dataset["cases"][1]]
+    assert selected[0] is dataset["cases"][1]
+    assert len(dataset["cases"]) == 2
+    assert select_cases(dataset, None, 2) == dataset["cases"]
+
+
+@pytest.mark.parametrize("case_ids,budget", [(["a", "b"], 1), (["a"], 0),
+                                          (["a"], 10), (["unknown"], 1),
+                                          (["a", "a"], 2), ([], 1)])
+def test_retest_rejects_invalid_selection_before_cloud_call(case_ids, budget):
+    with pytest.raises(ValueError):
+        select_cases({"cases": [{"case_id": "a"}, {"case_id": "b"}]}, case_ids, budget)
+
+
+def test_offline_review_does_not_inflate_subset_into_whole_dataset(tmp_path):
+    dataset = tmp_path / "dataset.json"
+    dataset.write_text(json.dumps({"cases": [{"case_id": "a"}, {"case_id": "b"}]}))
+    report = tmp_path / "report.json"
+    dataset_sha = hashlib.sha256(dataset.read_bytes()).hexdigest()
+    report.write_text(json.dumps({"dataset_sha256": dataset_sha,
+                                  "selected_case_ids": ["b"], "model_calls": 1,
+                                  "documents": [], "cases": [{"case_id": "b", "failures": []}]}))
+    policy = tmp_path / "policy.json"
+    policy.write_text(json.dumps({"policy_id": "subset", "fact_overrides": {},
+                                  "source_inspection": {"reviewer": "test", "scope": "subset",
+                                  "cases": {"b": {"passed": False, "reason": "no response"}}}}))
+    outcome = review(report, dataset, policy, tmp_path / "review.json")
+    assert outcome["original_dataset_case_count"] == 2
+    assert outcome["summary"]["total"] == 1
+    assert outcome["summary"]["accepted"] == 0
+    assert outcome["selected_case_ids"] == ["b"]
