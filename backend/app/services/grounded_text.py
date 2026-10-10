@@ -2,28 +2,77 @@
 
 import re
 from collections.abc import Sequence
+from decimal import Decimal, InvalidOperation, localcontext
 
 from app.llm.base import GeneratedClaim
 from app.schemas.agent import AnswerClaim, EvidenceAnchor
 
 NUMERIC_FACT_PATTERN = re.compile(
-    r"(?<![\w-])\d+(?:[.,]\d+)*(?:\s?(?:%|[KMB]|thousand|million|billion))?(?![\w])",
+    r"(?<![A-Za-z0-9_.-])[+-]?\d+(?:[.,]\d+)*(?:[eE][+-]?\d+)?"
+    r"(?:\s?(?:%|thousand|million|billion|万亿|亿|万|[KMB]))?"
+    r"(?![A-Za-z0-9_]|\.\d)",
     re.IGNORECASE,
 )
 INLINE_ANCHOR = re.compile(r"\[(?:[ER]\d+)(?:[\s,]+[ER]\d+)*\]", re.I)
+SCALES = {"k": 1000, "m": 1000000, "b": 1000000000,
+          "万": 10000, "亿": 100000000, "万亿": 1000000000000}
+DIFFERENCE = re.compile(
+    r"(?<![\d.])(?P<left>\d+(?:\.\d+)?)\s*[-−]\s*"
+    r"(?P<right>\d+(?:\.\d+)?)\s*=\s*(?P<result>[+-]?\d+(?:\.\d+)?)"
+    r"(?![\d.])"
+)
+DERIVATION_CUE = re.compile(r"推导|计算|\bderived\b|\bcalculated\b", re.I)
 
 
 def normalise_fact(value: str) -> str:
     normalised = " ".join(value.casefold().replace(",", "").split())
-    return (
+    normalised = (
         normalised.replace("thousand", "k")
         .replace("million", "m")
         .replace("billion", "b")
         .replace(" ", "")
     )
+    numeric = re.fullmatch(r"([+-]?\d+(?:\.\d+)?(?:e[+-]?\d+)?)(万亿|亿|万|[kmb%])?", normalised)
+    if numeric:
+        try:
+            value = Decimal(numeric.group(1))
+            unit = numeric.group(2)
+            if len(normalised) > 80 or abs(value.adjusted()) > 30:
+                return normalised
+            with localcontext() as context:
+                context.prec = 100
+                if unit in SCALES:
+                    return "quantity:" + format((value * SCALES[unit]).normalize(), "f")
+                return format(value.normalize(), "f") + (unit or "")
+        except InvalidOperation:
+            pass
+    return normalised
+
+
+def _source_numeric_facts(text: str) -> set[str]:
+    text = re.sub(r"(?<=\d)\s*\.\s*(?=\d)", ".", text)
+    return {normalise_fact(item) for item in NUMERIC_FACT_PATTERN.findall(text)}
 
 
 def unsupported_numeric_facts(text: str, evidence: Sequence[EvidenceAnchor]) -> list[str]:
+    # Only explicit, labelled subtraction with both operands in ONE cited passage
+    # may publish a new number. Arbitrary missing numbers are still rejected.
+    derivation_errors = []
+    if DERIVATION_CUE.search(text):
+        def verify_difference(match: re.Match) -> str:
+            left, right, result = (Decimal(match.group(name))
+                                   for name in ("left", "right", "result"))
+            operands = {normalise_fact(match.group(name)) for name in ("left", "right")}
+            with localcontext() as context:
+                context.prec = max(50, len(match.group(0)) + 2)
+                if left - right == result and any(
+                    operands.issubset(_source_numeric_facts(item.quote)) for item in evidence
+                ):
+                    return ""
+            derivation_errors.append("invalid_derivation:" + match.group(0))
+            return match.group(0)
+
+        text = DIFFERENCE.sub(verify_difference, text)
     facts = list(dict.fromkeys(normalise_fact(item) for item in NUMERIC_FACT_PATTERN.findall(text)))
     source = " ".join(
         [
@@ -33,9 +82,8 @@ def unsupported_numeric_facts(text: str, evidence: Sequence[EvidenceAnchor]) -> 
         ]
     )
     # PDF extraction can split a decimal into separate glyph runs ("0 . 98").
-    source = re.sub(r"(?<=\d)\s*\.\s*(?=\d)", ".", source)
-    source_facts = {normalise_fact(item) for item in NUMERIC_FACT_PATTERN.findall(source)}
-    return [fact for fact in facts if fact not in source_facts]
+    source_facts = _source_numeric_facts(source)
+    return derivation_errors + [fact for fact in facts if fact not in source_facts]
 
 
 def checked_claims(
