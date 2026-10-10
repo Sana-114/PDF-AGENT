@@ -1,0 +1,101 @@
+{
+  "dataset_id": "organizer-original-questions-first-round-2026-10-10",
+  "files": [
+    {"filename":"1706.03762v1.pdf","origin":"official","sha256":"0a9bff1be3575cf9fe26a4a3d3a9175bc791ecec90de8b9deba4cff75d2b9476"},
+    {"filename":"N19-1423.pdf","origin":"official","sha256":"987545ffb087f1ece898142c403a516baeabeb70ce19089397fac6f7db12c3d4"},
+    {"filename":"language_understanding_paper.pdf","origin":"official","sha256":"eb81a65e0856bd38e855e1f1de6ee12e7c3eb92ae05c8270d345a475beb631d0"},
+    {"filename":"2005.14165v4.pdf","origin":"official","sha256":"97fd272f1fdfc18677462d0292f5fbf26ca86b4d1b485c2dba03269b643a0e83"},
+    {"filename":"gpt2-openai-2019.pdf","origin":"public_supplement","source":"https://cdn.openai.com/better-language-models/language-models.pdf","sha256":"d9d852e2894556e73f53cb22b7c605a9643d6f0b19bf604b429ed6192fa24f4e"}
+  ],
+  "cases": [
+    {
+      "case_id":"sixth-author","documents":["1706.03762v1.pdf"],
+      "question":"论文 Attention Is All You Need 的第 6 作者是谁，在哪个公司或机构工作？",
+      "facts":[
+        {"fact_id":"name","source_filename":"1706.03762v1.pdf","source_pages":[1],"source_text_contains_any":["Aidan N. Gomez"],"claim_contains_any":["Aidan N. Gomez"]},
+        {"fact_id":"affiliation","source_filename":"1706.03762v1.pdf","source_pages":[1],"source_text_contains_any":["University of Toronto"],"claim_contains_any":["University of Toronto","多伦多大学"]}
+      ]
+    },
+    {
+      "case_id":"adam-settings","documents":["1706.03762v1.pdf"],
+      "question":"其中 Adam 优化器的超参数 β1 和 β2 分别被设置为了多少？",
+      "facts":[
+        {"fact_id":"beta1","source_filename":"1706.03762v1.pdf","source_pages":[7],"source_text_contains_any":["0.9"],"claim_contains_any":["0.9"]},
+        {"fact_id":"beta2","source_filename":"1706.03762v1.pdf","source_pages":[7],"source_text_contains_any":["0.98"],"claim_contains_any":["0.98"]}
+      ]
+    },
+    {
+      "case_id":"base-gpus","documents":["1706.03762v1.pdf"],
+      "question":"这篇论文中提到的 Transformer 架构，在训练 Base 模型时使用了多少个 GPU？具体是什么型号？",
+      "facts":[
+        {"fact_id":"count","source_filename":"1706.03762v1.pdf","source_pages":[7],"source_text_contains_any":["8 NVIDIA P100 GPUs"],"claim_contains_any":["8","八","eight"]},
+        {"fact_id":"model","source_filename":"1706.03762v1.pdf","source_pages":[7],"source_text_contains_any":["8 NVIDIA P100 GPUs"],"claim_contains_any":["P100"]}
+      ]
+    },
+    {
+      "case_id":"bleu-improvement","documents":["1706.03762v1.pdf"],
+      "question":"Transformer (big) 模型在 English-to-German 任务上的 BLEU 分数是多少？当时的 State-of-the-art 模型是多少？提升了多少？",
+      "facts":[
+        {"fact_id":"transformer","source_filename":"1706.03762v1.pdf","source_pages":[7,8],"source_text_contains_any":["28.4"],"claim_contains_any":["28.4"]},
+        {"fact_id":"previous-best-including-ensembles","source_filename":"1706.03762v1.pdf","source_pages":[8],"source_text_contains_any":["26.36"],"claim_contains_any":["26.36"]},
+        {"fact_id":"difference-derived-not-source-quote","source_filename":"1706.03762v1.pdf","source_pages":[8],"source_text_contains_any":["26.36"],"claim_contains_any":["2.04"],"derivation":{"left":"28.4","right":"26.36","result":"2.04"}}
+      ]
+    },
+    {
+      "case_id":"layernorm-reference","documents":["1706.03762v1.pdf"],
+      "question":"请列出论文中引用的关于 Layer Normalization 的参考文献的完整作者和年份。",
+      "facts":[
+        {"fact_id":"ba","source_filename":"1706.03762v1.pdf","source_pages":[10],"source_text_contains_any":["Jimmy Lei Ba"],"claim_contains_any":["Jimmy Lei Ba"]},
+        {"fact_id":"kiros","source_filename":"1706.03762v1.pdf","source_pages":[10],"source_text_contains_any":["Jamie Ryan Kiros"],"claim_contains_any":["Jamie Ryan Kiros"]},
+        {"fact_id":"hinton","source_filename":"1706.03762v1.pdf","source_pages":[10],"source_text_contains_any":["Geoffrey E Hinton"],"claim_contains_any":["Geoffrey E Hinton","Geoffrey E. Hinton"]},
+        {"fact_id":"year","source_filename":"1706.03762v1.pdf","source_pages":[10],"source_text_contains_any":["2016"],"claim_contains_any":["2016"]}
+      ]
+    },
+    {
+      "case_id":"bert-inheritance","documents":["1706.03762v1.pdf","N19-1423.pdf"],
+      "question":"根据 Attention Is All You Need 和 BERT: Pre-training of Deep Bidirectional Transformers for Language Understanding，请对比：BERT 的架构和原始 Transformer 的 Encoder 有什么承袭关系？BERT 丢弃了原始 Transformer 的哪个部分？",
+      "facts":[
+        {"fact_id":"bert-encoder","source_filename":"N19-1423.pdf","source_pages":[3],"source_text_contains_any":["bidirectional Transformer"],"claim_contains_any":["编码器","encoder"]},
+        {"fact_id":"original-decoder","source_filename":"1706.03762v1.pdf","source_pages":[2],"source_text_contains_any":["decoder"],"claim_contains_any":["解码器","decoder"]}
+      ],
+      "cross_facts":[{
+        "fact_id":"one-claim-two-original-sources",
+        "claim_contains_any_groups":[["BERT"],["编码器","encoder"],["Transformer"]],
+        "sources":[
+          {"source_filename":"1706.03762v1.pdf","source_pages":[2],"source_text_contains_any":["encoder","Encoder"]},
+          {"source_filename":"N19-1423.pdf","source_pages":[3],"source_text_contains_any":["bidirectional Transformer"]}
+        ]
+      }],
+      "human_review_required":"Encoder-only versus encoder-decoder is an architectural inference; inspect the actual two cited passages, not only keywords."
+    },
+    {
+      "case_id":"gpt-parameter-evolution","documents":["language_understanding_paper.pdf","gpt2-openai-2019.pdf","2005.14165v4.pdf"],
+      "question":"对比 GPT-1、GPT-2 和 GPT-3 的论文，说明这些模型的参数量变化。",
+      "facts":[
+        {"fact_id":"gpt1-from-gpt2-baseline-table","source_filename":"gpt2-openai-2019.pdf","source_pages":[4],"source_text_contains_any":["117M"],"claim_contains_any":["117M","117 M","1.17亿","1.17 亿"]},
+        {"fact_id":"gpt2-largest","source_filename":"gpt2-openai-2019.pdf","source_pages":[4],"source_text_contains_any":["1542M"],"claim_contains_any":["1542M","1.542B","15.42亿","15.42 亿","1.542 billion"]},
+        {"fact_id":"gpt3-largest","source_filename":"2005.14165v4.pdf","source_pages":[5,8],"source_text_contains_any":["175B","175.0B"],"claim_contains_any":["175B","175 B","175.0B","1750亿","1750 亿"]}
+      ]
+    },
+    {
+      "case_id":"gpt2-ln-change","documents":["language_understanding_paper.pdf","gpt2-openai-2019.pdf"],
+      "question":"GPT-2 相比于 GPT-1，在 Transformer 的 Layer Normalization（LN）位置上做了什么关键的调整？",
+      "facts":[
+        {"fact_id":"input-of-subblock","source_filename":"gpt2-openai-2019.pdf","source_pages":[4],"source_text_contains_any":["moved to the input of each sub-block"],"claim_contains_any":["输入","input"]},
+        {"fact_id":"final-layernorm","source_filename":"gpt2-openai-2019.pdf","source_pages":[4],"source_text_contains_any":["after the final self-attention block"],"claim_contains_any":["最后","最终","final"]}
+      ],
+      "human_review_required":"GPT-1 does not explicitly describe LN placement. Reject an unqualified claim that its paper directly states post-norm; distinguish inference and the explicit GPT-2 modification."
+    },
+    {
+      "case_id":"context-evolution","documents":["language_understanding_paper.pdf","gpt2-openai-2019.pdf","2005.14165v4.pdf"],
+      "question":"从 GPT-1 到 GPT-3，模型的最大上下文 Token 长度（Context Window）分别递增到了多少？",
+      "facts":[
+        {"fact_id":"gpt1-context-from-gpt2-report","source_filename":"gpt2-openai-2019.pdf","source_pages":[4],"source_text_contains_any":["context size from 512 to 1024"],"claim_contains_any":["512"]},
+        {"fact_id":"gpt2-context","source_filename":"gpt2-openai-2019.pdf","source_pages":[4],"source_text_contains_any":["context size from 512 to 1024"],"claim_contains_any":["1024"]},
+        {"fact_id":"gpt3-context","source_filename":"2005.14165v4.pdf","source_pages":[8,43],"source_text_contains_any":["2048"],"claim_contains_any":["2048"]}
+      ],
+      "human_review_required":"GPT-1's own 512-token statement is training sequence length. Accept context terminology only with GPT-2's explicit context-size passage, or a clear source limitation."
+    }
+  ],
+  "notes":"Original Chinese questions, explicit document scope for omitted-title followups; this is the production ask harness, not a multi-turn UI or compare-endpoint test. Exact BLEU difference is 28.4-26.36=2.04, not 3.24 or v7's French score. Machine matches remain subject to scientific human review."
+}

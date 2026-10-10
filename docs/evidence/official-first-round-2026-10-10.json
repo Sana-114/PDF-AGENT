@@ -1,0 +1,23 @@
+{
+  "recorded_at": "2026-10-10",
+  "repository_base_revision": "ec9872e",
+  "evaluation_scripts_uncommitted_at_generation_time": true,
+  "status": "failed",
+  "cloud_call_budget": {"authorized": 10, "question_calls": 9, "selection_translation_calls": 1, "new_page_translation_calls": 0, "offline_review_calls": 0},
+  "official_inventory": {"pdf_count": 39, "total_pages": 1986, "scope": "readability inventory, not full parsing acceptance"},
+  "official_core_groups": {"total": 4, "passed": 3, "failed": ["official_scan_ocr"]},
+  "official_original_questions": {"total": 9, "original_machine_passed": 5, "reviewed_machine_passed": 4, "source_inspection_accepted": 4},
+  "reader_cases": {"total": 3, "passed": 3, "scope": "one cached public page, native short selection, reciprocal proportional scrolling"},
+  "reports": [
+    {"path":"backend/tmp/stage88-official/first-round.json","sha256":"a6af3ee9bc5e36371e0d5dad76ce08daf640aa702f556872c8a966355ee89049"},
+    {"path":"backend/tmp/stage88-official/first-round-reviewed.json","sha256":"c8003f6e2dd2606230f70ccda778163e3ac268e7fa7721c470ffb48eb0a4b7bb"},
+    {"path":"backend/tmp/stage88-official/reader-selection-after-port-recovery.json","sha256":"baf59c4bff17f7c3c058f51299bd1c342db99f3cc94201e0926900c9b31ee1ab"}
+  ],
+  "original_dataset_sha256": "ca541357c2fa1ee545f90ff8d334874104e466eb786b403f8fb80cfb06470cbc",
+  "review_policy_sha256": "55f3f892b540081f89d4fdf7b3a4cf1fc066b4057c026eac7cf7d6172b0db1b7",
+  "production_library_modified": false,
+  "private_documents_sent": false,
+  "automatic_retries": false,
+  "offline_regression": {"backend_passed": 326, "frontend_passed": 29, "ruff_passed": true, "typescript_passed": true},
+  "limits": ["No full-corpus parsing acceptance", "No real multi-turn UI acceptance", "No entire-PDF translation quality acceptance", "No independent scientific peer review", "No new video or public deployment"]
+}

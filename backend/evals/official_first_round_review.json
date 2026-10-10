@@ -1,0 +1,34 @@
+{
+  "policy_id": "official-original-questions-source-association-review-v2",
+  "notes": "Offline review only. Preserve the original v1 dataset and generated answers. Model names and quantities must occur in the same cited claim; these checks do not replace semantic source review.",
+  "fact_overrides": {
+    "gpt-parameter-evolution": {
+      "gpt1-from-gpt2-baseline-table": {"claim_contains_any_groups": [["GPT-1", "GPT1", "原始 GPT", "原始GPT"]]},
+      "gpt2-largest": {"claim_contains_any_groups": [["GPT-2", "GPT2"]]},
+      "gpt3-largest": {"claim_contains_any_groups": [["GPT-3", "GPT3"]]}
+    },
+    "context-evolution": {
+      "gpt1-context-from-gpt2-report": {"claim_contains_any_groups": [["GPT-1", "GPT1", "原始 GPT", "原始GPT"]]},
+      "gpt2-context": {"claim_contains_any_groups": [["GPT-2", "GPT2"]]},
+      "gpt3-context": {"claim_contains_any_groups": [["GPT-3", "GPT3"]]}
+    },
+    "bleu-improvement": {
+      "difference-derived-not-source-quote": {"source_text_contains_all": ["28.4", "26.36"]}
+    }
+  },
+  "source_inspection": {
+    "reviewer": "code_assistant_source_and_answer_inspection",
+    "scope": "Published claims and actual cited excerpts, with original PDF page checks. This is not independent expert peer review.",
+    "cases": {
+      "sixth-author": {"passed": false, "reason": "Answer safely refuses. Retrieved first-page chunk lacks the complete ordered author list; the sixth author Aidan N. Gomez and University of Toronto are not answered."},
+      "adam-settings": {"passed": true, "reason": "Published beta1=0.9 and beta2=0.98 agree with Transformer v1 PDF page 7 and cited excerpts."},
+      "base-gpus": {"passed": true, "reason": "Published eight NVIDIA P100 GPUs agree with Transformer v1 PDF page 7."},
+      "bleu-improvement": {"passed": false, "reason": "28.4 is correct, but the previous best 26.36 and derived difference 2.04 are omitted despite the table being retrieved. More than 2.0 is not a complete exact comparison."},
+      "layernorm-reference": {"passed": true, "reason": "Jimmy Lei Ba, Jamie Ryan Kiros, Geoffrey E Hinton, and 2016 agree with the original reference on Transformer v1 PDF page 10."},
+      "bert-inheritance": {"passed": false, "reason": "Separate architecture statements do not form a source-qualified joint encoder inheritance/decoder removal conclusion with both original sources."},
+      "gpt-parameter-evolution": {"passed": false, "reason": "GPT-3 175B is retrieved and generated as the equivalent 1750 yi, but the numeric publication guard discards it. Published answer does not cover all three models."},
+      "gpt2-ln-change": {"passed": true, "reason": "GPT-2 PDF page 4 explicitly moves LN to each sub-block input and adds LN after the final self-attention block; the answer cites this rather than inventing a direct GPT-1 post-norm statement."},
+      "context-evolution": {"passed": false, "reason": "Published GPT-2 512-to-1024 and GPT-3 2048 are source-supported, but the answer explicitly declines GPT-1's maximum. Matching 512 within a GPT-2 claim is not a complete three-model answer."}
+    }
+  }
+}
