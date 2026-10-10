@@ -99,6 +99,12 @@ def evaluate_pair(existing_path: Path, current_path: Path, *, batch_pages: int) 
     current_parsed = _parse(current_path, batch_pages)
     existing_arxiv = extract_document_arxiv_identity(existing_path.name, existing_parsed.full_text)
     current_arxiv = extract_document_arxiv_identity(current_path.name, current_parsed.full_text)
+    body_existing_arxiv = extract_document_arxiv_identity(
+        "renamed-existing.pdf", existing_parsed.full_text
+    )
+    body_current_arxiv = extract_document_arxiv_identity(
+        "renamed-upload.pdf", current_parsed.full_text
+    )
     existing_signature = bottom_k_signature(existing_parsed.full_text)
     current_signature = bottom_k_signature(current_parsed.full_text)
     assessment = assess_duplicate(
@@ -142,6 +148,10 @@ def evaluate_pair(existing_path: Path, current_path: Path, *, batch_pages: int) 
         "same_arxiv_id": current_arxiv[0] == existing_arxiv[0] == "1706.03762",
         "existing_is_v7": existing_arxiv[1] == 7,
         "current_is_v1": current_arxiv[1] == 1,
+        "identity_detected_without_original_filenames": (
+            body_existing_arxiv == ("1706.03762", 7)
+            and body_current_arxiv == ("1706.03762", 1)
+        ),
         "duplicate_warning_triggered": assessment.qualifies,
         "newer_existing_version_recommended": "已有更新的 arXiv v7" in recommendation,
         "production_worker_matched_existing_v7": worker_flow["matched_existing"],

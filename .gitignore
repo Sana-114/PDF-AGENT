@@ -23,3 +23,6 @@ Thumbs.db
 output/pdf/regression-corpus/*.pdf
 output/pdf/regression-corpus/*.json
 output/evals/*.json
+
+# Organizer-provided PDFs are local inputs; commit hashes and tests, not the corpus.
+/科研小助手/
