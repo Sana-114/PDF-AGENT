@@ -1,8 +1,10 @@
-from sqlalchemy import create_engine
+import pytest
+from sqlalchemy import create_engine, func, select
 from sqlalchemy.orm import Session
 
 from app.api.routes import documents as document_routes
 from app.core.database import Base
+from app.models.chunk import DocumentChunk
 from app.models.document import Document, DocumentStatus
 from app.schemas.document import DuplicateResolutionRequest
 
@@ -46,6 +48,55 @@ def _disable_asset_deletion(monkeypatch) -> list[tuple[str, str]]:
         lambda storage_key, document_id: deleted.append((storage_key, document_id)),
     )
     return deleted
+
+
+@pytest.mark.parametrize("foreign_keys", [False, True])
+@pytest.mark.parametrize("action", ["delete", "keep_existing", "replace_existing"])
+def test_all_removal_paths_clean_chunks_even_without_sqlite_cascades(
+    monkeypatch, foreign_keys, action
+):
+    session, current, existing = _session_with_version_conflict()
+    _disable_asset_deletion(monkeypatch)
+    session.connection().exec_driver_sql("PRAGMA foreign_keys=" + ("ON" if foreign_keys else "OFF"))
+    for document in (current, existing):
+        session.add(
+            DocumentChunk(
+                document_id=document.id,
+                chunk_index=0,
+                page_number=1,
+                block_ids_json='["body"]',
+                text="public test body",
+                char_count=16,
+            )
+        )
+    session.commit()
+    removed = existing if action == "replace_existing" else current
+    survivor = current if removed is existing else existing
+    if action == "delete":
+        document_routes.delete_document(removed.id, session)
+    else:
+        document_routes.resolve_document_duplicate(
+            current.id,
+            DuplicateResolutionRequest(action=action),
+            session,
+        )
+    assert (
+        session.scalar(
+            select(func.count())
+            .select_from(DocumentChunk)
+            .where(DocumentChunk.document_id == removed.id)
+        )
+        == 0
+    )
+    assert (
+        session.scalar(
+            select(func.count())
+            .select_from(DocumentChunk)
+            .where(DocumentChunk.document_id == survivor.id)
+        )
+        == 1
+    )
+    session.close()
 
 
 def test_keep_existing_removes_newly_uploaded_duplicate(monkeypatch) -> None:

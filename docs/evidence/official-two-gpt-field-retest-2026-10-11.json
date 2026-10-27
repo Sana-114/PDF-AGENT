@@ -1,0 +1,124 @@
+{
+  "evaluation_kind": "two_original_gpt_questions_real_retest_then_offline_repairs",
+  "date": "2026-10-11",
+  "branch": "codex/stage94-official-failed-qa-retest",
+  "committed": false,
+  "pushed": false,
+  "fresh_generation": {
+    "provider": "deepseek",
+    "model": "deepseek-flash",
+    "calls": 2,
+    "authorized_call_limit": 2,
+    "automatic_retries": false,
+    "original_question_dataset_unchanged": true,
+    "dataset_sha256": "ca541357c2fa1ee545f90ff8d334874104e466eb786b403f8fb80cfb06470cbc",
+    "selected_case_ids": ["gpt-parameter-evolution", "context-evolution"],
+    "machine_passed": 0,
+    "strictly_accepted": 0,
+    "original_report": "backend/tmp/official-answer-field-retest-2026-10-11/run-1/report.json",
+    "original_report_sha256": "14fa8385b7593bb3f6259cc9bbd29312c869fd5bbb12269933dcef91e031316e",
+    "strict_review": "backend/tmp/official-answer-field-retest-2026-10-11/review-1.json",
+    "strict_review_sha256": "83b92f26aba8e89b2c1f17614501475b2c34dee292fbb6b2b6c7ae2dbad43e00"
+  },
+  "isolation": {
+    "public_declared_documents": 5,
+    "includes_existing_public_gpt2_supplement": true,
+    "restored_chunks": 1085,
+    "strong_excerpts_per_question": 18,
+    "private_papers_sent": false,
+    "whole_pdfs_sent": false,
+    "production_library_modified": false,
+    "vector_index_modified": false,
+    "index_reused_read_only": true,
+    "parser_calls": 0,
+    "production_images_rebuilt": false,
+    "frontend_validated": false
+  },
+  "offline_repaired_output_replay": {
+    "fresh_generation": false,
+    "generation_calls": 0,
+    "checks_passed": 2,
+    "parameter_fields_complete": true,
+    "incorrect_ordinal_rejected": true,
+    "context_fields_complete": false,
+    "training_only_window_inference_rejected": true,
+    "must_not_replace_real_generation_score": true,
+    "report": "backend/tmp/official-answer-field-retest-2026-10-11/guard-replay-5.json",
+    "sha256": "c0ff14b6effb8eb4bcee6b71578a45aacdcf544522ca43486b44bf940ab96150"
+  },
+  "unit_tests": {
+    "tests": 520,
+    "passed": 520,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0,
+    "new_test_items": 32,
+    "new_tests_are_not_a_unique_vulnerability_count": true,
+    "report": "backend/tmp/official-answer-field-retest-2026-10-11/full-unit-5.xml",
+    "sha256": "c4188df8b452db7f135abf9d422cd24e28d4a1c4bf8c6f2e4332d9fd19be572a"
+  },
+  "bge_retrieval_regression": {
+    "official_pdfs": 32,
+    "existing_chunks": 10391,
+    "cases": 68,
+    "passed": 68,
+    "top_k": 10,
+    "dense_model": "BAAI/bge-m3",
+    "dense_dimensions": 1024,
+    "reranker": "BAAI/bge-reranker-v2-m3",
+    "sparse_mode": "hash sparse and BM25, not learned BGE sparse",
+    "real_hybrid_and_reranked_chain": true,
+    "index_reused_read_only": true,
+    "source_anchor_review_passed": 68,
+    "original_native_gold_sha256_unchanged": true,
+    "source_gold_sha256": "c49e69ac83422925296957a7e55578730a970cc13861d4a4b48cdc16af62416d",
+    "report": "backend/tmp/official-answer-field-retest-2026-10-11/bge-68-after-1/report.json",
+    "sha256": "6e76d7995a8c41abf3e0d1fffd6b68ce9a93781f586ec81e51257d7461766e2e",
+    "anchor_review": "backend/tmp/official-answer-field-retest-2026-10-11/bge-source-review-1.json",
+    "anchor_review_sha256": "844dc667940aec54ae90a15edaad9d89a5059d8676bc5645e79f84f07ad47188",
+    "only_answer_guards_changed_after_run": true
+  },
+  "final_evidence_trace": {
+    "questions": 3,
+    "source_fact_probes": 8,
+    "source_fact_probes_passed": 8,
+    "generated_answer_acceptance": false,
+    "report": "backend/tmp/official-answer-field-retest-2026-10-11/trace-after-1.json",
+    "sha256": "4f11c5330c1f02ea21b6435d459525a6ab5b4cabe6bd594c46ed1e73960b2597"
+  },
+  "pdf_source_inspection": {
+    "material_pages": 8,
+    "complete_pages_visually_checked": [
+      {"filename": "gpt2-openai-2019.pdf", "physical_page": 4, "renderer": "Poppler"},
+      {"filename": "2005.14165v4.pdf", "physical_page": 8, "renderer": "Poppler"},
+      {"filename": "2005.14165v4.pdf", "physical_page": 43, "renderer": "Poppler"},
+      {"filename": "language_understanding_paper.pdf", "physical_page": 5, "renderer": "PyMuPDF"}
+    ],
+    "reviewer": "code_assistant_not_independent_expert",
+    "source_material": "backend/tmp/official-answer-field-retest-2026-10-11/source-pages-1/sources.json",
+    "sha256": "17b8e429e45a4024406c745e46b21ca87ac225d1a94518a20126539b41eab56d"
+  },
+  "historical_three_guard_regression": {
+    "expected_behavior_passed": 3,
+    "bert_valid_answer_preserved": true,
+    "new_generation_calls": 0,
+    "report": "backend/tmp/official-answer-field-retest-2026-10-11/previous-three-guard-replay-2.json",
+    "sha256": "c95ec7f691cc219a629d5c23bad6fb12d1c0638626ea297691d295fad24ff877"
+  },
+  "verification": {
+    "ruff": "passed",
+    "git_diff_check": "passed",
+    "failure_artifacts_preserved": true,
+    "secrets_not_printed_or_committed": true
+  },
+  "additional_generation": {
+    "requested_max_calls": 2,
+    "executed_calls": 0,
+    "user_confirmation_pending": true
+  },
+  "remaining": [
+    "Fresh bounded generation is needed to validate changed prompts and repaired publication rules",
+    "Context answer still lacks an acceptable complete conclusion",
+    "No all-module competition acceptance, new scan/book parsing or frontend recording readiness claim"
+  ]
+}

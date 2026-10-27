@@ -1,0 +1,303 @@
+{
+  "schema_version": 1,
+  "run_date": "2026-10-22",
+  "sealed_date": "2026-10-23",
+  "status": "fixed_checks_passed_scientific_scope_reserved",
+  "runtime_source": {
+    "python_version": "3.12.14",
+    "app_files": 140,
+    "app_sha256": "844c2ab7da5dfbc772934c336a222658e3c78fd1b150d25b87395c833719ba93",
+    "requirements_sha256": "b0e75e31a3ca8f034e095fd0667e3be7e380975548c5acce90db94f96ed7283f"
+  },
+  "rounds": [
+    {
+      "run": "comparison",
+      "executed": 4,
+      "machine_passed": 4,
+      "cloud_calls": 6,
+      "embedding_calls": 6,
+      "vector_operations": 29,
+      "reused_payloads_verified": 1237,
+      "report": {
+        "path": "backend/tmp/official-docker-return-2026-10-22/comparison/report.json",
+        "sha256": "17675fca547ff5cd28f45023d2e3c0d48ed86bb8b4c1bc58eca2a1f56f66b015"
+      }
+    },
+    {
+      "run": "stability",
+      "executed": 4,
+      "machine_passed": 4,
+      "cloud_calls": 6,
+      "embedding_calls": 6,
+      "vector_operations": 29,
+      "reused_payloads_verified": 1237,
+      "report": {
+        "path": "backend/tmp/official-docker-return-2026-10-22/stability/report.json",
+        "sha256": "e8148aab3397f48f737f62263b0d1eccdd3d7b653ae9bc23d027678773d7fe4f"
+      }
+    }
+  ],
+  "primary_generations": 8,
+  "comparison_reviews": 4,
+  "cloud_calls": 12,
+  "automatic_retries": 0,
+  "independent_questions": 4,
+  "official_originals_unchanged": 39,
+  "prior_raw_artifacts_unchanged": 1982,
+  "new_corpus_parse_or_accuracy_assigned": false,
+  "whole_scientific_quality_released": false,
+  "whole_project_released": false,
+  "formal_video_released": false,
+  "runtime_observation": {
+    "date": "2026-10-22",
+    "after_user_docker_restart": true,
+    "checked_urls": [
+      {
+        "url": "http://127.0.0.1:3300/",
+        "http_status": 200
+      },
+      {
+        "url": "http://127.0.0.1:8000/api/v1/health",
+        "http_status": 200
+      },
+      {
+        "url": "http://127.0.0.1:7333/healthz",
+        "http_status": 200
+      },
+      {
+        "url": "http://127.0.0.1:8001/health",
+        "http_status": 200
+      },
+      {
+        "url": "http://127.0.0.1:8002/health",
+        "http_status": 200
+      }
+    ],
+    "docker_running": true,
+    "backend_and_worker": {
+      "python_version": "3.11.17",
+      "app_files": 122,
+      "app_sha256": "0c025a51ce5248e65acc73b067199a6b2e5736d11201a6d9e30e4ae5d21bbb90",
+      "requirements_sha256": "b0e75e31a3ca8f034e095fd0667e3be7e380975548c5acce90db94f96ed7283f"
+    },
+    "tested_app_sha256": "844c2ab7da5dfbc772934c336a222658e3c78fd1b150d25b87395c833719ba93",
+    "production_runtime_matches_tested_source": false,
+    "production_image_replaced": false,
+    "production_database_migrated": false,
+    "docker_restarted_by_agent": false,
+    "previous_failure_root_cause_proven": false
+  },
+  "scientific_review": {
+    "date": "2026-10-22",
+    "runtime_app_sha256": "844c2ab7da5dfbc772934c336a222658e3c78fd1b150d25b87395c833719ba93",
+    "reviewed_rounds": [
+      "comparison",
+      "stability"
+    ],
+    "fixed_machine_checks_passed_each_round": [
+      4,
+      4
+    ],
+    "core_source_review": "Core object, learning objective, stage boundaries, method attribution, quantization mechanisms and evidence-limited refusal agree with the viewed original pages.",
+    "reservations": [
+      "Both QLoRA answers use unqualified performance-preservation wording; original experimental scope must not become a universal guarantee.",
+      "NF4 bit-for-bit accuracy language should retain its source experiment scope.",
+      "Two repeats of four fixed questions do not establish full-corpus accuracy or statistical stability.",
+      "Real retrieval and generation used current source via TestClient, not the old deployed backend, a new browser run or asynchronous Worker.",
+      "No new whole-corpus parsing, original-nine-question release, review generation or Future Work automatic-exclusion acceptance."
+    ],
+    "full_pages_viewed": [
+      "backend/tmp/official-batch-acceptance-2026-10-18/dpo-01.png",
+      "backend/tmp/official-batch-acceptance-2026-10-18/dpo-02.png",
+      "backend/tmp/official-batch-acceptance-2026-10-18/dpo-math-16.png",
+      "backend/tmp/official-batch-acceptance-2026-10-18/instructgpt-06.png",
+      "backend/tmp/official-batch-acceptance-2026-10-18/lora-02.png",
+      "backend/tmp/official-batch-acceptance-2026-10-18/qlora-04.png",
+      "backend/tmp/official-batch-acceptance-2026-10-18/qlora-05.png",
+      "backend/tmp/official-batch-acceptance-2026-10-18/qlora-performance-06.png",
+      "backend/tmp/official-vector-recovery-2026-10-20/source-pages/2305.18290v3-p5.png",
+      "backend/tmp/official-vector-recovery-2026-10-20/source-pages/2106.09685v2-p1.png",
+      "backend/tmp/official-vector-recovery-2026-10-20/source-pages/2305.14314v1-p3.png",
+      "backend/tmp/official-vector-recovery-2026-10-20/source-pages/1706.03762v1-p7.png"
+    ],
+    "whole_scientific_quality_released": false,
+    "whole_project_released": false
+  },
+  "source_pages": [
+    {
+      "path": "backend/tmp/official-batch-acceptance-2026-10-18/dpo-01.png",
+      "sha256": "d867587de967d200c58e0456f11f3b860e423f03eb453defdedf5d7b9eec30f4"
+    },
+    {
+      "path": "backend/tmp/official-batch-acceptance-2026-10-18/dpo-02.png",
+      "sha256": "0cae0d5cb567b79b24f45c9b286499ab7676c3da3b73a83e190ab0a560715a7d"
+    },
+    {
+      "path": "backend/tmp/official-batch-acceptance-2026-10-18/dpo-math-16.png",
+      "sha256": "94323e22f9630f71a6b96c50b7000ed66a7a2ea66a470c895f4426786f1ba397"
+    },
+    {
+      "path": "backend/tmp/official-batch-acceptance-2026-10-18/instructgpt-06.png",
+      "sha256": "74212743ccb6dc2ec293333fa49842e7ea9eccd83736670d886d1ad86aa0efd5"
+    },
+    {
+      "path": "backend/tmp/official-batch-acceptance-2026-10-18/lora-02.png",
+      "sha256": "b4a3a8b413b38e934f3fe92fba9fa1deac041a3a63e2dbbd6836f07371a81f89"
+    },
+    {
+      "path": "backend/tmp/official-batch-acceptance-2026-10-18/qlora-04.png",
+      "sha256": "a39f36f89647806831fc001c7056098a1915b9b06118bdaf56de716514c68079"
+    },
+    {
+      "path": "backend/tmp/official-batch-acceptance-2026-10-18/qlora-05.png",
+      "sha256": "e74919a15a8169195b4a86f927a1394f9c2adefe25986bcd69807f95ec29cbc4"
+    },
+    {
+      "path": "backend/tmp/official-batch-acceptance-2026-10-18/qlora-performance-06.png",
+      "sha256": "70927f4f8e85675d5b8a2c22321cc3b37a944dd470c942ae06bca5d003a0dd4c"
+    },
+    {
+      "path": "backend/tmp/official-vector-recovery-2026-10-20/source-pages/2305.18290v3-p5.png",
+      "sha256": "8d162c35e1a54c93cf6187614bc6080d56b3617154b48dba0d1927269a01ca94"
+    },
+    {
+      "path": "backend/tmp/official-vector-recovery-2026-10-20/source-pages/2106.09685v2-p1.png",
+      "sha256": "802a28af9c4612f7ecd9b67e8a6f09c24dcda636a7ecfb48855b8cb4653ee012"
+    },
+    {
+      "path": "backend/tmp/official-vector-recovery-2026-10-20/source-pages/2305.14314v1-p3.png",
+      "sha256": "a61ab32ebcafde32e81e20e5777cbe3bc801f70148a78bad741e21d66457236e"
+    },
+    {
+      "path": "backend/tmp/official-vector-recovery-2026-10-20/source-pages/1706.03762v1-p7.png",
+      "sha256": "86d34116fb739e3989aa67f9ab344895327e32f5a1b1958408539e4ededb0d1d"
+    }
+  ],
+  "secret_scan_findings": [],
+  "artifacts": [
+    {
+      "path": "backend/tmp/official-docker-return-2026-10-22/comparison/acceptance.db",
+      "sha256": "532fb0e1fd829010f361bafce7f0ea02a02526d29a08fe5c02d59c7cd60cd67a"
+    },
+    {
+      "path": "backend/tmp/official-docker-return-2026-10-22/comparison/fixture.json",
+      "sha256": "d7730edb860bcb4b6ba77311de22d749684d6fc726ea5d38b5762afc308c117f"
+    },
+    {
+      "path": "backend/tmp/official-docker-return-2026-10-22/comparison/model-calls.json",
+      "sha256": "dd788979bf5b1954e297948f6824bb8f33fd520c8b5a3478f91d9a533627534e"
+    },
+    {
+      "path": "backend/tmp/official-docker-return-2026-10-22/comparison/parsed/114bfa0d-d6cf-573d-82b2-cfaed94b58b6.json",
+      "sha256": "6710c78824d61e72e1b0c15aaddf534ce0872570051a9b95d6f2f39c786645d7"
+    },
+    {
+      "path": "backend/tmp/official-docker-return-2026-10-22/comparison/parsed/20d9fad6-9e6f-543d-a2e1-095d8056c5ff.json",
+      "sha256": "4a05a089a864b8fc603470e4f28fc480526b8184b8c5a89039db83b07bdded3d"
+    },
+    {
+      "path": "backend/tmp/official-docker-return-2026-10-22/comparison/parsed/855562a1-8309-57b2-b7b0-b9e7016207dc.json",
+      "sha256": "0bdf9ab2be963a5e42b3560e72b14fd247e2723c299ffc3e340682b02394db97"
+    },
+    {
+      "path": "backend/tmp/official-docker-return-2026-10-22/comparison/parsed/bc90bcf2-cccd-5364-94f6-5815603802f7.json",
+      "sha256": "2f5bdb78b265127069fbaf7c9841afe6e181a0d93c3209856c420d678c7825d0"
+    },
+    {
+      "path": "backend/tmp/official-docker-return-2026-10-22/comparison/parsed/cd05de96-3b20-5178-8953-d8ee090a4f23.json",
+      "sha256": "0ab6909920de99d93d12d57d963fe93c684446cbcfdba40bf2df1ed080d7b414"
+    },
+    {
+      "path": "backend/tmp/official-docker-return-2026-10-22/comparison/report.json",
+      "sha256": "17675fca547ff5cd28f45023d2e3c0d48ed86bb8b4c1bc58eca2a1f56f66b015"
+    },
+    {
+      "path": "backend/tmp/official-docker-return-2026-10-22/comparison/uploads/114bfa0d-d6cf-573d-82b2-cfaed94b58b6.pdf",
+      "sha256": "92cb3a2b71362acda98a789b03d88688fd33cf5fcf13f81d2b1de30ee7d3b67a"
+    },
+    {
+      "path": "backend/tmp/official-docker-return-2026-10-22/comparison/uploads/20d9fad6-9e6f-543d-a2e1-095d8056c5ff.pdf",
+      "sha256": "0a9bff1be3575cf9fe26a4a3d3a9175bc791ecec90de8b9deba4cff75d2b9476"
+    },
+    {
+      "path": "backend/tmp/official-docker-return-2026-10-22/comparison/uploads/855562a1-8309-57b2-b7b0-b9e7016207dc.pdf",
+      "sha256": "33a4e757c19d6ea8d3cca8958fce8fe405e290272e135c99ee66065c775d5bd1"
+    },
+    {
+      "path": "backend/tmp/official-docker-return-2026-10-22/comparison/uploads/bc90bcf2-cccd-5364-94f6-5815603802f7.pdf",
+      "sha256": "e9a0d3128767db616085dc0f4e6e455e672e89af823e8ed1282793682787395a"
+    },
+    {
+      "path": "backend/tmp/official-docker-return-2026-10-22/comparison/uploads/cd05de96-3b20-5178-8953-d8ee090a4f23.pdf",
+      "sha256": "c1984bb50a5b90fddb895fdc3a0f72e5bc977148c9f63ef6040cbe7a3e1f0d98"
+    },
+    {
+      "path": "backend/tmp/official-docker-return-2026-10-22/finalize_evidence.py",
+      "sha256": "e2811af4713dde664b2633ec5f69c144e98c12d117ebaa797df8f9f09596e04a"
+    },
+    {
+      "path": "backend/tmp/official-docker-return-2026-10-22/manual-source-review.json",
+      "sha256": "83b155be185a5965539d03ac89f25d5eca042bc4ff3745fb432398ac7ecbdbe8"
+    },
+    {
+      "path": "backend/tmp/official-docker-return-2026-10-22/runtime-observation.json",
+      "sha256": "ef1680d1bd0720e10609cccf5af799c3ff9340f7eb347df5eaeeb5696481b067"
+    },
+    {
+      "path": "backend/tmp/official-docker-return-2026-10-22/stability/acceptance.db",
+      "sha256": "966298351926f4fd6a27a1afc006ad0fb5aabb35a5f0fa91d88a34f73b5f617c"
+    },
+    {
+      "path": "backend/tmp/official-docker-return-2026-10-22/stability/fixture.json",
+      "sha256": "d7730edb860bcb4b6ba77311de22d749684d6fc726ea5d38b5762afc308c117f"
+    },
+    {
+      "path": "backend/tmp/official-docker-return-2026-10-22/stability/model-calls.json",
+      "sha256": "aa09299169792b3411dadcf871ce7b5901110bfe173a95c142d006b9ef1934f1"
+    },
+    {
+      "path": "backend/tmp/official-docker-return-2026-10-22/stability/parsed/114bfa0d-d6cf-573d-82b2-cfaed94b58b6.json",
+      "sha256": "6710c78824d61e72e1b0c15aaddf534ce0872570051a9b95d6f2f39c786645d7"
+    },
+    {
+      "path": "backend/tmp/official-docker-return-2026-10-22/stability/parsed/20d9fad6-9e6f-543d-a2e1-095d8056c5ff.json",
+      "sha256": "4a05a089a864b8fc603470e4f28fc480526b8184b8c5a89039db83b07bdded3d"
+    },
+    {
+      "path": "backend/tmp/official-docker-return-2026-10-22/stability/parsed/855562a1-8309-57b2-b7b0-b9e7016207dc.json",
+      "sha256": "0bdf9ab2be963a5e42b3560e72b14fd247e2723c299ffc3e340682b02394db97"
+    },
+    {
+      "path": "backend/tmp/official-docker-return-2026-10-22/stability/parsed/bc90bcf2-cccd-5364-94f6-5815603802f7.json",
+      "sha256": "2f5bdb78b265127069fbaf7c9841afe6e181a0d93c3209856c420d678c7825d0"
+    },
+    {
+      "path": "backend/tmp/official-docker-return-2026-10-22/stability/parsed/cd05de96-3b20-5178-8953-d8ee090a4f23.json",
+      "sha256": "0ab6909920de99d93d12d57d963fe93c684446cbcfdba40bf2df1ed080d7b414"
+    },
+    {
+      "path": "backend/tmp/official-docker-return-2026-10-22/stability/report.json",
+      "sha256": "e8148aab3397f48f737f62263b0d1eccdd3d7b653ae9bc23d027678773d7fe4f"
+    },
+    {
+      "path": "backend/tmp/official-docker-return-2026-10-22/stability/uploads/114bfa0d-d6cf-573d-82b2-cfaed94b58b6.pdf",
+      "sha256": "92cb3a2b71362acda98a789b03d88688fd33cf5fcf13f81d2b1de30ee7d3b67a"
+    },
+    {
+      "path": "backend/tmp/official-docker-return-2026-10-22/stability/uploads/20d9fad6-9e6f-543d-a2e1-095d8056c5ff.pdf",
+      "sha256": "0a9bff1be3575cf9fe26a4a3d3a9175bc791ecec90de8b9deba4cff75d2b9476"
+    },
+    {
+      "path": "backend/tmp/official-docker-return-2026-10-22/stability/uploads/855562a1-8309-57b2-b7b0-b9e7016207dc.pdf",
+      "sha256": "33a4e757c19d6ea8d3cca8958fce8fe405e290272e135c99ee66065c775d5bd1"
+    },
+    {
+      "path": "backend/tmp/official-docker-return-2026-10-22/stability/uploads/bc90bcf2-cccd-5364-94f6-5815603802f7.pdf",
+      "sha256": "e9a0d3128767db616085dc0f4e6e455e672e89af823e8ed1282793682787395a"
+    },
+    {
+      "path": "backend/tmp/official-docker-return-2026-10-22/stability/uploads/cd05de96-3b20-5178-8953-d8ee090a4f23.pdf",
+      "sha256": "c1984bb50a5b90fddb895fdc3a0f72e5bc977148c9f63ef6040cbe7a3e1f0d98"
+    }
+  ]
+}

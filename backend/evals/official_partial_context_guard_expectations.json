@@ -1,0 +1,10 @@
+{
+  "description": "The preserved context output must remain incomplete because its GPT-1 note mentions uncited E4. Preserve only valid GPT-2/GPT-3 fields, never fill the missing citation.",
+  "cases": {
+    "context-evolution": {
+      "insufficient_evidence": true,
+      "missing_fields": ["GPT-1 最大上下文及来源说明"],
+      "required_semantic_rejections": []
+    }
+  }
+}

@@ -1,0 +1,74 @@
+{
+  "evaluation_kind": "official_39_post_generation_local_retrieval_repairs_not_new_answers",
+  "date": "2026-10-11",
+  "new_deepseek_calls": 0,
+  "cloud_budget": {"authorized": 42, "used": 42, "remaining": 0},
+  "original_core_snapshot": {
+    "path": "docs/evidence/official-all-39-acceptance-2026-10-11.json",
+    "sha256": "59f757355f77220d6530a1ef1bc2550ad2d0164312758e1f54bc1035f8368811",
+    "original_cloud_machine_passed": 33,
+    "original_requested_core_accepted": 37,
+    "original_quality_hold_files": 4,
+    "whole_answer_acceptance": "not_certified"
+  },
+  "current_readonly_bge_regression": {
+    "selected": 39,
+    "executed": 39,
+    "passed": 39,
+    "failed": 0,
+    "model_calls": 0,
+    "parser_calls": 0,
+    "vector_index_modified": false,
+    "production_library_modified": false,
+    "scope": "Unchanged original single-file questions. Independent physical-page probes must be present in the actual usable generation budget; those anchors must match the unchanged full AST.",
+    "is_generated_answer_acceptance": false,
+    "unusable_candidate_holds": [
+      {"filename": "1706.03762v1_img.pdf", "invalid_anchor_count": 1,
+       "passed_to_generation": false, "not_claimed_fixed": true}
+    ]
+  },
+  "ppo_mechanism_source": {
+    "filename": "1707.06347v2.pdf",
+    "source_sha256": "e78feadadbdbb0b601b3c2bcc81404722cd431a489b307545f9b7bea1e8c4f5b",
+    "physical_page": 3,
+    "block_ids": ["p3-b9", "p3-b10", "p3-b11", "p3-b12"],
+    "original_generation_had_this_probe": false,
+    "current_usable_evidence_id": "E16",
+    "current_score": 0.1864,
+    "unchanged_rag_min_score": 0.18,
+    "retrieval_mode": "reranked",
+    "recall_mode": "hybrid",
+    "current_source_checks_passed": 6,
+    "current_source_checks_total": 6,
+    "new_llm_answer_confirmed": false,
+    "not_a_stability_proof": true
+  },
+  "backend_regression": {"tests": 645, "failures": 0, "errors": 0, "skipped": 0},
+  "post_generation_production_code_sha256": {
+    "app/services/retrieval.py": "63e367bee26b7fe72682950da9cacc782fc004d861e85827a72edf3e5d97afb9",
+    "app/services/retrieval_policy.py": "61035bfd16dc36b102652040d0d9d321f9fc92d6a9934a1a08a37e3385746b0d",
+    "app/rerankers/tei.py": "d6b09557488b1cb61a2f43760523381b0198b8bbe493152142ab25bec4b3c690"
+  },
+  "local_artifacts_sha256": {
+    "current-bge-39-regression-final.json": "cf755b7098dde1d713fc41a2371f99afc2d6cdbf7f2666614e3cbe3393dd64d7",
+    "current-bge-39-regression-1.json": "661e2a45e3cf58408fe3ea9ae6e1f0dbda8aa17b3b912998ebe16bc58842702f",
+    "current-bge-scan-diagnostic-1.json": "69a556a8e9b6dcf9190349e2a7b589bdc7e53e930e41e1831eb2a8f9dc7fe896",
+    "ppo-mechanism-retrieval-6.json": "72ab27e6c9683664a513e4f488a041db30df52c4a9fde094124f15a1d64b85ea",
+    "ppo-mechanism-source-1/page-3.png": "d2a77aaec78c8caf31d1f3e5a86feca3a278f7f1c78d549a89b306974e8b7733",
+    "full-unit-final-candidate.xml": "714295c6a9af2abe6445a6726dcc69def729025c56f10345287cfd5845a20d04"
+  },
+  "diagnostic_script_sha256": {
+    "scripts/recheck_official_corpus_retrieval.py": "470f9d2c7cdde685e030b007d774008b6edc135669a404b8db8ee9c3b23d0b0f",
+    "scripts/check_official_mechanism_retrieval.py": "6e584606b60356e19b0e558bf2954d0ded84a7f01b89cdb5a29ab0451186150a"
+  },
+  "failures_retained": [
+    "The first PPO diagnostic checked candidate recall but omitted the actual score-filtered budget; its apparent pass is not used as acceptance.",
+    "PPO diagnostics 2 through 5 failed the actual usable-source gate and remain unchanged.",
+    "The first all-39 local source-anchor gate checked every candidate and reported 38/39, including one unusable invalid scan anchor. The final gate explicitly checks usable anchors and separately retains the unusable-candidate defect; these are different metrics."
+  ],
+  "pending": [
+    "Fresh once-per-question confirmation for PPO, Qwen and four quality-hold answers requires separate authorization.",
+    "The final original-nine candidate generation and runtime-browser release gates remain open.",
+    "No new branch, commit, push, Docker rebuild, final submission material freeze or server purchase in this run."
+  ]
+}

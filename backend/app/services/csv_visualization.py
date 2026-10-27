@@ -4,7 +4,7 @@ import io
 import math
 import re
 from dataclasses import dataclass
-from datetime import datetime
+from datetime import UTC, datetime
 from pathlib import Path
 from statistics import fmean, stdev
 
@@ -18,6 +18,7 @@ from app.schemas.visualization import (
     ScientificChartRead,
     SeriesStatisticsRead,
 )
+from app.services.plot_script_fonts import MATPLOTLIB_FONT_SETUP
 
 MAX_ROWS = 5000
 MAX_COLUMNS = 50
@@ -27,9 +28,7 @@ MAX_BAR_POINTS = 16
 MAX_SERIES = 4
 MAX_RADAR_METRICS = 8
 MAX_RADAR_SERIES = 5
-NUMBER_RE = re.compile(
-    r"^[+-]?(?:\d+(?:\.\d*)?|\.\d+)(?:[eE][+-]?\d+)?$"
-)
+NUMBER_RE = re.compile(r"^[+-]?(?:\d+(?:\.\d*)?|\.\d+)(?:[eE][+-]?\d+)?$")
 DATE_FORMATS = ("%Y-%m-%d", "%Y/%m/%d", "%Y.%m.%d", "%m/%d/%Y", "%d/%m/%Y")
 ERROR_LABELS: dict[ErrorBarMode, str] = {
     "none": "",
@@ -154,6 +153,24 @@ def _is_date(value: str) -> bool:
     return False
 
 
+def _date_sort_key(value: str) -> datetime | None:
+    """Normalize supported timestamps without mixing aware and naive datetimes."""
+    candidate = value.strip()
+    try:
+        result = datetime.fromisoformat(candidate.replace("Z", "+00:00"))
+    except ValueError:
+        result = None
+        for date_format in DATE_FORMATS:
+            try:
+                result = datetime.strptime(candidate, date_format)
+                break
+            except ValueError:
+                continue
+    if result is None:
+        return None
+    return result.replace(tzinfo=UTC) if result.tzinfo is None else result.astimezone(UTC)
+
+
 def _summarize_columns(parsed: ParsedCsv) -> list[CsvColumnSummary]:
     summaries: list[CsvColumnSummary] = []
     for index, header in enumerate(parsed.headers):
@@ -275,9 +292,7 @@ def _raw_chart_data(
             _parse_number(parsed.rows[row_index][column_index]) for row_index in indices
         ]
         all_values = [
-            value
-            for row in parsed.rows
-            if (value := _parse_number(row[column_index])) is not None
+            value for row in parsed.rows if (value := _parse_number(row[column_index])) is not None
         ]
         name = parsed.headers[column_index]
         series.append(
@@ -371,11 +386,7 @@ def _series_facts(
     series: list[ChartSeriesRead],
 ) -> tuple[list[str], str]:
     primary = series[0]
-    points = [
-        (index, value)
-        for index, value in enumerate(primary.values)
-        if value is not None
-    ]
+    points = [(index, value) for index, value in enumerate(primary.values) if value is not None]
     if not points:
         return [], "所选主序列没有足够的有效数值。"
     minimum_index, minimum = min(points, key=lambda item: item[1])
@@ -417,13 +428,16 @@ def _matplotlib_script(
     series: list[ChartSeriesRead],
     x_label: str,
     y_label: str,
+    x_coordinates: list[float] | None = None,
 ) -> str:
     series_data = {item.name: item.values for item in series}
     error_data = {item.name: item.errors for item in series}
     prelude = (
         "import math\n"
         "import matplotlib.pyplot as plt\n\n"
-        f"categories = {_python_literal(categories)}\n"
+        + MATPLOTLIB_FONT_SETUP
+        + "\n"
+        + f"categories = {_python_literal(categories)}\n"
         f"series = {_python_literal(series_data)}\n"
         f"errors = {_python_literal(error_data)}\n"
         f"title = {_python_literal(title)}\n\n"
@@ -431,8 +445,12 @@ def _matplotlib_script(
     if chart_type == "line":
         body = (
             "fig, ax = plt.subplots(figsize=(9, 5), constrained_layout=True)\n"
-            "x = list(range(len(categories)))\n"
-            "for name, values in series.items():\n"
+            + (
+                f"x = {_python_literal(x_coordinates)}\n"
+                if x_coordinates
+                else "x = list(range(len(categories)))\n"
+            )
+            + "for name, values in series.items():\n"
             "    y = [float('nan') if value is None else value for value in values]\n"
             "    raw_errors = errors.get(name, [])\n"
             "    yerr = [0.0 if value is None else value for value in raw_errors]\n"
@@ -465,20 +483,41 @@ def _matplotlib_script(
             "ax = fig.add_subplot(111, projection='3d')\n"
             "angles = [2 * math.pi * i / len(categories) for i in range(len(categories))]\n"
             "colors = ['#25734f', '#d77a2b', '#3e7fa3', '#8c5aa6', '#7a8b3a']\n"
+            "# Give each record a visible 0-1 reference plane; z is a record index, not a metric.\n"
+            "for level in range(len(series)):\n"
+            "    for radius in (0.5, 1.0):\n"
+            "        ring = [(radius * math.cos(a), radius * math.sin(a), level) "
+            "for a in angles]\n"
+            "        ring.append(ring[0])\n"
+            "        ax.plot(*zip(*ring), color='#bcc7c0', linewidth=0.7, "
+            "alpha=0.8, label='_radar_grid')\n"
+            "    for angle in angles:\n"
+            "        ax.plot([0, math.cos(angle)], [0, math.sin(angle)], [level, level], "
+            "color='#d8dfda', linewidth=0.6, label='_radar_spoke')\n"
+            "    ax.text(0, 0, level, '0', fontsize=7, color='#53645c')\n"
+            "    for radius in (0.5, 1.0):\n"
+            "        ax.text(radius * math.cos(angles[0]), radius * math.sin(angles[0]), "
+            "level, str(radius), fontsize=7, color='#53645c')\n"
             "for level, (name, values) in enumerate(series.items()):\n"
-            "    radii = [0 if value is None else value for value in values]\n"
+            "    radii = [float('nan') if value is None else value for value in values]\n"
             "    points = [(r * math.cos(a), r * math.sin(a), level) "
             "for a, r in zip(angles, radii)]\n"
             "    points.append(points[0])\n"
             "    color = colors[level % len(colors)]\n"
-            "    ax.plot(*zip(*points), color=color, linewidth=2, label=name)\n"
-            "    ax.add_collection3d(Poly3DCollection("
+            "    ax.plot(*zip(*points), color=color, marker='o', linewidth=2, label=name)\n"
+            "    if all(value is not None for value in values):\n"
+            "        ax.add_collection3d(Poly3DCollection("
             "[points[:-1]], facecolor=color, alpha=0.16))\n"
             "for angle, label in zip(angles, categories):\n"
-            "    ax.text(1.12 * math.cos(angle), 1.12 * math.sin(angle), 0, label, ha='center')\n"
-            "ax.set_xlim(-1.2, 1.2); ax.set_ylim(-1.2, 1.2)\n"
+            "    ax.text(1.2 * math.cos(angle), 1.2 * math.sin(angle), "
+            "max(len(series) - 1, 0) + 0.12, label, ha='center', fontsize=9)\n"
+            "ax.set_xlim(-1.45, 1.45); ax.set_ylim(-1.45, 1.45)\n"
             "ax.set_zlim(0, max(len(series) - 1, 1))\n"
             "ax.set_axis_off()\n"
+            "fig.text(0.5, 0.015, '逐指标 min-max 归一化（0–1）；"
+            "恒定指标记为 1；层高仅区分记录。\\n"
+            "缺失指标保留断点；面积大小不代表综合性能。', ha='center', fontsize=8, "
+            "color='#53645c')\n"
         )
     return (
         prelude
@@ -554,6 +593,21 @@ def _regular_chart(
         chart_type = "line" if x_kind == "date" or (x_index == 0 and numeric_x_axis) else "bar"
     else:
         chart_type = requested_type
+    if chart_type == "line" and x_index is not None and summaries[x_index].kind == "date":
+        keys = [_date_sort_key(row[x_index]) for row in parsed.rows]
+        if all(key is not None for key in keys):
+            order = sorted(range(len(keys)), key=lambda index: keys[index])
+            if order != list(range(len(keys))):
+                parsed = ParsedCsv(
+                    parsed.headers,
+                    [parsed.rows[index] for index in order],
+                    parsed.encoding,
+                    parsed.delimiter,
+                    parsed.warnings,
+                )
+                warnings.append("日期折线图已按时间排序；原始表格预览保持上传顺序。")
+        else:
+            warnings.append("日期列含缺失或无法识别的值，保留输入顺序，请补齐日期后比较时间趋势。")
     limit = MAX_LINE_POINTS if chart_type == "line" else MAX_BAR_POINTS
     effective_aggregation: AggregationMode = aggregation
     if group_index is not None and effective_aggregation == "raw":
@@ -596,14 +650,24 @@ def _regular_chart(
     x_label = parsed.headers[x_index] if x_index is not None else "数据行"
     y_label = "、".join(item.name for item in series)
     facts, fact_summary = _series_facts(chart_type, categories, series)
+    x_coordinates: list[float] = []
+    if chart_type == "line" and x_index is not None:
+        kind = summaries[x_index].kind
+        coordinates = (
+            [_parse_number(category) for category in categories]
+            if kind == "numeric"
+            else [
+                key.timestamp() if (key := _date_sort_key(category)) else None
+                for category in categories
+            ]
+            if kind == "date"
+            else []
+        )
+        if coordinates and all(value is not None for value in coordinates):
+            x_coordinates = [float(value) for value in coordinates]
     uncertainty_note = ""
     if error_mode != "none":
-        sample_sizes = [
-            size
-            for item in series
-            for size in item.sample_sizes
-            if size > 0
-        ]
+        sample_sizes = [size for item in series for size in item.sample_sizes if size > 0]
         if sample_sizes:
             sample_range = (
                 str(sample_sizes[0])
@@ -611,8 +675,7 @@ def _regular_chart(
                 else f"{min(sample_sizes)}–{max(sample_sizes)}"
             )
             uncertainty_fact = (
-                f"误差棒表示{ERROR_LABELS[error_mode]}，每个聚合点包含 "
-                f"{sample_range} 个有效观测"
+                f"误差棒表示{ERROR_LABELS[error_mode]}，每个聚合点包含 {sample_range} 个有效观测"
             )
             facts.append(uncertainty_fact)
             uncertainty_note = uncertainty_fact + "；"
@@ -626,13 +689,14 @@ def _regular_chart(
         chart_type=chart_type,
         title=title,
         categories=categories,
+        x_coordinates=x_coordinates,
         series=series,
         x_label=x_label,
         y_label=y_label,
         caption=caption,
         caption_facts=facts,
         matplotlib_script=_matplotlib_script(
-            chart_type, title, categories, series, x_label, y_label
+            chart_type, title, categories, series, x_label, y_label, x_coordinates
         ),
         x_column=parsed.headers[x_index] if x_index is not None else None,
         y_columns=[parsed.headers[index] for index in selected_numeric],
@@ -688,11 +752,21 @@ def _radar_chart(
         warnings.append("常量指标归一化为 1：" + "、".join(constant_metrics) + "。")
 
     series: list[ChartSeriesRead] = []
+    used_names: set[str] = set()
     for position, row_index in enumerate(row_indices):
         label = parsed.rows[row_index][label_index] if label_index is not None else ""
+        name = label or f"记录 {row_index + 1}"
+        original_name = name
+        suffix = row_index + 1
+        while name in used_names:
+            name = f"{original_name}（记录 {suffix}）"
+            suffix += 1
+        if name != original_name:
+            warnings.append(f"雷达图重复记录名“{original_name}”已标注行号，未合并观测。")
+        used_names.add(name)
         series.append(
             ChartSeriesRead(
-                name=label or f"记录 {row_index + 1}",
+                name=name,
                 values=[values[position] for values in normalized_by_metric],
             )
         )
@@ -718,6 +792,10 @@ def _radar_chart(
         "各指标在当前展示记录内按 min-max 归一化至 0–1；层高仅用于区分记录，"
         "不编码额外数值。"
     )
+    missing_points = sum(value is None for item in series for value in item.values)
+    if missing_points:
+        warnings.append(f"雷达图保留 {missing_points} 个缺失点为空缺，不补零、不闭合缺失记录。")
+        caption += "缺失点保留为空缺，含缺失值的记录不填充闭合面积。"
     normalization = "各指标按展示记录 min-max 归一化至 0–1；常量指标记为 1。"
     statistics = [
         _series_statistics(

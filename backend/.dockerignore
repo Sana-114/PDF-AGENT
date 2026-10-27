@@ -12,4 +12,6 @@ coverage.xml
 .coverage
 *.egg-info
 .git
+.env
+.env.*
 Dockerfile

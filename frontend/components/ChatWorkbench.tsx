@@ -51,15 +51,18 @@ export default function ChatWorkbench({
   const [preview, setPreview] = useState<StreamPreview>(EMPTY_PREVIEW);
   const [streamStatus, setStreamStatus] = useState("");
   const [loading, setLoading] = useState(true);
+  const [historyError, setHistoryError] = useState<string | null>(null);
   const [sending, setSending] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const transcriptRef = useRef<HTMLDivElement>(null);
 
   const refreshHistory = useCallback(async () => {
+    setLoading(true);
     try {
       setConversations(await listConversations());
+      setHistoryError(null);
     } catch (requestError) {
-      setError(readableRequestError(requestError, "会话历史加载失败"));
+      setHistoryError(readableRequestError(requestError, "会话历史加载失败"));
     } finally {
       setLoading(false);
     }
@@ -183,6 +186,14 @@ export default function ChatWorkbench({
           <button disabled={sending} onClick={startConversation} type="button">＋ 新对话</button>
         </div>
         <div className="chat-history-list">
+          {historyError && (
+            <div role="alert">
+              <p className="chat-error">{historyError}</p>
+              <button disabled={loading} onClick={() => void refreshHistory()} type="button">
+                重新读取历史
+              </button>
+            </div>
+          )}
           {loading && <p className="chat-empty">正在读取历史…</p>}
           {!loading && conversations.length === 0 && (
             <p className="chat-empty">暂无记录。</p>

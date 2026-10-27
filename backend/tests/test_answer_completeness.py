@@ -102,6 +102,50 @@ def test_architecture_comparison_requires_both_relation_parts_and_two_sources():
     assert missing_fields(question, [joint], evidence)
 
 
+def test_two_separately_dual_source_relationships_are_complete():
+    question = "BERT 承袭和丢弃 Transformer 哪些部分？"
+    evidence = [anchor("original encoder decoder", "E1", "original"),
+                anchor("bidirectional Transformer encoder", "E2", "bert")]
+    inherited = AnswerClaim(text="据两篇架构描述推断，BERT 承袭 Transformer 编码器",
+                            evidence_ids=["E1", "E2"])
+    removed = AnswerClaim(text="据两篇架构描述推断，BERT 不使用原始解码器",
+                          evidence_ids=["E1", "E2"])
+    assert missing_fields(question, [inherited, removed], evidence) == []
+    assert missing_fields(question, [inherited], evidence) == ["去除部分的双来源结论"]
+    removed.evidence_ids = ["E1"]
+    assert missing_fields(question, [inherited, removed], evidence) == ["去除部分的双来源结论"]
+    evidence[1].document_id = "original"
+    assert len(missing_fields(question, [inherited, removed], evidence)) == 2
+
+
+@pytest.mark.asyncio
+async def test_agent_accepts_separate_joint_relations_in_one_generation():
+    class Registry:
+        async def execute(self, *args):
+            return [anchor("original encoder decoder", "E1", "original"),
+                    anchor("bidirectional Transformer encoder", "E2", "bert")]
+
+    class Provider:
+        name, model, calls = "test", "test", 0
+
+        async def generate_grounded_answer(self, question, evidence):
+            self.calls += 1
+            assert "two separately dual-source" in question
+            return GeneratedAnswer(answer="unused", claims=[
+                GeneratedClaim(text="推断：BERT 基于 Transformer 编码器",
+                               evidence_ids=["E1", "E2"]),
+                GeneratedClaim(text="推断：BERT 不使用 Transformer 解码器",
+                               evidence_ids=["E1", "E2"]),
+            ])
+
+    provider = Provider()
+    result = await ResearchAgent(None, registry=Registry(), provider=provider).ask(
+        AskRequest(question="BERT 承袭和丢弃 Transformer 哪些部分？")
+    )
+    assert provider.calls == 1 and not result.insufficient_evidence
+    assert result.trace[-1].status == "ok"
+
+
 def test_dialogue_history_does_not_create_requirements_for_the_current_question():
     question = "Prior dialogue:\nGPT-1 GPT-2 参数量\n\nCurrent user question:\n作者是谁？"
     assert current_question(question) == "作者是谁？"

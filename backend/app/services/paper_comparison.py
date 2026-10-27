@@ -32,6 +32,7 @@ from app.schemas.comparison import (
     ComparisonStatsRead,
     CrossPaperComparisonRead,
 )
+from app.services.claim_semantics import claim_semantic_conflicts
 from app.services.grounded_text import normalise_fact as _normalise_fact
 from app.services.grounded_text import unsupported_numeric_facts as _unsupported_numeric_facts
 from app.services.retrieval import HybridRetriever
@@ -392,6 +393,13 @@ class PaperComparisonService:
                     "一条声明包含原文证据中不存在的数值，已从公开结果中移除："
                     + "、".join(unsupported_facts[:4])
                 )
+                continue
+            semantic_errors = claim_semantic_conflicts(
+                text, [allowed[item] for item in evidence_ids], evidence
+            )
+            if semantic_errors:
+                rejection_reasons.extend(semantic_errors)
+                warnings.append("一条声明的模型排序或论文归属与所引证据冲突，已移除。")
                 continue
             claims.append(
                 ComparisonClaimRead(

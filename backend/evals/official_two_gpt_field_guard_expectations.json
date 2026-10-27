@@ -1,0 +1,16 @@
+{
+  "expectations_id": "two-gpt-preserved-output-repair-behavior-2026-10-11",
+  "notes": "Offline replay only. The parameter answer must reject the contradictory ordinal and keep supported assignments. The context answer remains incomplete. This is not fresh generation or independent scientific acceptance.",
+  "cases": {
+    "gpt-parameter-evolution": {
+      "insufficient_evidence": false,
+      "missing_fields": [],
+      "required_semantic_rejections": ["ordinal_model_equivalence_mismatch"]
+    },
+    "context-evolution": {
+      "insufficient_evidence": true,
+      "missing_fields": ["GPT-1 最大上下文及来源说明"],
+      "required_semantic_rejections": ["training_sequence_only_context_inference"]
+    }
+  }
+}

@@ -1,0 +1,366 @@
+{
+  "schema_version": 1,
+  "date": "2026-10-12",
+  "status": "partial_acceptance",
+  "scope": "Official-source CSV visualization, real local BGE recommendation replay, three-paper DeepSeek writing, and live discovery. Not final acceptance of all six modules.",
+  "git": {
+    "branch": "codex/stage94-official-failed-qa-retest",
+    "head": "a119f5609cda544e5d587588c5a338051da129a1",
+    "dirty_worktree": true,
+    "commit_created": false,
+    "branch_created": false,
+    "pushed": false
+  },
+  "sources": [
+    {
+      "document_id": "20d9fad6-9e6f-543d-a2e1-095d8056c5ff",
+      "filename": "1706.03762v1.pdf",
+      "source_sha256": "0a9bff1be3575cf9fe26a4a3d3a9175bc791ecec90de8b9deba4cff75d2b9476",
+      "ast_sha256": "17b79909f6ccfbef761befa41518b887e954b41bc1b74d8cfe071d519f8db5de"
+    },
+    {
+      "document_id": "788f47ff-23de-5f78-896b-7d3fe6e1bb92",
+      "filename": "2010.11929v2.pdf",
+      "source_sha256": "8ce7b83971a14508ca711a27c875c9b6914c4f6767cf3150fb1ca6c07aa056d6",
+      "ast_sha256": "de022dddb27d7defb935525ad5671da0c14c73b228926d08cd8fe78f5a5cd471"
+    },
+    {
+      "document_id": "1ae43cdf-aa5d-533e-8caa-c65a403deaf2",
+      "filename": "2103.00020v1.pdf",
+      "source_sha256": "6478b6e571a7d6fcd846d8ef77bfd60c285f1986abb8f475eedc43de403074f5",
+      "ast_sha256": "3acf3beac5486f12e34fd2cbae2b0b4e96c80cb1e6e164de74fb11f6f152c7e7"
+    },
+    {
+      "document_id": "bc90bcf2-cccd-5364-94f6-5815603802f7",
+      "filename": "2106.09685v2.pdf",
+      "source_sha256": "e9a0d3128767db616085dc0f4e6e455e672e89af823e8ed1282793682787395a",
+      "ast_sha256": "f4c849bd4de7d5a9d75c678178548613f51c038929a18c2b6f30a74affec4fb6"
+    }
+  ],
+  "charts": {
+    "status": "passed_scoped_checks",
+    "api": {
+      "passed": 6,
+      "total": 6,
+      "report": "charts-4/report.json"
+    },
+    "browser_svg": {
+      "passed": 6,
+      "total": 6,
+      "page_errors": 0,
+      "report": "browser-charts-4/report.json",
+      "frontend_port": 3301,
+      "backend_port": 8013,
+      "response_bodies_mocked": false
+    },
+    "actual_matplotlib": {
+      "passed": 6,
+      "total": 6,
+      "report": "charts-4/rendered-report.json",
+      "version": "3.10.9",
+      "isolated_dependencies": true
+    },
+    "manual_visual_review": {
+      "status": "passed_scoped_review",
+      "reviewer": "agent_assisted",
+      "scope": "All six final Matplotlib images inspected directly or matched by identical SHA to reviewed prior images; numeric line browser image and radar missing-value browser image reviewed. Not a journal style or all-browser certification."
+    },
+    "real_data": {
+      "filename": "1706.03762v1.pdf",
+      "physical_page": 9,
+      "table": "Table 3 (C)",
+      "input_method": "Independent manual transcription checked against native PDF and rendered page, NOT automatic PDF-to-CSV acceptance",
+      "columns": [
+        "layers",
+        "PPL_wordpiece",
+        "BLEU_dev",
+        "parameters_million"
+      ],
+      "rows": [
+        [
+          2,
+          6.11,
+          23.7,
+          36
+        ],
+        [
+          4,
+          5.19,
+          25.3,
+          50
+        ],
+        [
+          8,
+          4.88,
+          25.5,
+          80
+        ]
+      ],
+      "evaluation_scope": "English-to-German newstest2013 development set; per-wordpiece PPL"
+    },
+    "cases": [
+      "table3-line",
+      "table3-bar",
+      "table3-radar",
+      "synthetic-missing-duplicate",
+      "synthetic-unsorted-dates",
+      "synthetic-replicates"
+    ],
+    "caption_method": "Deterministic facts computed from supplied CSV, not LLM inference.",
+    "limitations": [
+      "Radar is per-metric min-max normalization, not a combined performance score; missing values are gaps, and constant metrics are assigned 1.",
+      "CSV preview is not an acceptance of automatic paper-table extraction.",
+      "CJK font checks passed on this Windows machine; a fresh Linux/container environment remains unverified."
+    ]
+  },
+  "recommendations": {
+    "status": "passed_scoped_checks",
+    "report": "recommendation-replay-2/report.json",
+    "checks_passed": 11,
+    "checks_total": 11,
+    "actual_bge_calls": 2,
+    "actual_input_counts": [
+      4,
+      5
+    ],
+    "embedding_dimensions": 1024,
+    "hash_fallback_used": false,
+    "inserted_records": 3,
+    "repeat_refresh": {
+      "new": 0,
+      "updated": 3
+    },
+    "code_source": "LoRA native first-page https://github.com/microsoft/LoRA; no fabricated stars",
+    "feedback": [
+      "like persisted",
+      "dislike persisted",
+      "feedback retained after refresh"
+    ],
+    "publication_dates": "Unknown; default temporal weight explicitly disclosed.",
+    "live_feed_verified": false,
+    "active_scheduler_verified": false,
+    "multi_user_verified": false,
+    "scope": "Replay of metadata from three official public PDFs with actual local BGE-M3 and real isolated storage/API; not live arXiv availability."
+  },
+  "writing": {
+    "status": "quality_hold",
+    "model": "deepseek-flash",
+    "generation_attempts": 2,
+    "automatic_retries": 0,
+    "first_attempt": {
+      "report": "writing-1/report.json",
+      "status": "failed_generation_with_extractive_fallback",
+      "failure": "Blank-detail network exception; exact transport cause not reconstructable from the original message.",
+      "counts_as_real_generation_pass": false
+    },
+    "second_attempt": {
+      "report": "writing-2/report.json",
+      "status": "source_checks_passed",
+      "claims": 13,
+      "evidence": 15,
+      "claimed_papers": 3,
+      "references_identity_checked": 3,
+      "sections": [
+        "Abstract",
+        "Introduction",
+        "Related Work"
+      ]
+    },
+    "semantic_review": {
+      "report": "writing-2/manual-review.json",
+      "excerpt_supported_claims": 12,
+      "total_claims": 13,
+      "needs_qualification_claim_numbers": [
+        2
+      ],
+      "affected_filename": "2010.11929v2.pdf",
+      "cited_physical_page": 16,
+      "qualifying_physical_page": 17,
+      "finding": "An initial poor GAP result was stated without the next-page learning-rate qualification; tuned classifiers perform similarly. Citation existence is insufficient to accept the conclusion.",
+      "required_fix": "Generic cross-page context retrieval and preservation of experimental conditions; not a paper-specific canned answer."
+    },
+    "bibliography_format_hold": "LoRA title still has a line-break hyphen. Years checked as arXiv submission years, not conference publication years.",
+    "novelty_boundary": "Absence from 15 supplied excerpts is not absence from complete papers or current literature.",
+    "retrieval_scope": "Lexical retrieval plus configured reranker; this writing run does not prove BGE vector retrieval."
+  },
+  "discovery": {
+    "status": "not_accepted_live",
+    "report": "discovery-1/report.json",
+    "metadata_requests": 5,
+    "http_statuses": [
+      429,
+      200,
+      429,
+      404,
+      429
+    ],
+    "successful_exact_paper_matches": 0,
+    "pdf_downloads": 0,
+    "live_subscription_new_records": 0,
+    "failures": [
+      "Semantic Scholar and arXiv HTTP 429 rate limits",
+      "Crossref fallback returned no identity-confirmed target",
+      "Old versioned Semantic Scholar ID returned HTTP 404"
+    ],
+    "local_fixes": [
+      "Explicit HTTP 429 diagnostics",
+      "Use base arXiv work ID for Semantic Scholar fallback",
+      "Do not silently replace an unverified requested revision; disable import and verify identity/version"
+    ],
+    "live_retest_after_fixes": false,
+    "automatic_retries": 0
+  },
+  "repairs": [
+    "Radar export preserves duplicate-named observations",
+    "Radar missing values remain NaN gaps instead of invented zeros",
+    "Date line charts sort paired observations chronologically, preserving raw preview order",
+    "Numeric/date line plots preserve true x spacing in UI and export",
+    "3D radar export includes reference planes and normalization/layer disclaimers",
+    "Recommendation embedding omits an absent empty disliked profile",
+    "DeepSeek network/timeout errors expose typed diagnostics without automatic retries",
+    "English writing request overrides language inference from a Chinese idea",
+    "Discovery fallback guards arXiv identity and revision"
+  ],
+  "regression": {
+    "backend": {
+      "tests": 811,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    "backend_cloud_provider": "mock",
+    "frontend": {
+      "passed": 32,
+      "total": 32
+    },
+    "typescript": "passed",
+    "ruff": "passed for backend app and listed new scripts/tests",
+    "git_diff_check": "passed",
+    "does_not_prove": "Cloud quality, fresh container deployment, complete PDF semantic accuracy, or a final same-version all-39 QA pass."
+  },
+  "requests_this_batch": {
+    "deepseek_generation_attempts": 2,
+    "local_bge_embedding_attempts_across_two_runs": 4,
+    "discovery_metadata_requests": 5,
+    "automatic_generation_retries": 0,
+    "previous_batch_calls_not_included": 26
+  },
+  "privacy": {
+    "private_papers_sent": false,
+    "production_library_modified": false,
+    "raw_cloud_records": "Ignored backend/tmp only; no keys or full raw cloud responses in this public summary."
+  },
+  "temporary_services": {
+    "ports": [
+      8013,
+      3301
+    ],
+    "stopped": true,
+    "existing_services_modified": false
+  },
+  "evidence_root": "backend/tmp/official-output-discovery-acceptance-2026-10-12",
+  "report_sha256": [
+    {
+      "path": "charts-4/report.json",
+      "sha256": "2adfa1b8f9610f668dba402694304a9570896d529be93da4279c9c811cf8ff66"
+    },
+    {
+      "path": "charts-4/rendered-report.json",
+      "sha256": "428227378d5cac483bb939b619af24245439fd802de96a03f9a2a20e32ad627e"
+    },
+    {
+      "path": "browser-charts-4/report.json",
+      "sha256": "94f8a9a5d351efdd1a8c53d0f240e1765a51ce83096cb602fe84c09f084aebef"
+    },
+    {
+      "path": "recommendation-replay-1/report.json",
+      "sha256": "500efa479c320d9d61d07cbf5cbbe0c3123378863e53aa2558f82bec24973b9b"
+    },
+    {
+      "path": "recommendation-replay-2/report.json",
+      "sha256": "5d7fee5818ee3e4de5cdd6f0d8dcbff6fa202d2990b2402edc104859de50defb"
+    },
+    {
+      "path": "writing-1/report.json",
+      "sha256": "aa3af84cbb0eafda28c0739d09a89d67e8a28f36ef7c939c9e05c73c84345b7e"
+    },
+    {
+      "path": "writing-2/report.json",
+      "sha256": "bb1c2098c6bfc5bd2b96ec7020a701539d7eaad3a41d7e472f53c2a61fcc6051"
+    },
+    {
+      "path": "writing-2/manual-review.json",
+      "sha256": "81d3b7801f9a9f1c28e3a54d7e5c269847df4650ee4edf521626bd9b0cfe6b2d"
+    },
+    {
+      "path": "discovery-1/report.json",
+      "sha256": "c63224af6e6d8a6db64d7ffb2592b9814310cbee1a4276d94000b54fe6bf553c"
+    },
+    {
+      "path": "offline-backend-final-after-radar.xml",
+      "sha256": "532cfbbc9825da95165530c9a69e0a70b5f1399aaaaecfaacf5019ad7ff60fac"
+    }
+  ],
+  "selected_code_sha256": [
+    {
+      "path": "backend/app/services/csv_visualization.py",
+      "sha256": "be3b068ea0968cde86e5fcc0732cdf7509f40424d7b9b2f365e747ab186fc9ff"
+    },
+    {
+      "path": "backend/app/services/recommendations.py",
+      "sha256": "cb100e21410d1404e23b1641d58afd133918fddbecbeebd27bb829a43382c9e2"
+    },
+    {
+      "path": "backend/app/services/paper_discovery.py",
+      "sha256": "f5f41c0cb3f20023aef611fa6848427f0167416566f454b9c8aa49656963700d"
+    },
+    {
+      "path": "backend/app/services/writing_outline.py",
+      "sha256": "939867b865f64c50ae4e93808447590c8725b518ea135dcdb0fa4f8839572db0"
+    },
+    {
+      "path": "backend/app/llm/openai_responses.py",
+      "sha256": "35cbda75fe42874a7b57e9c1747c51afb03655b31ebbc7e33a3e121f12d9d9a3"
+    },
+    {
+      "path": "backend/app/schemas/visualization.py",
+      "sha256": "e0e50551149b413221a50effbfedd820e67e55c7ccd2029ab3e4cdf760420113"
+    },
+    {
+      "path": "frontend/components/DataVisualizationWorkbench.tsx",
+      "sha256": "3994041eaab4180686dd31fa5a255228a33951611447e2cf06f27dfcaa83aa29"
+    },
+    {
+      "path": "frontend/lib/api.ts",
+      "sha256": "3aab6fa228da6fffa3fa6aa50555b250bff57a9a7e4d8304093492c6760fa848"
+    },
+    {
+      "path": "frontend/lib/radarSegments.ts",
+      "sha256": "32507f294e8fcd3dabef24851e42efb88bbf27cccdd3b0ee160f1f1455fd1ff4"
+    },
+    {
+      "path": "backend/scripts/verify_official_output_features.py",
+      "sha256": "3de2a5b5ae2e3f0f45a7848dbbcddf79e9cb027b620e0ab8e826773984dcea12"
+    },
+    {
+      "path": "backend/scripts/verify_official_chart_rendering.py",
+      "sha256": "790eabad05d2490d530c32a3a99040b07f1b2abadfd7c65889bf85d41710fddc"
+    },
+    {
+      "path": "backend/scripts/verify_official_recommendation_replay.py",
+      "sha256": "5cece81839413621763ed8ea2c234ae4931c44cd9140fcff7c5f561b4976925e"
+    },
+    {
+      "path": "frontend/e2e/officialChartAcceptance.mjs",
+      "sha256": "70ace08c8f51803166b5171a7eccadf9efbf380777ca4e4cfee6ad32a1f4d332"
+    }
+  ],
+  "remaining": [
+    "Cross-page writing conditions and bibliography display cleanup",
+    "Live exact-title/reference download and arXiv incremental tracking",
+    "Author-year reader linking and summary synthesis quality",
+    "Final same-candidate QA confirmation and actual deployment image",
+    "Final technical PDF, recording, public deployment, accounts, and key rotation"
+  ],
+  "historical_results": "Earlier reading/full-translation/20-paper graph evidence remains in official-functional-acceptance-2026-10-12. Not rerun or relabelled as a new all-module pass."
+}

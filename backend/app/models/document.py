@@ -6,6 +6,7 @@ from sqlalchemy import BigInteger, DateTime, Float, ForeignKey, Integer, String,
 from sqlalchemy.orm import Mapped, mapped_column
 
 from app.core.database import Base
+from app.core.source_text import SourceText
 
 
 def utcnow() -> datetime:
@@ -29,9 +30,9 @@ class Document(Base):
     size_bytes: Mapped[int] = mapped_column(BigInteger)
     sha256: Mapped[str] = mapped_column(String(64), unique=True, index=True)
     status: Mapped[str] = mapped_column(String(32), default=DocumentStatus.QUEUED, index=True)
-    error_message: Mapped[str | None] = mapped_column(Text, nullable=True)
+    error_message: Mapped[str | None] = mapped_column(SourceText, nullable=True)
 
-    title: Mapped[str | None] = mapped_column(Text, nullable=True)
+    title: Mapped[str | None] = mapped_column(SourceText, nullable=True)
     authors_json: Mapped[str | None] = mapped_column(Text, nullable=True)
     page_count: Mapped[int | None] = mapped_column(Integer, nullable=True)
     arxiv_id: Mapped[str | None] = mapped_column(String(64), nullable=True, index=True)

@@ -1,0 +1,45 @@
+{
+  "date": "2026-10-10",
+  "state": "uncommitted_worktree_repairs",
+  "base_branch": "codex/stage94-official-failed-qa-retest",
+  "base_commit": "a119f56",
+  "new_branch_created": false,
+  "git_commit_or_push_performed": false,
+  "new_deepseek_model_calls": 0,
+  "fresh_generation_acceptance": "pending_new_authorization",
+  "historical_stage94_strict_accepted": "2/5",
+  "backend_offline_tests_passed": 392,
+  "ruff": "passed",
+  "frontend_changed_or_retested": false,
+  "guard_replay": {
+    "is_new_end_to_end_generation": false,
+    "bert_incomplete_flag_cleared": true,
+    "parameter_semantic_claims_rejected": 2,
+    "correct_required_parameter_values_retained": true,
+    "old_context_answer_incomplete_flag_retained": true
+  },
+  "readonly_bge_recall": {
+    "collection": "official_first_round_20f8c2b7840b456fac6b3b044d7375c4_semantic_d790e73745_1024",
+    "attempts": [
+      {"attempt": 1, "status": "failed", "reason": "TEI 424 and confirmed CUDA out of memory", "record_kind": "manual_failure_summary_after_early_exit"},
+      {"attempt": 2, "status": "failed", "reason": "Few-shot example count falsely promoted as window definition; required GPT-3 paragraph absent"},
+      {"attempt": 3, "status": "passed", "definition_fact_recall": {"gpt1-context-from-gpt2-report": true, "gpt2-context": true, "gpt3-context": true}}
+    ],
+    "selected_evidence_count": 18,
+    "all_evidence_hybrid_and_reranked": true,
+    "is_new_end_to_end_generation": false,
+    "production_library_modified": false,
+    "vector_index_modified": false,
+    "gpt3_window_anchor": {"page_number": 43, "block_ids": ["p43-b11"], "bbox": [72.0, 507.67, 541.74, 572.41], "score": 0.4389}
+  },
+  "runtime_recovery": "Started existing stopped dependency containers and restarted backend; no data-volume deletion",
+  "production_fix_image_refresh": "not_yet_performed",
+  "sha256": {
+    "backend/tmp/stage94-official/targeted-retest.json": "2809e5a7c904a9b69fc054d61b85fd7d70e00778376001d1495ecd7de6ca0679",
+    "backend/tmp/official-repair-worktree/guard-replay.json": "46b27a11e68daf0f724a6e47989666e3c5293b1b47ed5a4d627bb78e90e193f8",
+    "backend/tmp/official-repair-worktree/context-recall-failed-1.json": "99a9711e743520e212bfd9d9317bb0ad493af282a5022000850a03d21fe00bf2",
+    "backend/tmp/official-repair-worktree/context-recall-failed-2.json": "7b93906d97fef011637498f74f24247de443e76dd4883d25adf8165fac877c15",
+    "backend/tmp/official-repair-worktree/context-recall-passed-3.json": "17e35a979744df8f0ac30112619af86cbdb5d527a51f91d63fb45139e89e3f9d"
+  },
+  "limits": ["Limited deterministic semantic contradictions, not general entailment verification.", "No new DeepSeek end-to-end score yet.", "TEI byte budget is not an exact token budget or a universal GPU memory guarantee.", "Do not submit or push repairs until the agreed paper-validation milestone."]
+}

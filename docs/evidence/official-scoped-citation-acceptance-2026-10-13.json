@@ -1,0 +1,288 @@
+{
+  "date": "2026-10-13",
+  "evaluation_kind": "official_scoped_citation_repairs_and_disjoint_corpus_core_acceptance",
+  "branch": "codex/stage94-official-failed-qa-retest",
+  "head": "a119f5609cda544e5d587588c5a338051da129a1",
+  "git_mutated": false,
+  "public_excerpt_cloud_authorized": true,
+  "private_documents_sent": false,
+  "whole_papers_sent": false,
+  "total_generation_calls": 43,
+  "automatic_retries": 0,
+  "generation_call_breakdown": {
+    "targeted_two": 2,
+    "context_identity_confirmation": 1,
+    "corpus_first_attempts": 39,
+    "explicit_flash_confirmation": 1
+  },
+  "generation_candidate": {
+    "app_files": 122,
+    "app_sha256": "ad97dfcf443bda1bd599a0432236405ff8e90b7385242cee3f0d146fe0c4c9c3",
+    "image_id": "sha256:bed7bb2095427e68a1c08cd29cc58a1caf4b0b5f46811c2c39a8b6b1be24f5c0"
+  },
+  "final_runtime": {
+    "app_files": 122,
+    "app_sha256": "0c025a51ce5248e65acc73b067199a6b2e5736d11201a6d9e30e4ae5d21bbb90",
+    "requirements_sha256": "b0e75e31a3ca8f034e095fd0667e3be7e380975548c5acce90db94f96ed7283f",
+    "image_id": "sha256:678114682d89f45821207aeb8e7e8c4d2e7afc61a28dd3de54db7e873872c124",
+    "host_backend_worker_match": true,
+    "backend_worker_bge_frontend_healthy": true,
+    "cached_build_not_clean_install": true,
+    "post_generation_changes": "Ruff formatting, import ordering, equivalent explicit re.split maxsplit=1",
+    "same_python_3_11_canonical_ast_sha256": "5cb49b98fa58d9a6763ee36a5ec670cfd186cc95331827624c67a5f56e3781cc",
+    "ast_normalization": "Only treat re.split third positional argument as identical maxsplit keyword; no general equivalence inference",
+    "final_byte_version_cloud_regenerated": false
+  },
+  "citation_policy": {
+    "changed_since_previous_strict_policy": true,
+    "raw_provider_output_preserved": true,
+    "only_already_explicit_positive_inline_ids_normalized": true,
+    "no_ids_inferred_from_pool_or_expected_values": true,
+    "negative_uncertain_unknown_or_wrong_fields_not_rescued": true,
+    "identity_bridge_not_auto_appended": true,
+    "normalization_visible_in_trace": true,
+    "general_entailment_verifier": false
+  },
+  "results": {
+    "corpus_preflight": {
+      "files": 39,
+      "source_identity_gold_question_checked": true,
+      "cloud_calls": 0,
+      "new_parser_calls": 0,
+      "saved_asts_and_indexes_reused": true
+    },
+    "disjoint_first_attempt_cohort": {
+      "files_attempted": 39,
+      "new_requests": 39,
+      "component_counts": [
+        7,
+        1,
+        31
+      ],
+      "original_machine_passed": 31,
+      "original_machine_failed": 8,
+      "source_review_requested_core_accepted": 38,
+      "independent_gold_source_in_request": 39,
+      "single_continuous_generation_run": false,
+      "whole_answer_certification": false,
+      "core_review_not_expert_or_statistical_accuracy": true
+    },
+    "flash_independent_confirmation": {
+      "new_requests": 1,
+      "machine_passed": true,
+      "requested_core_accepted": true,
+      "elapsed_seconds": 3.753,
+      "provider": "deepseek",
+      "unchanged_original_question": true,
+      "original_timeout_seconds": 60,
+      "first_failure_retained": true,
+      "reason_for_retest": "Read-only models check and 32 subsequent original corpus calls succeeded; explicit one-time confirmation, no automatic retry",
+      "report_sha256": "670016ad6594eb222bbe4bc7f28cbf45f0a6409e3d86eb31bca1610d1ef3eb61",
+      "source": {
+        "filename": "2205.14135v2.pdf",
+        "sha256": "ca7f9fda10b90fc05dd291a3accc85e9c1a4a860b99b31928dab03ed3fcb14e4",
+        "pages": 34,
+        "id": "26ba36b2-ec5e-4bbe-97f4-c7d21ea478d5"
+      },
+      "core_proofs": [
+        {
+          "claim_index": 0,
+          "evidence_id": "E2",
+          "page": 1
+        },
+        {
+          "claim_index": 0,
+          "evidence_id": "E1",
+          "page": 2
+        }
+      ],
+      "inspected_additional_pages": [
+        2,
+        6
+      ],
+      "whole_answer_certified": false,
+      "original_failure_cause": "Client ReadTimeout only; server-side or network cause not established"
+    },
+    "per_file_core_record_coverage": {
+      "files_with_accepted_record": 39,
+      "files": 39,
+      "requests_including_preserved_timeout": 40,
+      "not_a_new_39_of_39_single_round": true,
+      "not_whole_document_accuracy": true
+    },
+    "targeted_first_pair": {
+      "calls": 2,
+      "machine_passed": 2,
+      "bert_two_requested_relations_source_accepted": true,
+      "context_identity_bridge_missing_source_hold": true,
+      "first_context_failure_not_relabelled": true,
+      "bert_scope": "Two inferred architectural relations, each citing BERT and original Transformer, on candidate before final identity audit"
+    },
+    "context_after_identity_audit": {
+      "calls": 1,
+      "three_requested_fields_complete": true,
+      "source_proofs": {
+        "gpt1": [
+          [
+            "E2",
+            "GPT-2",
+            4
+          ],
+          [
+            "E5",
+            "GPT-2",
+            12
+          ],
+          [
+            "E1",
+            "GPT-1",
+            3
+          ]
+        ],
+        "gpt2": [
+          [
+            "E2",
+            "GPT-2",
+            4
+          ]
+        ],
+        "gpt3": [
+          [
+            "E3",
+            "GPT-3",
+            43
+          ]
+        ]
+      },
+      "gpt1_explicitly_later_source_inference": true
+    },
+    "offline_backend": {
+      "passed": 980,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0,
+      "latest_junit": "backend/tmp/official-scope-citation-2026-10-13/offline-backend-formatted-final.xml"
+    },
+    "frontend": {
+      "passed": 32,
+      "failed": 0,
+      "typecheck_passed": true,
+      "changed_this_turn": false,
+      "new_browser_run": false
+    },
+    "scoped_ruff": {
+      "eight_files_checked": true,
+      "final_passed": true,
+      "initial_failures_fixed": true
+    }
+  },
+  "library": {
+    "documents_uploaded_reparsed_deleted": false,
+    "new_conversations": false,
+    "public_source_sha256": "0a9bff1be3575cf9fe26a4a3d3a9175bc791ecec90de8b9deba4cff75d2b9476",
+    "public_ast_sha256": "c51ac3a2fbbb2d27359f38d5d3826d72e5e820173ff9e300e869b3a1bec247c4",
+    "sql_chunks": 106,
+    "vector_points": 106,
+    "point_ids_match": true,
+    "other_document_count": 7,
+    "other_document_rows_unchanged": true,
+    "existing_message_count": 4,
+    "messages_unchanged": true
+  },
+  "quality_holds": [
+    "All-corpus requested-core review does not certify all incidental claims or whole answers",
+    "Official scanned Transformer incidental OCR verbatim transcription retained as unaccepted",
+    "Final same-byte nine questions / counterexamples and finite stability not executed this turn",
+    "Writing, review synthesis, live discovery/subscriptions and future-work follow-up source gates remain",
+    "Cached build is not a clean install; final materials, release, secrets rotation, public deployment remain"
+  ],
+  "prior_scores_not_overwritten": {
+    "original_nine_machine": 9,
+    "original_nine_core": 9,
+    "original_nine_whole": 8,
+    "finite_three_passed": 2,
+    "prior_api_counterexamples_passed": 3,
+    "not_merged_into_current_success_round": true
+  },
+  "artifacts": [
+    {
+      "path": "backend/tmp/official-scope-citation-2026-10-13/context-positive-replay.json",
+      "sha256": "96fa99480ceb7933121ef87d53515cc0243c81d9108a02299f8105341d774cda"
+    },
+    {
+      "path": "backend/tmp/official-scope-citation-2026-10-13/context-positive-identity-replay.json",
+      "sha256": "4cde37acb68070ec4f0c4fef6f1d00380cc5e13eb2d7834af39b8eab5eaa1877"
+    },
+    {
+      "path": "backend/tmp/official-scope-citation-2026-10-13/targeted-two/report.json",
+      "sha256": "12dbc442625bce8c9e57508b7fc00c1ab480ccebd835e4b2d1ed93873b10579e"
+    },
+    {
+      "path": "backend/tmp/official-scope-citation-2026-10-13/context-identity/report.json",
+      "sha256": "b4434c27b13e7a3d2264188735e55f3aad04eeb699eaf6a71787bcae9868300e"
+    },
+    {
+      "path": "backend/tmp/official-scope-citation-2026-10-13/corpus-preflight/source-gold.json",
+      "sha256": "f91f310bb6d32f01439f7b3e125acf00260234f7c7a9cb6ee4c4bef7a05230da"
+    },
+    {
+      "path": "backend/tmp/official-scope-citation-2026-10-13/corpus-batch-8/report.json",
+      "sha256": "3eb5d274601ac51c8bbbc790441017b71cde219b48ebb271570474c8ab5d3b24"
+    },
+    {
+      "path": "backend/tmp/official-scope-citation-2026-10-13/pending-book/report.json",
+      "sha256": "c701e3a0c82adb6f2c4c6ee58331d7398495f935e6ce9d7fb4a47a1d123d98e2"
+    },
+    {
+      "path": "backend/tmp/official-scope-citation-2026-10-13/corpus-remaining-31/report.json",
+      "sha256": "972d129bd72ad8d9acb4a1ad4da398faaabb330c9927817a6c498b971b6562a3"
+    },
+    {
+      "path": "backend/tmp/official-scope-citation-2026-10-13/cohort-39.json",
+      "sha256": "a69372ded424e0650a66fff7676a3bb97b4db47961b5675324cde73f87e94da7"
+    },
+    {
+      "path": "backend/tmp/official-scope-citation-2026-10-13/cohort-39-core-review.json",
+      "sha256": "3f59a1469d2676c01541d3b52cdd0ebec249e7dbc75685a8e6123ca1d4eb8575"
+    },
+    {
+      "path": "backend/tmp/official-scope-citation-2026-10-13/flash-timeout-confirmation/report.json",
+      "sha256": "670016ad6594eb222bbe4bc7f28cbf45f0a6409e3d86eb31bca1610d1ef3eb61"
+    },
+    {
+      "path": "backend/tmp/official-scope-citation-2026-10-13/offline-backend-cohort-final.xml",
+      "sha256": "409800c8971011fe091ed2dd123ff8265fcb034c398d987a5dba9217e8484349"
+    },
+    {
+      "path": "backend/tmp/official-scope-citation-2026-10-13/library-after.json",
+      "sha256": "dcaccbc89c2184b21f8552ff93d8b71f0fa1f40351722cc7b78a8edc31997e24"
+    },
+    {
+      "path": "backend/evals/official_scoped_cohort_39_core_review.json",
+      "sha256": "80b2d146fa3d269423e3965c5d61dc8f7af60133c8dda247ecf889e6245198b5"
+    },
+    {
+      "path": "backend/scripts/combine_official_disjoint_retests.py",
+      "sha256": "a84f707aa713d2c95cba20cb81c53793b7aefcf41ae365ca1664d3938594c656"
+    },
+    {
+      "path": "backend/tmp/official-scope-citation-2026-10-13/offline-backend-formatted-final.xml",
+      "sha256": "412149bf0e77c39780d6b5f5151b68db6afb552026354ddfa80a45eb215b8d77"
+    },
+    {
+      "path": "backend/app/llm/model_fields.py",
+      "sha256": "77663fbd6f8d99a20e750112fd972937bd9fa0c3c1c67b98c0ca81974f61b218"
+    },
+    {
+      "path": "backend/app/llm/relationship_fields.py",
+      "sha256": "7907afb8d8be2449e32c6424b559ae0f9cb83f69cd75022c7b1cc1faffd9859a"
+    },
+    {
+      "path": "backend/app/services/baseline_evidence.py",
+      "sha256": "ee396ec098d150a7d41385f776a8b1990e345d079c3ac40643980b110f945d52"
+    }
+  ],
+  "original_reports_retained": true,
+  "six_modules_accepted": false,
+  "release_approved": false
+}

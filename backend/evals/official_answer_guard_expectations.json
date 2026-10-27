@@ -1,0 +1,9 @@
+{
+  "expectations_id": "preserved-2026-10-11-answer-guard-behavior-only",
+  "notes": "Offline replay of unchanged prior outputs. A passing check means the current guard preserves the valid BERT result and labels the two incomplete GPT answers appropriately. It is not a new model answer, source recall test, or scientific correctness acceptance.",
+  "cases": {
+    "bert-inheritance": {"insufficient_evidence": false, "missing_fields": []},
+    "gpt-parameter-evolution": {"insufficient_evidence": true, "missing_fields": ["GPT-1 参数量"]},
+    "context-evolution": {"insufficient_evidence": true, "missing_fields": ["GPT-1 最大上下文及来源说明"]}
+  }
+}

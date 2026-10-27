@@ -14,19 +14,34 @@ class EvidenceAnchor(BaseModel):
     block_ids: list[str] = Field(default_factory=list)
     bbox: list[float] | None = None
     section: str | None = None
-    source_type: Literal["text", "abstract", "table", "figure", "formula", "reference"] = (
-        "text"
-    )
-    retrieval_mode: Literal["lexical", "vector", "hybrid", "reranked"] = "lexical"
+    source_type: Literal["text", "abstract", "table", "figure", "formula", "reference"] = "text"
+    retrieval_mode: Literal["lexical", "vector", "hybrid", "reranked", "local_context"] = "lexical"
     # Reranking is a separate stage; it must not erase the first-stage provenance.
     recall_mode: Literal["lexical", "vector", "hybrid"] | None = None
     quote: str
     score: float = Field(ge=0.0, le=1.0)
+    # A page-local continuation is not a separately ranked retrieval hit.
+    context_for: list[str] = Field(default_factory=list)
 
 
 class AnswerClaim(BaseModel):
     text: str
     evidence_ids: list[str]
+
+
+class GroundingRejection(BaseModel):
+    claim_index: int = Field(ge=0)
+    evidence_ids: list[str]
+    reasons: list[str]
+
+
+class GroundingAudit(BaseModel):
+    """The grounding input, not the final answer or a semantic accuracy score."""
+
+    input_claim_count: int = Field(ge=0)
+    accepted_claim_count: int = Field(ge=0)
+    document_claim_counts: dict[str, int] = Field(default_factory=dict)
+    rejections: list[GroundingRejection] = Field(default_factory=list)
 
 
 class AgentTraceStep(BaseModel):
@@ -58,6 +73,7 @@ class AskResponse(BaseModel):
     provider: str
     model: str | None = None
     trace: list[AgentTraceStep] = Field(default_factory=list)
+    grounding_audit: GroundingAudit | None = None
 
 
 class TranslateRequest(BaseModel):

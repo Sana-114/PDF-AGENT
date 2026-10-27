@@ -1,0 +1,1417 @@
+{
+  "schema_version": 1,
+  "summary": {
+    "date": "2026-10-16",
+    "record_kind": "bounded_policy_scope_repair_followup",
+    "current_source": {
+      "python_version": "3.12.14",
+      "app_files": 127,
+      "app_sha256": "e15a2461b1b87c79be1597f73beac5069f66fcb5b85d211aa432403ca5d83f09",
+      "requirements_sha256": "b0e75e31a3ca8f034e095fd0667e3be7e380975548c5acce90db94f96ed7283f"
+    },
+    "runs": [
+      {
+        "directory": "runtime-qa",
+        "original_machine_status": "failed",
+        "original_case_statuses": [
+          "failed",
+          "failed"
+        ],
+        "report_sha256": "9bc4aebc6fc9caa485a3237808105e33c762d5816220d3b32e8e11132288fbfb",
+        "runtime_source": {
+          "python_version": "3.12.14",
+          "app_files": 127,
+          "app_sha256": "58e8822dfa5a7aca56aaaa329151ef1a7bad87286848fc647646ef7706c54406",
+          "requirements_sha256": "b0e75e31a3ca8f034e095fd0667e3be7e380975548c5acce90db94f96ed7283f"
+        },
+        "cloud_calls": 2,
+        "vector_collection": "official_runtime_9b82a43b46ca4a1898fffe6f691b51e1_semantic_d790e73745_1024",
+        "indexed_chunks": 633
+      },
+      {
+        "directory": "runtime-qa-confirm",
+        "original_machine_status": "failed",
+        "original_case_statuses": [
+          "source_checks_passed",
+          "failed"
+        ],
+        "report_sha256": "eb4af8541d5e1f5068ac9d0a6dba96840cbb4e9817c93648863bf33bbcb14658",
+        "runtime_source": {
+          "python_version": "3.12.14",
+          "app_files": 127,
+          "app_sha256": "d6e73bccc50894f2bc57bcb32e822ca61c009a8f80eda2cd02e46280513b0c6f",
+          "requirements_sha256": "b0e75e31a3ca8f034e095fd0667e3be7e380975548c5acce90db94f96ed7283f"
+        },
+        "cloud_calls": 2,
+        "vector_collection": "official_runtime_e130b6f5c77e45a9ad684be61cb8c2ad_semantic_d790e73745_1024",
+        "indexed_chunks": 633
+      },
+      {
+        "directory": "runtime-qa-release",
+        "original_machine_status": "failed",
+        "original_case_statuses": [
+          "source_checks_passed",
+          "failed"
+        ],
+        "report_sha256": "808f0f93d95a6d12c7d2df81db2d702ed5221a9857fe6eaeba88045e9cac62ac",
+        "runtime_source": {
+          "python_version": "3.12.14",
+          "app_files": 127,
+          "app_sha256": "ad2e8cefc6f05afa1e288dec6a10e074001a8fcce67b3c33b530331585b1e17f",
+          "requirements_sha256": "b0e75e31a3ca8f034e095fd0667e3be7e380975548c5acce90db94f96ed7283f"
+        },
+        "cloud_calls": 2,
+        "vector_collection": "official_runtime_51c2797ae4294a26be99076089e4ba5b_semantic_d790e73745_1024",
+        "indexed_chunks": 633
+      }
+    ],
+    "review_source": {
+      "python_version": "3.12.14",
+      "app_files": 127,
+      "app_sha256": "58e8822dfa5a7aca56aaaa329151ef1a7bad87286848fc647646ef7706c54406",
+      "requirements_sha256": "b0e75e31a3ca8f034e095fd0667e3be7e380975548c5acce90db94f96ed7283f"
+    },
+    "review_quality_passed": false,
+    "cloud_calls": 7,
+    "automatic_retries": 0,
+    "qa_anchor_count": 120,
+    "qa_all_anchors_valid": true,
+    "anchor_checks": [
+      {
+        "run": "runtime-qa",
+        "case": "dpo-instructgpt-object-and-stage",
+        "evidence_id": "E1",
+        "valid": true
+      },
+      {
+        "run": "runtime-qa",
+        "case": "dpo-instructgpt-object-and-stage",
+        "evidence_id": "E2",
+        "valid": true
+      },
+      {
+        "run": "runtime-qa",
+        "case": "dpo-instructgpt-object-and-stage",
+        "evidence_id": "E3",
+        "valid": true
+      },
+      {
+        "run": "runtime-qa",
+        "case": "dpo-instructgpt-object-and-stage",
+        "evidence_id": "E4",
+        "valid": true
+      },
+      {
+        "run": "runtime-qa",
+        "case": "dpo-instructgpt-object-and-stage",
+        "evidence_id": "E5",
+        "valid": true
+      },
+      {
+        "run": "runtime-qa",
+        "case": "dpo-instructgpt-object-and-stage",
+        "evidence_id": "E6",
+        "valid": true
+      },
+      {
+        "run": "runtime-qa",
+        "case": "dpo-instructgpt-object-and-stage",
+        "evidence_id": "E7",
+        "valid": true
+      },
+      {
+        "run": "runtime-qa",
+        "case": "dpo-instructgpt-object-and-stage",
+        "evidence_id": "E8",
+        "valid": true
+      },
+      {
+        "run": "runtime-qa",
+        "case": "dpo-instructgpt-object-and-stage",
+        "evidence_id": "E9",
+        "valid": true
+      },
+      {
+        "run": "runtime-qa",
+        "case": "dpo-instructgpt-object-and-stage",
+        "evidence_id": "E10",
+        "valid": true
+      },
+      {
+        "run": "runtime-qa",
+        "case": "dpo-instructgpt-object-and-stage",
+        "evidence_id": "E11",
+        "valid": true
+      },
+      {
+        "run": "runtime-qa",
+        "case": "dpo-instructgpt-object-and-stage",
+        "evidence_id": "E12",
+        "valid": true
+      },
+      {
+        "run": "runtime-qa",
+        "case": "dpo-instructgpt-object-and-stage",
+        "evidence_id": "E13",
+        "valid": true
+      },
+      {
+        "run": "runtime-qa",
+        "case": "dpo-instructgpt-object-and-stage",
+        "evidence_id": "E14",
+        "valid": true
+      },
+      {
+        "run": "runtime-qa",
+        "case": "dpo-instructgpt-object-and-stage",
+        "evidence_id": "E15",
+        "valid": true
+      },
+      {
+        "run": "runtime-qa",
+        "case": "dpo-instructgpt-object-and-stage",
+        "evidence_id": "E16",
+        "valid": true
+      },
+      {
+        "run": "runtime-qa",
+        "case": "dpo-instructgpt-object-and-stage",
+        "evidence_id": "E17",
+        "valid": true
+      },
+      {
+        "run": "runtime-qa",
+        "case": "dpo-instructgpt-object-and-stage",
+        "evidence_id": "E18",
+        "valid": true
+      },
+      {
+        "run": "runtime-qa",
+        "case": "dpo-instructgpt-object-and-stage",
+        "evidence_id": "E19",
+        "valid": true
+      },
+      {
+        "run": "runtime-qa",
+        "case": "dpo-instructgpt-object-and-stage",
+        "evidence_id": "E20",
+        "valid": true
+      },
+      {
+        "run": "runtime-qa",
+        "case": "dpo-reject-global-analytic-and-sampling-free",
+        "evidence_id": "E1",
+        "valid": true
+      },
+      {
+        "run": "runtime-qa",
+        "case": "dpo-reject-global-analytic-and-sampling-free",
+        "evidence_id": "E2",
+        "valid": true
+      },
+      {
+        "run": "runtime-qa",
+        "case": "dpo-reject-global-analytic-and-sampling-free",
+        "evidence_id": "E3",
+        "valid": true
+      },
+      {
+        "run": "runtime-qa",
+        "case": "dpo-reject-global-analytic-and-sampling-free",
+        "evidence_id": "E4",
+        "valid": true
+      },
+      {
+        "run": "runtime-qa",
+        "case": "dpo-reject-global-analytic-and-sampling-free",
+        "evidence_id": "E5",
+        "valid": true
+      },
+      {
+        "run": "runtime-qa",
+        "case": "dpo-reject-global-analytic-and-sampling-free",
+        "evidence_id": "E6",
+        "valid": true
+      },
+      {
+        "run": "runtime-qa",
+        "case": "dpo-reject-global-analytic-and-sampling-free",
+        "evidence_id": "E7",
+        "valid": true
+      },
+      {
+        "run": "runtime-qa",
+        "case": "dpo-reject-global-analytic-and-sampling-free",
+        "evidence_id": "E8",
+        "valid": true
+      },
+      {
+        "run": "runtime-qa",
+        "case": "dpo-reject-global-analytic-and-sampling-free",
+        "evidence_id": "E9",
+        "valid": true
+      },
+      {
+        "run": "runtime-qa",
+        "case": "dpo-reject-global-analytic-and-sampling-free",
+        "evidence_id": "E10",
+        "valid": true
+      },
+      {
+        "run": "runtime-qa",
+        "case": "dpo-reject-global-analytic-and-sampling-free",
+        "evidence_id": "E11",
+        "valid": true
+      },
+      {
+        "run": "runtime-qa",
+        "case": "dpo-reject-global-analytic-and-sampling-free",
+        "evidence_id": "E12",
+        "valid": true
+      },
+      {
+        "run": "runtime-qa",
+        "case": "dpo-reject-global-analytic-and-sampling-free",
+        "evidence_id": "E13",
+        "valid": true
+      },
+      {
+        "run": "runtime-qa",
+        "case": "dpo-reject-global-analytic-and-sampling-free",
+        "evidence_id": "E14",
+        "valid": true
+      },
+      {
+        "run": "runtime-qa",
+        "case": "dpo-reject-global-analytic-and-sampling-free",
+        "evidence_id": "E15",
+        "valid": true
+      },
+      {
+        "run": "runtime-qa",
+        "case": "dpo-reject-global-analytic-and-sampling-free",
+        "evidence_id": "E16",
+        "valid": true
+      },
+      {
+        "run": "runtime-qa",
+        "case": "dpo-reject-global-analytic-and-sampling-free",
+        "evidence_id": "E17",
+        "valid": true
+      },
+      {
+        "run": "runtime-qa",
+        "case": "dpo-reject-global-analytic-and-sampling-free",
+        "evidence_id": "E18",
+        "valid": true
+      },
+      {
+        "run": "runtime-qa",
+        "case": "dpo-reject-global-analytic-and-sampling-free",
+        "evidence_id": "E19",
+        "valid": true
+      },
+      {
+        "run": "runtime-qa",
+        "case": "dpo-reject-global-analytic-and-sampling-free",
+        "evidence_id": "E20",
+        "valid": true
+      },
+      {
+        "run": "runtime-qa-confirm",
+        "case": "dpo-instructgpt-object-and-stage",
+        "evidence_id": "E2",
+        "valid": true
+      },
+      {
+        "run": "runtime-qa-confirm",
+        "case": "dpo-instructgpt-object-and-stage",
+        "evidence_id": "E3",
+        "valid": true
+      },
+      {
+        "run": "runtime-qa-confirm",
+        "case": "dpo-instructgpt-object-and-stage",
+        "evidence_id": "E9",
+        "valid": true
+      },
+      {
+        "run": "runtime-qa-confirm",
+        "case": "dpo-instructgpt-object-and-stage",
+        "evidence_id": "E16",
+        "valid": true
+      },
+      {
+        "run": "runtime-qa-confirm",
+        "case": "dpo-instructgpt-object-and-stage",
+        "evidence_id": "E19",
+        "valid": true
+      },
+      {
+        "run": "runtime-qa-confirm",
+        "case": "dpo-instructgpt-object-and-stage",
+        "evidence_id": "E20",
+        "valid": true
+      },
+      {
+        "run": "runtime-qa-confirm",
+        "case": "dpo-instructgpt-object-and-stage",
+        "evidence_id": "E1",
+        "valid": true
+      },
+      {
+        "run": "runtime-qa-confirm",
+        "case": "dpo-instructgpt-object-and-stage",
+        "evidence_id": "E4",
+        "valid": true
+      },
+      {
+        "run": "runtime-qa-confirm",
+        "case": "dpo-instructgpt-object-and-stage",
+        "evidence_id": "E5",
+        "valid": true
+      },
+      {
+        "run": "runtime-qa-confirm",
+        "case": "dpo-instructgpt-object-and-stage",
+        "evidence_id": "E6",
+        "valid": true
+      },
+      {
+        "run": "runtime-qa-confirm",
+        "case": "dpo-instructgpt-object-and-stage",
+        "evidence_id": "E7",
+        "valid": true
+      },
+      {
+        "run": "runtime-qa-confirm",
+        "case": "dpo-instructgpt-object-and-stage",
+        "evidence_id": "E8",
+        "valid": true
+      },
+      {
+        "run": "runtime-qa-confirm",
+        "case": "dpo-instructgpt-object-and-stage",
+        "evidence_id": "E10",
+        "valid": true
+      },
+      {
+        "run": "runtime-qa-confirm",
+        "case": "dpo-instructgpt-object-and-stage",
+        "evidence_id": "E11",
+        "valid": true
+      },
+      {
+        "run": "runtime-qa-confirm",
+        "case": "dpo-instructgpt-object-and-stage",
+        "evidence_id": "E12",
+        "valid": true
+      },
+      {
+        "run": "runtime-qa-confirm",
+        "case": "dpo-instructgpt-object-and-stage",
+        "evidence_id": "E13",
+        "valid": true
+      },
+      {
+        "run": "runtime-qa-confirm",
+        "case": "dpo-instructgpt-object-and-stage",
+        "evidence_id": "E14",
+        "valid": true
+      },
+      {
+        "run": "runtime-qa-confirm",
+        "case": "dpo-instructgpt-object-and-stage",
+        "evidence_id": "E15",
+        "valid": true
+      },
+      {
+        "run": "runtime-qa-confirm",
+        "case": "dpo-instructgpt-object-and-stage",
+        "evidence_id": "E17",
+        "valid": true
+      },
+      {
+        "run": "runtime-qa-confirm",
+        "case": "dpo-instructgpt-object-and-stage",
+        "evidence_id": "E18",
+        "valid": true
+      },
+      {
+        "run": "runtime-qa-confirm",
+        "case": "dpo-reject-global-analytic-and-sampling-free",
+        "evidence_id": "E1",
+        "valid": true
+      },
+      {
+        "run": "runtime-qa-confirm",
+        "case": "dpo-reject-global-analytic-and-sampling-free",
+        "evidence_id": "E2",
+        "valid": true
+      },
+      {
+        "run": "runtime-qa-confirm",
+        "case": "dpo-reject-global-analytic-and-sampling-free",
+        "evidence_id": "E3",
+        "valid": true
+      },
+      {
+        "run": "runtime-qa-confirm",
+        "case": "dpo-reject-global-analytic-and-sampling-free",
+        "evidence_id": "E4",
+        "valid": true
+      },
+      {
+        "run": "runtime-qa-confirm",
+        "case": "dpo-reject-global-analytic-and-sampling-free",
+        "evidence_id": "E5",
+        "valid": true
+      },
+      {
+        "run": "runtime-qa-confirm",
+        "case": "dpo-reject-global-analytic-and-sampling-free",
+        "evidence_id": "E6",
+        "valid": true
+      },
+      {
+        "run": "runtime-qa-confirm",
+        "case": "dpo-reject-global-analytic-and-sampling-free",
+        "evidence_id": "E7",
+        "valid": true
+      },
+      {
+        "run": "runtime-qa-confirm",
+        "case": "dpo-reject-global-analytic-and-sampling-free",
+        "evidence_id": "E8",
+        "valid": true
+      },
+      {
+        "run": "runtime-qa-confirm",
+        "case": "dpo-reject-global-analytic-and-sampling-free",
+        "evidence_id": "E9",
+        "valid": true
+      },
+      {
+        "run": "runtime-qa-confirm",
+        "case": "dpo-reject-global-analytic-and-sampling-free",
+        "evidence_id": "E10",
+        "valid": true
+      },
+      {
+        "run": "runtime-qa-confirm",
+        "case": "dpo-reject-global-analytic-and-sampling-free",
+        "evidence_id": "E11",
+        "valid": true
+      },
+      {
+        "run": "runtime-qa-confirm",
+        "case": "dpo-reject-global-analytic-and-sampling-free",
+        "evidence_id": "E12",
+        "valid": true
+      },
+      {
+        "run": "runtime-qa-confirm",
+        "case": "dpo-reject-global-analytic-and-sampling-free",
+        "evidence_id": "E13",
+        "valid": true
+      },
+      {
+        "run": "runtime-qa-confirm",
+        "case": "dpo-reject-global-analytic-and-sampling-free",
+        "evidence_id": "E14",
+        "valid": true
+      },
+      {
+        "run": "runtime-qa-confirm",
+        "case": "dpo-reject-global-analytic-and-sampling-free",
+        "evidence_id": "E15",
+        "valid": true
+      },
+      {
+        "run": "runtime-qa-confirm",
+        "case": "dpo-reject-global-analytic-and-sampling-free",
+        "evidence_id": "E16",
+        "valid": true
+      },
+      {
+        "run": "runtime-qa-confirm",
+        "case": "dpo-reject-global-analytic-and-sampling-free",
+        "evidence_id": "E17",
+        "valid": true
+      },
+      {
+        "run": "runtime-qa-confirm",
+        "case": "dpo-reject-global-analytic-and-sampling-free",
+        "evidence_id": "E18",
+        "valid": true
+      },
+      {
+        "run": "runtime-qa-confirm",
+        "case": "dpo-reject-global-analytic-and-sampling-free",
+        "evidence_id": "E19",
+        "valid": true
+      },
+      {
+        "run": "runtime-qa-confirm",
+        "case": "dpo-reject-global-analytic-and-sampling-free",
+        "evidence_id": "E20",
+        "valid": true
+      },
+      {
+        "run": "runtime-qa-release",
+        "case": "dpo-instructgpt-object-and-stage",
+        "evidence_id": "E2",
+        "valid": true
+      },
+      {
+        "run": "runtime-qa-release",
+        "case": "dpo-instructgpt-object-and-stage",
+        "evidence_id": "E3",
+        "valid": true
+      },
+      {
+        "run": "runtime-qa-release",
+        "case": "dpo-instructgpt-object-and-stage",
+        "evidence_id": "E9",
+        "valid": true
+      },
+      {
+        "run": "runtime-qa-release",
+        "case": "dpo-instructgpt-object-and-stage",
+        "evidence_id": "E16",
+        "valid": true
+      },
+      {
+        "run": "runtime-qa-release",
+        "case": "dpo-instructgpt-object-and-stage",
+        "evidence_id": "E19",
+        "valid": true
+      },
+      {
+        "run": "runtime-qa-release",
+        "case": "dpo-instructgpt-object-and-stage",
+        "evidence_id": "E20",
+        "valid": true
+      },
+      {
+        "run": "runtime-qa-release",
+        "case": "dpo-instructgpt-object-and-stage",
+        "evidence_id": "E1",
+        "valid": true
+      },
+      {
+        "run": "runtime-qa-release",
+        "case": "dpo-instructgpt-object-and-stage",
+        "evidence_id": "E4",
+        "valid": true
+      },
+      {
+        "run": "runtime-qa-release",
+        "case": "dpo-instructgpt-object-and-stage",
+        "evidence_id": "E5",
+        "valid": true
+      },
+      {
+        "run": "runtime-qa-release",
+        "case": "dpo-instructgpt-object-and-stage",
+        "evidence_id": "E6",
+        "valid": true
+      },
+      {
+        "run": "runtime-qa-release",
+        "case": "dpo-instructgpt-object-and-stage",
+        "evidence_id": "E7",
+        "valid": true
+      },
+      {
+        "run": "runtime-qa-release",
+        "case": "dpo-instructgpt-object-and-stage",
+        "evidence_id": "E8",
+        "valid": true
+      },
+      {
+        "run": "runtime-qa-release",
+        "case": "dpo-instructgpt-object-and-stage",
+        "evidence_id": "E10",
+        "valid": true
+      },
+      {
+        "run": "runtime-qa-release",
+        "case": "dpo-instructgpt-object-and-stage",
+        "evidence_id": "E11",
+        "valid": true
+      },
+      {
+        "run": "runtime-qa-release",
+        "case": "dpo-instructgpt-object-and-stage",
+        "evidence_id": "E12",
+        "valid": true
+      },
+      {
+        "run": "runtime-qa-release",
+        "case": "dpo-instructgpt-object-and-stage",
+        "evidence_id": "E13",
+        "valid": true
+      },
+      {
+        "run": "runtime-qa-release",
+        "case": "dpo-instructgpt-object-and-stage",
+        "evidence_id": "E14",
+        "valid": true
+      },
+      {
+        "run": "runtime-qa-release",
+        "case": "dpo-instructgpt-object-and-stage",
+        "evidence_id": "E15",
+        "valid": true
+      },
+      {
+        "run": "runtime-qa-release",
+        "case": "dpo-instructgpt-object-and-stage",
+        "evidence_id": "E17",
+        "valid": true
+      },
+      {
+        "run": "runtime-qa-release",
+        "case": "dpo-instructgpt-object-and-stage",
+        "evidence_id": "E18",
+        "valid": true
+      },
+      {
+        "run": "runtime-qa-release",
+        "case": "dpo-reject-global-analytic-and-sampling-free",
+        "evidence_id": "E1",
+        "valid": true
+      },
+      {
+        "run": "runtime-qa-release",
+        "case": "dpo-reject-global-analytic-and-sampling-free",
+        "evidence_id": "E2",
+        "valid": true
+      },
+      {
+        "run": "runtime-qa-release",
+        "case": "dpo-reject-global-analytic-and-sampling-free",
+        "evidence_id": "E3",
+        "valid": true
+      },
+      {
+        "run": "runtime-qa-release",
+        "case": "dpo-reject-global-analytic-and-sampling-free",
+        "evidence_id": "E4",
+        "valid": true
+      },
+      {
+        "run": "runtime-qa-release",
+        "case": "dpo-reject-global-analytic-and-sampling-free",
+        "evidence_id": "E5",
+        "valid": true
+      },
+      {
+        "run": "runtime-qa-release",
+        "case": "dpo-reject-global-analytic-and-sampling-free",
+        "evidence_id": "E6",
+        "valid": true
+      },
+      {
+        "run": "runtime-qa-release",
+        "case": "dpo-reject-global-analytic-and-sampling-free",
+        "evidence_id": "E7",
+        "valid": true
+      },
+      {
+        "run": "runtime-qa-release",
+        "case": "dpo-reject-global-analytic-and-sampling-free",
+        "evidence_id": "E8",
+        "valid": true
+      },
+      {
+        "run": "runtime-qa-release",
+        "case": "dpo-reject-global-analytic-and-sampling-free",
+        "evidence_id": "E9",
+        "valid": true
+      },
+      {
+        "run": "runtime-qa-release",
+        "case": "dpo-reject-global-analytic-and-sampling-free",
+        "evidence_id": "E10",
+        "valid": true
+      },
+      {
+        "run": "runtime-qa-release",
+        "case": "dpo-reject-global-analytic-and-sampling-free",
+        "evidence_id": "E11",
+        "valid": true
+      },
+      {
+        "run": "runtime-qa-release",
+        "case": "dpo-reject-global-analytic-and-sampling-free",
+        "evidence_id": "E12",
+        "valid": true
+      },
+      {
+        "run": "runtime-qa-release",
+        "case": "dpo-reject-global-analytic-and-sampling-free",
+        "evidence_id": "E13",
+        "valid": true
+      },
+      {
+        "run": "runtime-qa-release",
+        "case": "dpo-reject-global-analytic-and-sampling-free",
+        "evidence_id": "E14",
+        "valid": true
+      },
+      {
+        "run": "runtime-qa-release",
+        "case": "dpo-reject-global-analytic-and-sampling-free",
+        "evidence_id": "E15",
+        "valid": true
+      },
+      {
+        "run": "runtime-qa-release",
+        "case": "dpo-reject-global-analytic-and-sampling-free",
+        "evidence_id": "E16",
+        "valid": true
+      },
+      {
+        "run": "runtime-qa-release",
+        "case": "dpo-reject-global-analytic-and-sampling-free",
+        "evidence_id": "E17",
+        "valid": true
+      },
+      {
+        "run": "runtime-qa-release",
+        "case": "dpo-reject-global-analytic-and-sampling-free",
+        "evidence_id": "E18",
+        "valid": true
+      },
+      {
+        "run": "runtime-qa-release",
+        "case": "dpo-reject-global-analytic-and-sampling-free",
+        "evidence_id": "E19",
+        "valid": true
+      },
+      {
+        "run": "runtime-qa-release",
+        "case": "dpo-reject-global-analytic-and-sampling-free",
+        "evidence_id": "E20",
+        "valid": true
+      }
+    ],
+    "old_immutable_count": 30,
+    "old_changed": [],
+    "backend_regression": {
+      "name": "pytest",
+      "errors": "0",
+      "failures": "0",
+      "skipped": "0",
+      "tests": "1213",
+      "time": "8.801",
+      "timestamp": "2026-10-16T12:32:23.292984+08:00",
+      "hostname": "LAPTOP-SDLMH7KC"
+    },
+    "frontend_regression": {
+      "tests": 42,
+      "failures": 0
+    },
+    "typecheck": "passed_observed_process_exit_0",
+    "acceptance_8018_closed": true,
+    "production_library_write_requested": false,
+    "git_mutated": false,
+    "git_branch": "codex/stage94-official-failed-qa-retest",
+    "git_head": "a119f5609cda544e5d587588c5a338051da129a1",
+    "whole_project_released": false,
+    "replay_not_new_generation": "backend/tmp/official-policy-scope-2026-10-16/post-repair-replay.json"
+  },
+  "manual_review": {
+    "date": "2026-10-16",
+    "scope": "Two new fixed policy-learning probes plus the same prior 20-paper synthesis request; not a 39-answer rerun",
+    "cloud_calls": 7,
+    "automatic_retries": 0,
+    "first_runtime": {
+      "directory": "runtime-qa",
+      "original_machine_status": "failed",
+      "positive_question": "Real failure: experimental no-extra-unlabelled-prompts paragraph was substituted for the requested LM sampling mechanism; no published dual-original comparison.",
+      "counterexample": "Core distinction/source scope was correct, but the checker missed 而非/并未声称. A correct additional source-limitation note was also conservatively withheld. Preserve original grades."
+    },
+    "second_runtime": {
+      "directory": "runtime-qa-confirm",
+      "original_machine_status": "failed",
+      "positive_machine_passed": true,
+      "positive_quality_hold": "One comparison mentioned both methods but cited DPO only; a later claim cited both originals correctly. Do not call that entire earlier answer accepted.",
+      "counterexample": "Sampling-scope claim was incorrectly withheld because its semicolon continuation said 并未声称. Also kept a closed-form reward-function wording ambiguity for review."
+    },
+    "last_runtime": {
+      "directory": "runtime-qa-release",
+      "app_sha256": "ad2e8cefc6f05afa1e288dec6a10e074001a8fcce67b3c33b530331585b1e17f",
+      "positive_original_machine_status": "source_checks_passed",
+      "positive_core_status": "four_published_claims_original_page_confirmed",
+      "positive_claim_reviews": [
+        {
+          "index": 0,
+          "evidence": [
+            "E1",
+            "E19"
+          ],
+          "pages": [
+            "DPO 1",
+            "DPO 2 Figure 1"
+          ],
+          "status": "confirmed",
+          "note": "Closed-form object is the optimal policy for the implicit reward, not an analytic fit of network weights or classifier loss."
+        },
+        {
+          "index": 1,
+          "evidence": [
+            "E9",
+            "E19"
+          ],
+          "pages": [
+            "DPO 2"
+          ],
+          "status": "confirmed",
+          "note": "Binary classification objective, preference-loss change of variables, and weighted preferred/dispreferred log-probability update match the cited body."
+        },
+        {
+          "index": 2,
+          "evidence": [
+            "E1"
+          ],
+          "pages": [
+            "DPO 1"
+          ],
+          "status": "confirmed",
+          "note": "Explicitly retains LM sampling during fine-tuning; not data/minibatch sampling or the entire pipeline."
+        },
+        {
+          "index": 3,
+          "evidence": [
+            "E1",
+            "E3",
+            "E9",
+            "E4",
+            "E19"
+          ],
+          "pages": [
+            "DPO 1, 2 and 8",
+            "InstructGPT 11"
+          ],
+          "status": "bounded_comparison_confirmed",
+          "note": "Cites both originals. Identifies SFT then comparison-data PPO in the InstructGPT source and explicitly notes DPO discusses PPO-class RLHF, not InstructGPT by name; no false inheritance or direct-author attribution."
+        }
+      ],
+      "counterexample_original_machine_status": "failed",
+      "counterexample_original_failed_check": "policy_object_and_learning_objective_present",
+      "counterexample_failure_kind": "checker_did_not_recognize_binary_cross_entropy_Chinese_synonym",
+      "counterexample_core_status": "published_core_original_page_confirmed",
+      "counterexample_published_claims": 5,
+      "counterexample_claim_reviews": [
+        {
+          "index": 0,
+          "pages": [
+            "DPO 2"
+          ],
+          "status": "confirmed",
+          "note": "The learning objective is called 二值交叉熵目标, an explicitly supported equivalent of binary cross-entropy objective. It is not missing."
+        },
+        {
+          "index": 1,
+          "pages": [
+            "DPO 1"
+          ],
+          "status": "confirmed",
+          "note": "Retains fine-tuning and LM generated samples."
+        },
+        {
+          "index": 2,
+          "pages": [
+            "DPO 5 DPO outline"
+          ],
+          "status": "confirmed",
+          "note": "The dataset-building sampling step and possible reuse of public preference data are stated in the full original page."
+        },
+        {
+          "index": 3,
+          "pages": [
+            "DPO 9 section 6.2"
+          ],
+          "status": "bounded_reported_experiment_confirmed",
+          "note": "Extra TL;DR sampling temperatures and human head-to-head generation settings match this experiment; not a general recommendation for all inference."
+        },
+        {
+          "index": 4,
+          "pages": [
+            "DPO 1 and 5"
+          ],
+          "status": "source_scope_note_confirmed",
+          "note": "Does not generalize the abstract's local elimination of online LM sampling to all preparation/training/inference."
+        }
+      ],
+      "withheld_raw_index": 0,
+      "withheld_kind": "false_positive_on_它并不是闭式求出神经网络权重",
+      "withheld_scope_after_fix": "Only zero-call replay, never labelled a new generated success",
+      "original_machine_grade_untouched": true,
+      "limitations": [
+        "One fixed positive and one adversarial case, not a stability sample",
+        "Final guard wording repair has zero-call replay, not a new generation on that SHA",
+        "The negative answer includes more benchmark detail than requested"
+      ]
+    },
+    "new_generated_review": {
+      "directory": "generated-review",
+      "app_sha256": "58e8822dfa5a7aca56aaaa329151ef1a7bad87286848fc647646ef7706c54406",
+      "machine_status": "source_checks_passed",
+      "published_claims": 5,
+      "quality_status": "hold",
+      "findings": [
+        "Opaque P-number paper attributions appeared despite prompt instructions",
+        "Post-LN near-output qualifier was missing and held",
+        "Human evaluation qualifier was missing and held",
+        "Pre-LN/ZeRO complementary scaling claim remains too loosely supported"
+      ],
+      "zero_call_attribution_replay": "review-attribution-replay; 3 claims survive, not a new review generation or whole-review quality pass"
+    },
+    "original_pages_inspected": [
+      "backend/tmp/official-mechanism-closure-2026-10-15/dpo-1.png",
+      "backend/tmp/official-policy-scope-2026-10-16/dpo-2.png",
+      "backend/tmp/official-policy-scope-2026-10-16/dpo-4.png",
+      "backend/tmp/official-policy-scope-2026-10-16/dpo-5.png",
+      "backend/tmp/official-policy-scope-2026-10-16/dpo-9.png",
+      "backend/tmp/official-policy-scope-2026-10-16/instructgpt-11.png"
+    ],
+    "production_library_modified": false,
+    "git_mutated": false,
+    "whole_project_released": false
+  },
+  "secret_scan_findings": [],
+  "artifacts": [
+    {
+      "path": "backend/tmp/official-policy-scope-2026-10-16/audit_policy.py",
+      "sha256": "8d69ad9625900fe429f2e3f1121f012566de5fd6c3791e6014c7293a43bfee5f"
+    },
+    {
+      "path": "backend/tmp/official-policy-scope-2026-10-16/backend-candidate-final.xml",
+      "sha256": "6e8f78dfce8b928db42c498099655eb2e322eb3a133c86d8e76c6ed7b25ab2dd"
+    },
+    {
+      "path": "backend/tmp/official-policy-scope-2026-10-16/backend-closure.xml",
+      "sha256": "b579a2f6c28c69b8c7ec754f9f2a18f6b695988865962736c3ad8fa25054479a"
+    },
+    {
+      "path": "backend/tmp/official-policy-scope-2026-10-16/backend-final.xml",
+      "sha256": "7721c97dff5887aae7bf3e10e1040ee5f6b5ca1931cc38fa6f54d068a5fb8769"
+    },
+    {
+      "path": "backend/tmp/official-policy-scope-2026-10-16/backend-regression.xml",
+      "sha256": "181b0e08dd1d379249a5b3c72d23734c9c52202e95029945aa93f8cd5b7556ed"
+    },
+    {
+      "path": "backend/tmp/official-policy-scope-2026-10-16/backend-release.xml",
+      "sha256": "4ec3817bcd603745c10d5c63ee5009e6ef3dc6232989b75b12f2bc08ad2a32cf"
+    },
+    {
+      "path": "backend/tmp/official-policy-scope-2026-10-16/dpo-2.png",
+      "sha256": "0cae0d5cb567b79b24f45c9b286499ab7676c3da3b73a83e190ab0a560715a7d"
+    },
+    {
+      "path": "backend/tmp/official-policy-scope-2026-10-16/dpo-4.png",
+      "sha256": "725d1143397e8c3bcc6b7bd2a2b10e3eba86f8297d337d0b603909cb5075706e"
+    },
+    {
+      "path": "backend/tmp/official-policy-scope-2026-10-16/dpo-5.png",
+      "sha256": "bc89328e20c0b45062008e8c453e3217c8922538354016fe75f9f4f25ed8df9e"
+    },
+    {
+      "path": "backend/tmp/official-policy-scope-2026-10-16/dpo-9.png",
+      "sha256": "17f4b7bfe04a52205999cff70d3772c7a75c34bee42345447fc9e2c137aba541"
+    },
+    {
+      "path": "backend/tmp/official-policy-scope-2026-10-16/final-audit.json",
+      "sha256": "834763ece023b71a65e57e95515a7bad755847cbcb1f0966002659a4c4f7fa79"
+    },
+    {
+      "path": "backend/tmp/official-policy-scope-2026-10-16/frontend-tests.xml",
+      "sha256": "15468da1442711d9bebac2c175c89c338af5659f80c337755c16fd7de9a2c0f4"
+    },
+    {
+      "path": "backend/tmp/official-policy-scope-2026-10-16/generated-review/calls.json",
+      "sha256": "71e831331169df37371bb2780e746270cd44069defc50b3d80de54f758e72bef"
+    },
+    {
+      "path": "backend/tmp/official-policy-scope-2026-10-16/generated-review/generated-review.json",
+      "sha256": "74b99685e35828e76e46958660e28ed59fc3593b20479ee4faf1c51c62db9bf6"
+    },
+    {
+      "path": "backend/tmp/official-policy-scope-2026-10-16/generated-review/report.json",
+      "sha256": "e567ef8802ccb8ac0d6c6e217b9ab64b8726c543f0ab5ddd2429e00b442495fc"
+    },
+    {
+      "path": "backend/tmp/official-policy-scope-2026-10-16/instructgpt-11.png",
+      "sha256": "12032912966978d326b27dddcc0e733550f00ee0dd366c4a2d119340fee90dfd"
+    },
+    {
+      "path": "backend/tmp/official-policy-scope-2026-10-16/manual-source-review.json",
+      "sha256": "d33f23769fd704c23d96c94fc480f9416670d7eab0052e1163348b165eca0acc"
+    },
+    {
+      "path": "backend/tmp/official-policy-scope-2026-10-16/old-output-replay-complete/generated-review.json",
+      "sha256": "a284e0abda37d65d7c4072221fd36f800728a09bb6cf852327f9d1b8f054e1e1"
+    },
+    {
+      "path": "backend/tmp/official-policy-scope-2026-10-16/old-output-replay-complete/parsed/0188171d-87ae-5a2f-acc2-87f71bc5db58.json",
+      "sha256": "43b61105eb3661bf73f00349d782fdc08bbe5c30a18ea7f5a8aed4911e5a7c5a"
+    },
+    {
+      "path": "backend/tmp/official-policy-scope-2026-10-16/old-output-replay-complete/parsed/0fedc9b8-1c87-5178-87a1-3bb5a02de3b8.json",
+      "sha256": "52c10a4838cfb069d5cef2d90b6ce7ec334793256121e01616fb320a85a14bd0"
+    },
+    {
+      "path": "backend/tmp/official-policy-scope-2026-10-16/old-output-replay-complete/parsed/114bfa0d-d6cf-573d-82b2-cfaed94b58b6.json",
+      "sha256": "6710c78824d61e72e1b0c15aaddf534ce0872570051a9b95d6f2f39c786645d7"
+    },
+    {
+      "path": "backend/tmp/official-policy-scope-2026-10-16/old-output-replay-complete/parsed/1ae43cdf-aa5d-533e-8caa-c65a403deaf2.json",
+      "sha256": "f0fa466dcb3d84426bcf18d05cf552fc5ed318403396cf540d2761fa162a9ff4"
+    },
+    {
+      "path": "backend/tmp/official-policy-scope-2026-10-16/old-output-replay-complete/parsed/1f104048-0d8e-59ac-bc55-92c6c3773d08.json",
+      "sha256": "be48c20df79cefce1eb5c859e489948f2a3f21c67e1dea44e1860ce1f423b895"
+    },
+    {
+      "path": "backend/tmp/official-policy-scope-2026-10-16/old-output-replay-complete/parsed/20d9fad6-9e6f-543d-a2e1-095d8056c5ff.json",
+      "sha256": "4a05a089a864b8fc603470e4f28fc480526b8184b8c5a89039db83b07bdded3d"
+    },
+    {
+      "path": "backend/tmp/official-policy-scope-2026-10-16/old-output-replay-complete/parsed/4ac3cbf3-13b9-5022-863f-a2dbe9391e58.json",
+      "sha256": "71aac46dc7e41ad3b5dbe43f9d7155b30eece5ab66765a58eda988921d08b978"
+    },
+    {
+      "path": "backend/tmp/official-policy-scope-2026-10-16/old-output-replay-complete/parsed/4eb9ae9c-2278-5530-ad02-d02e38f9088c.json",
+      "sha256": "3fbfad3906ec0274eddc79eabf99665257660b81af66ac91b5d8842a2f7ef551"
+    },
+    {
+      "path": "backend/tmp/official-policy-scope-2026-10-16/old-output-replay-complete/parsed/518cf49d-121d-55b9-834e-4160cf927fe9.json",
+      "sha256": "d4fac767dd728f544297f8c8f7706fcf6f585df6b7f25d511b0831e4efb26b61"
+    },
+    {
+      "path": "backend/tmp/official-policy-scope-2026-10-16/old-output-replay-complete/parsed/5b4ad1aa-0c85-5a2b-a5ca-97eb8dd4d2aa.json",
+      "sha256": "7b19a67774af5c29d84f5e80a3e76664c46aa549591e297cd2afce7f4cde8d65"
+    },
+    {
+      "path": "backend/tmp/official-policy-scope-2026-10-16/old-output-replay-complete/parsed/788f47ff-23de-5f78-896b-7d3fe6e1bb92.json",
+      "sha256": "72dfb9a676f7dc532988c1932651d52689e0e51f5a7392fc389b87d05b65cd73"
+    },
+    {
+      "path": "backend/tmp/official-policy-scope-2026-10-16/old-output-replay-complete/parsed/806425fa-1015-5452-91ee-cdb6b106183f.json",
+      "sha256": "cbb66488f7e1cc905474b59d8a91d5b37b8ec2fe853954fb29d2085b149880ea"
+    },
+    {
+      "path": "backend/tmp/official-policy-scope-2026-10-16/old-output-replay-complete/parsed/855562a1-8309-57b2-b7b0-b9e7016207dc.json",
+      "sha256": "0bdf9ab2be963a5e42b3560e72b14fd247e2723c299ffc3e340682b02394db97"
+    },
+    {
+      "path": "backend/tmp/official-policy-scope-2026-10-16/old-output-replay-complete/parsed/86e85629-7347-5f1a-92d7-089475d96cdb.json",
+      "sha256": "4766fd60e4ebd949fbef7c8e35659013ce1214f5630667e9ecbf86b21ac6e8d5"
+    },
+    {
+      "path": "backend/tmp/official-policy-scope-2026-10-16/old-output-replay-complete/parsed/9f2229cc-c150-5bbc-a615-53046bc74763.json",
+      "sha256": "f3803879171ddd2aa613aa827c4bf9c57cdc52cd8d2c1347fb051015c0257e49"
+    },
+    {
+      "path": "backend/tmp/official-policy-scope-2026-10-16/old-output-replay-complete/parsed/bc90bcf2-cccd-5364-94f6-5815603802f7.json",
+      "sha256": "2f5bdb78b265127069fbaf7c9841afe6e181a0d93c3209856c420d678c7825d0"
+    },
+    {
+      "path": "backend/tmp/official-policy-scope-2026-10-16/old-output-replay-complete/parsed/cd05de96-3b20-5178-8953-d8ee090a4f23.json",
+      "sha256": "0ab6909920de99d93d12d57d963fe93c684446cbcfdba40bf2df1ed080d7b414"
+    },
+    {
+      "path": "backend/tmp/official-policy-scope-2026-10-16/old-output-replay-complete/parsed/d9d5065d-9706-53db-b856-427c2c58bd1a.json",
+      "sha256": "756d5961546debe771d2e5450b07063245e44c14f2572ea9988e8f768f5f1451"
+    },
+    {
+      "path": "backend/tmp/official-policy-scope-2026-10-16/old-output-replay-complete/parsed/f5b4ca83-6f08-5d85-b64f-a292b7b1f7b6.json",
+      "sha256": "ffe352a9b7a799c7bc1bd9c2385fe4d93d8fd210da85f48d431b9fcb18f4b208"
+    },
+    {
+      "path": "backend/tmp/official-policy-scope-2026-10-16/old-output-replay-complete/parsed/fefabe1a-496e-5b57-83cf-c73f831b1275.json",
+      "sha256": "2a89673ed7b00095944dfa940a47e97b0321bff418face2cf0e2c37f05ee42b1"
+    },
+    {
+      "path": "backend/tmp/official-policy-scope-2026-10-16/old-output-replay-complete/report.json",
+      "sha256": "9758556bc98e4bc9a5aa61288282c9394073a1e2f929381831466b73ca1647e1"
+    },
+    {
+      "path": "backend/tmp/official-policy-scope-2026-10-16/post-repair-replay.json",
+      "sha256": "2567e3a17ab6b831831932655d6dd53cd5e6bb701c4d3765747549d5600b4599"
+    },
+    {
+      "path": "backend/tmp/official-policy-scope-2026-10-16/review-attribution-replay/generated-review.json",
+      "sha256": "be9698db87742d2f3a7643cd385895fff513bd1db7aa45f7dc7d5a3f759603fd"
+    },
+    {
+      "path": "backend/tmp/official-policy-scope-2026-10-16/review-attribution-replay/parsed/0188171d-87ae-5a2f-acc2-87f71bc5db58.json",
+      "sha256": "43b61105eb3661bf73f00349d782fdc08bbe5c30a18ea7f5a8aed4911e5a7c5a"
+    },
+    {
+      "path": "backend/tmp/official-policy-scope-2026-10-16/review-attribution-replay/parsed/0fedc9b8-1c87-5178-87a1-3bb5a02de3b8.json",
+      "sha256": "52c10a4838cfb069d5cef2d90b6ce7ec334793256121e01616fb320a85a14bd0"
+    },
+    {
+      "path": "backend/tmp/official-policy-scope-2026-10-16/review-attribution-replay/parsed/114bfa0d-d6cf-573d-82b2-cfaed94b58b6.json",
+      "sha256": "6710c78824d61e72e1b0c15aaddf534ce0872570051a9b95d6f2f39c786645d7"
+    },
+    {
+      "path": "backend/tmp/official-policy-scope-2026-10-16/review-attribution-replay/parsed/1ae43cdf-aa5d-533e-8caa-c65a403deaf2.json",
+      "sha256": "f0fa466dcb3d84426bcf18d05cf552fc5ed318403396cf540d2761fa162a9ff4"
+    },
+    {
+      "path": "backend/tmp/official-policy-scope-2026-10-16/review-attribution-replay/parsed/1f104048-0d8e-59ac-bc55-92c6c3773d08.json",
+      "sha256": "be48c20df79cefce1eb5c859e489948f2a3f21c67e1dea44e1860ce1f423b895"
+    },
+    {
+      "path": "backend/tmp/official-policy-scope-2026-10-16/review-attribution-replay/parsed/20d9fad6-9e6f-543d-a2e1-095d8056c5ff.json",
+      "sha256": "4a05a089a864b8fc603470e4f28fc480526b8184b8c5a89039db83b07bdded3d"
+    },
+    {
+      "path": "backend/tmp/official-policy-scope-2026-10-16/review-attribution-replay/parsed/4ac3cbf3-13b9-5022-863f-a2dbe9391e58.json",
+      "sha256": "71aac46dc7e41ad3b5dbe43f9d7155b30eece5ab66765a58eda988921d08b978"
+    },
+    {
+      "path": "backend/tmp/official-policy-scope-2026-10-16/review-attribution-replay/parsed/4eb9ae9c-2278-5530-ad02-d02e38f9088c.json",
+      "sha256": "3fbfad3906ec0274eddc79eabf99665257660b81af66ac91b5d8842a2f7ef551"
+    },
+    {
+      "path": "backend/tmp/official-policy-scope-2026-10-16/review-attribution-replay/parsed/518cf49d-121d-55b9-834e-4160cf927fe9.json",
+      "sha256": "d4fac767dd728f544297f8c8f7706fcf6f585df6b7f25d511b0831e4efb26b61"
+    },
+    {
+      "path": "backend/tmp/official-policy-scope-2026-10-16/review-attribution-replay/parsed/5b4ad1aa-0c85-5a2b-a5ca-97eb8dd4d2aa.json",
+      "sha256": "7b19a67774af5c29d84f5e80a3e76664c46aa549591e297cd2afce7f4cde8d65"
+    },
+    {
+      "path": "backend/tmp/official-policy-scope-2026-10-16/review-attribution-replay/parsed/788f47ff-23de-5f78-896b-7d3fe6e1bb92.json",
+      "sha256": "72dfb9a676f7dc532988c1932651d52689e0e51f5a7392fc389b87d05b65cd73"
+    },
+    {
+      "path": "backend/tmp/official-policy-scope-2026-10-16/review-attribution-replay/parsed/806425fa-1015-5452-91ee-cdb6b106183f.json",
+      "sha256": "cbb66488f7e1cc905474b59d8a91d5b37b8ec2fe853954fb29d2085b149880ea"
+    },
+    {
+      "path": "backend/tmp/official-policy-scope-2026-10-16/review-attribution-replay/parsed/855562a1-8309-57b2-b7b0-b9e7016207dc.json",
+      "sha256": "0bdf9ab2be963a5e42b3560e72b14fd247e2723c299ffc3e340682b02394db97"
+    },
+    {
+      "path": "backend/tmp/official-policy-scope-2026-10-16/review-attribution-replay/parsed/86e85629-7347-5f1a-92d7-089475d96cdb.json",
+      "sha256": "4766fd60e4ebd949fbef7c8e35659013ce1214f5630667e9ecbf86b21ac6e8d5"
+    },
+    {
+      "path": "backend/tmp/official-policy-scope-2026-10-16/review-attribution-replay/parsed/9f2229cc-c150-5bbc-a615-53046bc74763.json",
+      "sha256": "f3803879171ddd2aa613aa827c4bf9c57cdc52cd8d2c1347fb051015c0257e49"
+    },
+    {
+      "path": "backend/tmp/official-policy-scope-2026-10-16/review-attribution-replay/parsed/bc90bcf2-cccd-5364-94f6-5815603802f7.json",
+      "sha256": "2f5bdb78b265127069fbaf7c9841afe6e181a0d93c3209856c420d678c7825d0"
+    },
+    {
+      "path": "backend/tmp/official-policy-scope-2026-10-16/review-attribution-replay/parsed/cd05de96-3b20-5178-8953-d8ee090a4f23.json",
+      "sha256": "0ab6909920de99d93d12d57d963fe93c684446cbcfdba40bf2df1ed080d7b414"
+    },
+    {
+      "path": "backend/tmp/official-policy-scope-2026-10-16/review-attribution-replay/parsed/d9d5065d-9706-53db-b856-427c2c58bd1a.json",
+      "sha256": "756d5961546debe771d2e5450b07063245e44c14f2572ea9988e8f768f5f1451"
+    },
+    {
+      "path": "backend/tmp/official-policy-scope-2026-10-16/review-attribution-replay/parsed/f5b4ca83-6f08-5d85-b64f-a292b7b1f7b6.json",
+      "sha256": "ffe352a9b7a799c7bc1bd9c2385fe4d93d8fd210da85f48d431b9fcb18f4b208"
+    },
+    {
+      "path": "backend/tmp/official-policy-scope-2026-10-16/review-attribution-replay/parsed/fefabe1a-496e-5b57-83cf-c73f831b1275.json",
+      "sha256": "2a89673ed7b00095944dfa940a47e97b0321bff418face2cf0e2c37f05ee42b1"
+    },
+    {
+      "path": "backend/tmp/official-policy-scope-2026-10-16/review-attribution-replay/report.json",
+      "sha256": "da24196c7c062af1e4c395d41e4c4a9ac4165907d53fcb846586f8f56cfa0378"
+    },
+    {
+      "path": "backend/tmp/official-policy-scope-2026-10-16/runtime-fixture/fixture.json",
+      "sha256": "1101180d64eb999a993221460d29787cb83d481e0680fa871b737bec87cc8061"
+    },
+    {
+      "path": "backend/tmp/official-policy-scope-2026-10-16/runtime-fixture/parsed/114bfa0d-d6cf-573d-82b2-cfaed94b58b6.json",
+      "sha256": "6710c78824d61e72e1b0c15aaddf534ce0872570051a9b95d6f2f39c786645d7"
+    },
+    {
+      "path": "backend/tmp/official-policy-scope-2026-10-16/runtime-fixture/parsed/cd05de96-3b20-5178-8953-d8ee090a4f23.json",
+      "sha256": "0ab6909920de99d93d12d57d963fe93c684446cbcfdba40bf2df1ed080d7b414"
+    },
+    {
+      "path": "backend/tmp/official-policy-scope-2026-10-16/runtime-fixture/preparation.json",
+      "sha256": "56885a502968cf4a95d03ec29d59cb24ad0859387f49ac68275c2a0c1058d468"
+    },
+    {
+      "path": "backend/tmp/official-policy-scope-2026-10-16/runtime-fixture-confirm/fixture.json",
+      "sha256": "1101180d64eb999a993221460d29787cb83d481e0680fa871b737bec87cc8061"
+    },
+    {
+      "path": "backend/tmp/official-policy-scope-2026-10-16/runtime-fixture-confirm/parsed/114bfa0d-d6cf-573d-82b2-cfaed94b58b6.json",
+      "sha256": "6710c78824d61e72e1b0c15aaddf534ce0872570051a9b95d6f2f39c786645d7"
+    },
+    {
+      "path": "backend/tmp/official-policy-scope-2026-10-16/runtime-fixture-confirm/parsed/cd05de96-3b20-5178-8953-d8ee090a4f23.json",
+      "sha256": "0ab6909920de99d93d12d57d963fe93c684446cbcfdba40bf2df1ed080d7b414"
+    },
+    {
+      "path": "backend/tmp/official-policy-scope-2026-10-16/runtime-fixture-confirm/preparation.json",
+      "sha256": "56885a502968cf4a95d03ec29d59cb24ad0859387f49ac68275c2a0c1058d468"
+    },
+    {
+      "path": "backend/tmp/official-policy-scope-2026-10-16/runtime-fixture-confirm/runtime-calls.json",
+      "sha256": "6c047fb72ef43e27137436451fe2c0c0220b8368cf68d8607a4548a37fa20d34"
+    },
+    {
+      "path": "backend/tmp/official-policy-scope-2026-10-16/runtime-fixture-confirm/server-source.json",
+      "sha256": "8b63fbe3a10f924fa9d40568bb0ca303773d6a7004151205086bbb5e300e72e2"
+    },
+    {
+      "path": "backend/tmp/official-policy-scope-2026-10-16/runtime-fixture-final/fixture.json",
+      "sha256": "1101180d64eb999a993221460d29787cb83d481e0680fa871b737bec87cc8061"
+    },
+    {
+      "path": "backend/tmp/official-policy-scope-2026-10-16/runtime-fixture-final/parsed/114bfa0d-d6cf-573d-82b2-cfaed94b58b6.json",
+      "sha256": "6710c78824d61e72e1b0c15aaddf534ce0872570051a9b95d6f2f39c786645d7"
+    },
+    {
+      "path": "backend/tmp/official-policy-scope-2026-10-16/runtime-fixture-final/parsed/cd05de96-3b20-5178-8953-d8ee090a4f23.json",
+      "sha256": "0ab6909920de99d93d12d57d963fe93c684446cbcfdba40bf2df1ed080d7b414"
+    },
+    {
+      "path": "backend/tmp/official-policy-scope-2026-10-16/runtime-fixture-final/preparation.json",
+      "sha256": "56885a502968cf4a95d03ec29d59cb24ad0859387f49ac68275c2a0c1058d468"
+    },
+    {
+      "path": "backend/tmp/official-policy-scope-2026-10-16/runtime-fixture-final/runtime-calls.json",
+      "sha256": "705cdc52292d7a66212f26a9603ccd6aa1aa534d4fde807a035ffe8576bac5cf"
+    },
+    {
+      "path": "backend/tmp/official-policy-scope-2026-10-16/runtime-fixture-final/server-source.json",
+      "sha256": "9270469e30802b2bf7ec65ff62c00781292b905202c307f9598c87f6e92d25ec"
+    },
+    {
+      "path": "backend/tmp/official-policy-scope-2026-10-16/runtime-fixture-release/fixture.json",
+      "sha256": "1101180d64eb999a993221460d29787cb83d481e0680fa871b737bec87cc8061"
+    },
+    {
+      "path": "backend/tmp/official-policy-scope-2026-10-16/runtime-fixture-release/parsed/114bfa0d-d6cf-573d-82b2-cfaed94b58b6.json",
+      "sha256": "6710c78824d61e72e1b0c15aaddf534ce0872570051a9b95d6f2f39c786645d7"
+    },
+    {
+      "path": "backend/tmp/official-policy-scope-2026-10-16/runtime-fixture-release/parsed/cd05de96-3b20-5178-8953-d8ee090a4f23.json",
+      "sha256": "0ab6909920de99d93d12d57d963fe93c684446cbcfdba40bf2df1ed080d7b414"
+    },
+    {
+      "path": "backend/tmp/official-policy-scope-2026-10-16/runtime-fixture-release/preparation.json",
+      "sha256": "56885a502968cf4a95d03ec29d59cb24ad0859387f49ac68275c2a0c1058d468"
+    },
+    {
+      "path": "backend/tmp/official-policy-scope-2026-10-16/runtime-fixture-release/runtime-calls.json",
+      "sha256": "98664fbdc528b3c0a017c05ae098f6510eeb799b42e15618da4057fb131fafca"
+    },
+    {
+      "path": "backend/tmp/official-policy-scope-2026-10-16/runtime-fixture-release/server-source.json",
+      "sha256": "f60a1570a4cf443d9d008c36e54f9efe7565115760ce453cde7accb996b2cde1"
+    },
+    {
+      "path": "backend/tmp/official-policy-scope-2026-10-16/runtime-qa/report.json",
+      "sha256": "9bc4aebc6fc9caa485a3237808105e33c762d5816220d3b32e8e11132288fbfb"
+    },
+    {
+      "path": "backend/tmp/official-policy-scope-2026-10-16/runtime-qa-confirm/report.json",
+      "sha256": "eb4af8541d5e1f5068ac9d0a6dba96840cbb4e9817c93648863bf33bbcb14658"
+    },
+    {
+      "path": "backend/tmp/official-policy-scope-2026-10-16/runtime-qa-release/report.json",
+      "sha256": "808f0f93d95a6d12c7d2df81db2d702ed5221a9857fe6eaeba88045e9cac62ac"
+    },
+    {
+      "path": "backend/tmp/official-policy-scope-2026-10-16/runtime-startup-failure.json",
+      "sha256": "e02ebfd4e56bb03482a40d965c3d3067c58dfe5bd15ab31f24da3ede6be141b0"
+    },
+    {
+      "path": "backend/app/agent/harness.py",
+      "sha256": "78398201ddbde507d6bec9117b225e12666dd7e72f384dd85166eeffe661584a"
+    },
+    {
+      "path": "backend/app/services/claim_semantics.py",
+      "sha256": "d284d4276e63d58488792bbffd49ced04bdbdf3993c332a53d531dc7db93cb5d"
+    },
+    {
+      "path": "backend/app/services/grounded_text.py",
+      "sha256": "59842453304555653577f542f9487beb7365d310cdf31e8b3f741c1cfb445212"
+    },
+    {
+      "path": "backend/app/services/retrieval.py",
+      "sha256": "ebd27dbfbe7d083795df720cd756367c73829b6be2ded8595e994cf6f287a1a7"
+    },
+    {
+      "path": "backend/app/services/retrieval_policy.py",
+      "sha256": "730c06cc9dfd6173bd0aa121ea1df7a7cd01c5bfa825700e5326cc77f39526a4"
+    },
+    {
+      "path": "backend/app/services/answer_completeness.py",
+      "sha256": "a3805fb8f83269a9563e19d05d3fb17446ad66746e95371b763b88fbff41489e"
+    },
+    {
+      "path": "backend/app/llm/openai_responses.py",
+      "sha256": "93ec7c749a3aba594009a12243257b1e04bb39710bc937f7773cfed41817e873"
+    },
+    {
+      "path": "backend/app/llm/thematic_review.py",
+      "sha256": "f00f40b7446d97ff2e06dd1ac857241fadd824e8ff7d9ac7e62baaa72a4e38ca"
+    },
+    {
+      "path": "backend/app/llm/review_limits.py",
+      "sha256": "7d9a2393d7cc8ae420e93045144007abf06a5b3a277a3c3099dd064078cfe51d"
+    },
+    {
+      "path": "backend/scripts/verify_official_candidate_qa.py",
+      "sha256": "62b287c20775c31d8c7c3c8d1ccbfe23bd10071a155a371d1fa666daf23e045d"
+    },
+    {
+      "path": "backend/tests/test_explicit_source_focus.py",
+      "sha256": "7348e719ba2aa377af2b930d5d42dddbf0b338546e6c33f9a5f87b7ce6d09180"
+    },
+    {
+      "path": "backend/tests/test_policy_optimization_scope.py",
+      "sha256": "37c5e0d7fd0042d24a34573a4ec81679e7b6a8278c7c7555151d9a464bde10e6"
+    },
+    {
+      "path": "backend/tests/test_official_candidate_runtime_safety.py",
+      "sha256": "fc67c30e662efee893a42d9cbb48f37a70c3a5d18b589d701e3d4af65bf7bfac"
+    },
+    {
+      "path": "backend/tests/test_thematic_review.py",
+      "sha256": "6c9dfda7172f82f0ffdfc45cc1fa939901ddb9d84609267a3f0726045da44561"
+    },
+    {
+      "path": "backend/tests/test_review_scope_completion.py",
+      "sha256": "b587c921620bb6d69d37e06d4460b2d5e46d924e6659ab131446892c623cc41c"
+    },
+    {
+      "path": "docs/official-policy-scope-acceptance-2026-10-16.md",
+      "sha256": "ad438eb016049039a6069c32731164dfd6c0bd78aaf0b4ede56b89d33f76556a"
+    },
+    {
+      "path": "docs/acceptance-progress.md",
+      "sha256": "15d8aa37e3d200bebcb51270238d92832cead59bc698cb06bc65afdd057ba3ac"
+    },
+    {
+      "path": "docs/competition-verification-gates.md",
+      "sha256": "88a65ec3aa87d0ca5250bf36c2a1afc3637158d3396089e303f165c7366aad33"
+    },
+    {
+      "path": "docs/competition-delivery-checklist.md",
+      "sha256": "b22ae75bfc826806c6d85738c99f65d24de3ff0304017f564d6f48744204fd17"
+    }
+  ]
+}

@@ -1,0 +1,56 @@
+{
+  "schema_version": 1,
+  "date": "2026-10-22",
+  "status": "formal_recording_not_released",
+  "video_created": false,
+  "whole_project_released": false,
+  "current_app_files": 140,
+  "current_app_sha256": "844c2ab7da5dfbc772934c336a222658e3c78fd1b150d25b87395c833719ba93",
+  "source_matches_latest_acceptance": true,
+  "latest_manifest": "docs/evidence/official-uncovered-acceptance-2026-10-22.json",
+  "manifest_records_rehashed": 355,
+  "manifest_record_mismatches": 0,
+  "official_originals_rehashed": 39,
+  "official_original_mismatches": 0,
+  "existing_regression_evidence": {
+    "backend_passed": 1689,
+    "frontend_passed": 46,
+    "rerun_in_this_review": false,
+    "not_official_pdf_answer_accuracy": true
+  },
+  "local_http_probes": [
+    {"url": "http://127.0.0.1:3200/", "reachable": false},
+    {"url": "http://127.0.0.1:3300/", "reachable": false},
+    {"url": "http://127.0.0.1:8000/api/v1/health", "reachable": false},
+    {"url": "http://127.0.0.1:6333/healthz", "reachable": false}
+  ],
+  "probe_rechecked_with_local_access": true,
+  "docker_cli": {"exit_code": 1, "error": "dockerDesktopLinuxEngine named pipe not found"},
+  "runtime_health_does_not_establish_code_version": true,
+  "formal_recording_blockers": [
+    "No reachable confirmed-current recording runtime",
+    "Latest full BGE chain failed before QA; final stored-evidence rounds were 4/4 and 3/4",
+    "Complete generated review science remains reserved",
+    "Automatic exclusion of solved Future Work ideas lacks acceptance"
+  ],
+  "not_independent_recording_prerequisites": [
+    "Buying a server or domain before local filming",
+    "Installing all four diagram compilers",
+    "Adding DOCX export",
+    "Treating author-year support as the sole blocker for demonstrated bracket-reference navigation"
+  ],
+  "cloud_calls": 0,
+  "production_services_changed": false,
+  "production_library_modified": false,
+  "application_code_changed": false,
+  "git": {
+    "branch": "codex/stage94-official-failed-qa-retest",
+    "head": "a119f5609cda544e5d587588c5a338051da129a1",
+    "refs_mutated": false,
+    "pushed": false
+  },
+  "outputs": [
+    "docs/recording-readiness-review-2026-10-22.md",
+    "docs/demo-video-storyboard-2026-10-22.md"
+  ]
+}

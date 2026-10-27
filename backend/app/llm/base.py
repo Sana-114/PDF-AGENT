@@ -24,12 +24,18 @@ class LLMTransientError(LLMResponseError):
 class GeneratedClaim:
     text: str
     evidence_ids: list[str] = field(default_factory=list)
+    review_topic: str | None = None
+    review_kind: str | None = None
 
 
 @dataclass(slots=True)
 class GeneratedAnswer:
     answer: str
     claims: list[GeneratedClaim]
+    raw_grounded_output: dict | None = None
+    field_rejections: dict[str, str] = field(default_factory=dict)
+    citation_normalizations: dict[str, list[str]] = field(default_factory=dict)
+    comparison_review_status: str | None = None
 
 
 @dataclass(slots=True)

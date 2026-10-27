@@ -1,0 +1,402 @@
+{
+  "schema_version": 1,
+  "date": "2026-10-14",
+  "record_kind": "scoped_official_writing_repairs_not_new_all_39_accuracy",
+  "status": "four_local_repair_targets_confirmed__whole_argument_and_runtime_hold",
+  "git": {
+    "branch": "codex/stage94-official-failed-qa-retest",
+    "head": "a119f5609cda544e5d587588c5a338051da129a1",
+    "mutated": false
+  },
+  "runtime_source": {
+    "app_sha256": "dd4f399b23e55970f313ad9ea038be8e611564a8f2e9e16321c10a67179f580b",
+    "app_files": 126,
+    "requirements_sha256": "b0e75e31a3ca8f034e095fd0667e3be7e380975548c5acce90db94f96ed7283f",
+    "native_version": "1.26.4-layout103",
+    "ocr_base_version": "1.26.4-ocr-layout98",
+    "parser_code_changed": false,
+    "production_installed": false
+  },
+  "repairs": {
+    "identifier_shorthand": {
+      "matching": "all expanded names in ONE actually cited quote",
+      "published_text_changed": false,
+      "source_quote_changed": false,
+      "paper_or_dataset_specific_hardcode": false,
+      "known_raw_false_positive_fixed": true,
+      "ordinary_ratios_and_new_measurements_not_exempted": true
+    },
+    "grounding_audit": {
+      "shared_validation_entry_point": true,
+      "input_count_and_document_counts_before_rejection": true,
+      "indexed_rejection_reasons": true,
+      "writing_response_and_warnings": true,
+      "legacy_default_none_supported": true
+    },
+    "compact_budget": {
+      "max_total": 6,
+      "max_per_cited_paper": 2,
+      "first_round_covers_papers": true,
+      "cross_paper_claim_uses_each_source_budget": true,
+      "source_checked_extras_retained": true,
+      "deferred_is_not_scientific_rejection": true,
+      "no_silent_output_rewrite": true,
+      "clipboard_excludes_deferred": true,
+      "original_relative_order_within_each_list": true
+    },
+    "neighbor_section": {
+      "block": "p4-b10",
+      "actual_title": "3.2 FINE-TUNING AND HIGHER RESOLUTION",
+      "old_inherited_title": "4 EXPERIMENTS",
+      "actual_parser_heading_already_correct": true,
+      "independent_neighbor_context_for": [],
+      "score": 0,
+      "ranked_original_anchors_unchanged": true
+    }
+  },
+  "progress": {
+    "baseline_fixed_basic_content_39": {
+      "passed": 39,
+      "total": 39,
+      "percent": 100,
+      "physical_pages": 1986,
+      "source_app_sha256": "8914e470748df85adf9005be6b9de7dc07fea28c73d726bc33630897b30d8ce7",
+      "unchanged_parser_baseline_carried_forward": true,
+      "rerun_this_turn": false,
+      "resource_gates_measured": 19,
+      "resource_gates_not_measured": 20,
+      "not_single_uniform_resource_round": true
+    },
+    "historical_core_qa": {
+      "first_passed": 38,
+      "total": 39,
+      "percent": 97.4359,
+      "separate_timeout_confirmation_preserved": true,
+      "regenerated_this_turn": false
+    },
+    "new_all_function_scientific_accuracy_percent": null,
+    "excludes_delivery_materials_video_and_online_deployment": true
+  },
+  "cloud": {
+    "calls": 2,
+    "automatic_retries": 0,
+    "provider": "deepseek",
+    "model": "deepseek-flash",
+    "public_finite_excerpts_only": true,
+    "whole_documents_sent": false,
+    "private_papers_sent": false,
+    "reranker": "real TEI BGE",
+    "reranker_base_url": "http://localhost:8002",
+    "health_status": 200,
+    "recall": "lexical",
+    "not_dense_vector_acceptance": true,
+    "samples": [
+      {
+        "directory": "backend/tmp/official-shorthand-writing-2026-10-14/writing-original-1",
+        "same_previous_idea": true,
+        "input_claims": 6,
+        "grounding_accepted": 6,
+        "framework_claims": 6,
+        "deferred_claims": 0,
+        "per_paper_counts": [
+          2,
+          2,
+          2
+        ],
+        "core_source_consistent": 6,
+        "source_checks_passed": true,
+        "semantic_quality": "bounded_core_and_budget_confirmed__author_metadata_anchor_and_argument_hold"
+      },
+      {
+        "directory": "backend/tmp/official-shorthand-writing-2026-10-14/writing-conditions-1",
+        "same_previous_failed_idea": true,
+        "input_claims": 4,
+        "grounding_accepted": 4,
+        "framework_claims": 3,
+        "deferred_claims": 1,
+        "requested_targets_confirmed": 3,
+        "source_checks_passed": true,
+        "per_paper_excess_visible": true,
+        "semantic_quality": "core_targets_confirmed__exhaustive_conditions_and_extra_table_scope_hold"
+      }
+    ],
+    "one_orchestration_result_storage_error_did_not_repeat_completed_api_call": true,
+    "semantic_review": "backend/tmp/official-shorthand-writing-2026-10-14/manual-source-review.json",
+    "original_machine_reports_not_regraded": true,
+    "new_generation_did_not_itself_exercise_CIFAR_shorthand": true
+  },
+  "replays": {
+    "calls": 0,
+    "existing_driver_extended_not_duplicated": true,
+    "runs": [
+      {
+        "directory": "backend/tmp/official-shorthand-writing-2026-10-14/raw-replay-conditions-1",
+        "saved_raw_input": 4,
+        "grounding_accepted": 4,
+        "framework_claims": 3,
+        "deferred_original_indices": [
+          2
+        ],
+        "withheld_original_indices": []
+      },
+      {
+        "directory": "backend/tmp/official-shorthand-writing-2026-10-14/raw-replay-original-1",
+        "saved_raw_input": 6,
+        "grounding_accepted": 6,
+        "framework_claims": 5,
+        "deferred_original_indices": [
+          2
+        ],
+        "withheld_original_indices": []
+      },
+      {
+        "directory": "backend/tmp/official-shorthand-writing-2026-10-14/saved-output-stability-1",
+        "saved_published_claims": 3,
+        "saved_deferred_claims": 1,
+        "framework_claims": 3,
+        "deferred_claims": 1,
+        "withheld_original_indices": []
+      }
+    ]
+  },
+  "regression": {
+    "backend": 1094,
+    "backend_failures": 0,
+    "backend_errors": 0,
+    "frontend": 42,
+    "frontend_failures": 0,
+    "typecheck_passed": true,
+    "ruff_entire_app_updated_driver_and_changed_tests_passed": true,
+    "frontend_real_react_server_render_not_browser": true,
+    "source_before_numeric_fix_positive_failures": 4,
+    "source_before_numeric_fix_negative_passes": 9,
+    "targeted_final_tests": 60,
+    "short_fake_root_fixture_failure_preserved": true,
+    "restricted_async_attempt_stopped_and_separately_reexecuted_offline": true,
+    "summary": "backend/tmp/official-shorthand-writing-2026-10-14/regression-summary.json"
+  },
+  "previous_evidence": {
+    "path": "docs/evidence/official-clip-protocol-acceptance-2026-10-14.json",
+    "manifest_items": 162,
+    "immutable_backend_tmp_items": 141,
+    "all_immutable_items_unchanged": true,
+    "source_and_progress_docs_expected_to_change": true,
+    "not_all_162_hashes_unchanged": true,
+    "writing_source_ast_hashes_unchanged": true
+  },
+  "deployment": {
+    "production_library_modified": false,
+    "new_backend_or_frontend_installed": false,
+    "servers_started": false,
+    "Docker_restarted_or_volumes_deleted": false,
+    "new_browser_acceptance": false,
+    "public_server_or_domain_purchased": false
+  },
+  "remaining": [
+    "complete experiment-condition preservation and research-gap argument",
+    "earlier review initialization conditions and multi-document synthesis",
+    "author-metadata evidence containing abstract should have body-specific presentation",
+    "current runtime/API/browser/BGE dense chain and finite stability",
+    "general table/header/formula accuracy, online import/subscription, author-year links",
+    "final materials, Git release, clean install, secrets rotation and public deployment"
+  ],
+  "artifact_manifest_count": 49,
+  "artifacts": [
+    {
+      "path": "backend/app/agent/harness.py",
+      "sha256": "cb50236e09f2a8f33befd0603a5cac4308314cc47f8afd42cc1731722843dc0d"
+    },
+    {
+      "path": "backend/app/parsers/layout.py",
+      "sha256": "0d72387197a5c44b4132d8df1e595d9288f40895374b0399fa43a8aacd4db587"
+    },
+    {
+      "path": "backend/app/parsers/ocr_parser.py",
+      "sha256": "72c7f79c427971d4da387ed3fc1dccfcba68a31208226b42bffc592c93ec6fa8"
+    },
+    {
+      "path": "backend/app/parsers/pymupdf_parser.py",
+      "sha256": "b4ed2793b7bd70e3f5651ede67431887b3088201700814a12b8a1adae195b324"
+    },
+    {
+      "path": "backend/app/schemas/agent.py",
+      "sha256": "0557a384dd475f10a8166294c3363dd594f503aca9ffb43d91c77fcf71177698"
+    },
+    {
+      "path": "backend/app/schemas/writing.py",
+      "sha256": "2c31a3d1969eebcd377e184d72d08f99d1e74696ce52aa5d815508b0f7ce8877"
+    },
+    {
+      "path": "backend/app/services/document_content.py",
+      "sha256": "fc97354ad049dad23403661bec8998fd0f6edd29c121f44d20d364b84b2af7f7"
+    },
+    {
+      "path": "backend/app/services/grounded_text.py",
+      "sha256": "7afb12f67890d40e76b24cec18cb094b10e937f929b147bed1c058bc6a358d19"
+    },
+    {
+      "path": "backend/app/services/writing_context.py",
+      "sha256": "52f904aa66cc09266502b093ad3decd69c9da9e877c320fd879f75a13fb23000"
+    },
+    {
+      "path": "backend/app/services/writing_outline.py",
+      "sha256": "3a670e2b958b11017d543de38d011dbe8c83c6eb61b86149f9218dc35195b8d5"
+    },
+    {
+      "path": "backend/scripts/replay_official_publication.py",
+      "sha256": "e8c2de29060a8632502f5afe3f437481492e789c897dca4d15187f1743929b5c"
+    },
+    {
+      "path": "backend/tests/test_named_identifier_shorthand.py",
+      "sha256": "255227eefb7f9993af9b77e63ba870d9d2282ef6b100dcb664000f6a91400539"
+    },
+    {
+      "path": "backend/tests/test_writing_context.py",
+      "sha256": "f55753eba9a2354f14cc8f93a8d3c22508150e3153d10e7202d76186be344383"
+    },
+    {
+      "path": "backend/tests/test_writing_outline.py",
+      "sha256": "89c5bfb72eea2974473efbf8ee920c9deca54c02f119b4f8358b0352afa5c882"
+    },
+    {
+      "path": "backend/tmp/official-clip-protocol-2026-10-14/combined-content-39.json",
+      "sha256": "cf8e132d732e2ef19155e6831d409e4579d399bab4be63ad4eaf9395e4f9968a"
+    },
+    {
+      "path": "backend/tmp/official-clip-protocol-2026-10-14/parser-20-final/fixture.json",
+      "sha256": "3e6dbfca5c224539a759913f5fd1d04feb84024acb2c93a71819783a84d98728"
+    },
+    {
+      "path": "backend/tmp/official-clip-protocol-2026-10-14/parser-20-final/parsed/1ae43cdf-aa5d-533e-8caa-c65a403deaf2.json",
+      "sha256": "f0fa466dcb3d84426bcf18d05cf552fc5ed318403396cf540d2761fa162a9ff4"
+    },
+    {
+      "path": "backend/tmp/official-clip-protocol-2026-10-14/parser-20-final/parsed/788f47ff-23de-5f78-896b-7d3fe6e1bb92.json",
+      "sha256": "72dfb9a676f7dc532988c1932651d52689e0e51f5a7392fc389b87d05b65cd73"
+    },
+    {
+      "path": "backend/tmp/official-clip-protocol-2026-10-14/parser-20-final/parsed/bc90bcf2-cccd-5364-94f6-5815603802f7.json",
+      "sha256": "2f5bdb78b265127069fbaf7c9841afe6e181a0d93c3209856c420d678c7825d0"
+    },
+    {
+      "path": "backend/tmp/official-shorthand-writing-2026-10-14/backend-final.xml",
+      "sha256": "af0c5854219eb1a890c7b5eed6ed484565aa144402c02873d28e05daa1b26a1b"
+    },
+    {
+      "path": "backend/tmp/official-shorthand-writing-2026-10-14/manual-source-review.json",
+      "sha256": "c47c087087c57b18d04047a671c5e1b9d11a36361665275b8fdc1179d916e446"
+    },
+    {
+      "path": "backend/tmp/official-shorthand-writing-2026-10-14/numeric-before.xml",
+      "sha256": "d7b2145ef04b0d5b6cbebe94c205bceeacfaa40a154737812be7e406e148a55e"
+    },
+    {
+      "path": "backend/tmp/official-shorthand-writing-2026-10-14/numeric-context-1.xml",
+      "sha256": "f7f7dc5f8776a0e1db3d0ed766faef95029718a681696b29a251543e1be632b9"
+    },
+    {
+      "path": "backend/tmp/official-shorthand-writing-2026-10-14/raw-replay-conditions-1/report.json",
+      "sha256": "fca76b305f60b584b330547f6b9ad449c2f9beef3c6497d53ce1026e2a8710cf"
+    },
+    {
+      "path": "backend/tmp/official-shorthand-writing-2026-10-14/raw-replay-conditions-1/writing-outline.json",
+      "sha256": "48ba91d3bc1906f6f39b3832c0671c9574b53eec86d9be6dc9c8791932926822"
+    },
+    {
+      "path": "backend/tmp/official-shorthand-writing-2026-10-14/raw-replay-original-1/report.json",
+      "sha256": "14bc8f59cbbffbee20e2c3f1c121822aed15e306b7f38fb0af99a4100aae38ed"
+    },
+    {
+      "path": "backend/tmp/official-shorthand-writing-2026-10-14/raw-replay-original-1/writing-outline.json",
+      "sha256": "44e030a0102f0996a2aad462812614931c5bf1c4411dc8ed7689bd731aff4875"
+    },
+    {
+      "path": "backend/tmp/official-shorthand-writing-2026-10-14/regression-summary.json",
+      "sha256": "e080b9408e6f6db98858f9ae02164eb2d0ad0d46cf51a19b9c2f4f4d29ede144"
+    },
+    {
+      "path": "backend/tmp/official-shorthand-writing-2026-10-14/saved-output-stability-1/report.json",
+      "sha256": "16e49d017d542489f40bd9d6751e9c48e9402516bf199d1c08c987fd670c90a0"
+    },
+    {
+      "path": "backend/tmp/official-shorthand-writing-2026-10-14/saved-output-stability-1/writing-outline.json",
+      "sha256": "bed054486483b4f2a0fe64088885af8710f4dea612451f6bf6632206ae7953dc"
+    },
+    {
+      "path": "backend/tmp/official-shorthand-writing-2026-10-14/source-pages/clip-1.png",
+      "sha256": "93fd9b680b9592c951ca2b7d4f16ef054c14e0f27516db81650d92b5c659144f"
+    },
+    {
+      "path": "backend/tmp/official-shorthand-writing-2026-10-14/writing-conditions-1/calls.json",
+      "sha256": "264cdf7316457ec8b3eaef521ceb0a1dd850767e76921c6e5847b73c5a5f8c87"
+    },
+    {
+      "path": "backend/tmp/official-shorthand-writing-2026-10-14/writing-conditions-1/report.json",
+      "sha256": "f4889031ec3b9f88a4f80e604f8523f3023c71bf0c1a121c202a25f9343224a6"
+    },
+    {
+      "path": "backend/tmp/official-shorthand-writing-2026-10-14/writing-conditions-1/writing-outline.json",
+      "sha256": "03d1e48fca4a03c0e5d9fd6535150094315d0bf24220dc213940128ac02dc62e"
+    },
+    {
+      "path": "backend/tmp/official-shorthand-writing-2026-10-14/writing-original-1/calls.json",
+      "sha256": "f0fde7a8c1c6778b55991e5502a380d2708dcfb0b29f2d2b207b9f1f9ec02710"
+    },
+    {
+      "path": "backend/tmp/official-shorthand-writing-2026-10-14/writing-original-1/report.json",
+      "sha256": "a2276f1ae52f6a2f77206b48c76f8cd05b590b3bded9d581ebee73caadc7c60b"
+    },
+    {
+      "path": "backend/tmp/official-shorthand-writing-2026-10-14/writing-original-1/writing-outline.json",
+      "sha256": "5389875939fe95b7aeb54ebc33456cee29c4c069f940152ad1669e7940625664"
+    },
+    {
+      "path": "backend/tmp/official-shorthand-writing-2026-10-14/writing-tests-2.xml",
+      "sha256": "237393cc370f8ce955527746ed972d354576aad59f6c4b8fb57b74441fc9219b"
+    },
+    {
+      "path": "backend/tmp/official-shorthand-writing-2026-10-14/writing-tests-3.xml",
+      "sha256": "0667a8ac7aa48ec0a7d0761abb0548f25be11141591238478dce5d1b64f68119"
+    },
+    {
+      "path": "docs/acceptance-progress.md",
+      "sha256": "9a3a58c8007fa293700486a1d7270572e7954b7fac94578a626fc1d07042341e"
+    },
+    {
+      "path": "docs/competition-delivery-checklist.md",
+      "sha256": "227b6dcf283afc8fc36f9d2ae2b3a76a418f4007e6ca966e401a5d27a6a6a513"
+    },
+    {
+      "path": "docs/competition-verification-gates.md",
+      "sha256": "0adac2d30133146fb98e083227f906a855b9d6423d15f17389850c7939149859"
+    },
+    {
+      "path": "docs/evidence/official-clip-protocol-acceptance-2026-10-14.json",
+      "sha256": "59800df3e78e1d427914bfedbe657360ef2dad1cef46d067c95f259d640e5818"
+    },
+    {
+      "path": "docs/official-shorthand-writing-acceptance-2026-10-14.md",
+      "sha256": "7fed470f66f603348499c62c7db08cc24315beb556bd3b52f40e7b1ff66dcca0"
+    },
+    {
+      "path": "frontend/app/globals.css",
+      "sha256": "5843bfe0be23e48fd630f1df53a0c39962d3ddbb89a68eca4faa8f3af900bd27"
+    },
+    {
+      "path": "frontend/components/WritingWorkbench.tsx",
+      "sha256": "19665259ad1e2a7d5208981a91a0e4a739e0cd062764f4dc7c88c4bef7124b09"
+    },
+    {
+      "path": "frontend/lib/api.ts",
+      "sha256": "e0c518aa58c96962add2a56ed98712f53de817460199d2dd0cea36ba0be42d89"
+    },
+    {
+      "path": "frontend/lib/writingMarkdown.test.mjs",
+      "sha256": "554ed985f7bd3f4ccb34826abd633a8ef407354f2c34c6ad84b274bdc53199f6"
+    },
+    {
+      "path": "frontend/lib/writingMarkdown.ts",
+      "sha256": "4b1f1490518e5f6997faa2fe8d8033f7bb78c12ad0a3770bc5ddfc89b9982c7d"
+    }
+  ]
+}

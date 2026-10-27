@@ -1,0 +1,99 @@
+{
+  "evaluation_kind": "local_answer_field_repairs_and_negative_regressions_not_fresh_generation",
+  "date": "2026-10-11",
+  "branch": "codex/stage94-official-failed-qa-retest",
+  "head": "a119f5609cda544e5d587588c5a338051da129a1",
+  "committed": false,
+  "pushed": false,
+  "deepseek_calls": 0,
+  "new_end_to_end_answer_generation": false,
+  "production_library_modified": false,
+  "existing_vector_indexes_modified": false,
+  "parser_calls": 0,
+  "production_images_rebuilt": false,
+  "unit_regression": {
+    "tests": 488,
+    "passed": 488,
+    "failed": 0,
+    "errors": 0,
+    "skipped": 0,
+    "new_test_items": 50,
+    "new_tests_are_not_a_unique_vulnerability_count": true,
+    "report": "backend/tmp/official-answer-repair-2026-10-11/full-unit-4.xml",
+    "sha256": "b994a2df41d63399136346a9b5bb0e5f76dfafaefe154e1d57d904f0fa60902d"
+  },
+  "bge_regression": {
+    "documents": 32,
+    "existing_chunks": 10391,
+    "cases": 68,
+    "passed": 68,
+    "top_k": 10,
+    "real_hybrid_recall_and_reranking": true,
+    "dense_model": "BAAI/bge-m3",
+    "dense_dimensions": 1024,
+    "reranker_model": "BAAI/bge-reranker-v2-m3",
+    "sparse_mode": "existing hash sparse plus BM25, not learned BGE sparse",
+    "index_reused_read_only": true,
+    "original_gold_unchanged": true,
+    "source_anchor_review_passed": 68,
+    "native_gold_bbox_overlap_checks_passed": 68,
+    "post_run_code_changes": ["app/services/answer_completeness.py"],
+    "post_run_changes_affect_retrieval_embedding_or_reranking": false,
+    "report": "backend/tmp/official-answer-repair-2026-10-11/bge-68-after-2/report.json",
+    "sha256": "cd32d36db4a20d1356e9a73870c17fce1b913c45c952edf195851e1a5af6fa03",
+    "source_gold_sha256": "c49e69ac83422925296957a7e55578730a970cc13861d4a4b48cdc16af62416d",
+    "source_review": "backend/tmp/official-answer-repair-2026-10-11/bge-source-review-2.json",
+    "source_review_sha256": "bb45692ec8f203aeb01d56cb43311585eaca60349420c8402b5945bbb5cc5858"
+  },
+  "original_question_retrieval_trace": {
+    "cases": 3,
+    "source_fact_probes": 8,
+    "source_fact_probes_passed": 8,
+    "per_document_top_k": 20,
+    "combined_top_k": 18,
+    "public_documents": 5,
+    "includes_public_gpt2_supplement": true,
+    "generated_answer_acceptance": false,
+    "final_code_snapshot_matches": true,
+    "report": "backend/tmp/official-answer-repair-2026-10-11/trace-after-4.json",
+    "sha256": "2c78bc380fa643e15fd864913121d1eb0c47ea41e7fc586ec1b3c7788937a4b5"
+  },
+  "saved_output_guard_replay": {
+    "cases": 3,
+    "expected_behavior_passed": 3,
+    "generation_calls": 0,
+    "raw_original_answers_unchanged": true,
+    "gpt_answers_remain_incomplete": true,
+    "report": "backend/tmp/official-answer-repair-2026-10-11/guard-replay-4.json",
+    "sha256": "d7e9a9b721d6c7751c1bcdaec3003f0ecd245016cfe5e1bdb691298498a8d7c1",
+    "guard_policy_sha256": "0610c4f22ca16972602e572239f7e31621c755d706c365fe7f42fa06d3739b2b"
+  },
+  "latest_preserved_real_answer_acceptance": {
+    "cases": 3,
+    "accepted": 1,
+    "requires_new_generation_for_updated_answer_score": true,
+    "report": "backend/tmp/official-answer-repair-2026-10-11/strict-review-3.json",
+    "sha256": "b5615afd54dccc60e8c81acf403bb21af23612f5ce659191d418d78657ec267d",
+    "original_generation_report_sha256": "f872ddf7c7e5fba2ffcc3afa384e372c6baeb9b6369abc6350dcc5f628d7bdc5",
+    "original_question_dataset_sha256": "ca541357c2fa1ee545f90ff8d334874104e466eb786b403f8fb80cfb06470cbc"
+  },
+  "preserved_failure_artifacts": [
+    "backend/tmp/official-answer-repair-2026-10-11/trace-before-1.json",
+    "backend/tmp/official-answer-repair-2026-10-11/negative-before.xml",
+    "backend/tmp/official-answer-repair-2026-10-11/negative-after-1.xml",
+    "backend/tmp/official-answer-repair-2026-10-11/full-unit-1.xml",
+    "backend/tmp/official-answer-repair-2026-10-11/guard-replay-2.json",
+    "backend/tmp/official-answer-repair-2026-10-11/architecture-negative-before.xml"
+  ],
+  "checks": {
+    "ruff": "passed",
+    "git_diff_check": "passed",
+    "original_gold_and_reports_not_overwritten": true
+  },
+  "remaining_scope": [
+    "Two original GPT comparison questions need bounded fresh DeepSeek generation and source review",
+    "General semantic entailment, all table-cell/model mappings and cross-claim contradictions are not proven",
+    "No new scanned-PDF or 541-page textbook parser acceptance in this round",
+    "Refresh production runtime and verify frontend before recording the demo"
+  ]
+}

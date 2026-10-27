@@ -11,6 +11,7 @@ import {
   ScientificChart,
 } from "../lib/api";
 import { readableRequestError } from "../lib/requestError";
+import { radarSegments } from "../lib/radarSegments";
 
 const PALETTE = ["#25734f", "#d77a2b", "#3e7fa3", "#8c5aa6"];
 
@@ -85,6 +86,13 @@ function CartesianChart({ chart, svgRef }: {
   const xAt = (index: number) => {
     if (chart.chart_type === "bar") {
       return plot.left + ((index + 0.5) / Math.max(chart.categories.length, 1)) * plotWidth;
+    }
+    const coordinates = chart.x_coordinates;
+    if (coordinates?.length === chart.categories.length && coordinates.length > 1
+      && coordinates.every(Number.isFinite)) {
+      const minimum = Math.min(...coordinates), maximum = Math.max(...coordinates);
+      return plot.left + (maximum === minimum ? .5
+        : (coordinates[index] - minimum) / (maximum - minimum)) * plotWidth;
     }
     return plot.left
       + (chart.categories.length <= 1
@@ -201,8 +209,8 @@ function RadarChart({ chart, svgRef }: {
       centerY + Math.sin(angle) * radius * value - layer * 5,
     ];
   };
-  const polygon = (values: Array<number | null>, layer = 0) => values
-    .map((value, index) => point(index, value ?? 0, layer).join(","))
+  const polygon = (values: number[], layer = 0) => values
+    .map((value, index) => point(index, value, layer).join(","))
     .join(" ");
 
   return (
@@ -230,14 +238,24 @@ function RadarChart({ chart, svgRef }: {
       {[...chart.series].reverse().map((series, reverseIndex) => {
         const seriesIndex = chart.series.length - reverseIndex - 1;
         const color = PALETTE[seriesIndex % PALETTE.length];
+        const complete = series.values.every((value) => value !== null && Number.isFinite(value));
+        const segments = radarSegments(series.values);
         return (
-          <polygon
-            className="radar-series"
-            fill={color}
-            key={series.name}
-            points={polygon(series.values, seriesIndex)}
-            stroke={color}
-          />
+          <g key={series.name}>
+            <title>{series.name}{complete ? "" : "：缺失指标保留为空缺"}</title>
+            {complete ? (
+              <polygon className="radar-series" fill={color}
+                points={polygon(series.values as number[], seriesIndex)} stroke={color} />
+            ) : segments.map((segment) => (
+              <polyline className="radar-series" fill="none" key={segment.join("-")}
+                points={segment.map((index) => point(index, series.values[index]!, seriesIndex).join(",")).join(" ")}
+                stroke={color} />
+            ))}
+            {!complete && series.values.map((value, index) => value === null ? null : (
+              <circle key={index} cx={point(index, value, seriesIndex)[0]}
+                cy={point(index, value, seriesIndex)[1]} r="3" fill={color} />
+            ))}
+          </g>
         );
       })}
       <text className="radar-scale-note" x="20" y="388">0–1 归一化 · 透视层高仅区分记录</text>

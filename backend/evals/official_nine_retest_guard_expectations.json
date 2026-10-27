@@ -1,0 +1,15 @@
+{
+  "policy_id": "nine-saved-output-current-guard-expectations-2026-10-11",
+  "notes": "Zero-generation replay only, not nine-question fresh acceptance. Context should remain incomplete because the saved answer refuses its GPT-1 field. In particular, 9/9 guard expectations does not mean 9/9 answered correctly.",
+  "cases": {
+    "sixth-author": {"insufficient_evidence": false, "missing_fields": []},
+    "adam-settings": {"insufficient_evidence": false, "missing_fields": []},
+    "base-gpus": {"insufficient_evidence": false, "missing_fields": []},
+    "bleu-improvement": {"insufficient_evidence": false, "missing_fields": []},
+    "layernorm-reference": {"insufficient_evidence": false, "missing_fields": []},
+    "bert-inheritance": {"insufficient_evidence": false, "missing_fields": []},
+    "gpt-parameter-evolution": {"insufficient_evidence": false, "missing_fields": []},
+    "gpt2-ln-change": {"insufficient_evidence": false, "missing_fields": []},
+    "context-evolution": {"insufficient_evidence": true, "missing_fields": ["GPT-1 最大上下文及来源说明"]}
+  }
+}

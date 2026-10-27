@@ -1,0 +1,87 @@
+{
+  "schema_version": "1.0",
+  "date": "2026-10-10",
+  "kind": "official_remaining_scoped_parser_checks",
+  "git_branch": "codex/stage94-official-failed-qa-retest",
+  "git_head": "a119f5609cda544e5d587588c5a338051da129a1",
+  "uncommitted_worktree": true,
+  "production_parser_modified_this_round": false,
+  "production_image_refreshed": false,
+  "model_calls": 0,
+  "embedding_calls": 0,
+  "reranker_calls": 0,
+  "automatic_retries": 0,
+  "inputs": {
+    "official_files": 39,
+    "official_pages": 1986,
+    "excluded_previously_tested_files": 7,
+    "selected_files": 32,
+    "selected_pages": 1297,
+    "inventory_sha256": "320ebbce4dba59e746d2336da8d91bbd2cfdc18806b382b10a34bbf4ab77bd22",
+    "metadata_sha256": "f46e8aa777ce4272498187391087e431d7b68ce8431debdd67c109ff61be4d74",
+    "manifest_sha256": "07e0fac018f10e1b649a18c1b1bd5ea90606889490209a7ff9660dc548bfbef2",
+    "source_notes_sha256": "8c1ea87050e80d7eb3c1824e9f0d771872ec00566544bb65383195a27369a97a"
+  },
+  "raw_run": {
+    "path": "backend/tmp/official-remaining-32/parse-1/report.json",
+    "sha256": "e1c72f203ffac8e65ec649dd412e1b0abe90479c1f1b45553bb60567c11346d8",
+    "parsed_complete": 32,
+    "scoped_checks_passed": 17,
+    "scoped_checks_failed": 15,
+    "errors": 0,
+    "timeouts": 0,
+    "elapsed_seconds": 1060.825,
+    "maximum_document_parse_seconds": 111.932,
+    "maximum_python_peak_memory_mb": 323.59,
+    "python_memory_budget_mb": 256,
+    "batch_size": 8,
+    "batch_count": 4,
+    "timeout_seconds_per_document": 300
+  },
+  "offline_reviews": [
+    {
+      "path": "backend/tmp/official-remaining-32/parse-1/reviewed-1.json",
+      "sha256": "ba4685fc32b416f8ae02b2a4e0edd44f4efe8008e2cbe8d72cca903f6bb507d3",
+      "parser_calls": 0,
+      "scoped_checks_passed": 23,
+      "scoped_checks_failed": 9,
+      "note": "First separate-label validation; later a unit test exposed leading-year ambiguity."
+    },
+    {
+      "path": "backend/tmp/official-remaining-32/parse-1/reviewed-2.json",
+      "sha256": "23ed6b754a8423d243ea9e2a79201743ef396f094794310f5d5a620fa0e422f0",
+      "parser_calls": 0,
+      "scoped_checks_passed": 23,
+      "scoped_checks_failed": 9,
+      "note": "Bracketed labels matched separately; ordinary leading years remain source text."
+    }
+  ],
+  "remaining_failed_files": [
+    "1707.06347v2.pdf", "2101.03961v3.pdf", "2107.03374v2.pdf",
+    "2210.02414v2.pdf", "2303.08774v6.pdf", "2406.14491v2.pdf",
+    "2407.21783v3.pdf", "2412.19437v1.pdf", "2501.12948v2.pdf"
+  ],
+  "source_verified_pure_label_false_positives": [
+    "1910.02054v3.pdf", "2205.14135v2.pdf", "2304.08485v2.pdf",
+    "2305.14314v1.pdf", "2305.18290v3.pdf", "2310.06825v1.pdf"
+  ],
+  "additional_metadata_risks_not_covered_by_single_author_gate": [
+    "1910.02054v3.pdf", "2106.09685v2.pdf", "2107.03374v2.pdf", "2307.09288v2.pdf"
+  ],
+  "regression": {
+    "backend_offline_tests_passed": 405,
+    "collection_count_verified": true,
+    "ruff": "passed",
+    "git_diff_check": "passed",
+    "frontend_rerun": false
+  },
+  "acceptance_limits": [
+    "Scoped title fragment and one author/team, not full author/affiliation correctness.",
+    "Page sequence and text volume do not prove complete semantic extraction or reading order.",
+    "Native-source reference fragment match is not full bibliography-field acceptance.",
+    "Table, figure and formula candidate counts are not accuracy measures.",
+    "Python allocations are not total RAM/VRAM; thresholds are project budgets.",
+    "No fresh BGE indexing/retrieval or DeepSeek end-to-end QA run for this expanded corpus.",
+    "Historical seven-file coverage and new 32-file coverage do not form a uniform 39-file pass rate."
+  ]
+}

@@ -1,0 +1,13 @@
+{
+  "description": "Reject both the unsupported starting position and the original-position expansion in the preserved LN answer, retain direct source modifications without filling missing facts.",
+  "cases": {
+    "gpt2-ln-change": {
+      "insufficient_evidence": false,
+      "missing_fields": [],
+      "required_semantic_rejections": [
+        "normalization_origin_not_supported_by_cited_passage",
+        "normalization_position_missing_from_cited_passage"
+      ]
+    }
+  }
+}

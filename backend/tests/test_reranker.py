@@ -158,6 +158,42 @@ def test_tei_cross_encoder_splits_large_candidate_pool() -> None:
     assert all(item.retrieval_mode == "reranked" for item in results)
 
 
+def test_tei_long_passages_use_byte_bounded_batches_without_altering_anchors():
+    batches = []
+
+    def handler(request):
+        texts = json.loads(request.content)["texts"]
+        batches.append(texts)
+        assert len(texts) == 1 or sum(len(text.encode("utf-8")) for text in texts) <= 12000
+        return httpx.Response(200, json=[{"index": index, "score": 0.5}
+                                        for index in range(len(texts))])
+
+    reranker = TeiReranker(model="test", base_url="http://reranker.test",
+                          client=httpx.Client(transport=httpx.MockTransport(handler)))
+    candidates = [_evidence(str(index), "长文证据" * size, 0.5)
+                  for index, size in enumerate([300, 300, 300, 300, 300, 3000, 300])]
+    original = [item.model_dump() for item in candidates]
+    results = reranker.rerank("上下文窗口？", candidates, len(candidates))
+    assert [text for batch in batches for text in batch] == [item.quote for item in candidates]
+    assert any(len(batch) == 1 and len(batch[0].encode("utf-8")) > 12000 for batch in batches)
+    assert {item.chunk_id for item in results} == {item.chunk_id for item in candidates}
+    assert [item.model_dump() for item in candidates] == original
+
+
+def test_tei_does_not_retry_a_failed_dependency_or_claim_successful_reranking():
+    calls = []
+
+    def handler(request):
+        calls.append(request)
+        return httpx.Response(424, json={"error": "out of memory"})
+
+    reranker = TeiReranker(model="test", base_url="http://reranker.test",
+                          client=httpx.Client(transport=httpx.MockTransport(handler)))
+    with pytest.raises(RerankerServiceError):
+        reranker.rerank("context window", [_evidence("source", "context window 2048", 1)], 1)
+    assert len(calls) == 1
+
+
 def test_hybrid_retriever_preserves_rank_when_reranker_fails() -> None:
     class FailingReranker:
         name = "failing"

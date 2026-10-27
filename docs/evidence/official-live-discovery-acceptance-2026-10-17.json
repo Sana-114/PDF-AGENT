@@ -1,0 +1,663 @@
+{
+  "schema_version": 1,
+  "date": "2026-10-17",
+  "status": "partial_acceptance",
+  "current_source": {
+    "python_version": "3.12.14",
+    "app_files": 130,
+    "app_sha256": "861856be4e522ce765467e9a34f46bb04ccb5ed634ff8d705e8ace7ca56ea5d6",
+    "requirements_sha256": "b0e75e31a3ca8f034e095fd0667e3be7e380975548c5acce90db94f96ed7283f"
+  },
+  "scope": "Live metadata/import/reference/feed API in isolated ASGI workspace; not external Worker/Beat/browser/public/multi-user acceptance",
+  "git": {
+    "branch": "codex/stage94-official-failed-qa-retest",
+    "head": "a119f5609cda544e5d587588c5a338051da129a1",
+    "dirty_worktree": true,
+    "refs_mutated": false,
+    "commit_created": false,
+    "pushed": false
+  },
+  "runs": [
+    {
+      "run": "baseline",
+      "source": {
+        "python_version": "3.12.14",
+        "app_files": 130,
+        "app_sha256": "8e91623b3d7d73dd8f7ada7856b0dc4ac48f911e58f160894d6cfe899cd800de",
+        "requirements_sha256": "b0e75e31a3ca8f034e095fd0667e3be7e380975548c5acce90db94f96ed7283f"
+      },
+      "original_status": "partial",
+      "cases": [
+        {
+          "case": "An Image is Worth 16x16 Words: Transformers for Image Recognition at Scale",
+          "status": "failed",
+          "checks": {
+            "correct_title": false,
+            "correct_identity": false
+          },
+          "warnings": [
+            "Semantic Scholar 请求频率受限，已尝试备用检索源。"
+          ]
+        },
+        {
+          "case": "arxiv:2106.09685v2",
+          "status": "passed",
+          "checks": {
+            "correct_title": true,
+            "correct_identity": true,
+            "exact_requested_version": true,
+            "download_title_native_page1": true,
+            "download_pages_nonempty": true
+          },
+          "warnings": [],
+          "download": {
+            "sha256": "e9a0d3128767db616085dc0f4e6e455e672e89af823e8ed1282793682787395a",
+            "bytes": 1609513,
+            "source_id": "2106.09685v2",
+            "pdf_url": "https://arxiv.org/pdf/2106.09685v2.pdf"
+          }
+        },
+        {
+          "case": "live-arxiv-refresh",
+          "status": "passed",
+          "subscription_id": "adaf495e-2f04-44bb-941b-d0b567965ed1",
+          "discovered": 3,
+          "updated": 0,
+          "error": null
+        }
+      ]
+    },
+    {
+      "run": "workflow-1",
+      "source": {
+        "python_version": "3.12.14",
+        "app_files": 130,
+        "app_sha256": "e11a21d6efe93cfac046643b279b9da75b7b99c17df8b3b500e03b3f1af7803b",
+        "requirements_sha256": "b0e75e31a3ca8f034e095fd0667e3be7e380975548c5acce90db94f96ed7283f"
+      },
+      "original_status": "partial_acceptance",
+      "cases": [
+        {
+          "case": "live-title-search",
+          "status": "passed",
+          "checks": {
+            "api_200": true,
+            "correct_identity": true,
+            "title_and_importable": true
+          }
+        },
+        {
+          "case": "live-exact-import-and-duplicate",
+          "status": "passed",
+          "checks": {
+            "api_202": true,
+            "parsed_ready": true,
+            "exact_official_bytes": true,
+            "version_two": true,
+            "persisted_source_and_file": true,
+            "native_title_and_pages": true,
+            "actual_parser_complete_pages": true,
+            "repeat_same_document": true,
+            "no_extra_library_row": true
+          }
+        },
+        {
+          "case": "live-reference-drilldown",
+          "status": "failed",
+          "checks": {
+            "api_200": true,
+            "one_attempt": true,
+            "matched_correct_paper": false,
+            "citation_context_preserved": true
+          }
+        },
+        {
+          "case": "live-feed-feedback-and-task",
+          "status": "failed",
+          "checks": {
+            "create_201": true,
+            "live_records_added": true,
+            "like_saved": true,
+            "dislike_saved": true,
+            "feedback_retained": true,
+            "refresh_without_duplicate": true,
+            "scores_and_reasons": true,
+            "task_active_filter": true,
+            "beat_configuration": true,
+            "actual_bge_no_fallback": false
+          }
+        }
+      ]
+    },
+    {
+      "run": "workflow-2",
+      "source": {
+        "python_version": "3.12.14",
+        "app_files": 130,
+        "app_sha256": "79eb183dc93610c9db09fe72805c172c68f72ff829cbef8a78f809efeee244be",
+        "requirements_sha256": "b0e75e31a3ca8f034e095fd0667e3be7e380975548c5acce90db94f96ed7283f"
+      },
+      "original_status": "partial_acceptance",
+      "cases": [
+        {
+          "case": "live-title-search",
+          "status": "passed",
+          "checks": {
+            "api_200": true,
+            "correct_identity": true,
+            "title_and_importable": true
+          }
+        },
+        {
+          "case": "live-exact-import-and-duplicate",
+          "status": "passed",
+          "checks": {
+            "api_202": true,
+            "parsed_ready": true,
+            "exact_official_bytes": true,
+            "version_two": true,
+            "persisted_source_and_file": true,
+            "native_title_and_pages": true,
+            "actual_parser_complete_pages": true,
+            "repeat_same_document": true,
+            "no_extra_library_row": true
+          }
+        },
+        {
+          "case": "live-reference-drilldown",
+          "status": "passed",
+          "checks": {
+            "api_200": true,
+            "one_attempt": true,
+            "matched_correct_paper": true,
+            "citation_context_preserved": true
+          }
+        },
+        {
+          "case": "live-feed-feedback-and-task",
+          "status": "failed",
+          "checks": {
+            "create_201": true,
+            "live_records_added": true,
+            "like_saved": true,
+            "dislike_saved": true,
+            "feedback_retained": true,
+            "refresh_without_duplicate": true,
+            "scores_and_reasons": true,
+            "task_active_filter": true,
+            "beat_configuration": true,
+            "actual_bge_no_fallback": false
+          }
+        }
+      ]
+    },
+    {
+      "run": "workflow-final",
+      "source": {
+        "python_version": "3.12.14",
+        "app_files": 130,
+        "app_sha256": "861856be4e522ce765467e9a34f46bb04ccb5ed634ff8d705e8ace7ca56ea5d6",
+        "requirements_sha256": "b0e75e31a3ca8f034e095fd0667e3be7e380975548c5acce90db94f96ed7283f"
+      },
+      "original_status": "partial_acceptance",
+      "cases": [
+        {
+          "case": "live-title-search",
+          "status": "passed",
+          "checks": {
+            "api_200": true,
+            "correct_identity": true,
+            "title_and_importable": true
+          }
+        },
+        {
+          "case": "live-exact-import-and-duplicate",
+          "status": "passed",
+          "checks": {
+            "api_202": true,
+            "parsed_ready": true,
+            "exact_official_bytes": true,
+            "version_two": true,
+            "persisted_source_and_file": true,
+            "native_title_and_pages": true,
+            "actual_parser_complete_pages": true,
+            "repeat_same_document": true,
+            "no_extra_library_row": true
+          }
+        },
+        {
+          "case": "live-reference-drilldown",
+          "status": "passed",
+          "checks": {
+            "api_200": true,
+            "one_attempt": true,
+            "matched_correct_paper": true,
+            "citation_context_preserved": true
+          }
+        },
+        {
+          "case": "live-feed-feedback-and-task",
+          "status": "failed",
+          "checks": {
+            "create_201": true,
+            "live_records_added": true,
+            "like_saved": true,
+            "dislike_saved": true,
+            "feedback_retained": true,
+            "refresh_without_duplicate": true,
+            "scores_and_reasons": true,
+            "ranking_provenance_visible": true,
+            "task_active_filter": true,
+            "beat_configuration": true,
+            "actual_bge_no_fallback": false,
+            "summary_reports_actual_bge": false
+          }
+        }
+      ]
+    }
+  ],
+  "final_passed_groups": 3,
+  "final_total_groups": 4,
+  "counts": {
+    "metadata_requests": 31,
+    "pdf_downloads": 7,
+    "workflow_bge_requests": 9,
+    "workflow_bge_successes": 6,
+    "workflow_bge_failures": 3,
+    "additional_connection_probes": 6,
+    "cloud_llm_calls": 0,
+    "automatic_retries": 0
+  },
+  "final_refreshes": [
+    {
+      "subscription_id": "b38b8ee2-231a-4086-8332-f4876a5452e1",
+      "discovered": 3,
+      "updated": 0,
+      "error": null,
+      "ranking_provider": "openai-compatible",
+      "ranking_warning": null
+    },
+    {
+      "subscription_id": "b38b8ee2-231a-4086-8332-f4876a5452e1",
+      "discovered": 0,
+      "updated": 3,
+      "error": null,
+      "ranking_provider": "hash",
+      "ranking_warning": "语义向量服务暂不可用，本次使用词项哈希排序，不代表 BGE 语义推荐。"
+    },
+    {
+      "subscription_id": "b38b8ee2-231a-4086-8332-f4876a5452e1",
+      "discovered": 0,
+      "updated": 3,
+      "error": null,
+      "ranking_provider": "openai-compatible",
+      "ranking_warning": null
+    }
+  ],
+  "source_visual_review": {
+    "reviewer": "agent-assisted",
+    "status": "passed_scoped_checks",
+    "scope": "Complete downloaded LoRA first page and Transformer physical page 11 rendered and inspected; official LoRA bytes match. Not full extraction correctness."
+  },
+  "tests": {
+    "backend-regression.xml": {
+      "tests": 1361,
+      "failures": 0,
+      "errors": 0
+    },
+    "backend-regression-final.xml": {
+      "tests": 1363,
+      "failures": 0,
+      "errors": 0
+    },
+    "frontend-regression.xml": {
+      "tests": 42,
+      "failures": 0,
+      "errors": 0
+    }
+  },
+  "typecheck": "observed_exit_0",
+  "ruff": "observed_exit_0",
+  "old_immutable_artifacts_checked": 39,
+  "old_changed": [],
+  "secret_scan_findings": [],
+  "official_basic_coverage_inherited": {
+    "files": 39,
+    "pages": 1986
+  },
+  "production_library_modified": false,
+  "production_image_updated": false,
+  "bge_connection_stability_released": false,
+  "whole_project_released": false,
+  "remaining": [
+    "BGE intermittent connection reset",
+    "external Worker/Beat scheduling and genuinely new feed arrivals",
+    "broader bibliography formats and multi-user mode",
+    "complex QA same-build quality",
+    "complete synthesis/writing/future-work scientific quality",
+    "fine parsing/resource boundaries",
+    "final installation/materials/public deployment/key rotation/release"
+  ],
+  "artifacts": [
+    {
+      "path": "backend/app/api/routes/recommendations.py",
+      "sha256": "bc5aa1090fdd78935675ebfe66a1eada14d400b99a6be7a7789b69dbacee749b"
+    },
+    {
+      "path": "backend/app/schemas/recommendation.py",
+      "sha256": "811b1adca4872ef195e7242ae03dfd66d8690f18dcd65a54ca18f122b39cc94e"
+    },
+    {
+      "path": "backend/app/services/paper_discovery.py",
+      "sha256": "d0c574bb83ea1454e7d4fe39ba77506603a29c29bcd15c862ce7b0d31849ac32"
+    },
+    {
+      "path": "backend/app/services/recommendations.py",
+      "sha256": "ea8ac81aa87484c42f02744b5089e3fcf02fd61b2fe62fa84af4908f453c53ba"
+    },
+    {
+      "path": "backend/app/services/reference_discovery.py",
+      "sha256": "6cac3b27fe984eccf2eef8e1222b846bed24e78ab5f54e823c7605331b1e21cf"
+    },
+    {
+      "path": "backend/app/workers/tasks.py",
+      "sha256": "840868b67f2543da4ca8f30bc06cbc00d64ad18acbcfca0a256272382f9327af"
+    },
+    {
+      "path": "backend/scripts/verify_official_live_discovery.py",
+      "sha256": "1e26516bfe636562379dc6f395cf29f434b0b88b6b149c075c730e1748063eac"
+    },
+    {
+      "path": "backend/tests/test_discovery_title_fallback.py",
+      "sha256": "c7aeb9e2432b0bc90c2e9490ce851112b61f7a047097324bd5bbb817b3e7c12c"
+    },
+    {
+      "path": "backend/tests/test_recommendation_embedding_inputs.py",
+      "sha256": "9bd7e60b6bc5d342b8a62c9b6900267178998d0c5960b36c00f876e420bc5ab2"
+    },
+    {
+      "path": "backend/tests/test_reference_discovery.py",
+      "sha256": "c5fecf94d4789e395e3ec67ca1945f1133db08e067b05d625f635b018f6dc6f5"
+    },
+    {
+      "path": "backend/tmp/official-live-discovery-2026-10-17/audit_discovery.py",
+      "sha256": "e0cfe9f9fabac4891d11ff1287aa40d8d9d8cbbcac8c389e2ceb0a58421b2ca6"
+    },
+    {
+      "path": "backend/tmp/official-live-discovery-2026-10-17/backend-regression-final.xml",
+      "sha256": "cfcd633d990092c3043c58c8e084ac7af5d1c51f06ff80f70624eb6fc93f6c3f"
+    },
+    {
+      "path": "backend/tmp/official-live-discovery-2026-10-17/backend-regression.xml",
+      "sha256": "115865d73df59055bac5caa68a72b59869ebbb30b13408adb776bc460e4d439c"
+    },
+    {
+      "path": "backend/tmp/official-live-discovery-2026-10-17/baseline/network-calls.json",
+      "sha256": "f33a01fdac779bcd4cc30548f37ac01ecce8d8b83b4025e7e1853755bf6212d2"
+    },
+    {
+      "path": "backend/tmp/official-live-discovery-2026-10-17/baseline/report.json",
+      "sha256": "500798ed7b22e1e774a93627c627296dc906b5cf83b132a1ecf9e02ccc25773d"
+    },
+    {
+      "path": "backend/tmp/official-live-discovery-2026-10-17/baseline/search-1.json",
+      "sha256": "375b8b47c2973d2a878f2c418bfa4c561a1b3e74ad0f476743558f287cd2ce4a"
+    },
+    {
+      "path": "backend/tmp/official-live-discovery-2026-10-17/baseline/search-2.json",
+      "sha256": "eda2002491192d44c54ac5a4fef2468c7f71284ac46fdc0966b00f3bbb1ab63c"
+    },
+    {
+      "path": "backend/tmp/official-live-discovery-2026-10-17/connection-probe.json",
+      "sha256": "aeba5b0d70a1e35c0b3f679ab5ddb6505e6ed943e036c7cff8fba8233527b443"
+    },
+    {
+      "path": "backend/tmp/official-live-discovery-2026-10-17/discovery-tests-final.xml",
+      "sha256": "92a3213eeefba22a455d1175fc260d54ab69aff8cb467dc6a97ebd5894bf082a"
+    },
+    {
+      "path": "backend/tmp/official-live-discovery-2026-10-17/discovery-tests-repaired.xml",
+      "sha256": "82e0d65a04c205ce8ea88ea65a1e1cd7b96d3d05b1204c3ebd0515afa7f2b095"
+    },
+    {
+      "path": "backend/tmp/official-live-discovery-2026-10-17/discovery-tests.xml",
+      "sha256": "9a7b6d4eae7d613c1d77c81ed2287c5f2940875c2ea94e414fbd847453c567f7"
+    },
+    {
+      "path": "backend/tmp/official-live-discovery-2026-10-17/frontend-regression.xml",
+      "sha256": "2115eb426d06703f95a379889dfc5d4884102ff6d0063aa5ba3e224810fedd04"
+    },
+    {
+      "path": "backend/tmp/official-live-discovery-2026-10-17/probe_bge.py",
+      "sha256": "ccafb5591aeaa32a51b2d8a422a84aa75347664f19d64d2ba4fea90b4221e206"
+    },
+    {
+      "path": "backend/tmp/official-live-discovery-2026-10-17/transformer-references-page11.png",
+      "sha256": "34632765f959d24d53224e4dee8a7fc5d33ddc88d7249318887ba174ea5d2ecc"
+    },
+    {
+      "path": "backend/tmp/official-live-discovery-2026-10-17/workflow-1/downloads.json",
+      "sha256": "1f614f1e4147ad64d650642b74025f74484d5686aea36e71c20086e171ffbde1"
+    },
+    {
+      "path": "backend/tmp/official-live-discovery-2026-10-17/workflow-1/duplicate-import.json",
+      "sha256": "d76960f561582ea7b931a1d718ddf04676ff95bdd0c0f5eba98e4dc95bb15c89"
+    },
+    {
+      "path": "backend/tmp/official-live-discovery-2026-10-17/workflow-1/embedding-calls.json",
+      "sha256": "61c8fddb57b0321e0deec3a1feafee124f76c8fb4ca277fbbcff7f00cf1c1b5e"
+    },
+    {
+      "path": "backend/tmp/official-live-discovery-2026-10-17/workflow-1/feed-first.json",
+      "sha256": "8b04d546a15b4c754842b81d85fb78f66c8c81286b76a04330725a1a8ec36d22"
+    },
+    {
+      "path": "backend/tmp/official-live-discovery-2026-10-17/workflow-1/feed-second.json",
+      "sha256": "b3a8ea131bd5f243624042b5e0f77e5384f362a1e93f56cec704d285a4c651a8"
+    },
+    {
+      "path": "backend/tmp/official-live-discovery-2026-10-17/workflow-1/import.json",
+      "sha256": "b68cc29c5b093b9c271b05f66ea6207e6a9537ed0e2ea352efe58c578a9b8a56"
+    },
+    {
+      "path": "backend/tmp/official-live-discovery-2026-10-17/workflow-1/lora-first-page.png",
+      "sha256": "5748ab14a0021d2fc4f940b2c1d434eec12666aa36be31513951ac1710befc68"
+    },
+    {
+      "path": "backend/tmp/official-live-discovery-2026-10-17/workflow-1/network-calls.json",
+      "sha256": "ae7e54ac0cdd6a0a1bb52f40b0074f55d9d8a41789b4fa21858af8365d13547f"
+    },
+    {
+      "path": "backend/tmp/official-live-discovery-2026-10-17/workflow-1/parsed/195b74b9-a524-41bd-ac39-a675d6192d00.json",
+      "sha256": "16aafaf3945bbfd1e9068aac58829b74f88e30e13dbf85778b92c4f7b68fb591"
+    },
+    {
+      "path": "backend/tmp/official-live-discovery-2026-10-17/workflow-1/parsed/20d9fad6-9e6f-543d-a2e1-095d8056c5ff.json",
+      "sha256": "4a05a089a864b8fc603470e4f28fc480526b8184b8c5a89039db83b07bdded3d"
+    },
+    {
+      "path": "backend/tmp/official-live-discovery-2026-10-17/workflow-1/reference-input.json",
+      "sha256": "4163025543897ef0b6be572ac8c82df3399bfd5539e616c823be27000f2da694"
+    },
+    {
+      "path": "backend/tmp/official-live-discovery-2026-10-17/workflow-1/reference-resolution.json",
+      "sha256": "95a485e7586c8ab3a49405a133a3c5556aa9192f26a06a2d9ffb843768367a1f"
+    },
+    {
+      "path": "backend/tmp/official-live-discovery-2026-10-17/workflow-1/refreshes.json",
+      "sha256": "a222aaa470618fa65a480948fe627bab5c70a9b02350a83d13fc04ae6094630a"
+    },
+    {
+      "path": "backend/tmp/official-live-discovery-2026-10-17/workflow-1/report.json",
+      "sha256": "28c222be3ebf9879cc290a22ff6c2ea1ed795e8e313ca2434849eb9f4e43cf56"
+    },
+    {
+      "path": "backend/tmp/official-live-discovery-2026-10-17/workflow-1/scheduled-task-code.json",
+      "sha256": "2e6f82bcda94b9143b3e94bbf40461ed97c12869f1d1abf0269eb87ddad2b1ee"
+    },
+    {
+      "path": "backend/tmp/official-live-discovery-2026-10-17/workflow-1/subscription.json",
+      "sha256": "9c534e3797b1f596182867e047465a59c396f733d9da209b7335e816a9866958"
+    },
+    {
+      "path": "backend/tmp/official-live-discovery-2026-10-17/workflow-1/title-search.json",
+      "sha256": "14b025de934f9203608338a6c58a4b9bd3675f0e4b237fad0e0ae10bf14b6d86"
+    },
+    {
+      "path": "backend/tmp/official-live-discovery-2026-10-17/workflow-2/downloads.json",
+      "sha256": "1f614f1e4147ad64d650642b74025f74484d5686aea36e71c20086e171ffbde1"
+    },
+    {
+      "path": "backend/tmp/official-live-discovery-2026-10-17/workflow-2/duplicate-import.json",
+      "sha256": "82cd76adc926d3902a47e5b89c4d33a500c5a634944d46155f7d96b0ea22d321"
+    },
+    {
+      "path": "backend/tmp/official-live-discovery-2026-10-17/workflow-2/embedding-calls.json",
+      "sha256": "f82b1d684f143585497f2a972a604e8bd58ea0890bbb0147a7814436d3dd700d"
+    },
+    {
+      "path": "backend/tmp/official-live-discovery-2026-10-17/workflow-2/feed-first.json",
+      "sha256": "ec7eb6a9c476c11e4c5a405ae04ac36d6a2716e49bd0da382e2039ffed5c377f"
+    },
+    {
+      "path": "backend/tmp/official-live-discovery-2026-10-17/workflow-2/feed-second.json",
+      "sha256": "50b0708e38e2ba5791c429d051cbe0945e408830a998820fa98651e605eae5f8"
+    },
+    {
+      "path": "backend/tmp/official-live-discovery-2026-10-17/workflow-2/import.json",
+      "sha256": "01c8c49c2d28b807a27a0c9a919755eef5c2db6c98b02b9caa4ddefdc5a2e19c"
+    },
+    {
+      "path": "backend/tmp/official-live-discovery-2026-10-17/workflow-2/lora-first-page.png",
+      "sha256": "5748ab14a0021d2fc4f940b2c1d434eec12666aa36be31513951ac1710befc68"
+    },
+    {
+      "path": "backend/tmp/official-live-discovery-2026-10-17/workflow-2/network-calls.json",
+      "sha256": "24ec8dbba8415487c850e16a675ee945b9049609056cf3d87492b6f79b0f8858"
+    },
+    {
+      "path": "backend/tmp/official-live-discovery-2026-10-17/workflow-2/parsed/20d9fad6-9e6f-543d-a2e1-095d8056c5ff.json",
+      "sha256": "4a05a089a864b8fc603470e4f28fc480526b8184b8c5a89039db83b07bdded3d"
+    },
+    {
+      "path": "backend/tmp/official-live-discovery-2026-10-17/workflow-2/parsed/f358e1e7-271a-40fe-a66e-ba20f1bbfc3e.json",
+      "sha256": "3809d5c92347605b95ce4d4c4c4b17831ccad20513bde07d6d4c3be8257f8d3a"
+    },
+    {
+      "path": "backend/tmp/official-live-discovery-2026-10-17/workflow-2/reference-input.json",
+      "sha256": "4163025543897ef0b6be572ac8c82df3399bfd5539e616c823be27000f2da694"
+    },
+    {
+      "path": "backend/tmp/official-live-discovery-2026-10-17/workflow-2/reference-resolution.json",
+      "sha256": "45cd51fa29c292bb9b0f008163937d682f786dcab0d1c8f5133573fbf4b152b0"
+    },
+    {
+      "path": "backend/tmp/official-live-discovery-2026-10-17/workflow-2/refreshes.json",
+      "sha256": "1bd2928a8f4d760a26baaed6f48adb4150fe9f1bc35473f90ad007a5838c87ab"
+    },
+    {
+      "path": "backend/tmp/official-live-discovery-2026-10-17/workflow-2/report.json",
+      "sha256": "9a97ea12886eb27bf88306a99f8235ec412ac31f54041fc1ca154161a93b0316"
+    },
+    {
+      "path": "backend/tmp/official-live-discovery-2026-10-17/workflow-2/scheduled-task-code.json",
+      "sha256": "9fcc9709211aaa84d792199449f09049fa09295182b999f0ed3f501efb4d503a"
+    },
+    {
+      "path": "backend/tmp/official-live-discovery-2026-10-17/workflow-2/subscription.json",
+      "sha256": "463ff1dd0d6e7c19f1ca81389feb9d913074eee5c443a67a552580394c4bd978"
+    },
+    {
+      "path": "backend/tmp/official-live-discovery-2026-10-17/workflow-2/title-search.json",
+      "sha256": "025cc19728dc0726b420cbbe6f51d54abfa488e9fe2ae84754cd29b11b8fafb9"
+    },
+    {
+      "path": "backend/tmp/official-live-discovery-2026-10-17/workflow-final/downloads.json",
+      "sha256": "1f614f1e4147ad64d650642b74025f74484d5686aea36e71c20086e171ffbde1"
+    },
+    {
+      "path": "backend/tmp/official-live-discovery-2026-10-17/workflow-final/duplicate-import.json",
+      "sha256": "b420000a5bf832d0e9cc6d5d34da227b543bfabda3d68fcf86aadbb6dcb24f00"
+    },
+    {
+      "path": "backend/tmp/official-live-discovery-2026-10-17/workflow-final/embedding-calls.json",
+      "sha256": "f82b1d684f143585497f2a972a604e8bd58ea0890bbb0147a7814436d3dd700d"
+    },
+    {
+      "path": "backend/tmp/official-live-discovery-2026-10-17/workflow-final/feed-first.json",
+      "sha256": "a79d3812b52f6ae92714084ea0fa85aeda477e46db67d33d452225b5fc6dc5c1"
+    },
+    {
+      "path": "backend/tmp/official-live-discovery-2026-10-17/workflow-final/feed-second.json",
+      "sha256": "b6f7b2562f15a3cf136e3c3607af02ca4a1eee1a180ea335a77d61985dce6971"
+    },
+    {
+      "path": "backend/tmp/official-live-discovery-2026-10-17/workflow-final/import.json",
+      "sha256": "8316e25871c7d8c06aadca6e3efa6c4075e4d0696f503fc8a6e749f70ab57f84"
+    },
+    {
+      "path": "backend/tmp/official-live-discovery-2026-10-17/workflow-final/lora-first-page.png",
+      "sha256": "5748ab14a0021d2fc4f940b2c1d434eec12666aa36be31513951ac1710befc68"
+    },
+    {
+      "path": "backend/tmp/official-live-discovery-2026-10-17/workflow-final/network-calls.json",
+      "sha256": "c82a687f22e5a4d7c39915e3a8a19d599b4116ae3268941df5348d59c79d3d76"
+    },
+    {
+      "path": "backend/tmp/official-live-discovery-2026-10-17/workflow-final/parsed/20d9fad6-9e6f-543d-a2e1-095d8056c5ff.json",
+      "sha256": "4a05a089a864b8fc603470e4f28fc480526b8184b8c5a89039db83b07bdded3d"
+    },
+    {
+      "path": "backend/tmp/official-live-discovery-2026-10-17/workflow-final/parsed/a6004179-a817-4c69-a1da-1c87d4caf1f2.json",
+      "sha256": "62a694bee318d0c635f2e1a2259ef0bb02fa09e4636b6029c8fc0b8198c03b53"
+    },
+    {
+      "path": "backend/tmp/official-live-discovery-2026-10-17/workflow-final/reference-input.json",
+      "sha256": "4163025543897ef0b6be572ac8c82df3399bfd5539e616c823be27000f2da694"
+    },
+    {
+      "path": "backend/tmp/official-live-discovery-2026-10-17/workflow-final/reference-resolution.json",
+      "sha256": "45cd51fa29c292bb9b0f008163937d682f786dcab0d1c8f5133573fbf4b152b0"
+    },
+    {
+      "path": "backend/tmp/official-live-discovery-2026-10-17/workflow-final/refreshes.json",
+      "sha256": "2cab95f7b489a558be4b1d37774ae5529662140875f13aad84fc1f4f9092b5bb"
+    },
+    {
+      "path": "backend/tmp/official-live-discovery-2026-10-17/workflow-final/report.json",
+      "sha256": "464cdf1e6be39abb58692ea56bd735ba3c7255f4b8a1ed83c8d08a195d253a3c"
+    },
+    {
+      "path": "backend/tmp/official-live-discovery-2026-10-17/workflow-final/scheduled-task-code.json",
+      "sha256": "1738c7b8b94c32bd57fc12a98b2072e0a5a1064960625ad80578e91a7bee867f"
+    },
+    {
+      "path": "backend/tmp/official-live-discovery-2026-10-17/workflow-final/subscription.json",
+      "sha256": "60d97a2a474d730e44a03176353c5fc188b0bcbe17a8b237b0759063b43c6d4e"
+    },
+    {
+      "path": "backend/tmp/official-live-discovery-2026-10-17/workflow-final/title-search.json",
+      "sha256": "14b025de934f9203608338a6c58a4b9bd3675f0e4b237fad0e0ae10bf14b6d86"
+    },
+    {
+      "path": "docs/acceptance-progress.md",
+      "sha256": "734d14d7b31bace1a2e4d1f7ed3971747ad9a762baff2a438a1c23a191c4daf8"
+    },
+    {
+      "path": "docs/competition-delivery-checklist.md",
+      "sha256": "5d77eb3154f0add728311fcfe69c721df9bf5779badc9c4bbe38e519ee169670"
+    },
+    {
+      "path": "docs/competition-verification-gates.md",
+      "sha256": "4fcb6701089a8c86fbe0f246d51dc77fb1e336a798712efdaaedfc08d8e08a03"
+    },
+    {
+      "path": "docs/official-live-discovery-acceptance-2026-10-17.md",
+      "sha256": "ba51f245e902fcca31ca6c9357ff264fd2b1c2cb98fc48bb13a917bf089e9d77"
+    },
+    {
+      "path": "README.md",
+      "sha256": "758a48de52ee46733f3f56b8a9126471e46546c0ca67ceb757b1fcdae080fb2d"
+    }
+  ]
+}

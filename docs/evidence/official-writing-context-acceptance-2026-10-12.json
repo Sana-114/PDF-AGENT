@@ -1,0 +1,206 @@
+{
+  "schema_version": 1,
+  "date": "2026-10-12",
+  "status": "scoped_context_repair_verified__overall_writing_quality_hold",
+  "objective": "Repair a missing next-page experimental qualification in three-paper academic outline generation.",
+  "git": {
+    "branch": "codex/stage94-official-failed-qa-retest",
+    "head": "a119f5609cda544e5d587588c5a338051da129a1",
+    "dirty_worktree": true,
+    "branch_created": false,
+    "commit_created": false,
+    "pushed": false
+  },
+  "sources": [
+    {
+      "document_id": "788f47ff-23de-5f78-896b-7d3fe6e1bb92",
+      "filename": "2010.11929v2.pdf",
+      "source_sha256": "8ce7b83971a14508ca711a27c875c9b6914c4f6767cf3150fb1ca6c07aa056d6",
+      "ast_sha256": "de022dddb27d7defb935525ad5671da0c14c73b228926d08cd8fe78f5a5cd471"
+    },
+    {
+      "document_id": "1ae43cdf-aa5d-533e-8caa-c65a403deaf2",
+      "filename": "2103.00020v1.pdf",
+      "source_sha256": "6478b6e571a7d6fcd846d8ef77bfd60c285f1986abb8f475eedc43de403074f5",
+      "ast_sha256": "3acf3beac5486f12e34fd2cbae2b0b4e96c80cb1e6e164de74fb11f6f152c7e7"
+    },
+    {
+      "document_id": "bc90bcf2-cccd-5364-94f6-5815603802f7",
+      "filename": "2106.09685v2.pdf",
+      "source_sha256": "e9a0d3128767db616085dc0f4e6e455e672e89af823e8ed1282793682787395a",
+      "ast_sha256": "f4c849bd4de7d5a9d75c678178548613f51c038929a18c2b6f30a74affec4fb6"
+    }
+  ],
+  "repairs": [
+    "Writing-only bounded expansion of same-document neighboring AST blocks, with independent page and block anchors and context_for links; maximum 10 blocks/9500 characters.",
+    "Prioritize next pages when a retrieved page ends mid-thought.",
+    "Exclude reference entries, short fragments and repeated running headers from new context.",
+    "Do not publish writing claims that cite an unfinished passage without a citation to its continuation; preserve withheld count in warnings.",
+    "Normalize wrapped display-title words while retaining meaningful compound hyphens."
+  ],
+  "replay_of_prior_failure": {
+    "source": "backend/tmp/official-output-discovery-acceptance-2026-10-12/writing-2/writing-outline.json",
+    "original_claims": 13,
+    "continuation_added_from_physical_page": 17,
+    "original_problem_claim_number": 2,
+    "problem_claim_withheld": true,
+    "total_withheld": 4,
+    "accepted": 9,
+    "assessment": "Gate catches the known error; three other statements are also withheld, so conservative overblocking remains to be refined."
+  },
+  "model_runs": [
+    {
+      "id": "writing-1",
+      "provider": "deepseek-flash",
+      "reranker": "none",
+      "model_calls": 1,
+      "status": "source_checks_passed",
+      "claims": 10,
+      "evidence": 25,
+      "original_risky_page_in_top15": false,
+      "conclusion": "Not a comparable regression of the missing qualifier."
+    },
+    {
+      "id": "writing-2",
+      "provider": "deepseek-flash",
+      "reranker": "actual local BGE TEI",
+      "model_calls": 1,
+      "status": "source_checks_passed",
+      "claims": 11,
+      "evidence": 25,
+      "all_three_papers_claimed": true,
+      "condition_claim": {
+        "number": 2,
+        "cited_ids": [
+          "E10",
+          "E16",
+          "E17"
+        ],
+        "source_pages": [
+          16,
+          17
+        ],
+        "mentions_initial_attempt": true,
+        "mentions_learning_rate_and_similar_tuned_classifiers": true
+      },
+      "bibliography": {
+        "three_source_identities_checked": true,
+        "lora_wrapped_title_cleaned": true
+      },
+      "conclusion": "Original high-risk comparison correctly qualified in this one real generation."
+    },
+    {
+      "id": "writing-3",
+      "provider": "deepseek-flash",
+      "reranker": "actual local BGE TEI",
+      "model_calls": 1,
+      "status": "source_checks_passed",
+      "claims": 11,
+      "evidence": 25,
+      "all_three_papers_claimed": true,
+      "condition_claim": "omitted",
+      "unsafe_unqualified_claim_observed": false,
+      "style_note": "Several claims begin with evidence ID labels; draft prose still requires editing.",
+      "conclusion": "No repeated false comparison, but the particular comparison was not generated; this is not a second positive accuracy result."
+    }
+  ],
+  "semantic_review": {
+    "method": "Manual assisted comparison of all claims with cited excerpts; original ViT pages 16 and 17 including Figure 9 inspected previously.",
+    "result": "No unsupported numerical claim found in writing-2 or writing-3 sampled outputs. Writing-3 did not answer the original condition topic, so consistency remains unproven.",
+    "boundary": "Reference identity and arXiv submission year checks do not prove full bibliography style or novelty across complete papers/literature."
+  },
+  "cloud_usage": {
+    "deepseek_generation_attempts_this_turn": 3,
+    "automatic_retries": 0,
+    "private_papers_sent": false,
+    "public_pdf_excerpt_scope": "ViT, CLIP, LoRA official public paper excerpts only"
+  },
+  "regression": {
+    "backend": {
+      "tests": 815,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    "backend_llm_provider": "mock",
+    "ruff": "passed for backend app and touched tests",
+    "git_diff_check": "passed"
+  },
+  "environment": {
+    "original_dependency_containers_started": [
+      "pdfagent-postgres-1",
+      "pdfagent-redis-1",
+      "pdfagent-minio-1",
+      "pdfagent-qdrant-1"
+    ],
+    "backend_and_worker_healthy": true,
+    "frontend_3300_http": 200,
+    "backend_agent_status_8000_http": 200,
+    "backend_container_has_source_bind_mount": false,
+    "latest_host_code_in_running_container": false
+  },
+  "remaining": [
+    "Reduce conservative false rejections while preserving the cross-page safety gate",
+    "Use a fixed focused question to confirm the qualifier on the final candidate without relying on whether a broad outline chooses the detail",
+    "Package updated code into runtime image and verify UI/worker on the same candidate",
+    "Live discovery and arXiv tracking remain unaccepted due external API limits",
+    "Final all-39 QA, technical PDF, recording, public deployment and credential rotation remain open"
+  ],
+  "evidence_root": "backend/tmp/official-writing-context-acceptance-2026-10-12",
+  "report_sha256": [
+    {
+      "path": "writing-1/report.json",
+      "sha256": "871e8d3f3652c7a054cc3346de828a22de1ecffe937fad9fe9614ae6c053b508"
+    },
+    {
+      "path": "writing-1/writing-outline.json",
+      "sha256": "246a0d7ab6ec9294c2ed60c170ae264ed27007e0b3e6b5c271e8cbce0603c722"
+    },
+    {
+      "path": "writing-2/report.json",
+      "sha256": "e8c2bc32c1c40ebff2efecbda41ef13cb82dee2666ec21059f2b190f0cdef3b1"
+    },
+    {
+      "path": "writing-2/writing-outline.json",
+      "sha256": "7a6878534bd7de5ef6c1d1ec6229f8fffac5058cd317d3ab0401ce41ce26f828"
+    },
+    {
+      "path": "writing-3/report.json",
+      "sha256": "e8c2bc32c1c40ebff2efecbda41ef13cb82dee2666ec21059f2b190f0cdef3b1"
+    },
+    {
+      "path": "writing-3/writing-outline.json",
+      "sha256": "527fd76efa2d19ef56af0b3dd586b454ba469794d14b88de2ac27d957751d5d2"
+    },
+    {
+      "path": "offline-backend-final.xml",
+      "sha256": "19f6ee50f2bb5588ee1738f5d5aeb1f87e3eaa7fdbaca9b5f91d221e49fdc346"
+    }
+  ],
+  "selected_code_sha256": [
+    {
+      "path": "backend/app/agent/harness.py",
+      "sha256": "7e0598de52b586a1abdfca51b0ec82eb4e060a3c5e5fd73ac4a3b4fc0cb2760d"
+    },
+    {
+      "path": "backend/app/llm/openai_responses.py",
+      "sha256": "ad5fe5b55730c5514b53fae58910e9e6b104785a4b1494602337b2385d227e6e"
+    },
+    {
+      "path": "backend/app/schemas/agent.py",
+      "sha256": "c43f4d4f1cab7dd14b948d3ce68171e838ab3456c23aa240b612e4e4006a0cfe"
+    },
+    {
+      "path": "backend/app/services/writing_context.py",
+      "sha256": "ea784ca1d6d2185ae1a6ecc54d21b59fbba256149e8a2eac19182904709febf5"
+    },
+    {
+      "path": "backend/app/services/writing_outline.py",
+      "sha256": "413368b0bf567f36b14e7d5780d7b4c29a5877a2f06eac9ec36e864789ba260e"
+    },
+    {
+      "path": "backend/tests/test_writing_context.py",
+      "sha256": "cfc975f1c59052734d648c4cce9ce094524e5016c7009796aa20c9281e28fb69"
+    }
+  ]
+}

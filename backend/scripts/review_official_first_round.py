@@ -12,6 +12,13 @@ from types import SimpleNamespace
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
 from app.schemas.agent import AskResponse  # noqa: E402
+from app.services.answer_completeness import (  # noqa: E402
+    QUANTITY,
+    affirmative_model_values,
+    model_mentions,
+)
+from app.services.evidence_fields import CONTEXT_QUERY  # noqa: E402
+from app.services.grounded_text import normalise_fact  # noqa: E402
 from scripts.evaluate_real_pdf_comparison import (  # noqa: E402
     _check_cross_document_fact,
     _check_fact,
@@ -26,6 +33,17 @@ def check_reviewed_fact(fact: dict, response, document_ids: dict[str, str]) -> b
         if any(not _contains_any(claim.text, group)
                for group in fact.get("claim_contains_any_groups", [])):
             continue
+        subjects = {name for group in fact.get("claim_contains_any_groups", [])
+                    for option in group for _, _, name in model_mentions(option)}
+        fragments = " ".join(fact.get("source_text_contains_any", []))
+        kind = "model_context" if CONTEXT_QUERY.search(fragments) else (
+            "model_parameters" if any(QUANTITY.search(value)
+                                      for value in fact["claim_contains_any"]) else None)
+        if subjects and kind:
+            values = affirmative_model_values(claim.text, kind)
+            expected = {normalise_fact(option) for option in fact["claim_contains_any"]}
+            if not any(values.get(subject, set()) & expected for subject in subjects):
+                continue
         cited = [anchors[key] for key in claim.evidence_ids if key in anchors]
         cited = [anchor for anchor in cited if all(
             _contains_any(anchor.quote, [fragment])
@@ -54,6 +72,11 @@ def review(report_path: Path, dataset_path: Path, policy_path: Path, output: Pat
     dataset_sha = hashlib.sha256(dataset_bytes).hexdigest()
     if dataset_sha != source["dataset_sha256"]:
         raise ValueError("Original dataset SHA differs from the preserved generation run")
+    # Historical policies predate source binding. New inspections can bind their
+    # findings to exactly one completed generation report, never another round.
+    report_sha = hashlib.sha256(report_bytes).hexdigest()
+    if policy.get("original_report_sha256", report_sha) != report_sha:
+        raise ValueError("Source inspection policy is bound to a different report")
     originals = {item["case_id"]: item for item in source["cases"]}
     all_cases = {item["case_id"]: item for item in dataset["cases"]}
     selected_ids = source.get("selected_case_ids", list(all_cases))
@@ -100,7 +123,7 @@ def review(report_path: Path, dataset_path: Path, policy_path: Path, output: Pat
         "evaluation_kind": "offline_regrade_and_source_inspection",
         "timestamp": datetime.now(UTC).isoformat(),
         "model_calls": 0, "original_model_calls": source["model_calls"],
-        "original_report_sha256": hashlib.sha256(report_bytes).hexdigest(),
+        "original_report_sha256": report_sha,
         "original_dataset_sha256": dataset_sha,
         "review_policy_sha256": hashlib.sha256(policy_bytes).hexdigest(),
         "review_script_sha256": hashlib.sha256(Path(__file__).read_bytes()).hexdigest(),

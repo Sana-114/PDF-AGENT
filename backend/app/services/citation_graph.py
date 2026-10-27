@@ -86,17 +86,17 @@ def _json_list(value: str | None) -> list[str]:
     return [str(item) for item in parsed] if isinstance(parsed, list) else []
 
 
-def match_local_reference(
+def match_local_references(
     reference_text: str,
     source_document_id: str,
     papers: Sequence[_PaperIdentity],
     *,
     threshold: float = 0.72,
-) -> _ReferenceMatch | None:
+) -> list[_ReferenceMatch]:
     normalized_reference = normalize_title(reference_text)
     reference_terms = title_terms(reference_text)
     reference_arxiv_ids = {item.lower() for item in ARXIV_ID.findall(reference_text)}
-    best: _ReferenceMatch | None = None
+    candidates: list[_ReferenceMatch] = []
 
     for paper in papers:
         if paper.document.id == source_document_id:
@@ -123,9 +123,20 @@ def match_local_reference(
                     round(score, 4),
                     f"题名词覆盖 {coverage:.0%}，文本相似度 {similarity:.0%}",
                 )
-        if candidate.score >= threshold and (best is None or candidate.score > best.score):
-            best = candidate
-    return best
+        if candidate.score >= threshold:
+            candidates.append(candidate)
+    if not candidates:
+        return []
+    exact = [item for item in candidates
+             if item.reason in {"arXiv ID 完全一致", "参考文献包含完整题名"}]
+    pool = exact or candidates
+    best_score = max(item.score for item in pool)
+    best = sorted((item for item in pool if item.score == best_score),
+                  key=lambda item: item.target_id)
+    # A merged bibliography block may explicitly identify several local papers.
+    # Preserve all exact matches; do not choose whichever document arrived first.
+    # Equally plausible fuzzy matches remain unresolved.
+    return best if exact or len(best) == 1 else []
 
 
 def _pagerank(
@@ -205,39 +216,46 @@ class CitationGraphService:
             mention_counts = Counter(str(item["label"]) for item in mentions)
             total_references += len(references)
             for index, reference in enumerate(references, start=1):
-                match = match_local_reference(
+                matches = match_local_references(
                     str(reference["text"]),
                     paper.document.id,
                     papers,
                     threshold=match_threshold,
                 )
-                if match is None:
+                if not matches:
                     continue
                 matched_references += 1
-                key = (paper.document.id, match.target_id)
-                relation_weights[key] += 1
-                payload = relation_payloads.setdefault(
-                    key,
-                    {
-                        "reference_ids": [],
-                        "reference_labels": [],
-                        "reference_pages": [],
-                        "sample_reference": str(reference["text"])[:1000],
-                        "mention_count": 0,
-                        "match_score": match.score,
-                        "match_reason": match.reason,
-                    },
-                )
                 reference_id = str(reference.get("reference_id") or f"ref-{index}")
                 label = str(reference.get("label") or index)
                 page_number = max(1, int(reference.get("page_number") or 1))
-                payload["reference_ids"].append(reference_id)
-                payload["reference_labels"].append(label)
-                payload["reference_pages"].append(page_number)
-                payload["mention_count"] += mention_counts[label]
-                if match.score > payload["match_score"]:
-                    payload["match_score"] = match.score
-                    payload["match_reason"] = match.reason
+                if len(matches) > 1:
+                    warnings.append(
+                        f"《{paper.title}》第 {page_number} 页的参考文献段 {reference_id} "
+                        f"含 {len(matches)} 个明确匹配；分别保留书目关系，正文提及次数不分配给单篇。"
+                    )
+                for match in matches:
+                    key = (paper.document.id, match.target_id)
+                    relation_weights[key] += 1
+                    payload = relation_payloads.setdefault(
+                        key,
+                        {
+                            "reference_ids": [],
+                            "reference_labels": [],
+                            "reference_pages": [],
+                            "sample_reference": str(reference["text"])[:1000],
+                            "mention_count": 0,
+                            "match_score": match.score,
+                            "match_reason": match.reason,
+                        },
+                    )
+                    payload["reference_ids"].append(reference_id)
+                    payload["reference_labels"].append(label)
+                    payload["reference_pages"].append(page_number)
+                    if len(matches) == 1:
+                        payload["mention_count"] += mention_counts[label]
+                    if match.score > payload["match_score"]:
+                        payload["match_score"] = match.score
+                        payload["match_reason"] = match.reason
 
         document_ids = [paper.document.id for paper in papers]
         incoming: dict[str, set[str]] = defaultdict(set)

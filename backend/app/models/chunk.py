@@ -4,6 +4,7 @@ from sqlalchemy import ForeignKey, Index, Integer, String, Text, UniqueConstrain
 from sqlalchemy.orm import Mapped, mapped_column
 
 from app.core.database import Base
+from app.core.source_text import SourceText
 
 
 class DocumentChunk(Base):
@@ -21,7 +22,7 @@ class DocumentChunk(Base):
     page_number: Mapped[int] = mapped_column(Integer)
     block_ids_json: Mapped[str] = mapped_column(Text)
     bbox_json: Mapped[str | None] = mapped_column(Text, nullable=True)
-    section: Mapped[str | None] = mapped_column(Text, nullable=True)
-    text: Mapped[str] = mapped_column(Text)
+    section: Mapped[str | None] = mapped_column(SourceText, nullable=True)
+    text: Mapped[str] = mapped_column(SourceText)
     char_count: Mapped[int] = mapped_column(Integer)
 

@@ -1,0 +1,672 @@
+{
+  "schema_version": 1,
+  "date": "2026-10-14",
+  "status": "target_table_boundary_and_safe_cleanup_confirmed__full_table_and_scientific_generation_hold",
+  "git": {
+    "branch": "codex/stage94-official-failed-qa-retest",
+    "head": "a119f5609cda544e5d587588c5a338051da129a1",
+    "dirty_worktree": true,
+    "branch_created": false,
+    "committed": false,
+    "pushed": false,
+    "merged": false
+  },
+  "previous_record": {
+    "path": "docs/evidence/official-thematic-review-acceptance-2026-10-14.json",
+    "artifacts_checked": 43,
+    "immutable_result_artifacts_changed": 0,
+    "expected_changed_code_files": [
+      "backend/app/llm/review_limits.py",
+      "backend/app/services/evidence_review.py",
+      "backend/app/services/writing_outline.py",
+      "backend/tests/test_writing_outline.py"
+    ],
+    "history_scores_overwritten": false
+  },
+  "cloud": {
+    "provider": "deepseek",
+    "model": "deepseek-flash",
+    "calls": 3,
+    "automatic_retries": 0,
+    "selected_public_review_papers": 20,
+    "review_excerpts": 40,
+    "writing_public_papers": 3,
+    "whole_document_or_private_transmission": false,
+    "newest_candidate_generated": false
+  },
+  "generation_runs": [
+    {
+      "name": "generated-review-1",
+      "status": "source_checks_passed",
+      "app_sha256": "f4f0582b87bcec7d89f7c5b66bc4c2e127c2ffb9499b0298ed71aaf2b68a3d13",
+      "actual_calls": 1,
+      "raw_claims": 8,
+      "published_claims": 8,
+      "themes": 4,
+      "multi_source_body_claims": 4,
+      "retrieval_tags": [
+        {
+          "mode": "lexical",
+          "count": 40
+        }
+      ]
+    },
+    {
+      "name": "generated-writing-1",
+      "status": "source_checks_passed",
+      "app_sha256": "f4f0582b87bcec7d89f7c5b66bc4c2e127c2ffb9499b0298ed71aaf2b68a3d13",
+      "actual_calls": 1,
+      "raw_claims": 12,
+      "published_claims": 12,
+      "themes": null,
+      "multi_source_body_claims": null,
+      "retrieval_tags": [
+        {
+          "mode": "lexical",
+          "count": 25
+        }
+      ]
+    },
+    {
+      "name": "generated-writing-2",
+      "status": "source_checks_passed",
+      "app_sha256": "f4f0582b87bcec7d89f7c5b66bc4c2e127c2ffb9499b0298ed71aaf2b68a3d13",
+      "actual_calls": 1,
+      "raw_claims": 7,
+      "published_claims": 6,
+      "themes": null,
+      "multi_source_body_claims": null,
+      "retrieval_tags": [
+        {
+          "mode": "reranked",
+          "count": 25
+        }
+      ]
+    }
+  ],
+  "final_source": {
+    "python_version": "3.12.14",
+    "app_files": 126,
+    "app_sha256": "fff43be379b3ffaeafbd777d43ef26a7d067b0b8f2ce3d915c8d024805926e8d",
+    "requirements_sha256": "b0e75e31a3ca8f034e095fd0667e3be7e380975548c5acce90db94f96ed7283f",
+    "native_parser_version": "1.26.4-layout99",
+    "ocr_parser_base_version": "1.26.4-ocr-layout94",
+    "deployed": false,
+    "last_cloud_generation_app_sha256": "f4f0582b87bcec7d89f7c5b66bc4c2e127c2ffb9499b0298ed71aaf2b68a3d13"
+  },
+  "parser_acceptance": {
+    "selected_files": 20,
+    "physical_pages": 651,
+    "basic_checks_passed": 20,
+    "rounds": [
+      {
+        "status": "basic_checks_passed",
+        "app_sha256": "c13cb71bee8658572aa5898577a8d677e240e46cbeb162335a888db71761daf0",
+        "files": 20,
+        "old_tables": 290,
+        "new_tables": 322
+      },
+      {
+        "status": "basic_checks_passed",
+        "app_sha256": "a6d1fd1cea5af2de468f5303126ab35f226ee3b66d971488d86c89d74a83e2e3",
+        "files": 20,
+        "old_tables": 290,
+        "new_tables": 323
+      },
+      {
+        "status": "basic_checks_passed",
+        "app_sha256": "9105b582dedd53272140a6000a262e9b618c1b3d7be4678b45cb6788b029caec",
+        "files": 20,
+        "old_tables": 290,
+        "new_tables": 327
+      }
+    ],
+    "original_source_or_new_ast_mismatches": 0,
+    "candidate_sql_chunks_rebuilt": true,
+    "source_copies_and_original_ast_preserved": true,
+    "full_table_quality": "hold",
+    "latest_shared_guard_and_formatting_after_parse_not_counted_as_new_20_file_run": true,
+    "sources": [
+      {
+        "document_id": "0188171d-87ae-5a2f-acc2-87f71bc5db58",
+        "filename": "1607.06450v1.pdf",
+        "source_sha256": "c464f839fb8d59f7fde92f9b4caa67c2d1f2f196b88f93fb60502249df0aaef7",
+        "ast_sha256": "12403d5489b8a57667ae7a1c74affdb3c3571da1aaf3fba9234084d62cbb258c"
+      },
+      {
+        "document_id": "20d9fad6-9e6f-543d-a2e1-095d8056c5ff",
+        "filename": "1706.03762v1.pdf",
+        "source_sha256": "0a9bff1be3575cf9fe26a4a3d3a9175bc791ecec90de8b9deba4cff75d2b9476",
+        "ast_sha256": "f9666fde9d9a106a2d56bc77695a31c23dd038a77696e4c6eb60d2481330b1fa"
+      },
+      {
+        "document_id": "1f104048-0d8e-59ac-bc55-92c6c3773d08",
+        "filename": "1707.06347v2.pdf",
+        "source_sha256": "e78feadadbdbb0b601b3c2bcc81404722cd431a489b307545f9b7bea1e8c4f5b",
+        "ast_sha256": "2afb8cf8bd513be8d712cb974ad855270994231805ffdf4d50e7fb2f7770b725"
+      },
+      {
+        "document_id": "4ac3cbf3-13b9-5022-863f-a2dbe9391e58",
+        "filename": "1910.02054v3.pdf",
+        "source_sha256": "c531734c7d9ee647fda9b4f0e1a6abd6d58ad34e862bc945451b09032be3167e",
+        "ast_sha256": "71aac46dc7e41ad3b5dbe43f9d7155b30eece5ab66765a58eda988921d08b978"
+      },
+      {
+        "document_id": "d9d5065d-9706-53db-b856-427c2c58bd1a",
+        "filename": "1910.10683v4.pdf",
+        "source_sha256": "ad07e47cedf437a4156419ce5d3076e08a3e59bbfd6dac7cc53df1009cdcbe7f",
+        "ast_sha256": "2381a490e7d2ec8fc1d53e1cd25431ce36d853cc986b61ed04defb1356d5ea5a"
+      },
+      {
+        "document_id": "806425fa-1015-5452-91ee-cdb6b106183f",
+        "filename": "2001.08361v1.pdf",
+        "source_sha256": "a41bd7877fd1a6bcbba096b2619618bd2f90e02488f2365644903eb2f7c6a494",
+        "ast_sha256": "9b85dd70b3b8a6ca9de089e0f220e1bf5822748762591870cca52259f8adc4e3"
+      },
+      {
+        "document_id": "9f2229cc-c150-5bbc-a615-53046bc74763",
+        "filename": "2002.04745v2.pdf",
+        "source_sha256": "e1fa0519ed8e09a676d56c983e99ead5effd7ef840ae86a186729287469bf883",
+        "ast_sha256": "046719170db5fe2a7b4d2ba89c092689ccbfb0e86101d330d6cca9387d2cd0c1"
+      },
+      {
+        "document_id": "4eb9ae9c-2278-5530-ad02-d02e38f9088c",
+        "filename": "2005.14165v4.pdf",
+        "source_sha256": "97fd272f1fdfc18677462d0292f5fbf26ca86b4d1b485c2dba03269b643a0e83",
+        "ast_sha256": "2fa06c2bbe7c1c93352e0fdf024f37b2892b9c4a414b417a0818e31bdab23286"
+      },
+      {
+        "document_id": "788f47ff-23de-5f78-896b-7d3fe6e1bb92",
+        "filename": "2010.11929v2.pdf",
+        "source_sha256": "8ce7b83971a14508ca711a27c875c9b6914c4f6767cf3150fb1ca6c07aa056d6",
+        "ast_sha256": "e05230443e6bdad68eefa793d9fe56b77d79d6830e112e80cfc805948a63b35b"
+      },
+      {
+        "document_id": "0fedc9b8-1c87-5178-87a1-3bb5a02de3b8",
+        "filename": "2101.03961v3.pdf",
+        "source_sha256": "f340f6ace31abf7d0730ef461404279f40d3c890e9cc2daeb7068b3304afdbd6",
+        "ast_sha256": "a160eab9157fbfb1f07499eacfed5b52f12d85fd3e33ff4b1b639b8013fc6539"
+      },
+      {
+        "document_id": "1ae43cdf-aa5d-533e-8caa-c65a403deaf2",
+        "filename": "2103.00020v1.pdf",
+        "source_sha256": "6478b6e571a7d6fcd846d8ef77bfd60c285f1986abb8f475eedc43de403074f5",
+        "ast_sha256": "8a5b87d799d7b96a7495a189ca4074b5cac384026e7c715f6946fbecae68a3b8"
+      },
+      {
+        "document_id": "bc90bcf2-cccd-5364-94f6-5815603802f7",
+        "filename": "2106.09685v2.pdf",
+        "source_sha256": "e9a0d3128767db616085dc0f4e6e455e672e89af823e8ed1282793682787395a",
+        "ast_sha256": "f65cc9a84e885bccc5e7803303ecb2418659e2ea54814f6ddfd7c3042ec95932"
+      },
+      {
+        "document_id": "fefabe1a-496e-5b57-83cf-c73f831b1275",
+        "filename": "2107.03374v2.pdf",
+        "source_sha256": "ebae72ea0e8a5eb2ecbccdb985aec6cc1254a7c4d29e6d4de7866db1e66c4855",
+        "ast_sha256": "04d4a0ee66bfa5f038d0961c0ddad484e68d634fa11bfa6a896f945238ab1ea7"
+      },
+      {
+        "document_id": "5b4ad1aa-0c85-5a2b-a5ca-97eb8dd4d2aa",
+        "filename": "2201.11903v6.pdf",
+        "source_sha256": "7d9f878c23b460e4566aa4ec9201b1abfb3b8faefb2b1356e411cb90fef72a12",
+        "ast_sha256": "5ea979b9fadf6bb6e8472ba5b47083ec015ea17c7582783d171d221141644bfe"
+      },
+      {
+        "document_id": "cd05de96-3b20-5178-8953-d8ee090a4f23",
+        "filename": "2203.02155v1.pdf",
+        "source_sha256": "c1984bb50a5b90fddb895fdc3a0f72e5bc977148c9f63ef6040cbe7a3e1f0d98",
+        "ast_sha256": "44271b643a62d7242bf679c7291e1bd888b6c4382b810b8d4a7ddca98c39dbd8"
+      },
+      {
+        "document_id": "518cf49d-121d-55b9-834e-4160cf927fe9",
+        "filename": "2205.14135v2.pdf",
+        "source_sha256": "ca7f9fda10b90fc05dd291a3accc85e9c1a4a860b99b31928dab03ed3fcb14e4",
+        "ast_sha256": "8ed0616b14b96d4cee77175e965424ee1cbb0fbdb37b8b5649177bf7dac55024"
+      },
+      {
+        "document_id": "855562a1-8309-57b2-b7b0-b9e7016207dc",
+        "filename": "2305.14314v1.pdf",
+        "source_sha256": "33a4e757c19d6ea8d3cca8958fce8fe405e290272e135c99ee66065c775d5bd1",
+        "ast_sha256": "0bdf9ab2be963a5e42b3560e72b14fd247e2723c299ffc3e340682b02394db97"
+      },
+      {
+        "document_id": "114bfa0d-d6cf-573d-82b2-cfaed94b58b6",
+        "filename": "2305.18290v3.pdf",
+        "source_sha256": "92cb3a2b71362acda98a789b03d88688fd33cf5fcf13f81d2b1de30ee7d3b67a",
+        "ast_sha256": "781af7c7e57aba38a54d4dc2153750cdbeb4fdc2790b8f0c34a3446d4b4695fe"
+      },
+      {
+        "document_id": "86e85629-7347-5f1a-92d7-089475d96cdb",
+        "filename": "N19-1423.pdf",
+        "source_sha256": "987545ffb087f1ece898142c403a516baeabeb70ce19089397fac6f7db12c3d4",
+        "ast_sha256": "004deaff4ab97344b2a62096b754ad071463b825c09f3c01715ef00123b2fdb9"
+      },
+      {
+        "document_id": "f5b4ca83-6f08-5d85-b64f-a292b7b1f7b6",
+        "filename": "language_understanding_paper.pdf",
+        "source_sha256": "eb81a65e0856bd38e855e1f1de6ee12e7c3eb92ae05c8270d345a475beb631d0",
+        "ast_sha256": "d8cb3eb8d9c7f686f339216a57cb7731a103ad2d7c7a8f28cd74a7c79bfb60ca"
+      }
+    ]
+  },
+  "manual_inspection": {
+    "record_kind": "manual_complete_page_inspection_not_automated_semantic_truth",
+    "date": "2026-10-14",
+    "indices": "zero_based_original_published_claims",
+    "table_acceptance": {
+      "vit_p16_table7": {
+        "status": "target_boundary_and_six_data_rows_confirmed",
+        "columns": 5,
+        "rows_including_headers": 8,
+        "body_or_chart_rows_absent": true,
+        "header_colspan_not_fully_modelled": true
+      },
+      "transformer_p6_table1": {
+        "status": "restored_after_wrapped_header_regression",
+        "full_latex_accuracy_certified": false
+      },
+      "t5_p14_table1": {
+        "status": "bottom_caption_grid_boundary_and_visible_values_checked",
+        "all_fifteen_t5_detections_certified": false
+      },
+      "bert_p7": {
+        "status": "hold",
+        "reason": "Table 2 caption can be associated with the Table 3 grid; compact numeric cells remain merged. Spanning-header recovery alone does not prove table identity or cell accuracy."
+      },
+      "other_remaining": [
+        "ViT p6 native detector includes chart/body false-positive table",
+        "Some long qualitative tables are withheld or incomplete",
+        "No fresh official scan or 541-page book acceptance on layout99"
+      ]
+    },
+    "generated_review": {
+      "run": "generated-review-1",
+      "original_claims": 8,
+      "multi_source_body_claims": 4,
+      "core_source_supported_indices": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7
+      ],
+      "cross_paper_core_source_supported_indices": [
+        3,
+        5,
+        7
+      ],
+      "held_indices": [
+        0
+      ],
+      "hold_reason": "Initialization/near-output-layer scope is not preserved clearly ('原位梯度大'); LN paper is not itself a warmup study. Do not treat the whole comparison as scientifically accepted.",
+      "publication_style_caveat": "P-number labels are internal identities and should not replace recognizable method/paper names in final prose.",
+      "whole_review_status": "hold",
+      "statistical_accuracy": false
+    },
+    "generated_writing": {
+      "run": "generated-writing-2",
+      "original_claims": 6,
+      "core_source_supported_indices": [
+        1,
+        2,
+        3,
+        4
+      ],
+      "held_indices": [
+        0,
+        5
+      ],
+      "hold_reasons": {
+        "0": "Pure patch-based architecture is present on native page 1, but cited E1 is the NLP introduction, not that supporting block; E22 supports fine-tuning only.",
+        "5": "Input excerpt limitation is not a paper fact; later publication replay removes this row."
+      },
+      "comparator_caveat": "CLIP efficiency statement should retain the bag-of-words predictive baseline explicitly.",
+      "whole_writing_status": "hold",
+      "remaining_after_replay_not_all_accepted": true
+    },
+    "writing_fallback": {
+      "run": "generated-writing-1",
+      "actual_reranking": false,
+      "reason": "TEI was configured with an OpenAI-style /v1 prefix; /v1/rerank returned 404 three times and retrieval fell back to lexical.",
+      "core_or_whole_semantic_acceptance": "not_claimed",
+      "raw_generation_retained": true
+    },
+    "page_inspection": {
+      "fresh_complete_pages_viewed": 15,
+      "cached_vit_p16_also_viewed": true,
+      "original_pdf_bytes_modified": false,
+      "render_warnings": "Poppler missing display fonts reported; inspected pages readable"
+    },
+    "redundancy_review": {
+      "scope": "Changed parsing, scientific publication and agent paths; not an exhaustive proof that the whole repository contains no dead code.",
+      "consolidated": [
+        "Five repeated review filter/count/warning blocks",
+        "Shared evidence-scope note predicate for authoring roles",
+        "Duplicate normalization regex",
+        "Repeated format instructions delegated to model protocol"
+      ],
+      "removed_private_helpers": [
+        "_classify_block",
+        "_guess_title"
+      ],
+      "call_sites_before_removal": "Only definitions found in backend/frontend/docs source search; active title helper and OCR inheritance retained.",
+      "retained_intentionally": [
+        "Schema and publication checks both remain for legacy/saved providers",
+        "SHORT_REVIEW_PREFIX remains for compatible integrations and tests",
+        "Official eval fixtures, scripts and past failed outputs remain audit assets"
+      ],
+      "full_app_ruff_initial_findings": 12,
+      "findings_kind": "Import ordering and long lines; no unused import errors",
+      "full_app_ruff_final_pass": true
+    },
+    "detected_and_retained_failures": [
+      "Two pre-fix boundary tests fail as expected",
+      "Parser-1/2 wrapped and spanning header regressions; parser outputs never overwritten",
+      "First full regression misses local TESSDATA_PREFIX; corrected environment, no bypass",
+      "TEI root URL configuration mistake; distinct successful root-address attempt retained separately",
+      "Native table caption/cell failures remain holds"
+    ],
+    "deployed_new_source": false
+  },
+  "zero_call_replays": [
+    {
+      "name": "review-replay-1",
+      "original_published": 7,
+      "kept": 4,
+      "withheld_indices": [
+        1,
+        4,
+        6
+      ],
+      "cloud_calls": 0,
+      "claims_equal_to_previous_replay": true,
+      "themes_equal_to_previous_replay": true,
+      "warnings_equal_to_previous_replay": true
+    },
+    {
+      "name": "writing-replay-1",
+      "original_published": 6,
+      "kept": 5,
+      "withheld_indices": [
+        5
+      ],
+      "cloud_calls": 0,
+      "note": "Input-scope limitation separated; remaining citation mismatch still on manual hold. Replay not new generation."
+    }
+  ],
+  "regression": {
+    "backend": {
+      "tests": 1042,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "junit": "backend/tmp/official-table-cleanup-2026-10-14/backend-cleanup-final.xml"
+    },
+    "frontend": {
+      "tests": 38,
+      "failures": 0,
+      "typecheck_passed": true
+    },
+    "whole_production_app_ruff_passed": true,
+    "git_diff_check_passed": true,
+    "counts_not_business_accuracy": true,
+    "first_environment_failure_retained": true
+  },
+  "deployment": {
+    "docker_server_version": "29.7.2",
+    "pdfagent_backend_worker_frontend_healthy": true,
+    "bge_embedding_health": 200,
+    "bge_reranker_health": 200,
+    "worker_active_tasks_at_check": 0,
+    "existing_runtime_source_prefix": "0c025a51",
+    "existing_runtime_app_files": 122,
+    "free_host_memory_kib_at_check": 15521668,
+    "docker_or_wsl_restarted": false,
+    "volumes_removed": false,
+    "images_built_or_installed_this_turn": false,
+    "production_library_written": false,
+    "standard_dense_chain_confirmed": false,
+    "live_reranker_writing_confirmed_in_generated_writing_2": true,
+    "unrelated_containers_modified": false
+  },
+  "remaining": [
+    "Caption ownership and compact numeric-cell splitting, including BERT p7 and native chart false positives",
+    "Fresh last-candidate writing with all conclusions citing the supporting blocks",
+    "Review initialization scope and prose P-label presentation",
+    "Latest scan/book acceptance after parser version change",
+    "Latest production runtime/browser and full BGE dense chain",
+    "Other previously documented online, future-work, final delivery gates"
+  ],
+  "artifacts": [
+    {
+      "path": "backend/tmp/official-table-cleanup-2026-10-14/backend-candidate.xml",
+      "sha256": "a396246e23a346db47d4b23ca4f5945e941e342db4aca92ad07cfaf2abc51eb3"
+    },
+    {
+      "path": "backend/tmp/official-table-cleanup-2026-10-14/backend-cleanup-final.xml",
+      "sha256": "2817725303119d314d2eaa5fa234b433bf620cf97f58d423aad269db0748bf46"
+    },
+    {
+      "path": "backend/tmp/official-table-cleanup-2026-10-14/backend-final-candidate.xml",
+      "sha256": "235eb6c50e78adc1d7ea18086408003e29207ef6768cc399e066c42c8be28539"
+    },
+    {
+      "path": "backend/tmp/official-table-cleanup-2026-10-14/backend-final.xml",
+      "sha256": "95c28d1bba7d1fe1db3386528993259485cf11f9dbdea55a569ff5e005f8d78d"
+    },
+    {
+      "path": "backend/tmp/official-table-cleanup-2026-10-14/backend-release.xml",
+      "sha256": "c41414ebb59a45e3a9d1115a0bb139da3422a9f84f8bff7c50adecc9cac828e4"
+    },
+    {
+      "path": "backend/tmp/official-table-cleanup-2026-10-14/generated-review-1/calls.json",
+      "sha256": "cc56e79454ab1eb14e89d834e530374b13019f0c22791254ce6108c934103ebf"
+    },
+    {
+      "path": "backend/tmp/official-table-cleanup-2026-10-14/generated-review-1/generated-review.json",
+      "sha256": "cb4e421c9235103a91fa0fe81fe556cda60f6437f4a1786a5ab9e7007c20c9fa"
+    },
+    {
+      "path": "backend/tmp/official-table-cleanup-2026-10-14/generated-review-1/report.json",
+      "sha256": "02d3c42eb42faca51548d1cc8e6798cf381fe531dd874a5b6a3bffe01c28a8f0"
+    },
+    {
+      "path": "backend/tmp/official-table-cleanup-2026-10-14/generated-writing-1/calls.json",
+      "sha256": "5d05f7143ddcfa7ec08b6dadceacc7cac060514b04b0393dadd9f63677619e21"
+    },
+    {
+      "path": "backend/tmp/official-table-cleanup-2026-10-14/generated-writing-1/report.json",
+      "sha256": "0c3a209773999a241f60297e9c9a38d1249dd14defc814c7fcc0eed2fd912a6e"
+    },
+    {
+      "path": "backend/tmp/official-table-cleanup-2026-10-14/generated-writing-1/writing-outline.json",
+      "sha256": "f0bc565711805d3429441e7ec4b1cd17bc9dc5c71f7b4d0a1d1a8923f245f34c"
+    },
+    {
+      "path": "backend/tmp/official-table-cleanup-2026-10-14/generated-writing-2/calls.json",
+      "sha256": "c3356361eabe7eb0e0083c8ad2a32d015512f3dd31d515d2ad43018720b85b2e"
+    },
+    {
+      "path": "backend/tmp/official-table-cleanup-2026-10-14/generated-writing-2/report.json",
+      "sha256": "f226aeccd1e07a1edf1c6535e99a3e671ab68e4cb80c255d33f8ce629e3be9bd"
+    },
+    {
+      "path": "backend/tmp/official-table-cleanup-2026-10-14/generated-writing-2/writing-outline.json",
+      "sha256": "f1a06717e531e53476b6f1a523a3e2efa639c6a3f9b58b32b6f90936d289ef74"
+    },
+    {
+      "path": "backend/tmp/official-table-cleanup-2026-10-14/parser-1/fixture.json",
+      "sha256": "b179b2224a1b31a7c274c90ef57b5bb584f0bd6126302411c87a60c7632851e1"
+    },
+    {
+      "path": "backend/tmp/official-table-cleanup-2026-10-14/parser-1/report.json",
+      "sha256": "81e270c7ac73f8ab3388822a5d850c9d0146ffe0ea520abf4d4c97ae6e08709e"
+    },
+    {
+      "path": "backend/tmp/official-table-cleanup-2026-10-14/parser-2/fixture.json",
+      "sha256": "5a01889ac631bd0a47bec515edee36e511032431964006870a5fe2b75d8e2f43"
+    },
+    {
+      "path": "backend/tmp/official-table-cleanup-2026-10-14/parser-2/report.json",
+      "sha256": "f5651c6a5c02ebbe96a790f23dd4f378b6c1c11e5192a1f549512ff70b496beb"
+    },
+    {
+      "path": "backend/tmp/official-table-cleanup-2026-10-14/parser-3/fixture.json",
+      "sha256": "12a7e7a1403b2d0d177e409ea998b7fa9ea40397a8048c4a14593e10ade0aa1d"
+    },
+    {
+      "path": "backend/tmp/official-table-cleanup-2026-10-14/parser-3/report.json",
+      "sha256": "a86adb8f03a0f1876860d8b3008420c94cfb343728dd34ea07fd5997e28db47f"
+    },
+    {
+      "path": "backend/tmp/official-table-cleanup-2026-10-14/review-replay-1/generated-review.json",
+      "sha256": "127511a1b183c56f67bc74b96b48553de0c5a541f86d61221a4e1cdee69f02da"
+    },
+    {
+      "path": "backend/tmp/official-table-cleanup-2026-10-14/review-replay-1/report.json",
+      "sha256": "0df32b68e7f9ea3fd585af66cbd4da32a1268154dbcf19407614f7690c66c30a"
+    },
+    {
+      "path": "backend/tmp/official-table-cleanup-2026-10-14/semantic-review.json",
+      "sha256": "05d9643469f30247f4b3b81b23826f605d38df9407034f3837818593e0acb2ec"
+    },
+    {
+      "path": "backend/tmp/official-table-cleanup-2026-10-14/source-pages/bert-7.png",
+      "sha256": "c5ceff5afae8ff556557ece0a4afb2ef3cc55b06fa2802bd43b946359ae0b98c"
+    },
+    {
+      "path": "backend/tmp/official-table-cleanup-2026-10-14/source-pages/clip-4.png",
+      "sha256": "0282ec75b863a766f5fbeab3c66b6d230a939c04b30b6ae29bdd3997fd06aafb"
+    },
+    {
+      "path": "backend/tmp/official-table-cleanup-2026-10-14/source-pages/dpo-1.png",
+      "sha256": "b432d9de6869d2d77a22db9cca13491fadb4f4ae9599f6696fbd3eefea97508c"
+    },
+    {
+      "path": "backend/tmp/official-table-cleanup-2026-10-14/source-pages/flash-1.png",
+      "sha256": "92d2211829e6f4912dea74d0952f9239ce700a8ee862d1d91ba98cf8b989ceda"
+    },
+    {
+      "path": "backend/tmp/official-table-cleanup-2026-10-14/source-pages/flash-6.png",
+      "sha256": "d6cf66d82c5cf211e0243ea40432d8781231345c2e48e0e5522105a7fdbe93ec"
+    },
+    {
+      "path": "backend/tmp/official-table-cleanup-2026-10-14/source-pages/instruct-1.png",
+      "sha256": "46cf6af0f7ac443fe331d859d9dac26262752bf54d6b37c180147ffff01ddcac"
+    },
+    {
+      "path": "backend/tmp/official-table-cleanup-2026-10-14/source-pages/ln-1.png",
+      "sha256": "8ba78ba2a42965b4835c05bc49fe2fac5b7db110e3c067df01833c7c5a4c2355"
+    },
+    {
+      "path": "backend/tmp/official-table-cleanup-2026-10-14/source-pages/lora-1.png",
+      "sha256": "ae28868e8979c8aef69717eed982bcede70d2f1d6dc7a9de7ded6c21c75271a1"
+    },
+    {
+      "path": "backend/tmp/official-table-cleanup-2026-10-14/source-pages/lora-3.png",
+      "sha256": "27aa915f47b5563c9b584a76ba245671af95fd27a04f108f5fa1552fe74d9459"
+    },
+    {
+      "path": "backend/tmp/official-table-cleanup-2026-10-14/source-pages/preln-1.png",
+      "sha256": "83944fabaf366552ffc8e67082e279d488bf4dda6c8b2065bf501665ede8473c"
+    },
+    {
+      "path": "backend/tmp/official-table-cleanup-2026-10-14/source-pages/qlora-1.png",
+      "sha256": "25e1eec9ff90d34888e523ef508ba5074e3aaa61e4b9a9e8c48f01e8e46f3b33"
+    },
+    {
+      "path": "backend/tmp/official-table-cleanup-2026-10-14/source-pages/t5-14.png",
+      "sha256": "a4bfeeb977d958b7098105804dd3fd0820e5ded44d5693f3288992f1cb4ad7b0"
+    },
+    {
+      "path": "backend/tmp/official-table-cleanup-2026-10-14/source-pages/transformer-6.png",
+      "sha256": "bf45d428e6c58bdf6a1a09516b5873544e590b5b118a8aa9ad58f5785f39e963"
+    },
+    {
+      "path": "backend/tmp/official-table-cleanup-2026-10-14/source-pages/vit-1.png",
+      "sha256": "77b8db7b7a3c7fcc879cde1a0e7a7e99a1a4e4cd3d10766f7acd7a33952b56b2"
+    },
+    {
+      "path": "backend/tmp/official-table-cleanup-2026-10-14/source-pages/vit-4.png",
+      "sha256": "87bad360c2304f147d1e9e2451d10352a21ea70d9ad53d58e1cb761cd75184e5"
+    },
+    {
+      "path": "backend/tmp/official-table-cleanup-2026-10-14/writing-replay-1/report.json",
+      "sha256": "9edae4082ba310ecb41d6e01f25c74f9328d1c6292c30f715756bafaef29efc0"
+    },
+    {
+      "path": "backend/tmp/official-table-cleanup-2026-10-14/writing-replay-1/writing-outline.json",
+      "sha256": "e3ad6db4bcddd138e8f773352f46b685bbba9a0bfd6a1d09e106f0f7b8c25b5a"
+    },
+    {
+      "path": "backend/app/parsers/text_table.py",
+      "sha256": "e4f86412181ae873ae5fa006dd2598d13a331c86412377d7b69485bfe7251615"
+    },
+    {
+      "path": "backend/app/parsers/pymupdf_parser.py",
+      "sha256": "a5513034bbd4d47652d914be4dbae6172d4a6a534b77d539d336b9beab13b747"
+    },
+    {
+      "path": "backend/app/parsers/ocr_parser.py",
+      "sha256": "ea88d5fe1641e2620af1de9fff2b23998c8e362e9c8f7a5ce7a907bfbdfad02f"
+    },
+    {
+      "path": "backend/app/llm/review_limits.py",
+      "sha256": "1c3bc56102716c862f08dbf3f0f577a175ddcb9e3299d74304d5666e7fdc4e5e"
+    },
+    {
+      "path": "backend/app/services/evidence_review.py",
+      "sha256": "413188f9a60d4de116003d9cbe940e9a23cdf250b9b4c3ece5549da669f33ce3"
+    },
+    {
+      "path": "backend/app/services/claim_semantics.py",
+      "sha256": "6ecab5dae9a8d5b23730b23a3b98d2b2d52d05ff33012236d50eb8079ca79b82"
+    },
+    {
+      "path": "backend/app/services/writing_outline.py",
+      "sha256": "6d3814e4a0c7e09dc805e8c77360121fd663959d954f1c7ff9235e96f1bfacab"
+    },
+    {
+      "path": "backend/app/services/normalization_evidence.py",
+      "sha256": "96c788cf749e3cad4bd55a95ac5b93c6d594b449a45eb9d62bb70462480ac7d0"
+    },
+    {
+      "path": "backend/app/services/answer_completeness.py",
+      "sha256": "2a58a0b71f11017de1be52f1119f6ebd3dd8c4d2737976eefba96a3557daf076"
+    },
+    {
+      "path": "backend/app/services/optimizer_evidence.py",
+      "sha256": "09e10f410272f6e3dd15ba69ee0a97c54bdf5530f6301069f934ddd1a42a7c94"
+    },
+    {
+      "path": "backend/app/agent/harness.py",
+      "sha256": "eb39ac685883aabfa3163aa54cfe1c962a5d7596cf01031a94db66abd07ebe17"
+    },
+    {
+      "path": "backend/tests/test_review_publication_guards.py",
+      "sha256": "7dca605c00e9a1e35917355ae7a3d6a0bbfa1d077a55a4d77e1ac5bc7a7e6e7b"
+    },
+    {
+      "path": "backend/tests/test_text_table_boundaries.py",
+      "sha256": "ec14de14e69328c2b0ed75816f7937b40e12d2b7e3b49482d32958ed70e5b2c9"
+    },
+    {
+      "path": "backend/tests/test_writing_outline.py",
+      "sha256": "80c9de9be070e1d8310ec592680a40da7e037c6cd046b1632192bd12f609a585"
+    },
+    {
+      "path": "backend/tests/test_single_column_section_order.py",
+      "sha256": "312d2616b98caa16d7f33f260c0cc556e9cda299924770e16ff3a648b6d2dc87"
+    },
+    {
+      "path": "backend/scripts/prepare_official_parser_candidate.py",
+      "sha256": "76b8f75444afaf653e064693c54e436737676bf7c682daa966333a37f59fe118"
+    },
+    {
+      "path": "backend/scripts/verify_official_local_features.py",
+      "sha256": "5ab93fb20edc4286a9ae0eeda37df6585bb18389860b24f048baded8e3caa756"
+    }
+  ]
+}

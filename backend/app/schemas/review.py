@@ -3,7 +3,7 @@ from typing import Literal
 
 from pydantic import BaseModel, Field, field_validator, model_validator
 
-from app.schemas.agent import AnswerClaim, EvidenceAnchor
+from app.schemas.agent import AnswerClaim, EvidenceAnchor, GroundingAudit
 from app.schemas.citation_graph import CitationGraphStatsRead
 
 
@@ -26,17 +26,33 @@ class ResearchReviewRequest(BaseModel):
 
 
 class ReviewEvidenceRead(EvidenceAnchor):
-    evidence_kind: Literal["overview", "future_work", "later_progress"]
+    evidence_kind: Literal["overview", "future_work", "later_progress", "citation_relation"]
+
+
+class ReviewCitationRelationRead(BaseModel):
+    source_document_id: str
+    source_title: str
+    target_document_id: str
+    target_title: str
+    evidence_id: str
+    match_reason: str
 
 
 class ReviewPaperRead(BaseModel):
     document_id: str
     title: str
     publication_year: int | None
+    metadata_evidence: EvidenceAnchor | None = None
     graph_role: Literal["cornerstone", "bridge", "derivative", "isolated", "peripheral"]
     foundation_score: float
     overview_evidence_ids: list[str]
     future_work_evidence_ids: list[str]
+
+
+class ReviewThemeRead(BaseModel):
+    title: str = Field(min_length=1, max_length=40)
+    claim_indices: list[int]
+    cross_paper_claim_indices: list[int] = Field(default_factory=list)
 
 
 class FutureWorkSource(BaseModel):
@@ -75,6 +91,46 @@ class FutureWorkDecisionRead(BaseModel):
     updated_at: datetime
 
 
+class FutureWorkAssessmentRequest(BaseModel):
+    source: FutureWorkSource
+    progress: list[FutureWorkSource] = Field(min_length=1, max_length=3)
+
+
+class FutureProgressProof(BaseModel):
+    evidence_id: str
+    quote: str
+
+
+class FutureFacetRead(BaseModel):
+    goal_quote: str
+    status: Literal["addressed", "partial", "not_established"]
+    explanation: str
+    evidence_ids: list[str] = Field(default_factory=list)
+    proof: list[FutureProgressProof] = Field(default_factory=list)
+
+
+class FutureExclusionReviewRead(BaseModel):
+    status: Literal["approved", "rejected", "unavailable"]
+    scope_check: Literal["supported", "unsupported", "uncertain"]
+    facet_checks: list[Literal["supported", "unsupported", "uncertain"]]
+
+
+class FutureWorkAssessmentRead(BaseModel):
+    direction_id: str
+    status: Literal["insufficient", "partial_progress", "supported_progress"]
+    facets: list[FutureFacetRead]
+    progress_evidence: list[EvidenceAnchor]
+    scope_coverage_complete: bool
+    warnings: list[str] = Field(default_factory=list)
+    provider: str
+    model: str | None = None
+    updated_at: datetime
+    # An evidence-limited model assessment is not a durable human confirmation.
+    automatically_resolved: Literal[False] = False
+    excluded_from_recommendations: bool = False
+    exclusion_review: FutureExclusionReviewRead | None = None
+
+
 class FutureDirectionRead(BaseModel):
     direction_id: str
     text: str
@@ -82,22 +138,42 @@ class FutureDirectionRead(BaseModel):
     source_title: str
     source_year: int | None
     source_evidence_id: str
-    status: Literal["open", "possibly_addressed", "confirmed_addressed"]
+    status: Literal["open", "possibly_addressed", "confirmed_addressed", "evidence_addressed"]
     possibly_addressed_by_document_ids: list[str] = Field(default_factory=list)
     progress_evidence_ids: list[str] = Field(default_factory=list)
     exploration_score: float = Field(ge=0.0, le=1.0)
     reason: str
     confirmation: FutureWorkDecisionRead | None = None
+    assessment: FutureWorkAssessmentRead | None = None
+
+
+class SemanticReviewVerdictRead(BaseModel):
+    claim_index: int
+    status: Literal["supported", "unsupported", "uncertain"]
+    reason: str
+
+
+class SemanticReviewRead(BaseModel):
+    status: Literal["checked", "unavailable"]
+    input_claim_count: int
+    accepted_claim_count: int
+    verdicts: list[SemanticReviewVerdictRead] = Field(default_factory=list)
 
 
 class ResearchReviewRead(BaseModel):
     generated_at: datetime
     review: str
     claims: list[AnswerClaim]
+    grounding_audit: GroundingAudit | None = None
+    semantic_review: SemanticReviewRead | None = None
+    themes: list[ReviewThemeRead] = Field(default_factory=list)
     papers: list[ReviewPaperRead]
     future_directions: list[FutureDirectionRead]
     evidence: list[ReviewEvidenceRead]
+    # Local direction candidates are not additional evidence sent to the model.
+    future_work_evidence: list[ReviewEvidenceRead] = Field(default_factory=list)
     graph_stats: CitationGraphStatsRead
+    citation_relations: list[ReviewCitationRelationRead] = Field(default_factory=list)
     provider: str
     model: str | None = None
     insufficient_evidence: bool

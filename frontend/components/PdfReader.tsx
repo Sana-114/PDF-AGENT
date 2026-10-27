@@ -16,9 +16,12 @@ import {
   DocumentTranslationJob,
   DocumentOutlineNode,
   DocumentReference,
+  DocumentPeople,
+  PeopleSource,
   EvidenceAnchor,
   documentTranslationExportUrl,
   getDocumentOutline,
+  getDocumentPeople,
   getDocumentReferences,
   getDocumentTranslationStatus,
   startDocumentTranslation,
@@ -38,6 +41,7 @@ import {
   mapSynchronizedScroll,
   MAX_TRANSLATION_CHARS,
 } from "../lib/translation";
+import DocumentPeoplePanel from "./DocumentPeoplePanel";
 
 pdfjs.GlobalWorkerOptions.workerSrc = new URL(
   "pdfjs-dist/build/pdf.worker.min.mjs",
@@ -71,10 +75,10 @@ interface OutlineTreeProps {
   onSelect: (item: DocumentOutlineNode) => void;
 }
 
-type SidebarTab = "outline" | "references";
+type SidebarTab = "outline" | "references" | "people";
 type ReferenceTargetKind = "reference" | "citation";
 type HighlightTarget = ReferenceTarget | {
-  kind: "evidence";
+  kind: "evidence" | "people";
   label: string;
   pageNumber: number;
   bbox: number[] | null;
@@ -196,6 +200,11 @@ export default function PdfReader({
   const [referencesLoading, setReferencesLoading] = useState(true);
   const [referencesError, setReferencesError] = useState<string | null>(null);
   const [sidebarTab, setSidebarTab] = useState<SidebarTab>("outline");
+  const [people, setPeople] = useState<DocumentPeople | null>(null);
+  const [peopleLoading, setPeopleLoading] = useState(false);
+  const [peopleError, setPeopleError] = useState<string | null>(null);
+  const [peopleRetry, setPeopleRetry] = useState(0);
+  const [peopleTarget, setPeopleTarget] = useState<(HighlightTarget & { blockId: string }) | null>(null);
   const [referenceTarget, setReferenceTarget] = useState<ReferenceTarget | null>(null);
   const [citationOrigin, setCitationOrigin] = useState<ReferenceTarget | null>(null);
   const [selectionDraft, setSelectionDraft] = useState<SelectionDraft | null>(null);
@@ -220,6 +229,7 @@ export default function PdfReader({
   const translationRequestRef = useRef<string | null>(null);
   const pageShellRef = useRef<HTMLDivElement>(null);
   const viewportRef = useRef<HTMLDivElement>(null);
+  const highlightRef = useRef<HTMLDivElement>(null);
 
   const flatOutline = useMemo(() => flattenOutline(outline), [outline]);
   const activeOutline = useMemo(
@@ -234,6 +244,7 @@ export default function PdfReader({
     [references],
   );
   const activePageTarget = useMemo<HighlightTarget | null>(() => {
+    if (peopleTarget?.pageNumber === pageNumber) return peopleTarget;
     if (referenceTarget?.pageNumber === pageNumber) return referenceTarget;
     if (evidence?.page_number === pageNumber) {
       return {
@@ -245,7 +256,7 @@ export default function PdfReader({
       };
     }
     return null;
-  }, [evidence, pageNumber, referenceTarget]);
+  }, [evidence, pageNumber, peopleTarget, referenceTarget]);
   const highlightRect = useMemo(
     () => activePageTarget && pageSize
       ? bboxToPercentRect(activePageTarget.bbox, pageSize.width, pageSize.height)
@@ -284,6 +295,31 @@ export default function PdfReader({
       if (translationRequestRef.current === cacheKey) setPageTranslationLoading(false);
     }
   }, [documentId]);
+
+  useEffect(() => {
+    if (sidebarTab !== "people") return;
+    const controller = new AbortController();
+    setPeople(null);
+    setPeopleError(null);
+    setPeopleLoading(true);
+    void getDocumentPeople(documentId, controller.signal)
+      .then((response) => { if (!controller.signal.aborted) setPeople(response); })
+      .catch((error: unknown) => {
+        if (!controller.signal.aborted) setPeopleError(readableRequestError(error, "署名信息加载失败"));
+      })
+      .finally(() => { if (!controller.signal.aborted) setPeopleLoading(false); });
+    return () => controller.abort();
+  }, [documentId, peopleRetry, sidebarTab]);
+
+  useEffect(() => {
+    setPeopleTarget(null);
+  }, [documentId]);
+
+  useEffect(() => {
+    if (activePageTarget?.kind === "people" && highlightRect) {
+      highlightRef.current?.scrollIntoView({ block: "center", inline: "nearest" });
+    }
+  }, [activePageTarget, highlightRect]);
 
   useEffect(() => {
     let active = true;
@@ -471,9 +507,21 @@ export default function PdfReader({
   }
 
   function showReferenceTarget(target: ReferenceTarget) {
+    setPeopleTarget(null);
     setReferenceTarget(target);
     setSidebarTab("references");
     goToPage(target.pageNumber);
+    if (window.innerWidth <= 760) setOutlineOpen(false);
+  }
+
+  function selectPeopleSource(source: PeopleSource, label: string) {
+    setReferenceTarget(null);
+    setCitationOrigin(null);
+    setPeopleTarget({
+      kind: "people", label, blockId: source.block_id,
+      pageNumber: source.page_number, bbox: source.bbox, context: source.text,
+    });
+    goToPage(source.page_number);
     if (window.innerWidth <= 760) setOutlineOpen(false);
   }
 
@@ -629,6 +677,7 @@ export default function PdfReader({
           <div className="pdf-reader-controls" aria-label="PDF 阅读控制">
             <button
               aria-controls="pdf-document-outline"
+              aria-label="文档导航"
               aria-expanded={outlineOpen}
               className={`pdf-outline-toggle ${outlineOpen ? "active" : ""}`}
               onClick={() => setOutlineOpen((current) => !current)}
@@ -719,6 +768,15 @@ export default function PdfReader({
               >
                 引用 <span>{references.length}</span>
               </button>
+              <button
+                aria-selected={sidebarTab === "people"}
+                className={sidebarTab === "people" ? "active" : ""}
+                onClick={() => setSidebarTab("people")}
+                role="tab"
+                type="button"
+              >
+                署名与贡献
+              </button>
             </div>
             {sidebarTab === "outline" ? (
               <>
@@ -739,6 +797,18 @@ export default function PdfReader({
                       onSelect={selectOutline}
                     />
                   </nav>
+                )}
+              </>
+            ) : sidebarTab === "people" ? (
+              <>
+                {peopleLoading && <div className="pdf-outline-message" role="status">正在读取署名信息…</div>}
+                {peopleError && (
+                  <div className="pdf-outline-message error" role="alert">
+                    {peopleError} <button onClick={() => setPeopleRetry((n) => n + 1)} type="button">重试</button>
+                  </div>
+                )}
+                {people?.document_id === documentId && !peopleLoading && !peopleError && (
+                  <DocumentPeoplePanel data={people} activeBlockId={peopleTarget?.blockId} onSelectSource={selectPeopleSource} />
                 )}
               </>
             ) : (
@@ -797,7 +867,8 @@ export default function PdfReader({
                 />
                 {highlightRect && (
                   <div
-                    aria-label={`${activePageTarget?.kind === "evidence" ? "证据" : "引用"} ${activePageTarget?.label} 的原文位置`}
+                    aria-label={`${activePageTarget?.kind === "people" ? "署名与贡献" : activePageTarget?.kind === "evidence" ? "证据" : "引用"} ${activePageTarget?.label} 的原文位置`}
+                    ref={highlightRef}
                     className={`pdf-evidence-highlight ${activePageTarget?.kind ?? ""}`}
                     style={{
                       left: `${highlightRect.left}%`,
@@ -807,8 +878,8 @@ export default function PdfReader({
                     }}
                     title={activePageTarget?.context}
                   >
-                    <span>{activePageTarget?.kind === "evidence"
-                      ? activePageTarget.label
+                    <span>{["evidence", "people"].includes(activePageTarget?.kind ?? "")
+                      ? activePageTarget?.label
                       : `[${activePageTarget?.label}]`}</span>
                   </div>
                 )}
@@ -946,11 +1017,13 @@ export default function PdfReader({
           <div className="pdf-reader-location">
             {activePageTarget ? (
               <>
-                <strong className={activePageTarget.kind}>{activePageTarget.kind === "evidence"
+                <strong className={activePageTarget.kind}>{["evidence", "people"].includes(activePageTarget.kind)
                   ? activePageTarget.label
                   : `[${activePageTarget.label}]`}</strong>
                 <span className="pdf-evidence-status">{highlightRect
-                  ? activePageTarget.kind === "evidence"
+                  ? activePageTarget.kind === "people"
+                    ? "已定位署名与贡献原文"
+                    : activePageTarget.kind === "evidence"
                     ? "已高亮原文证据"
                     : activePageTarget.kind === "reference"
                       ? "已定位参考文献条目"

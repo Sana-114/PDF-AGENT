@@ -4,6 +4,7 @@ import json
 import shutil
 from pathlib import Path
 from typing import Any, Literal
+from uuid import uuid4
 
 from app.core.config import settings
 from app.parsers.checkpoint import utc_timestamp, write_json_atomic
@@ -52,9 +53,23 @@ class TranslationStore:
         if (
             not isinstance(payload, dict)
             or payload.get("schema_version") != TRANSLATION_SCHEMA_VERSION
+            or payload.get("document_id") != document_id
+            or payload.get("target_language") != target_language
         ):
             return None
         return payload
+
+    def record_failure(
+        self, document_id, target_language, *, page_number, source_fingerprint, error
+    ):
+        """Keep failed output separate from publishable pages and retain every attempt."""
+        job_dir = self.job_dir(document_id, target_language)
+        write_json_atomic(job_dir / f"failure-{uuid4().hex}.json", {
+            "document_id": document_id, "page_number": page_number,
+            "source_fingerprint": source_fingerprint, "created_at": utc_timestamp(),
+            "error_type": type(error).__name__,
+            "raw_translation_output": getattr(error, "raw_translation_output", None),
+        })
 
     def prepare(
         self,
@@ -129,7 +144,16 @@ class TranslationStore:
             payload = json.loads(path.read_text(encoding="utf-8"))
         except (FileNotFoundError, OSError, json.JSONDecodeError):
             return None
-        return payload if isinstance(payload, dict) else None
+        if (not isinstance(payload, dict)
+                or payload.get("document_id") != document_id
+                or payload.get("target_language") != target_language
+                or type(payload.get("page_number")) is not int
+                or payload["page_number"] != page_number
+                or payload.get("source_language") != "auto"
+                or payload.get("provider") != manifest.get("provider")
+                or payload.get("model") != manifest.get("model")):
+            return None
+        return payload
 
     def write_page(
         self,
@@ -164,6 +188,19 @@ class TranslationStore:
             raise RuntimeError("Translation manifest is missing")
         manifest["status"] = status
         manifest["error"] = error
+        manifest["updated_at"] = utc_timestamp()
+        write_json_atomic(job_dir / "manifest.json", manifest)
+        return manifest
+
+    def reconcile_completed_pages(
+        self, document_id: str, target_language: str, valid_pages: set[int]
+    ) -> dict[str, Any]:
+        """Correct stale coverage metadata without deleting any saved page payload."""
+        job_dir = self.job_dir(document_id, target_language)
+        manifest = self.read_manifest(document_id, target_language)
+        if manifest is None:
+            raise RuntimeError("Translation manifest is missing")
+        manifest["completed_pages"] = sorted(valid_pages)
         manifest["updated_at"] = utc_timestamp()
         write_json_atomic(job_dir / "manifest.json", manifest)
         return manifest

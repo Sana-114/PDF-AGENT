@@ -1,0 +1,30 @@
+{
+  "policy_id": "two-original-gpt-field-retest-source-review-2026-10-11",
+  "notes": "Inspect only the two new one-attempt answers. Preserve original gold and outputs. Do not count an offline repaired replay as a fresh generation pass.",
+  "fact_overrides": {
+    "gpt-parameter-evolution": {
+      "gpt1-from-gpt2-baseline-table": {"claim_contains_any_groups": [["GPT-1", "GPT1", "原始 GPT", "原始GPT"]]},
+      "gpt2-largest": {"claim_contains_any_groups": [["GPT-2", "GPT2"]]},
+      "gpt3-largest": {"claim_contains_any_groups": [["GPT-3", "GPT3"]]}
+    },
+    "context-evolution": {
+      "gpt1-context-from-gpt2-report": {"claim_contains_any_groups": [["GPT-1", "GPT1", "原始 GPT", "原始GPT"]]},
+      "gpt2-context": {"claim_contains_any_groups": [["GPT-2", "GPT2"]]},
+      "gpt3-context": {"claim_contains_any_groups": [["GPT-3", "GPT3"]]}
+    }
+  },
+  "source_inspection": {
+    "reviewer": "code_assistant_preserved_claim_and_complete_native_pdf_page_inspection",
+    "scope": "Only the two 2026-10-11 field-retest answers, from current host source and a read-only public index. GPT-2 physical page 4, GPT-3 physical pages 8 and 43 were rendered with Poppler and visually inspected; GPT-1 page 5 training wording was inspected. This is not independent expert peer review, nine-case acceptance, a fresh parse run or frontend validation.",
+    "cases": {
+      "gpt-parameter-evolution": {
+        "passed": false,
+        "reason": "The numeric GPT baseline and largest-model table now reaches E2 together with the equivalence passage E5. The generator supplies the exact table values and a source-qualified original-GPT inference. However, its second published claim incorrectly says the second largest model is equivalent to the largest BERT model; physical page 4 says second smallest. The then-current synonym guard did not reject '等同'. The runtime also marks GPT-1/GPT-2 incomplete because its assignment grammar misses the alias/reverse mapping and '参数量分别为' list. GPT-3's independently supported 175B range is retained via E6; a redundant E3-only eight-model statement is conservatively rejected because that cited chunk does not explicitly contain the count 8. Do not accept the faulty published answer just because all keyword facts match."
+      },
+      "context-evolution": {
+        "passed": false,
+        "reason": "E2 contains GPT-2's architectural context-size comparison and E3 contains GPT-3's full nctx context window; physical pages 4 and 43 verify both. GPT-3 physical page 8 independently states the context-window configuration. The answer still rejects the maximum-window field merely because that literal label is absent and publishes a GPT-1 context inference based only on E4's training-sequence wording. Another claim offers the later-paper baseline inference, but the overall answer is contradictory and the runtime flags GPT-1 incomplete. Retain the failure; neither keyword numbers nor a full-window training passage justify the global assertion that there is no usable context evidence."
+      }
+    }
+  }
+}

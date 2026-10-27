@@ -207,6 +207,8 @@ def refresh_arxiv_subscription(subscription_id: str) -> dict:
             "discovered": summary.discovered,
             "updated": summary.updated,
             "error": summary.error,
+            "ranking_provider": summary.ranking_provider,
+            "ranking_warning": summary.ranking_warning,
         }
 
 
@@ -221,5 +223,13 @@ def refresh_all_arxiv_subscriptions() -> dict:
     for index, subscription_id in enumerate(subscription_ids):
         if index and settings.arxiv_request_delay_seconds:
             time.sleep(settings.arxiv_request_delay_seconds)
-        results.append(refresh_arxiv_subscription(subscription_id))
+        try:
+            results.append(refresh_arxiv_subscription(subscription_id))
+        except Exception as exc:
+            # One corrupt/unavailable subscription must not starve later jobs.
+            # Do not expose raw connection URLs or SQL parameters in results.
+            results.append({
+                "subscription_id": subscription_id, "discovered": 0, "updated": 0,
+                "error": f"任务执行失败（{type(exc).__name__}）；本次未自动重试。",
+            })
     return {"refreshed": len(results), "results": results}

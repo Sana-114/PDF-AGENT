@@ -83,7 +83,8 @@ try {
   await capture("04-future-work");
   const unreviewed = review.future_directions[0];
   if (unreviewed && (!unreviewed.confirmation || unreviewed.confirmation.reason.startsWith("录制准备："))) {
-    const source = review.evidence.find((item) => item.evidence_id === unreviewed.source_evidence_id);
+    const source = [...review.evidence, ...(review.future_work_evidence || [])]
+      .find((item) => item.evidence_id === unreviewed.source_evidence_id);
     const decisionResponse = unreviewed.confirmation ? null : await page.request.put(`http://localhost:8000/api/v1/reviews/future-directions/${unreviewed.direction_id}/decision`, {
       data: { source: { document_id: source.document_id, page_number: source.page_number,
         block_ids: source.block_ids, quote: source.quote }, decision: "needs_review",

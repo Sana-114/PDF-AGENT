@@ -14,6 +14,9 @@ class ArxivSubscriptionCreate(BaseModel):
 
     @model_validator(mode="after")
     def require_filter(self):
+        self.name = self.name.strip()
+        if not self.name:
+            raise ValueError("请填写订阅名称。")
         self.query = " ".join(self.query.split())
         self.category = self.category.strip() if self.category else None
         if not self.query and not self.category:
@@ -58,6 +61,8 @@ class RecommendationRead(BaseModel):
     freshness_score: float
     final_score: float
     recommendation_reason: str
+    ranking_provider: str | None = None
+    ranking_warning: str | None = None
     feedback: Literal["neutral", "like", "dislike"]
     discovered_at: datetime
     updated_at: datetime

@@ -8,7 +8,7 @@ from sqlalchemy.orm import Session
 from app.models.chunk import DocumentChunk
 from app.models.document import Document, DocumentStatus
 from app.parsers.layout import rows_to_markdown
-from app.services.author_evidence import author_evidence_nodes
+from app.services.author_evidence import author_evidence_nodes, contributor_evidence_nodes
 from app.services.storage import storage
 
 
@@ -65,6 +65,12 @@ def build_chunk_drafts(parsed: dict[str, Any], target_chars: int = 1200) -> list
             block_text = str(block.get("text", "")).strip()
             if not block_text:
                 continue
+            if block.get("type") == "footnote":
+                flush(page_number, current_section, texts, block_ids, boxes)
+                note_box = _valid_bbox(block.get("bbox"))
+                flush(page_number, f"脚注 · 第 {page_number} 页", [block_text],
+                      [str(block.get("block_id", ""))], [note_box] if note_box else [])
+                continue
             if block.get("type") == "heading":
                 flush(page_number, current_section, texts, block_ids, boxes)
                 current_section = block_text[:500]
@@ -78,7 +84,7 @@ def build_chunk_drafts(parsed: dict[str, Any], target_chars: int = 1200) -> list
         flush(page_number, current_section, texts, block_ids, boxes)
 
     _append_structured_drafts(parsed, drafts, chunk_index)
-    for node in author_evidence_nodes(parsed):
+    for node in [*author_evidence_nodes(parsed), *contributor_evidence_nodes(parsed)]:
         drafts.append(ChunkDraft(chunk_index=len(drafts), **node))
     return drafts
 

@@ -1,0 +1,34 @@
+{
+  "policy_id": "unchanged-nine-original-questions-source-review-2026-10-11",
+  "notes": "Review only official-nine-qa-retest-2026-10-11/run-1. Do not overwrite past gold or outputs. Keyword matches, valid numeric claims, and a table proof do not excuse contradictory published refusals or missing model assignments.",
+  "fact_overrides": {
+    "gpt-parameter-evolution": {
+      "gpt1-from-gpt2-baseline-table": {"claim_contains_any_groups": [["GPT-1", "GPT1", "原始 GPT", "原始GPT"]]},
+      "gpt2-largest": {"claim_contains_any_groups": [["GPT-2", "GPT2"]]},
+      "gpt3-largest": {"claim_contains_any_groups": [["GPT-3", "GPT3"]]}
+    },
+    "context-evolution": {
+      "gpt1-context-from-gpt2-report": {"claim_contains_any_groups": [["GPT-1", "GPT1", "原始 GPT", "原始GPT"]]},
+      "gpt2-context": {"claim_contains_any_groups": [["GPT-2", "GPT2"]]},
+      "gpt3-context": {"claim_contains_any_groups": [["GPT-3", "GPT3"]]}
+    },
+    "bleu-improvement": {
+      "difference-derived-not-source-quote": {"source_text_contains_all": ["28.4", "26.36"]}
+    }
+  },
+  "source_inspection": {
+    "reviewer": "code_assistant_complete_original_page_and_published_claim_inspection",
+    "scope": "All nine preserved published answers from one fresh, one-attempt-per-question host-code run. Visually inspected 11 complete Poppler pages, including material headings, table metric/task columns, references, author grid/footnotes and architecture provenance. Transformer page 1 had Poppler missing-font warnings but the author names/order and dagger footnote were legible and checked. Not independent expert peer review, frontend end-to-end acceptance, fresh parsing, all PDFs or six-module acceptance.",
+    "cases": {
+      "sixth-author": {"passed": true, "reason": "Transformer physical page 1 author grid gives Aidan N. Gomez sixth in layout order, University of Toronto and the reported email. The dagger footnote says work performed while at Google Brain; the answer distinguishes affiliation from work location rather than replacing the affiliation."},
+      "adam-settings": {"passed": true, "reason": "Transformer physical page 7 Optimizer paragraph explicitly assigns beta1=0.9 and beta2=0.98, matching the published pair and cited passages."},
+      "base-gpus": {"passed": true, "reason": "Transformer physical page 7 Hardware and Schedule says one machine with eight NVIDIA P100 GPUs and covers the base model, matching both claims."},
+      "bleu-improvement": {"passed": false, "reason": "The table proof correctly selects EN-DE BLEU 28.4 versus previous best including ensembles 26.36 and derives 2.04. However, the third model claim, citing the same table among its anchors, asserts the exact previous-best value is unavailable and an exact difference cannot be calculated. The published answer is internally contradictory; reject despite all keyword facts matching and runtime flagging complete. No older/newer French score or FLOPs column may replace the EN-DE gold."},
+      "layernorm-reference": {"passed": true, "reason": "Transformer physical page 10 References [1] gives Jimmy Lei Ba, Jamie Ryan Kiros, Geoffrey E Hinton, Layer normalization and 2016; the answer matches the full names/year without invented metadata."},
+      "bert-inheritance": {"passed": true, "reason": "Transformer physical page 2 specifies encoder sublayers, residual/LN and the decoder including encoder-decoder attention. BERT physical page 3 says multilayer bidirectional Transformer encoder, implementation almost identical to the original, and bidirectional rather than GPT's left-constrained attention. The answer separately dual-cites inheritance and decoder-removal conclusions, explicitly labelling both as architecture inferences and not asserting BERT keeps the original six-layer or 512-dimensional configuration."},
+      "gpt-parameter-evolution": {"passed": false, "reason": "The table and equivalence sources on GPT-2 physical page 4 support the qualified original-GPT 117M baseline inference and GPT-2 1542M main variant. GPT-3 physical page 8 supports eight sizes and 175B, and page 31 supports its roughly two-orders-of-magnitude data/model comparison. All main factual claims are supported; however, the live runtime fails to recognize the labelled baseline assignment and marks GPT-1 incomplete. Retain the failure, rather than reinterpreting a later local grammar fix as fresh acceptance."},
+      "gpt2-ln-change": {"passed": true, "reason": "GPT-2 physical page 4 explicitly moves LN to each sub-block input and adds a final LN after the final self-attention block. The answer cites this and does not invent an explicit GPT-1 paper post-norm statement."},
+      "context-evolution": {"passed": false, "reason": "GPT-2 physical page 4 and GPT-3 physical page 43 correctly support the reported 1024 and 2048 windows. GPT-1 physical page 5 only reports a 512-token training sequence. The refusal is cautious about that training sentence, but fails to use the already supplied GPT-2 architectural configuration comparison for a clearly qualified GPT-1 512-token inference. The published answer is incomplete; mentioning 512 in the refusal or GPT-2 comparison does not answer GPT-1."}
+    }
+  }
+}

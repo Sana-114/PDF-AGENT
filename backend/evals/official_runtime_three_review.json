@@ -1,0 +1,33 @@
+{
+  "original_report_sha256": "9ec453271a156ca7ffa2fb323eeee1b93f1276e4e5196ab9aeb4e9b0133daefe",
+  "reviewer": "code_assistant_full_original_page_visual_review",
+  "scope": "Three unchanged questions, three new one-attempt public-excerpt generations; original machine scores remain unchanged. Assistant source review, not independent expert review or a statistical accuracy estimate.",
+  "original_machine_passed": 1,
+  "requested_core_accepted": 3,
+  "cases": {
+    "2002.04745v2.pdf": {
+      "accepted": true,
+      "source_sha256": "e1fa0519ed8e09a676d56c983e99ead5effd7ef840ae86a186729287469bf883",
+      "inspected_physical_pages": [1, 2, 5],
+      "proofs": [[0, "E1", 5], [0, "E2", 2], [1, "E1", 5], [1, "E2", 2], [2, "E1", 5], [2, "E3", 1], [2, "E4", 1]],
+      "original_machine_status": "failed",
+      "note": "位置、非线性变换前的顺序、预测前的 final LN 及与 Post-LN 的对照均有原页依据。机器金标要求固定首页摘录，而核心回答引用有效正文页；不覆盖原机器失败。"
+    },
+    "1706.03762v1_img.pdf": {
+      "accepted": true,
+      "source_sha256": "64094fe169dd4ff454f579e9f197298df1c118c24b71b1f1ca8bb218c9e4801d",
+      "inspected_physical_pages": [7],
+      "proofs": [[0, "E1", 7], [0, "E2", 7]],
+      "original_machine_status": "machine_passed_pending_source_review",
+      "note": "原扫描页的 Adam 两个变量与数值顺序已核对。修复的是数字保护将希腊变量下标误识别为额外数值的问题；原 OCR 的变量字符仍有损伤，未改写 AST 或宣称公式 OCR 全面准确。"
+    },
+    "language_understanding_paper.pdf": {
+      "accepted": true,
+      "source_sha256": "eb81a65e0856bd38e855e1f1de6ee12e7c3eb92ae05c8270d345a475beb631d0",
+      "inspected_physical_pages": [1, 2, 3, 4],
+      "proofs": [[0, "E4", 2], [0, "E6", 3], [1, "E6", 3], [2, "E1", 4], [2, "E3", 2], [3, "E3", 2], [3, "E8", 1], [3, "E9", 3]],
+      "original_machine_status": "failed",
+      "note": "无标注文本语言建模预训练、带标注数据监督适配、结构化输入转换与少量架构改动均有依据。辅助特征方法对照也核对了完整第 3 页。中文同义表达未匹配机器固定短语；保留原失败。前两条略重复，但没有本题发现的事实错误。本次 JSON 完整，不代表截断永不发生。"
+    }
+  }
+}

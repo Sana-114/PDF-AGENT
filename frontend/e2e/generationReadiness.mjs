@@ -107,14 +107,24 @@ async function checkReader(evidence, parentSelector) {
 
 try {
   const corpus = JSON.parse(await readFile(path.join(repo, "docs/pdf-regression-corpus.json"), "utf8"));
-  const libraryResponse = await page.request.get(`${apiUrl}/documents`);
+  const libraryResponse = await page.request.get(`${apiUrl}/documents?limit=200`);
   assert.equal(libraryResponse.status(), 200);
   const library = await libraryResponse.json();
-  const docs = ["1706.03762v1.pdf", "1810.04805v2.pdf"].map((filename) => {
-    const expected = corpus.downloads.find((item) => item.filename === filename);
-    const document = library.items.find((item) => item.original_filename === filename && item.status === "ready");
-    assert.ok(document && expected?.sha256, `Missing pinned public document: ${filename}`);
-    assert.equal(document.sha256, expected.sha256);
+  const officialFixture = process.env.PDFAGENT_PUBLIC_GENERATION_FIXTURE;
+  let pins = corpus.downloads;
+  if (officialFixture) {
+    const filename = path.resolve(officialFixture);
+    assert.ok(filename.startsWith(path.join(repo, "backend", "tmp") + path.sep));
+    pins = JSON.parse(await readFile(filename, "utf8"));
+  }
+  const docs = ["1706.03762v1.pdf", officialFixture ? "N19-1423.pdf" : "1810.04805v2.pdf"].map((filename) => {
+    const expected = pins.find((item) => item.filename === filename);
+    const digest = expected?.source_sha256 || expected?.sha256;
+    const matches = library.items.filter((item) => item.sha256 === digest && item.status === "ready");
+    assert.equal(matches.length, 1, `Missing unique pinned public document: ${filename}`);
+    const document = matches[0];
+    assert.ok(digest);
+    assert.equal(document.sha256, digest);
     return document;
   });
   allowedIds = docs.map((item) => item.id);
@@ -136,6 +146,20 @@ try {
     for (const claim of payload.claims) assert.ok((await page.locator(".review-narrative").innerText()).includes(claim.text));
     result.screenshot = await capture("generated-review");
     result.reader = await checkReader(evidence.get(payload.claims[0].evidence_ids[0]), ".review-claims");
+    if (officialFixture) {
+      const bert = payload.papers.find(item => item.document_id === docs[1].id);
+      assert.equal(bert.publication_year, 2019);
+      assert.equal(bert.metadata_evidence?.document_id, docs[1].id);
+      assert.equal(bert.metadata_evidence?.page_number, 1);
+      const entry = page.locator(".review-paper-timeline article").filter({ hasText: bert.title });
+      await entry.getByRole("button", { name: "年份出处 · p.1", exact: true }).click();
+      const reader = page.getByRole("dialog", { name: /阅读/ });
+      await waitForPaintedPdfPage(reader, 1);
+      assert.ok(await reader.locator(".pdf-evidence-highlight").count());
+      result.metadata_reader = { document_id: docs[1].id, page_number: 1,
+        screenshot: await capture("review-publication-source") };
+      await reader.getByRole("button", { name: "关闭阅读器" }).click();
+    }
     result.status = "passed";
   }
   await page.getByLabel("工作区导航").getByRole("button", { name: /研究产出/ }).click();
@@ -152,6 +176,12 @@ try {
     assert.deepEqual(new Set(payload.claims.flatMap((claim) => claim.evidence_ids.map((id) => evidence.get(id).document_id))), new Set(allowedIds));
     assert.ok(payload.evidence.every((item) => item.source_type !== "reference"));
     assert.ok(payload.references.length);
+    if (officialFixture) {
+      const bert = payload.references.find(item => item.document_id === docs[1].id);
+      assert.equal(bert.publication_year, 2019);
+      assert.equal(bert.metadata_evidence?.document_id, docs[1].id);
+      assert.equal(bert.metadata_evidence?.page_number, 1);
+    }
     for (const reference of payload.references) {
       const document = docs.find((item) => item.id === reference.document_id);
       assert.ok(document);
@@ -160,11 +190,35 @@ try {
       assert.ok(reference.publication_year);
       for (const id of reference.evidence_ids) assert.equal(evidence.get(id).document_id, reference.document_id);
     }
-    assert.ok(payload.evidence.every((item) => item.recall_mode === "hybrid" && item.retrieval_mode === "reranked"));
+    // Adjacent, uncited paragraphs are labelled local_context by design.
+    // Require this fixed case's actual claims to use BGE + reranker evidence.
+    const citedIds = new Set(payload.claims.flatMap(claim => claim.evidence_ids));
+    for (const id of citedIds) {
+      const item = evidence.get(id);
+      assert.equal(item.recall_mode, "hybrid", `Claim citation ${id} must use hybrid retrieval`);
+      assert.equal(item.retrieval_mode, "reranked", `Claim citation ${id} must use reranking`);
+    }
+    assert.ok(payload.evidence.every(item =>
+      (item.recall_mode === "hybrid" && item.retrieval_mode === "reranked") ||
+      (item.recall_mode === null && item.retrieval_mode === "local_context")));
     await writing.locator(".writing-workbench").waitFor();
     for (const reference of payload.references) assert.ok((await writing.locator(".verified-references").innerText()).includes(reference.formatted_citation));
     result.screenshot = await capture("generated-writing");
     result.reader = await checkReader(evidence.get(payload.claims[0].evidence_ids[0]), ".writing-workbench");
+    result.metadata_readers = [];
+    for (const reference of payload.references.filter(item => item.metadata_evidence)) {
+      const anchor = reference.metadata_evidence;
+      assert.equal(anchor.document_id, reference.document_id);
+      assert.ok(anchor.quote.includes(String(reference.publication_year)));
+      const entry = writing.locator(".verified-references article").filter({ hasText: reference.formatted_citation });
+      await entry.getByRole("button", { name: `书目信息 · p.${anchor.page_number}`, exact: true }).click();
+      const reader = page.getByRole("dialog", { name: /阅读/ });
+      await waitForPaintedPdfPage(reader, anchor.page_number);
+      assert.ok(await reader.locator(".pdf-evidence-highlight").count());
+      result.metadata_readers.push({ document_id: anchor.document_id, page_number: anchor.page_number,
+        screenshot: await capture(`metadata-${anchor.document_id}`) });
+      await reader.getByRole("button", { name: "关闭阅读器" }).click();
+    }
     result.status = "passed";
   }
   if (cloudAllowed && ["all", "translation"].includes(selectedCase)) {

@@ -1,0 +1,568 @@
+{
+  "schema_version": 1,
+  "date": "2026-10-18",
+  "status": "partial_project_acceptance",
+  "current_source": {
+    "python_version": "3.12.14",
+    "app_files": 131,
+    "app_sha256": "802985040f777117fe59e4ea98572b47cf8a05f1dc3034acc539dc3fef1f20ed",
+    "requirements_sha256": "b0e75e31a3ca8f034e095fd0667e3be7e380975548c5acce90db94f96ed7283f"
+  },
+  "git": {
+    "head": "a119f5609cda544e5d587588c5a338051da129a1",
+    "branch": "codex/stage94-official-failed-qa-retest",
+    "refs_mutated": false,
+    "commit_created": false,
+    "pushed": false
+  },
+  "counts": {
+    "bge_transport_probes": 5,
+    "bge_recorded_feed_business_calls": 3,
+    "bge_business_successes": 3,
+    "live_metadata_requests": 1,
+    "live_metadata_successes": 0,
+    "cloud_llm_calls": 0,
+    "automatic_retries": 0
+  },
+  "live_subscription": {
+    "status": "partial_acceptance",
+    "source": {
+      "python_version": "3.12.14",
+      "app_files": 130,
+      "app_sha256": "861856be4e522ce765467e9a34f46bb04ccb5ed634ff8d705e8ace7ca56ea5d6",
+      "requirements_sha256": "b0e75e31a3ca8f034e095fd0667e3be7e380975548c5acce90db94f96ed7283f"
+    },
+    "cases": [
+      {
+        "case": "live-feed-feedback-and-task",
+        "status": "failed",
+        "checks": {
+          "create_201": true,
+          "live_records_added": false
+        }
+      }
+    ],
+    "bge_requests": 0
+  },
+  "recorded_feed_business": {
+    "status": "passed_scoped_checks",
+    "source": {
+      "python_version": "3.12.14",
+      "app_files": 130,
+      "app_sha256": "9fcd46236a5934500e8a46baa322dfc95d55265088e562b13b61e79618fe6f58",
+      "requirements_sha256": "b0e75e31a3ca8f034e095fd0667e3be7e380975548c5acce90db94f96ed7283f"
+    },
+    "cases": [
+      {
+        "case": "recorded-feed-feedback-and-task",
+        "status": "passed",
+        "checks": {
+          "create_201": true,
+          "feed_records_added": true,
+          "like_saved": true,
+          "dislike_saved": true,
+          "feedback_retained": true,
+          "refresh_without_duplicate": true,
+          "scores_and_reasons": true,
+          "ranking_provenance_visible": true,
+          "task_active_filter": true,
+          "beat_configuration": true,
+          "actual_bge_no_fallback": true,
+          "summary_reports_actual_bge": true
+        }
+      }
+    ],
+    "recorded_feed": {
+      "path": "backend/tmp/official-live-discovery-2026-10-17/workflow-final/feed-first.json",
+      "sha256": "a79d3812b52f6ae92714084ea0fa85aeda477e46db67d33d452225b5fc6dc5c1"
+    },
+    "external_metadata_replayed": true,
+    "bge_responses_mocked": false
+  },
+  "bloom": {
+    "status": "passed_scoped_checks",
+    "source_sha256": "8033c3e611aaa120cb7294085ebd6ee297ffae9ec02393b1c4f1593d7e6ee065",
+    "physical_pages": 73,
+    "checks": {
+      "73_complete_physical_pages": true,
+      "collective_not_flattened_ranks": true,
+      "ten_original_role_headings": true,
+      "all_35_major_members_independently_transcribed": true,
+      "prompt_cross_page_end_complete": true,
+      "applications_cross_page_name_complete": true,
+      "wrapped_lowercase_name_join": true,
+      "wrapped_hyphen_name_preserved": true,
+      "one_collective_author_evidence": true,
+      "twelve_page_scoped_contribution_segments": true,
+      "body_structures_unchanged": true,
+      "no_abstract_or_fake_global_ranks": true,
+      "api_preserves_new_structures": true,
+      "actual_pdf_range": true,
+      "lexical_collective_source_first": true,
+      "lexical_prompt_continuation_source": true,
+      "lexical_application_continuation_source": true,
+      "no_other_corpus_front_matter_false_activation": true,
+      "official_source_unchanged": true
+    },
+    "groups": [
+      {
+        "role": "Major Contributors",
+        "members": 35,
+        "physical_pages": [
+          1
+        ]
+      },
+      {
+        "role": "Dataset",
+        "members": 112,
+        "physical_pages": [
+          1
+        ]
+      },
+      {
+        "role": "Tokenization",
+        "members": 18,
+        "physical_pages": [
+          1
+        ]
+      },
+      {
+        "role": "Prompt Engineering",
+        "members": 55,
+        "physical_pages": [
+          1,
+          2
+        ]
+      },
+      {
+        "role": "Architecture and Objective",
+        "members": 22,
+        "physical_pages": [
+          2
+        ]
+      },
+      {
+        "role": "Engineering",
+        "members": 28,
+        "physical_pages": [
+          2
+        ]
+      },
+      {
+        "role": "Evaluation and Interpretability",
+        "members": 71,
+        "physical_pages": [
+          2
+        ]
+      },
+      {
+        "role": "Broader Impacts",
+        "members": 102,
+        "physical_pages": [
+          2
+        ]
+      },
+      {
+        "role": "Applications",
+        "members": 99,
+        "physical_pages": [
+          2,
+          3
+        ]
+      },
+      {
+        "role": "Organization",
+        "members": 11,
+        "physical_pages": [
+          3
+        ]
+      }
+    ],
+    "structured_chunks": 424,
+    "lexical_only_not_dense_or_llm": true,
+    "prior_tool_failure_preserved": true,
+    "dedicated_frontend_added": false,
+    "all_name_unicode_accuracy_claimed": false
+  },
+  "visual_review": {
+    "reviewer": "agent-assisted",
+    "source": "科研小助手/pdf/2211.05100v4.pdf",
+    "full_physical_pages": [
+      1,
+      2,
+      3
+    ],
+    "renderers": [
+      "Poppler",
+      "PyMuPDF"
+    ],
+    "warnings": [
+      "No display font for Symbol",
+      "No display font for ArialUnicode"
+    ],
+    "scope": "Role headings/major members/cross-page boundaries, not full Unicode or full-paper layout certification"
+  },
+  "corpus_front_sample": {
+    "files": 39,
+    "max_native_pages_each": 3,
+    "other_file_group_activations": 0,
+    "full_corpus_reparse": false
+  },
+  "tests": {
+    "backend-final.xml": {
+      "tests": 1372,
+      "failures": 0,
+      "errors": 0
+    },
+    "frontend-final.xml": {
+      "tests": 42,
+      "failures": 0,
+      "errors": 0
+    }
+  },
+  "typecheck": "observed_exit_0",
+  "ruff": "observed_exit_0",
+  "old_immutable_artifacts_checked": 65,
+  "old_changed": [],
+  "secret_scan_findings": [],
+  "official_basic_coverage_inherited": {
+    "files": 39,
+    "pages": 1986
+  },
+  "production_library_written_by_acceptance": false,
+  "production_image_updated": false,
+  "docker_existing_services_started": true,
+  "bge_reset_root_cause_proven": false,
+  "whole_project_released": false,
+  "remaining": [
+    "live subscription timeout and BGE intermittent resets",
+    "external scheduling and multi-user modes",
+    "contribution UI/old-data migration/new-field dense and generated QA",
+    "complex QA same-build scientific acceptance",
+    "complete review/writing/future-work quality",
+    "other parsing/resource gates",
+    "final delivery and public deployment"
+  ],
+  "artifacts": [
+    {
+      "path": "backend/app/parsers/base.py",
+      "sha256": "b6bfb1cbb17470dd65aedc1aaafea647416b3b723d1535252679573451493bef"
+    },
+    {
+      "path": "backend/app/parsers/contributors.py",
+      "sha256": "760948dd8022d24570e69cddac17065d2ed9f829641ad7e09e8fe538330bdb11"
+    },
+    {
+      "path": "backend/app/parsers/ocr_parser.py",
+      "sha256": "9984b503bab5b237166a5e986e9dd4312d516d1b33ffa064932b3d49e0ae9962"
+    },
+    {
+      "path": "backend/app/parsers/pymupdf_parser.py",
+      "sha256": "6ecca1eee352486fec45142fb252bcda25fafa68413f15f6e3a12aafc3c7fd26"
+    },
+    {
+      "path": "backend/app/services/author_evidence.py",
+      "sha256": "e46c8931fd252694d9302869a155429ad342c19af0c63f7beca17d611eabc53d"
+    },
+    {
+      "path": "backend/app/services/chunking.py",
+      "sha256": "5ff5d92c3787105a3b2c09f4cd8c74342e5f4d8343a14ed882d02051cccbc739"
+    },
+    {
+      "path": "backend/app/services/paper_discovery.py",
+      "sha256": "519ee738876d266ae29169b3e4bcdb41f5e112781afc613ae81a337cb8f7bc95"
+    },
+    {
+      "path": "backend/scripts/verify_official_grouped_contributors.py",
+      "sha256": "3a11444e1c177abb9ee4071af5c1fc35d3151556e86b1dce404e4f9aac151769"
+    },
+    {
+      "path": "backend/scripts/verify_official_live_discovery.py",
+      "sha256": "94648835e439e4d3de7f32cf50215ba8f4c4356fdf390b206815f6b5e209d0f3"
+    },
+    {
+      "path": "backend/tests/test_discovery_title_fallback.py",
+      "sha256": "953dee42a939d716d7c183a684aa113efca0786c8ea2e411e8e7ab3d8e9cec2a"
+    },
+    {
+      "path": "backend/tests/test_grouped_contributors.py",
+      "sha256": "cac8b59464b5a2d2b9e8b71ddb0ce7408fdbc2f08f3cd83fdf3ec8911aa5c516"
+    },
+    {
+      "path": "backend/tests/test_single_column_section_order.py",
+      "sha256": "f30bf558d849c95c91d0599d329c9737e9948ac2fe221797ba908fcc2e5c3bea"
+    },
+    {
+      "path": "backend/tmp/official-bge-stability-2026-10-18/audit_final.py",
+      "sha256": "eea20a784ffc65c42a1580fa8956b360ccf319c95601899e16a8b3b1f3d17aef"
+    },
+    {
+      "path": "backend/tmp/official-bge-stability-2026-10-18/author-tests.xml",
+      "sha256": "dd3fb3366a14e0904656ecca9fbc65a899c40fc38bb96788f0a5eeb275e7ed50"
+    },
+    {
+      "path": "backend/tmp/official-bge-stability-2026-10-18/backend-final.xml",
+      "sha256": "a32db09de990ff431170a981b1456042b97c0ae20d5eda2b0ca5bfe4fbf6b603"
+    },
+    {
+      "path": "backend/tmp/official-bge-stability-2026-10-18/bloom-after/parsed.json",
+      "sha256": "e2fe13c08cdc825e40aecc6c0142ef775b4359257c079414e14906f351412d60"
+    },
+    {
+      "path": "backend/tmp/official-bge-stability-2026-10-18/bloom-after/raw-front.json",
+      "sha256": "e8349df5a2ec81db18c6a4b90a3067ecd036ef825f61bc29d2a37dd01ec1c258"
+    },
+    {
+      "path": "backend/tmp/official-bge-stability-2026-10-18/bloom-after/report.json",
+      "sha256": "83ff0123715811589a266ff2f348b68030fd5198d88d31000ea798944fc3168f"
+    },
+    {
+      "path": "backend/tmp/official-bge-stability-2026-10-18/bloom-api-and-corpus/api-content.json",
+      "sha256": "e2fe13c08cdc825e40aecc6c0142ef775b4359257c079414e14906f351412d60"
+    },
+    {
+      "path": "backend/tmp/official-bge-stability-2026-10-18/bloom-api-and-corpus/corpus-front-sample.json",
+      "sha256": "c0f284d1f40c4a3d3668a506b18e3ce81240e20ab386d476d8014bdce3f0f2ab"
+    },
+    {
+      "path": "backend/tmp/official-bge-stability-2026-10-18/bloom-api-and-corpus/parsed/998438b7-7f31-44b3-973c-ccb0154f5851.json",
+      "sha256": "e2fe13c08cdc825e40aecc6c0142ef775b4359257c079414e14906f351412d60"
+    },
+    {
+      "path": "backend/tmp/official-bge-stability-2026-10-18/bloom-api-and-corpus/report.json",
+      "sha256": "8ffbc4c4ceb4462b3438ec75fee12eeee383f0da9418d4e447de3cc8795f3798"
+    },
+    {
+      "path": "backend/tmp/official-bge-stability-2026-10-18/bloom-api-and-corpus/retrieval.json",
+      "sha256": "acca73266bc2ccfb7fe8de8805d8d440ab5f669bf934af895f3975b69a397b67"
+    },
+    {
+      "path": "backend/tmp/official-bge-stability-2026-10-18/bloom-api-and-corpus-final/api-content.json",
+      "sha256": "e2fe13c08cdc825e40aecc6c0142ef775b4359257c079414e14906f351412d60"
+    },
+    {
+      "path": "backend/tmp/official-bge-stability-2026-10-18/bloom-api-and-corpus-final/corpus-front-sample.json",
+      "sha256": "c0f284d1f40c4a3d3668a506b18e3ce81240e20ab386d476d8014bdce3f0f2ab"
+    },
+    {
+      "path": "backend/tmp/official-bge-stability-2026-10-18/bloom-api-and-corpus-final/parsed/df5bde81-6ed2-4054-94c7-8169a81016b1.json",
+      "sha256": "e2fe13c08cdc825e40aecc6c0142ef775b4359257c079414e14906f351412d60"
+    },
+    {
+      "path": "backend/tmp/official-bge-stability-2026-10-18/bloom-api-and-corpus-final/report.json",
+      "sha256": "f044ae6016cec085a77a4236aa49b6d3307f62870f426a2ddb78f77f03232d01"
+    },
+    {
+      "path": "backend/tmp/official-bge-stability-2026-10-18/bloom-api-and-corpus-final/retrieval.json",
+      "sha256": "e5f2451e7ac2536c9b8d605d6dc9a8b7d1b9114a59ffecd4d8bbd0b963c1fb8e"
+    },
+    {
+      "path": "backend/tmp/official-bge-stability-2026-10-18/bloom-before/parsed.json",
+      "sha256": "1c6100b21229f1cb4a9a07a1ed26a77d7e01eb4e1ac8e02e7c56fb5eca6aecfc"
+    },
+    {
+      "path": "backend/tmp/official-bge-stability-2026-10-18/bloom-before/raw-front.json",
+      "sha256": "e8349df5a2ec81db18c6a4b90a3067ecd036ef825f61bc29d2a37dd01ec1c258"
+    },
+    {
+      "path": "backend/tmp/official-bge-stability-2026-10-18/bloom-before/report.json",
+      "sha256": "2efc7a0d1da3bd69b7eacd6c48a09cd46984e16ff2d4a9db0ad73247b6c07abb"
+    },
+    {
+      "path": "backend/tmp/official-bge-stability-2026-10-18/bloom-inspection/page-1.png",
+      "sha256": "43748364fb11b2f32c3e5bbdd4580d3038c3fafffca69ea5a10cc2f2a7bcd943"
+    },
+    {
+      "path": "backend/tmp/official-bge-stability-2026-10-18/bloom-inspection/page-2.png",
+      "sha256": "deba6b65198fb218208a3f79f8f0992eb388e2533b8e19be2251f3ccd445289a"
+    },
+    {
+      "path": "backend/tmp/official-bge-stability-2026-10-18/bloom-inspection/page-3.png",
+      "sha256": "1f56e2ae80ffc6446f34bcd2749aac18f433bb70a2ad959456aeae634f143827"
+    },
+    {
+      "path": "backend/tmp/official-bge-stability-2026-10-18/bloom-inspection/page-4.png",
+      "sha256": "a253bbfba5e0d39bcc253a8e23efec00ef1c44433f9821cd72c9a0960d377efe"
+    },
+    {
+      "path": "backend/tmp/official-bge-stability-2026-10-18/bloom-inspection/page-5.png",
+      "sha256": "8aec46433cbbc9d799275870775eb8e4a2c13b7bebb46638773ebfa99cad134e"
+    },
+    {
+      "path": "backend/tmp/official-bge-stability-2026-10-18/bloom-inspection/page-6.png",
+      "sha256": "4c126094efdf2178d52fd902780336a5944ca0fddc9d5bfae4440471f6f289e3"
+    },
+    {
+      "path": "backend/tmp/official-bge-stability-2026-10-18/bloom-inspection/poppler-bloom-01.png",
+      "sha256": "c7272a768a5479543a26ce28c21c36096bd7494d88a1c04f1b6572deb3176ce1"
+    },
+    {
+      "path": "backend/tmp/official-bge-stability-2026-10-18/bloom-inspection/poppler-bloom-02.png",
+      "sha256": "41f559960b813c6c841882ce6e30d80e7f6da2607ccd5c3550f1b4d2ad515388"
+    },
+    {
+      "path": "backend/tmp/official-bge-stability-2026-10-18/bloom-inspection/poppler-bloom-03.png",
+      "sha256": "a1297c9076bc16c464992ca9584ca497ad47ea238e5fdad442557676f516fe22"
+    },
+    {
+      "path": "backend/tmp/official-bge-stability-2026-10-18/bloom-inspection/source.json",
+      "sha256": "d074f07f02ee5d9da4fd31430731a7069159d4807a9d09678dabd501d4131911"
+    },
+    {
+      "path": "backend/tmp/official-bge-stability-2026-10-18/bloom-reproducible-final/api-content.json",
+      "sha256": "e2fe13c08cdc825e40aecc6c0142ef775b4359257c079414e14906f351412d60"
+    },
+    {
+      "path": "backend/tmp/official-bge-stability-2026-10-18/bloom-reproducible-final/corpus-front-sample.json",
+      "sha256": "c0f284d1f40c4a3d3668a506b18e3ce81240e20ab386d476d8014bdce3f0f2ab"
+    },
+    {
+      "path": "backend/tmp/official-bge-stability-2026-10-18/bloom-reproducible-final/fresh-parsed.json",
+      "sha256": "e2fe13c08cdc825e40aecc6c0142ef775b4359257c079414e14906f351412d60"
+    },
+    {
+      "path": "backend/tmp/official-bge-stability-2026-10-18/bloom-reproducible-final/parsed/ee6d5d18-fae5-4afe-9c1f-1f8af973ad99.json",
+      "sha256": "e2fe13c08cdc825e40aecc6c0142ef775b4359257c079414e14906f351412d60"
+    },
+    {
+      "path": "backend/tmp/official-bge-stability-2026-10-18/bloom-reproducible-final/report.json",
+      "sha256": "7d88a1cb5bfa979bc57a1f8ae3b9ef0d30a7583c089f21513d9018edcbd09c48"
+    },
+    {
+      "path": "backend/tmp/official-bge-stability-2026-10-18/bloom-reproducible-final/retrieval.json",
+      "sha256": "664b760d1b953b950d9d26f30655551bb7a2392974ec4b7b26386898fff4053d"
+    },
+    {
+      "path": "backend/tmp/official-bge-stability-2026-10-18/diagnose_transport.py",
+      "sha256": "93bfc4e8ca56ccc564b65e2f2491ad179716377ec9ad564c5657e6fd094d2ac7"
+    },
+    {
+      "path": "backend/tmp/official-bge-stability-2026-10-18/frontend-final.xml",
+      "sha256": "b8e48645b293d986fc543e79e57057a6206ae196d6b6886cfc1583c5cf2a6406"
+    },
+    {
+      "path": "backend/tmp/official-bge-stability-2026-10-18/inspect_bloom.py",
+      "sha256": "bcfe429771c3a395ad0ca16b78aeec91c8af92ce8f49417446f7d9e74360a709"
+    },
+    {
+      "path": "backend/tmp/official-bge-stability-2026-10-18/live-feed-trace/downloads.json",
+      "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+    },
+    {
+      "path": "backend/tmp/official-bge-stability-2026-10-18/live-feed-trace/embedding-calls.json",
+      "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+    },
+    {
+      "path": "backend/tmp/official-bge-stability-2026-10-18/live-feed-trace/feed-first.json",
+      "sha256": "cb0ab387433313b9dbc69e8571b780fb7fd3b560f6125bc62e2b21da6ae7225a"
+    },
+    {
+      "path": "backend/tmp/official-bge-stability-2026-10-18/live-feed-trace/network-calls.json",
+      "sha256": "4868825ecf3198a4a0f93828aa04f98c8eacbc49e9e52f2b49b3d1bfbe3c71a7"
+    },
+    {
+      "path": "backend/tmp/official-bge-stability-2026-10-18/live-feed-trace/parsed/20d9fad6-9e6f-543d-a2e1-095d8056c5ff.json",
+      "sha256": "4a05a089a864b8fc603470e4f28fc480526b8184b8c5a89039db83b07bdded3d"
+    },
+    {
+      "path": "backend/tmp/official-bge-stability-2026-10-18/live-feed-trace/parsed/bc90bcf2-cccd-5364-94f6-5815603802f7.json",
+      "sha256": "2f5bdb78b265127069fbaf7c9841afe6e181a0d93c3209856c420d678c7825d0"
+    },
+    {
+      "path": "backend/tmp/official-bge-stability-2026-10-18/live-feed-trace/refreshes.json",
+      "sha256": "3917ba3187b9fb6ef52d2ba486eb4576b0c61f76398a67dbfbf145e0676765e6"
+    },
+    {
+      "path": "backend/tmp/official-bge-stability-2026-10-18/live-feed-trace/report.json",
+      "sha256": "cf82e13c8334c470de6ec8e4638dc7f03347cd04e97d116c51932a3226935ae7"
+    },
+    {
+      "path": "backend/tmp/official-bge-stability-2026-10-18/live-feed-trace/subscription.json",
+      "sha256": "20b235d5874b3d825b89b3639e514a465672d83946cc9ef7d4a203d4ac217fa4"
+    },
+    {
+      "path": "backend/tmp/official-bge-stability-2026-10-18/network-tests.xml",
+      "sha256": "0a655ebd15e9a4f05c9fb5cab6e3e57a039ecdacf7344f5222c4b8a39f148b48"
+    },
+    {
+      "path": "backend/tmp/official-bge-stability-2026-10-18/parse_bloom.py",
+      "sha256": "73341d67ce0dbd1e5c367c6f05fa57e82e2007e07c4bbb416f86f859a034354f"
+    },
+    {
+      "path": "backend/tmp/official-bge-stability-2026-10-18/public-inputs.json",
+      "sha256": "1e8a58e52ac0eb725fbeeaa4c5fda46194f3fa15bed83c4bfe6141b3837b7f72"
+    },
+    {
+      "path": "backend/tmp/official-bge-stability-2026-10-18/recorded-feed-trace/downloads.json",
+      "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+    },
+    {
+      "path": "backend/tmp/official-bge-stability-2026-10-18/recorded-feed-trace/embedding-calls.json",
+      "sha256": "e70e6783e55f89c6dbef65ed9d99057cd2e830e28ad3c38d264fe087c2242329"
+    },
+    {
+      "path": "backend/tmp/official-bge-stability-2026-10-18/recorded-feed-trace/feed-first.json",
+      "sha256": "7a69aaa6babe5080d06fea5d0ae181863788ff125498e676bf3f24e55ea2efa5"
+    },
+    {
+      "path": "backend/tmp/official-bge-stability-2026-10-18/recorded-feed-trace/feed-second.json",
+      "sha256": "3f1a0e7d7e48c9eca71a6642c315dc84f9a70e39282f1f2f89b3615862ad509c"
+    },
+    {
+      "path": "backend/tmp/official-bge-stability-2026-10-18/recorded-feed-trace/network-calls.json",
+      "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+    },
+    {
+      "path": "backend/tmp/official-bge-stability-2026-10-18/recorded-feed-trace/parsed/20d9fad6-9e6f-543d-a2e1-095d8056c5ff.json",
+      "sha256": "4a05a089a864b8fc603470e4f28fc480526b8184b8c5a89039db83b07bdded3d"
+    },
+    {
+      "path": "backend/tmp/official-bge-stability-2026-10-18/recorded-feed-trace/parsed/bc90bcf2-cccd-5364-94f6-5815603802f7.json",
+      "sha256": "2f5bdb78b265127069fbaf7c9841afe6e181a0d93c3209856c420d678c7825d0"
+    },
+    {
+      "path": "backend/tmp/official-bge-stability-2026-10-18/recorded-feed-trace/refreshes.json",
+      "sha256": "335bde0ed315aebacda0cc62d635a71fcc18f392587e94b267454192c4a60b6c"
+    },
+    {
+      "path": "backend/tmp/official-bge-stability-2026-10-18/recorded-feed-trace/report.json",
+      "sha256": "09d44d74efe1f76dd30e3de6a9473173f3c35dff1491228191dba0a725460bcb"
+    },
+    {
+      "path": "backend/tmp/official-bge-stability-2026-10-18/recorded-feed-trace/scheduled-task-code.json",
+      "sha256": "4c9bfedacdb264c31ec8843a5d0b4a9753f3bf90d3b6e5426a1be619236758d8"
+    },
+    {
+      "path": "backend/tmp/official-bge-stability-2026-10-18/recorded-feed-trace/subscription.json",
+      "sha256": "1abae076e246e4597fe8b6258c5066f23233602ccf613ff2761c8ca46af5a07e"
+    },
+    {
+      "path": "backend/tmp/official-bge-stability-2026-10-18/transport-diagnosis.json",
+      "sha256": "c6fe2f85db9cf230963ccfbb383381df6998fb39e39369388f0669b050690afc"
+    },
+    {
+      "path": "backend/tmp/official-bge-stability-2026-10-18/verify_bloom.py",
+      "sha256": "b7c960153528ad2ab32bc8529978a09fa84e9a15aba8a9958a9e4f1bada75a24"
+    },
+    {
+      "path": "docs/acceptance-progress.md",
+      "sha256": "e18900fd2d2d102a5a2bf5b2b4ea80a1da90953d6327b9efe86887ccbc9e2c51"
+    },
+    {
+      "path": "docs/competition-delivery-checklist.md",
+      "sha256": "e6a39c9ffa7bf687e97169b24a3339d286059941cb80feabf25375ba3aabb605"
+    },
+    {
+      "path": "docs/competition-verification-gates.md",
+      "sha256": "2601dcf5d8a7c90439beec18d5d1cef57e3b87c17c6e5ad2989f464bfe24a99c"
+    },
+    {
+      "path": "docs/official-bge-and-grouped-authors-acceptance-2026-10-18.md",
+      "sha256": "cced692b51d15d7305deb40c548ce14f7ea6fa0d3d5e0dcd943cc77d6b5fcc27"
+    },
+    {
+      "path": "README.md",
+      "sha256": "7dc04853a529fc9817de8ebca1e7510d33f2249ba0bb500e2b1c0b9e1a84f3af"
+    }
+  ]
+}

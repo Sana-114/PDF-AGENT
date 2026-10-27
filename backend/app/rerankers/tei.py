@@ -15,6 +15,39 @@ class TeiReranker(HttpReranker):
     # TEI's configured max-client-batch-size is 32 in the local BGE profile.
     # Leave headroom for deployments with a smaller limit and long PDF chunks.
     max_batch_size = 16
+    # Two BGE services share an 8 GiB GPU in the standard local profile.
+    # Long PDF blocks must not be batched like sixteen short sentences. Bound
+    # total UTF-8 input bytes (not an exact tokenizer budget), without changing
+    # any quote/anchor or silently dropping a candidate. An oversize single
+    # passage is sent alone with the existing explicit server truncation flag.
+    max_batch_bytes = 12000
+
+    @staticmethod
+    def _scoring_passage(item: EvidenceAnchor) -> str:
+        """Keep real local headings for passages referring to 'this objective'.
+
+        Only the scorer sees this bounded context; the original quote/anchor is
+        never rewritten and headings alone cannot support a published claim.
+        """
+        context = []
+        for label, value in (("Document", item.document_title), ("Section", item.section)):
+            if value and value.strip():
+                context.append(f"{label}: {' '.join(value.split())[:160]}")
+        return "\n".join([*context, item.quote]) if context else item.quote
+
+    def _batches(self, question: str, evidence: list[EvidenceAnchor]):
+        batch: list[EvidenceAnchor] = []
+        start, size = 0, 0
+        for index, item in enumerate(evidence):
+            item_size = len((question + self._scoring_passage(item)).encode("utf-8"))
+            if batch and (len(batch) >= self.max_batch_size
+                          or size + item_size > self.max_batch_bytes):
+                yield start, batch
+                start, batch, size = index, [], 0
+            batch.append(item)
+            size += item_size
+        if batch:
+            yield start, batch
 
     def rerank(
         self, question: str, evidence: list[EvidenceAnchor], top_k: int
@@ -32,13 +65,12 @@ class TeiReranker(HttpReranker):
                 else httpx.Client(timeout=self.timeout_seconds)
             )
             with client_context as client:
-                for start in range(0, len(evidence), self.max_batch_size):
-                    batch = evidence[start : start + self.max_batch_size]
+                for start, batch in self._batches(question, evidence):
                     response = client.post(
                         f"{self.base_url}/rerank",
                         json={
                             "query": question,
-                            "texts": [item.quote for item in batch],
+                            "texts": [self._scoring_passage(item) for item in batch],
                             "truncate": True,
                             "raw_scores": False,
                             "return_text": False,

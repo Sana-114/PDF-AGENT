@@ -1,0 +1,838 @@
+{
+  "schema_version": 1,
+  "date": "2026-10-13",
+  "status": "scoped_writing_and_review_repairs_verified__final_cloud_and_deployment_hold",
+  "git": {
+    "branch": "codex/stage94-official-failed-qa-retest",
+    "head": "a119f5609cda544e5d587588c5a338051da129a1",
+    "dirty_worktree": true,
+    "branch_created": false,
+    "commit_created": false,
+    "pushed": false
+  },
+  "cloud": {
+    "provider": "deepseek",
+    "model": "deepseek-flash",
+    "calls_this_turn": 5,
+    "automatic_retries": 0,
+    "scope": "Previously declared official public PDF excerpts only; writing lexical retrieval with configured BGE reranker, not a dense-vector acceptance run.",
+    "prior_43_calls_not_recounted": true
+  },
+  "sources": [
+    {
+      "document_id": "788f47ff-23de-5f78-896b-7d3fe6e1bb92",
+      "filename": "2010.11929v2.pdf",
+      "source_sha256": "8ce7b83971a14508ca711a27c875c9b6914c4f6767cf3150fb1ca6c07aa056d6",
+      "ast_sha256": "de022dddb27d7defb935525ad5671da0c14c73b228926d08cd8fe78f5a5cd471"
+    },
+    {
+      "document_id": "1ae43cdf-aa5d-533e-8caa-c65a403deaf2",
+      "filename": "2103.00020v1.pdf",
+      "source_sha256": "6478b6e571a7d6fcd846d8ef77bfd60c285f1986abb8f475eedc43de403074f5",
+      "ast_sha256": "3acf3beac5486f12e34fd2cbae2b0b4e96c80cb1e6e164de74fb11f6f152c7e7"
+    },
+    {
+      "document_id": "bc90bcf2-cccd-5364-94f6-5815603802f7",
+      "filename": "2106.09685v2.pdf",
+      "source_sha256": "e9a0d3128767db616085dc0f4e6e455e672e89af823e8ed1282793682787395a",
+      "ast_sha256": "f4c849bd4de7d5a9d75c678178548613f51c038929a18c2b6f30a74affec4fb6"
+    },
+    {
+      "document_id": "0188171d-87ae-5a2f-acc2-87f71bc5db58",
+      "filename": "1607.06450v1.pdf",
+      "source_sha256": "c464f839fb8d59f7fde92f9b4caa67c2d1f2f196b88f93fb60502249df0aaef7",
+      "ast_sha256": "6611f04506807ec34453f5e5d85fb1e089c509a10b95a2e7557984094a6bd4d5"
+    },
+    {
+      "document_id": "20d9fad6-9e6f-543d-a2e1-095d8056c5ff",
+      "filename": "1706.03762v1.pdf",
+      "source_sha256": "0a9bff1be3575cf9fe26a4a3d3a9175bc791ecec90de8b9deba4cff75d2b9476",
+      "ast_sha256": "17b79909f6ccfbef761befa41518b887e954b41bc1b74d8cfe071d519f8db5de"
+    },
+    {
+      "document_id": "1f104048-0d8e-59ac-bc55-92c6c3773d08",
+      "filename": "1707.06347v2.pdf",
+      "source_sha256": "e78feadadbdbb0b601b3c2bcc81404722cd431a489b307545f9b7bea1e8c4f5b",
+      "ast_sha256": "50933f82813e5a26bab6d10afa8b97100e588f032a3e5d3ecdca3795c8ddb60c"
+    },
+    {
+      "document_id": "4ac3cbf3-13b9-5022-863f-a2dbe9391e58",
+      "filename": "1910.02054v3.pdf",
+      "source_sha256": "c531734c7d9ee647fda9b4f0e1a6abd6d58ad34e862bc945451b09032be3167e",
+      "ast_sha256": "af48027ab1f69128c86caf8792c1a46966cdc57896e82ca054e4b9f6c393cd20"
+    },
+    {
+      "document_id": "d9d5065d-9706-53db-b856-427c2c58bd1a",
+      "filename": "1910.10683v4.pdf",
+      "source_sha256": "ad07e47cedf437a4156419ce5d3076e08a3e59bbfd6dac7cc53df1009cdcbe7f",
+      "ast_sha256": "ef4608da1839b472920b80fc912542b891e896d8303c43b205fe65488ddc8f8d"
+    },
+    {
+      "document_id": "806425fa-1015-5452-91ee-cdb6b106183f",
+      "filename": "2001.08361v1.pdf",
+      "source_sha256": "a41bd7877fd1a6bcbba096b2619618bd2f90e02488f2365644903eb2f7c6a494",
+      "ast_sha256": "7645101da07b1c37d21bd8a20054fdd456ec8ac4f20ac3c2dccf59b87bbe375c"
+    },
+    {
+      "document_id": "9f2229cc-c150-5bbc-a615-53046bc74763",
+      "filename": "2002.04745v2.pdf",
+      "source_sha256": "e1fa0519ed8e09a676d56c983e99ead5effd7ef840ae86a186729287469bf883",
+      "ast_sha256": "8b31ed1bfe15be06f613724a67ab274f214171381c6ae43a3df1e8647b8ea37b"
+    },
+    {
+      "document_id": "4eb9ae9c-2278-5530-ad02-d02e38f9088c",
+      "filename": "2005.14165v4.pdf",
+      "source_sha256": "97fd272f1fdfc18677462d0292f5fbf26ca86b4d1b485c2dba03269b643a0e83",
+      "ast_sha256": "1c3d0de91e2ba7cd815e11227057c543c1342cb073150db7f698f56d4d523485"
+    },
+    {
+      "document_id": "0fedc9b8-1c87-5178-87a1-3bb5a02de3b8",
+      "filename": "2101.03961v3.pdf",
+      "source_sha256": "f340f6ace31abf7d0730ef461404279f40d3c890e9cc2daeb7068b3304afdbd6",
+      "ast_sha256": "49ea976655d88d88e7096fe8486c848cba75fc48f041fa8d019acb411b33131b"
+    },
+    {
+      "document_id": "fefabe1a-496e-5b57-83cf-c73f831b1275",
+      "filename": "2107.03374v2.pdf",
+      "source_sha256": "ebae72ea0e8a5eb2ecbccdb985aec6cc1254a7c4d29e6d4de7866db1e66c4855",
+      "ast_sha256": "7e24c24f1c3cb1d94f25172826f6f1d897be75bd1322304630e7944ea8fe9067"
+    },
+    {
+      "document_id": "5b4ad1aa-0c85-5a2b-a5ca-97eb8dd4d2aa",
+      "filename": "2201.11903v6.pdf",
+      "source_sha256": "7d9f878c23b460e4566aa4ec9201b1abfb3b8faefb2b1356e411cb90fef72a12",
+      "ast_sha256": "b223f6a82fcd5aa9a7d700517d0a2ab067fa30ddaf75ae05bdd359359c3a8a18"
+    },
+    {
+      "document_id": "cd05de96-3b20-5178-8953-d8ee090a4f23",
+      "filename": "2203.02155v1.pdf",
+      "source_sha256": "c1984bb50a5b90fddb895fdc3a0f72e5bc977148c9f63ef6040cbe7a3e1f0d98",
+      "ast_sha256": "19742a09056a4771803ce938bf6b08dbfb372f81d419fc84bcff855cf34cc1d4"
+    },
+    {
+      "document_id": "518cf49d-121d-55b9-834e-4160cf927fe9",
+      "filename": "2205.14135v2.pdf",
+      "source_sha256": "ca7f9fda10b90fc05dd291a3accc85e9c1a4a860b99b31928dab03ed3fcb14e4",
+      "ast_sha256": "b6051dfb0f0e21d3d9ccdf3c5acda45b85fb75af2cf721c3b5c175457bf09a49"
+    },
+    {
+      "document_id": "855562a1-8309-57b2-b7b0-b9e7016207dc",
+      "filename": "2305.14314v1.pdf",
+      "source_sha256": "33a4e757c19d6ea8d3cca8958fce8fe405e290272e135c99ee66065c775d5bd1",
+      "ast_sha256": "53deba177eac63b4a690dc3f4353b602c4267a3a77940a0327d8a1e469d307dc"
+    },
+    {
+      "document_id": "114bfa0d-d6cf-573d-82b2-cfaed94b58b6",
+      "filename": "2305.18290v3.pdf",
+      "source_sha256": "92cb3a2b71362acda98a789b03d88688fd33cf5fcf13f81d2b1de30ee7d3b67a",
+      "ast_sha256": "43cdfdd569318044ed9d604aa1d5398d6974edd6b1ecdee44175ba99e8624966"
+    },
+    {
+      "document_id": "86e85629-7347-5f1a-92d7-089475d96cdb",
+      "filename": "N19-1423.pdf",
+      "source_sha256": "987545ffb087f1ece898142c403a516baeabeb70ce19089397fac6f7db12c3d4",
+      "ast_sha256": "08b02b0b8e3224d8b93dd6fa84bb5c0966f99162cd0c0bc2d4fe7be3eaed0b13"
+    },
+    {
+      "document_id": "f5b4ca83-6f08-5d85-b64f-a292b7b1f7b6",
+      "filename": "language_understanding_paper.pdf",
+      "source_sha256": "eb81a65e0856bd38e855e1f1de6ee12e7c3eb92ae05c8270d345a475beb631d0",
+      "ast_sha256": "3a1864cf4a08f50578b55c3d81c0da69379da0a6eebc59fb44dc173364ca0842"
+    }
+  ],
+  "generations": [
+    {
+      "name": "writing-qualified",
+      "cloud_calls": 1,
+      "actual_saved_calls": 1,
+      "app_sha256": "8f58337802a99edd5e0a9c4868440862070056def195109ffdfc99d8667cdc35",
+      "raw_claims": 4,
+      "published_claims": 2,
+      "source_filenames": [
+        "2010.11929v2.pdf"
+      ]
+    },
+    {
+      "name": "review-20",
+      "cloud_calls": 1,
+      "actual_saved_calls": 1,
+      "app_sha256": "8f58337802a99edd5e0a9c4868440862070056def195109ffdfc99d8667cdc35",
+      "raw_claims": 9,
+      "published_claims": 8,
+      "source_filenames": [
+        "1607.06450v1.pdf",
+        "1706.03762v1.pdf",
+        "1707.06347v2.pdf",
+        "1910.02054v3.pdf",
+        "1910.10683v4.pdf",
+        "2001.08361v1.pdf",
+        "2002.04745v2.pdf",
+        "2005.14165v4.pdf",
+        "2010.11929v2.pdf",
+        "2101.03961v3.pdf",
+        "2103.00020v1.pdf",
+        "2106.09685v2.pdf",
+        "2107.03374v2.pdf",
+        "2201.11903v6.pdf",
+        "2203.02155v1.pdf",
+        "2205.14135v2.pdf",
+        "2305.14314v1.pdf",
+        "2305.18290v3.pdf",
+        "N19-1423.pdf",
+        "language_understanding_paper.pdf"
+      ]
+    },
+    {
+      "name": "writing-qualified-final",
+      "cloud_calls": 1,
+      "actual_saved_calls": 1,
+      "app_sha256": "a4b9cf333f922ac20f658939559b6d193e2130fbe0ad16c5aa8685b0401cdbdb",
+      "raw_claims": 3,
+      "published_claims": 2,
+      "source_filenames": [
+        "2010.11929v2.pdf"
+      ]
+    },
+    {
+      "name": "writing-three-final",
+      "cloud_calls": 1,
+      "actual_saved_calls": 1,
+      "app_sha256": "a4b9cf333f922ac20f658939559b6d193e2130fbe0ad16c5aa8685b0401cdbdb",
+      "raw_claims": 8,
+      "published_claims": 8,
+      "source_filenames": [
+        "2010.11929v2.pdf",
+        "2103.00020v1.pdf",
+        "2106.09685v2.pdf"
+      ]
+    },
+    {
+      "name": "review-20-final",
+      "cloud_calls": 1,
+      "actual_saved_calls": 1,
+      "app_sha256": "a4b9cf333f922ac20f658939559b6d193e2130fbe0ad16c5aa8685b0401cdbdb",
+      "raw_claims": 8,
+      "published_claims": 8,
+      "source_filenames": [
+        "1607.06450v1.pdf",
+        "1706.03762v1.pdf",
+        "1707.06347v2.pdf",
+        "1910.02054v3.pdf",
+        "1910.10683v4.pdf",
+        "2001.08361v1.pdf",
+        "2002.04745v2.pdf",
+        "2005.14165v4.pdf",
+        "2010.11929v2.pdf",
+        "2101.03961v3.pdf",
+        "2103.00020v1.pdf",
+        "2106.09685v2.pdf",
+        "2107.03374v2.pdf",
+        "2201.11903v6.pdf",
+        "2203.02155v1.pdf",
+        "2205.14135v2.pdf",
+        "2305.14314v1.pdf",
+        "2305.18290v3.pdf",
+        "N19-1423.pdf",
+        "language_understanding_paper.pdf"
+      ]
+    }
+  ],
+  "final_source": {
+    "app_files": 124,
+    "app_sha256": "5762c7060b12a8722ae4273d99d7569d42b094746924497cf7aecb3c064375c2",
+    "requirements_sha256": "b0e75e31a3ca8f034e095fd0667e3be7e380975548c5acce90db94f96ed7283f",
+    "new_generation_on_this_final_candidate": false
+  },
+  "publication_replays": [
+    {
+      "name": "writing-publication-replay-2",
+      "app_sha256": "5762c7060b12a8722ae4273d99d7569d42b094746924497cf7aecb3c064375c2",
+      "model_calls": 0,
+      "original_claims": 8,
+      "published_claims": 6,
+      "withheld_original_indices": [
+        3,
+        5
+      ],
+      "claims": [
+        {
+          "published_index": 0,
+          "cited_anchors": [
+            {
+              "evidence_id": "E1",
+              "document_id": "788f47ff-23de-5f78-896b-7d3fe6e1bb92",
+              "page_number": 1
+            },
+            {
+              "evidence_id": "E7",
+              "document_id": "788f47ff-23de-5f78-896b-7d3fe6e1bb92",
+              "page_number": 4
+            },
+            {
+              "evidence_id": "E10",
+              "document_id": "788f47ff-23de-5f78-896b-7d3fe6e1bb92",
+              "page_number": 16
+            },
+            {
+              "evidence_id": "E16",
+              "document_id": "788f47ff-23de-5f78-896b-7d3fe6e1bb92",
+              "page_number": 17
+            },
+            {
+              "evidence_id": "E17",
+              "document_id": "788f47ff-23de-5f78-896b-7d3fe6e1bb92",
+              "page_number": 17
+            }
+          ]
+        },
+        {
+          "published_index": 1,
+          "cited_anchors": [
+            {
+              "evidence_id": "E10",
+              "document_id": "788f47ff-23de-5f78-896b-7d3fe6e1bb92",
+              "page_number": 16
+            }
+          ]
+        },
+        {
+          "published_index": 2,
+          "cited_anchors": [
+            {
+              "evidence_id": "E8",
+              "document_id": "1ae43cdf-aa5d-533e-8caa-c65a403deaf2",
+              "page_number": 4
+            },
+            {
+              "evidence_id": "E11",
+              "document_id": "1ae43cdf-aa5d-533e-8caa-c65a403deaf2",
+              "page_number": 4
+            }
+          ]
+        },
+        {
+          "published_index": 3,
+          "cited_anchors": [
+            {
+              "evidence_id": "E3",
+              "document_id": "bc90bcf2-cccd-5364-94f6-5815603802f7",
+              "page_number": 1
+            }
+          ]
+        },
+        {
+          "published_index": 4,
+          "cited_anchors": [
+            {
+              "evidence_id": "E15",
+              "document_id": "bc90bcf2-cccd-5364-94f6-5815603802f7",
+              "page_number": 9
+            },
+            {
+              "evidence_id": "E18",
+              "document_id": "bc90bcf2-cccd-5364-94f6-5815603802f7",
+              "page_number": 10
+            },
+            {
+              "evidence_id": "E19",
+              "document_id": "bc90bcf2-cccd-5364-94f6-5815603802f7",
+              "page_number": 10
+            }
+          ]
+        },
+        {
+          "published_index": 5,
+          "cited_anchors": [
+            {
+              "evidence_id": "E6",
+              "document_id": "bc90bcf2-cccd-5364-94f6-5815603802f7",
+              "page_number": 7
+            },
+            {
+              "evidence_id": "E21",
+              "document_id": "bc90bcf2-cccd-5364-94f6-5815603802f7",
+              "page_number": 8
+            },
+            {
+              "evidence_id": "E22",
+              "document_id": "bc90bcf2-cccd-5364-94f6-5815603802f7",
+              "page_number": 7
+            }
+          ]
+        }
+      ],
+      "inspection": {
+        "reviewer": "Codex full-original-page inspection; not independent expert review",
+        "published_claims_source_supported_in_this_saved_sample": true,
+        "output_hash_binding": "b637cc7c9132d1ad54378610900078eebc3ec380c3646b05971e4123e5b2187c"
+      }
+    },
+    {
+      "name": "review-publication-replay-2",
+      "app_sha256": "5762c7060b12a8722ae4273d99d7569d42b094746924497cf7aecb3c064375c2",
+      "model_calls": 0,
+      "original_claims": 8,
+      "published_claims": 7,
+      "withheld_original_indices": [
+        2
+      ],
+      "claims": [
+        {
+          "published_index": 0,
+          "cited_anchors": [
+            {
+              "evidence_id": "R19",
+              "document_id": "86e85629-7347-5f1a-92d7-089475d96cdb",
+              "page_number": 1
+            },
+            {
+              "evidence_id": "R20",
+              "document_id": "f5b4ca83-6f08-5d85-b64f-a292b7b1f7b6",
+              "page_number": 1
+            }
+          ]
+        },
+        {
+          "published_index": 1,
+          "cited_anchors": [
+            {
+              "evidence_id": "R8",
+              "document_id": "4eb9ae9c-2278-5530-ad02-d02e38f9088c",
+              "page_number": 1
+            },
+            {
+              "evidence_id": "R24",
+              "document_id": "d9d5065d-9706-53db-b856-427c2c58bd1a",
+              "page_number": 1
+            }
+          ]
+        },
+        {
+          "published_index": 2,
+          "cited_anchors": [
+            {
+              "evidence_id": "R15",
+              "document_id": "cd05de96-3b20-5178-8953-d8ee090a4f23",
+              "page_number": 1
+            },
+            {
+              "evidence_id": "R18",
+              "document_id": "114bfa0d-d6cf-573d-82b2-cfaed94b58b6",
+              "page_number": 1
+            }
+          ]
+        },
+        {
+          "published_index": 3,
+          "cited_anchors": [
+            {
+              "evidence_id": "R14",
+              "document_id": "5b4ad1aa-0c85-5a2b-a5ca-97eb8dd4d2aa",
+              "page_number": 1
+            },
+            {
+              "evidence_id": "R33",
+              "document_id": "5b4ad1aa-0c85-5a2b-a5ca-97eb8dd4d2aa",
+              "page_number": 2
+            }
+          ]
+        },
+        {
+          "published_index": 4,
+          "cited_anchors": [
+            {
+              "evidence_id": "R12",
+              "document_id": "bc90bcf2-cccd-5364-94f6-5815603802f7",
+              "page_number": 1
+            }
+          ]
+        },
+        {
+          "published_index": 5,
+          "cited_anchors": [
+            {
+              "evidence_id": "R17",
+              "document_id": "855562a1-8309-57b2-b7b0-b9e7016207dc",
+              "page_number": 1
+            }
+          ]
+        },
+        {
+          "published_index": 6,
+          "cited_anchors": [
+            {
+              "evidence_id": "R4",
+              "document_id": "4ac3cbf3-13b9-5022-863f-a2dbe9391e58",
+              "page_number": 1
+            },
+            {
+              "evidence_id": "R16",
+              "document_id": "518cf49d-121d-55b9-834e-4160cf927fe9",
+              "page_number": 1
+            }
+          ]
+        }
+      ],
+      "inspection": {
+        "reviewer": "Codex full-original-page inspection; not independent expert review",
+        "published_claims_source_supported_in_this_saved_sample": true,
+        "output_hash_binding": "2c3e59a2a24790f649a35c12afaa6db5d765138186088afc86605bfc76479929"
+      }
+    },
+    {
+      "name": "writing-qualified-replay",
+      "app_sha256": "5762c7060b12a8722ae4273d99d7569d42b094746924497cf7aecb3c064375c2",
+      "model_calls": 0,
+      "original_claims": 2,
+      "published_claims": 2,
+      "withheld_original_indices": [],
+      "claims": [
+        {
+          "published_index": 0,
+          "cited_anchors": [
+            {
+              "evidence_id": "E1",
+              "document_id": "788f47ff-23de-5f78-896b-7d3fe6e1bb92",
+              "page_number": 16
+            },
+            {
+              "evidence_id": "E2",
+              "document_id": "788f47ff-23de-5f78-896b-7d3fe6e1bb92",
+              "page_number": 17
+            },
+            {
+              "evidence_id": "E4",
+              "document_id": "788f47ff-23de-5f78-896b-7d3fe6e1bb92",
+              "page_number": 16
+            }
+          ]
+        },
+        {
+          "published_index": 1,
+          "cited_anchors": [
+            {
+              "evidence_id": "E2",
+              "document_id": "788f47ff-23de-5f78-896b-7d3fe6e1bb92",
+              "page_number": 17
+            },
+            {
+              "evidence_id": "E3",
+              "document_id": "788f47ff-23de-5f78-896b-7d3fe6e1bb92",
+              "page_number": 17
+            }
+          ]
+        }
+      ],
+      "inspection": {
+        "reviewer": "Codex full-original-page inspection; not independent expert review",
+        "published_claims_source_supported_in_this_saved_sample": true,
+        "output_hash_binding": "c5bb94d6348c7c08afd219071a36bc200630ce66d103e1f159ed0372b8abbb7a"
+      }
+    }
+  ],
+  "quality_failures_preserved": [
+    {
+      "run": "writing-qualified",
+      "reason": "One published claim falsely cited a user premise as a source-paper fact; two unfinished-page claims were withheld."
+    },
+    {
+      "run": "review-20",
+      "reason": "1920 rendered characters, not concise; one raw graph claim omitted its inline R citation from evidence_ids and was correctly withheld."
+    },
+    {
+      "run": "writing-qualified-final",
+      "reason": "Two main experimental-condition claims accepted; one architecture-only claim conservatively withheld, possible false hold remains."
+    },
+    {
+      "run": "writing-three-final",
+      "original_claim_index": 3,
+      "reason": "CLIP author first-person voice presented as the new writing study."
+    },
+    {
+      "run": "writing-three-final",
+      "original_claim_index": 5,
+      "reason": "None of these cited works on physical LoRA page 9 expanded to no prior work, overclaiming novelty scope."
+    },
+    {
+      "run": "review-20-final",
+      "original_claim_index": 2,
+      "reason": "Dropped some trends and more-than scope from scaling source physical page 1; original generated result unchanged."
+    }
+  ],
+  "review": {
+    "selected_papers": 20,
+    "body_evidence": 36,
+    "bibliography_evidence": 4,
+    "total_generation_evidence": 40,
+    "input_evidence_papers": 20,
+    "original_final_claims": 8,
+    "original_rendered_chars": 706,
+    "replay_published_claims": 7,
+    "replay_rendered_chars": 645,
+    "replay_multidocument_claims": 4,
+    "replay_claimed_papers": 11,
+    "bibliography_relations_original_page_checked": 4,
+    "future_directions_returned": 16,
+    "future_direction_completeness_verified": false,
+    "not_scientific_inheritance_or_latest_field_review": true
+  },
+  "writing": {
+    "three_public_papers": 3,
+    "independently_checked_bibliography_identities": 3,
+    "original_claims": 8,
+    "published_in_final_replay": 6,
+    "withheld_original_indices": [
+      3,
+      5
+    ],
+    "qualified_experiment_claims": 2,
+    "qualified_experiment_claims_retained_in_final_replay": 2,
+    "overall_generation_stability_verified": false,
+    "publishable_full_manuscript_verified": false
+  },
+  "frontend": {
+    "tests_passed": 32,
+    "typecheck_passed": true,
+    "actual_isolated_api_and_source_frontend_browser": {
+      "run": "browser-relations-5",
+      "mode": "extractive",
+      "cloud_calls": 0,
+      "checks_passed": 2,
+      "graph_relationships_displayed": 4,
+      "original_pdf_jumps_tested": 1,
+      "physical_page": 10,
+      "viewport": [
+        1920,
+        1080
+      ],
+      "default_bundler": "Turbopack",
+      "pdf_pixels_and_text_waited": true,
+      "production_docker_build": false,
+      "api_started_before_final_writing_only_guard": true
+    },
+    "retained_failures": [
+      {
+        "run": "browser-relations-1",
+        "reason": "Script clicked a hidden panel before client hydration."
+      },
+      {
+        "run": "browser-relations-2",
+        "reason": "Script navigation clicked before hydration."
+      },
+      {
+        "run": "browser-relations-3",
+        "reason": "Script assumed array rather than documents.items API envelope."
+      },
+      {
+        "run": "browser-relations-4",
+        "reason": "Bibliography display check passed; actual PDF load failed in alternate Webpack dev mode with Object.defineProperty called on non-object. Default Turbopack then passed, not a repair or certification of Webpack mode."
+      }
+    ]
+  },
+  "regression": {
+    "backend": {
+      "tests": 1002,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "junit": "backend/tmp/official-synthesis-acceptance-2026-10-13/backend-release-final.xml"
+    },
+    "ruff_passed": true
+  },
+  "deployment": {
+    "status": "blocked_by_Docker_engine_HTTP_500",
+    "backend_image_built_before_last_writing_scope_guard": {
+      "tag": "pdfagent-backend:synthesis-publication-20261013",
+      "image_manifest": "sha256:6f307b2e8833c45c8628d91dac81eb2fd498b99776854ca8e7cc9ca516d1f8dd",
+      "app_sha256": "d018472fe98c95d45fc64a2bdd5dfb344c80cf3ebc30318c6a90708bd5c5441b"
+    },
+    "final_backend_installed_verified": false,
+    "final_frontend_production_build_completed": false,
+    "volumes_deleted": false,
+    "docker_restart_performed": false,
+    "production_library_modified": false
+  },
+  "limits": [
+    "Publication rules detect narrow source-scope cues, not general semantic entailment or scientific novelty.",
+    "No fresh DeepSeek generation on final 5762c706 candidate; saved output replay is not a new model pass.",
+    "The review claims mention 11 of the 20 supplied papers; source budget coverage is not narrative completeness.",
+    "Future Work extraction remains coupled to generation evidence budget; 16 directions here do not replace the historical larger-budget 33-direction check.",
+    "Bibliography links establish actual cited-entry identity, not method inheritance, importance or causal scientific influence.",
+    "No new current-candidate nine-question or official 39-question QA round; prior results remain tied to prior candidate.",
+    "No final release, public deployment, video or final technical PDF certification this turn."
+  ],
+  "artifacts": [
+    {
+      "path": "backend/tmp/official-synthesis-acceptance-2026-10-13/writing-qualified/calls.json",
+      "sha256": "39e67093f56272ac2fa9ea3809d3d5c02bc182450fdd13ae237ed92ae1bc7c9f"
+    },
+    {
+      "path": "backend/tmp/official-synthesis-acceptance-2026-10-13/writing-qualified/report.json",
+      "sha256": "baf827387f5acc6e84012238ed66dbe4838f75f76d977a3c2902767e08755b2e"
+    },
+    {
+      "path": "backend/tmp/official-synthesis-acceptance-2026-10-13/writing-qualified/writing-outline.json",
+      "sha256": "369e2941411ec5f54b1d608482abfab5945e1b089457bf9d81ebc9f1c906eab3"
+    },
+    {
+      "path": "backend/tmp/official-synthesis-acceptance-2026-10-13/writing-qualified-final/calls.json",
+      "sha256": "3aeb1f084cfcc5e9f9bc9fb4c17578150eaf2806c0865edee7b061d2993c79c8"
+    },
+    {
+      "path": "backend/tmp/official-synthesis-acceptance-2026-10-13/writing-qualified-final/report.json",
+      "sha256": "4589196d762fbe8d0a9fdc14ed3895cfbe8480cd93958a8066837eabb41a1fc2"
+    },
+    {
+      "path": "backend/tmp/official-synthesis-acceptance-2026-10-13/writing-qualified-final/writing-outline.json",
+      "sha256": "cd84e9cd4c19f1d8e393744031a1fd309682a2a71b75abee658071684238e278"
+    },
+    {
+      "path": "backend/tmp/official-synthesis-acceptance-2026-10-13/writing-three-final/calls.json",
+      "sha256": "8ac11974176faf215f68c700b93c0a021f12ec8adb24879412f543cffdede282"
+    },
+    {
+      "path": "backend/tmp/official-synthesis-acceptance-2026-10-13/writing-three-final/report.json",
+      "sha256": "e99218679962853bfa24388ab08ceb34e86c94d4671fab6f00bcefc65e32cf00"
+    },
+    {
+      "path": "backend/tmp/official-synthesis-acceptance-2026-10-13/writing-three-final/writing-outline.json",
+      "sha256": "e6c8ef03cf35f31c57d743a200fe4d1134c7de893eb7e0f97a3281fb2f363eec"
+    },
+    {
+      "path": "backend/tmp/official-synthesis-acceptance-2026-10-13/review-20/calls.json",
+      "sha256": "4adc32728c5747a7935446330ab8ba4b07a12d6f661712f911c986d8f067b93f"
+    },
+    {
+      "path": "backend/tmp/official-synthesis-acceptance-2026-10-13/review-20/generated-review.json",
+      "sha256": "d5dcd835e678d07dc4996b37f318ed05230fd948920292ac9cf571faf79f0f0f"
+    },
+    {
+      "path": "backend/tmp/official-synthesis-acceptance-2026-10-13/review-20/report.json",
+      "sha256": "16e1fb6929d02b6e015ab2bd27dcca6645941d4a932ed69cf2defba46c1e988e"
+    },
+    {
+      "path": "backend/tmp/official-synthesis-acceptance-2026-10-13/review-20-final/calls.json",
+      "sha256": "7bd960154b9b7d05ccb535c4a811613a045013758aa6841ffd9b73caa307818b"
+    },
+    {
+      "path": "backend/tmp/official-synthesis-acceptance-2026-10-13/review-20-final/generated-review.json",
+      "sha256": "100e52ba1b39634cd48ae9489016a857fc59f7d0159811524c6d36ec8d925ddb"
+    },
+    {
+      "path": "backend/tmp/official-synthesis-acceptance-2026-10-13/review-20-final/report.json",
+      "sha256": "0b93b35c8a18378becd6727954b995384efce3904c2ab69a56b99f36e750a119"
+    },
+    {
+      "path": "backend/tmp/official-synthesis-acceptance-2026-10-13/writing-publication-replay/report.json",
+      "sha256": "c91480ae7e6b3c469b68c3b7998cecb3376dc09f2a89495ed944d124363649dd"
+    },
+    {
+      "path": "backend/tmp/official-synthesis-acceptance-2026-10-13/writing-publication-replay/writing-outline.json",
+      "sha256": "09e6d0b1c98bcaf9842b33586738d6366667fa393589a3656f0f20608ec745e0"
+    },
+    {
+      "path": "backend/tmp/official-synthesis-acceptance-2026-10-13/review-publication-replay/generated-review.json",
+      "sha256": "6834172dc58266837cd72a25374bffc08f5ea608842bf67853059d027e4d9d04"
+    },
+    {
+      "path": "backend/tmp/official-synthesis-acceptance-2026-10-13/review-publication-replay/report.json",
+      "sha256": "771beb955f95ae6f5a0dad3b0203dbac1a5e6aa4e2061ab841fd7a6bb0bdfbeb"
+    },
+    {
+      "path": "backend/tmp/official-synthesis-acceptance-2026-10-13/writing-publication-replay-2/report.json",
+      "sha256": "b741efdab6d9fcabe36eb18753ed510c65e5d76cc3ce6745f5d4e6ca5e541315"
+    },
+    {
+      "path": "backend/tmp/official-synthesis-acceptance-2026-10-13/writing-publication-replay-2/writing-outline.json",
+      "sha256": "b637cc7c9132d1ad54378610900078eebc3ec380c3646b05971e4123e5b2187c"
+    },
+    {
+      "path": "backend/tmp/official-synthesis-acceptance-2026-10-13/review-publication-replay-2/generated-review.json",
+      "sha256": "2c3e59a2a24790f649a35c12afaa6db5d765138186088afc86605bfc76479929"
+    },
+    {
+      "path": "backend/tmp/official-synthesis-acceptance-2026-10-13/review-publication-replay-2/report.json",
+      "sha256": "dad8b99ecf71e6c940c31b59eaa66791182e490bea05a79b0cb2d6146666bb8d"
+    },
+    {
+      "path": "backend/tmp/official-synthesis-acceptance-2026-10-13/writing-qualified-replay/report.json",
+      "sha256": "4bee21b2b8754d16cb48556995b331415a9036a46794fd17d2a2fafd3294220a"
+    },
+    {
+      "path": "backend/tmp/official-synthesis-acceptance-2026-10-13/writing-qualified-replay/writing-outline.json",
+      "sha256": "c5bb94d6348c7c08afd219071a36bc200630ce66d103e1f159ed0372b8abbb7a"
+    },
+    {
+      "path": "backend/tmp/official-synthesis-acceptance-2026-10-13/browser-relations-1/failure.png",
+      "sha256": "7b542024800172386df014dd72eca7cd12509f0150d79d68ba3ba6ee1870ffe2"
+    },
+    {
+      "path": "backend/tmp/official-synthesis-acceptance-2026-10-13/browser-relations-1/report.json",
+      "sha256": "a78fd6d81be87ddece9d782f56f2a909a1c695ba289c6f8621208cb73a2c17a6"
+    },
+    {
+      "path": "backend/tmp/official-synthesis-acceptance-2026-10-13/browser-relations-2/failure.png",
+      "sha256": "ce1199216a211def66ea83d08deff387de79c4055a4be4bb5473b7c530aa0d3e"
+    },
+    {
+      "path": "backend/tmp/official-synthesis-acceptance-2026-10-13/browser-relations-2/report.json",
+      "sha256": "ba4a155f28e5a6fef376c1d716a2ffb34def17ff0f07e527ee015b99d3369df7"
+    },
+    {
+      "path": "backend/tmp/official-synthesis-acceptance-2026-10-13/browser-relations-3/failure.png",
+      "sha256": "a04406d3c982432c6faa5c523f9cc5926e69308f5171df620bec827b6972aab7"
+    },
+    {
+      "path": "backend/tmp/official-synthesis-acceptance-2026-10-13/browser-relations-3/report.json",
+      "sha256": "91e93c20a5ee6d16496daa8c9b4ef9068df64d3550182c1a9514f848eb19a054"
+    },
+    {
+      "path": "backend/tmp/official-synthesis-acceptance-2026-10-13/browser-relations-4/01-relations.png",
+      "sha256": "6b0350ec21515eefc1a58665e2cce52f60e99d322e677d51a776ab538e2bb524"
+    },
+    {
+      "path": "backend/tmp/official-synthesis-acceptance-2026-10-13/browser-relations-4/failure.png",
+      "sha256": "b1ee8e6aa74f21a006a291c7f7f720a3bb12aac1faca7354d81047ad3e3b40ea"
+    },
+    {
+      "path": "backend/tmp/official-synthesis-acceptance-2026-10-13/browser-relations-4/report.json",
+      "sha256": "73a5b92fc60458b7b5bdf63e687a39a587a60a7e9cf7122a2ddb870de17d52ff"
+    },
+    {
+      "path": "backend/tmp/official-synthesis-acceptance-2026-10-13/browser-relations-4/review.json",
+      "sha256": "45efa07cb430a9ae38517766b6542086ed698d2abb10ecd790efb51ce58f7c3d"
+    },
+    {
+      "path": "backend/tmp/official-synthesis-acceptance-2026-10-13/browser-relations-5/01-relations.png",
+      "sha256": "6b0350ec21515eefc1a58665e2cce52f60e99d322e677d51a776ab538e2bb524"
+    },
+    {
+      "path": "backend/tmp/official-synthesis-acceptance-2026-10-13/browser-relations-5/02-reference-original.png",
+      "sha256": "1dc79d30b7246953e44b01a63de08fe3b9ddd75bb0964796c42e93dd7405122c"
+    },
+    {
+      "path": "backend/tmp/official-synthesis-acceptance-2026-10-13/browser-relations-5/report.json",
+      "sha256": "1a45163aadf73f0279294f06557b02896cb1cdc54f458e17c4c16b8ff4039d62"
+    },
+    {
+      "path": "backend/tmp/official-synthesis-acceptance-2026-10-13/browser-relations-5/review.json",
+      "sha256": "768a05887a5a7ef16bb6fd5b34a5865850cbde836bc0ba6287c1e40b797a3c1f"
+    },
+    {
+      "path": "backend/tmp/official-synthesis-acceptance-2026-10-13/backend-preflight.xml",
+      "sha256": "24bf5c85852ec6e14960eabd71f83388e4b705f950358279426ff4be685cbc2a"
+    },
+    {
+      "path": "backend/tmp/official-synthesis-acceptance-2026-10-13/backend-final.xml",
+      "sha256": "e5f9818fc08108a5709ff84fec2d749c215ff71748992fb3b3d00c55af9dab56"
+    },
+    {
+      "path": "backend/tmp/official-synthesis-acceptance-2026-10-13/backend-publication-final.xml",
+      "sha256": "f63e7304bafff0b8d55960ad9d88e89242e917becfcffcd2aab0c15d122caa0c"
+    },
+    {
+      "path": "backend/tmp/official-synthesis-acceptance-2026-10-13/backend-release-final.xml",
+      "sha256": "729de23a224792c621e5fb0139defea60c9e855caec3fcbd1159982ade5b88c8"
+    }
+  ]
+}

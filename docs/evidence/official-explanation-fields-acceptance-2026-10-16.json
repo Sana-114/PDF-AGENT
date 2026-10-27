@@ -1,0 +1,1599 @@
+{
+  "schema_version": 1,
+  "summary": {
+    "date": "2026-10-16",
+    "current_source": {
+      "python_version": "3.12.14",
+      "app_files": 128,
+      "app_sha256": "f2dea1a87a4657a0bf0d41aa0c2255c1c68aba540976f7ce4f2c206cb436af4b",
+      "requirements_sha256": "b0e75e31a3ca8f034e095fd0667e3be7e380975548c5acce90db94f96ed7283f"
+    },
+    "cloud_calls": 9,
+    "automatic_model_retries": 0,
+    "runs": [
+      {
+        "directory": "round-1-mechanism",
+        "runtime_source": {
+          "python_version": "3.12.14",
+          "app_files": 128,
+          "app_sha256": "e712bee8e7d9c72aaede1bcbba71ce404e99dc9991241710607adf0d043f71b8",
+          "requirements_sha256": "b0e75e31a3ca8f034e095fd0667e3be7e380975548c5acce90db94f96ed7283f"
+        },
+        "original_status": "failed",
+        "original_case_statuses": [
+          "failed",
+          "source_checks_passed"
+        ],
+        "cloud_calls": 2,
+        "fresh_retrieval": false,
+        "original_case_providers": [
+          "extractive",
+          "deepseek"
+        ]
+      },
+      {
+        "directory": "round-1-policy",
+        "runtime_source": {
+          "python_version": "3.12.14",
+          "app_files": 128,
+          "app_sha256": "e712bee8e7d9c72aaede1bcbba71ce404e99dc9991241710607adf0d043f71b8",
+          "requirements_sha256": "b0e75e31a3ca8f034e095fd0667e3be7e380975548c5acce90db94f96ed7283f"
+        },
+        "original_status": "failed",
+        "original_case_statuses": [
+          "failed",
+          "source_checks_passed"
+        ],
+        "cloud_calls": 2,
+        "fresh_retrieval": false,
+        "original_case_providers": [
+          "extractive",
+          "deepseek"
+        ]
+      },
+      {
+        "directory": "round-2-mechanism",
+        "runtime_source": {
+          "python_version": "3.12.14",
+          "app_files": 128,
+          "app_sha256": "ff294112d9acfd06b5a620bc8347d72ea9c5052cb09f70ec326bbfab658d0a6d",
+          "requirements_sha256": "b0e75e31a3ca8f034e095fd0667e3be7e380975548c5acce90db94f96ed7283f"
+        },
+        "original_status": "failed",
+        "original_case_statuses": [
+          "failed",
+          "source_checks_passed"
+        ],
+        "cloud_calls": 2,
+        "fresh_retrieval": false,
+        "original_case_providers": [
+          "deepseek",
+          "deepseek"
+        ]
+      },
+      {
+        "directory": "round-2-policy",
+        "runtime_source": {
+          "python_version": "3.12.14",
+          "app_files": 128,
+          "app_sha256": "ff294112d9acfd06b5a620bc8347d72ea9c5052cb09f70ec326bbfab658d0a6d",
+          "requirements_sha256": "b0e75e31a3ca8f034e095fd0667e3be7e380975548c5acce90db94f96ed7283f"
+        },
+        "original_status": "failed",
+        "original_case_statuses": [
+          "failed",
+          "failed"
+        ],
+        "cloud_calls": 2,
+        "fresh_retrieval": false,
+        "original_case_providers": [
+          "deepseek",
+          "deepseek"
+        ]
+      }
+    ],
+    "review_runtime_source": {
+      "python_version": "3.12.14",
+      "app_files": 128,
+      "app_sha256": "e4e7435e963229aeb726782f5730bdece4d9020160abbac30715ec5bde6e885e",
+      "requirements_sha256": "b0e75e31a3ca8f034e095fd0667e3be7e380975548c5acce90db94f96ed7283f"
+    },
+    "fresh_BGE_QA_completed": false,
+    "same_build_HTTP_stability_released": false,
+    "original_round_machine_results": [
+      2,
+      1
+    ],
+    "qa_anchor_count": 156,
+    "qa_anchors_all_valid": true,
+    "qa_anchor_checks": [
+      {
+        "run": "round-1-mechanism",
+        "case_id": "lora-qlora-mechanism",
+        "evidence_id": "E1",
+        "valid": true
+      },
+      {
+        "run": "round-1-mechanism",
+        "case_id": "lora-qlora-mechanism",
+        "evidence_id": "E2",
+        "valid": true
+      },
+      {
+        "run": "round-1-mechanism",
+        "case_id": "lora-qlora-mechanism",
+        "evidence_id": "E3",
+        "valid": true
+      },
+      {
+        "run": "round-1-mechanism",
+        "case_id": "lora-qlora-mechanism",
+        "evidence_id": "E5",
+        "valid": true
+      },
+      {
+        "run": "round-1-mechanism",
+        "case_id": "lora-qlora-mechanism",
+        "evidence_id": "E9",
+        "valid": true
+      },
+      {
+        "run": "round-1-mechanism",
+        "case_id": "lora-qlora-mechanism",
+        "evidence_id": "E15",
+        "valid": true
+      },
+      {
+        "run": "round-1-mechanism",
+        "case_id": "lora-qlora-mechanism",
+        "evidence_id": "E16",
+        "valid": true
+      },
+      {
+        "run": "round-1-mechanism",
+        "case_id": "lora-qlora-mechanism",
+        "evidence_id": "E19",
+        "valid": true
+      },
+      {
+        "run": "round-1-mechanism",
+        "case_id": "lora-qlora-mechanism",
+        "evidence_id": "E4",
+        "valid": true
+      },
+      {
+        "run": "round-1-mechanism",
+        "case_id": "lora-qlora-mechanism",
+        "evidence_id": "E6",
+        "valid": true
+      },
+      {
+        "run": "round-1-mechanism",
+        "case_id": "lora-qlora-mechanism",
+        "evidence_id": "E7",
+        "valid": true
+      },
+      {
+        "run": "round-1-mechanism",
+        "case_id": "lora-qlora-mechanism",
+        "evidence_id": "E8",
+        "valid": true
+      },
+      {
+        "run": "round-1-mechanism",
+        "case_id": "lora-qlora-mechanism",
+        "evidence_id": "E10",
+        "valid": true
+      },
+      {
+        "run": "round-1-mechanism",
+        "case_id": "lora-qlora-mechanism",
+        "evidence_id": "E11",
+        "valid": true
+      },
+      {
+        "run": "round-1-mechanism",
+        "case_id": "lora-qlora-mechanism",
+        "evidence_id": "E12",
+        "valid": true
+      },
+      {
+        "run": "round-1-mechanism",
+        "case_id": "lora-qlora-mechanism",
+        "evidence_id": "E13",
+        "valid": true
+      },
+      {
+        "run": "round-1-mechanism",
+        "case_id": "lora-qlora-mechanism",
+        "evidence_id": "E14",
+        "valid": true
+      },
+      {
+        "run": "round-1-mechanism",
+        "case_id": "lora-qlora-mechanism",
+        "evidence_id": "E17",
+        "valid": true
+      },
+      {
+        "run": "round-1-mechanism",
+        "case_id": "lora-qlora-mechanism",
+        "evidence_id": "E18",
+        "valid": true
+      },
+      {
+        "run": "round-1-mechanism",
+        "case_id": "lora-qlora-mechanism",
+        "evidence_id": "E20",
+        "valid": true
+      },
+      {
+        "run": "round-1-mechanism",
+        "case_id": "unreported-training-seed",
+        "evidence_id": "E1",
+        "valid": true
+      },
+      {
+        "run": "round-1-mechanism",
+        "case_id": "unreported-training-seed",
+        "evidence_id": "E2",
+        "valid": true
+      },
+      {
+        "run": "round-1-mechanism",
+        "case_id": "unreported-training-seed",
+        "evidence_id": "E3",
+        "valid": true
+      },
+      {
+        "run": "round-1-mechanism",
+        "case_id": "unreported-training-seed",
+        "evidence_id": "E4",
+        "valid": true
+      },
+      {
+        "run": "round-1-mechanism",
+        "case_id": "unreported-training-seed",
+        "evidence_id": "E5",
+        "valid": true
+      },
+      {
+        "run": "round-1-mechanism",
+        "case_id": "unreported-training-seed",
+        "evidence_id": "E6",
+        "valid": true
+      },
+      {
+        "run": "round-1-mechanism",
+        "case_id": "unreported-training-seed",
+        "evidence_id": "E7",
+        "valid": true
+      },
+      {
+        "run": "round-1-mechanism",
+        "case_id": "unreported-training-seed",
+        "evidence_id": "E8",
+        "valid": true
+      },
+      {
+        "run": "round-1-mechanism",
+        "case_id": "unreported-training-seed",
+        "evidence_id": "E9",
+        "valid": true
+      },
+      {
+        "run": "round-1-mechanism",
+        "case_id": "unreported-training-seed",
+        "evidence_id": "E10",
+        "valid": true
+      },
+      {
+        "run": "round-1-mechanism",
+        "case_id": "unreported-training-seed",
+        "evidence_id": "E11",
+        "valid": true
+      },
+      {
+        "run": "round-1-mechanism",
+        "case_id": "unreported-training-seed",
+        "evidence_id": "E12",
+        "valid": true
+      },
+      {
+        "run": "round-1-mechanism",
+        "case_id": "unreported-training-seed",
+        "evidence_id": "E13",
+        "valid": true
+      },
+      {
+        "run": "round-1-mechanism",
+        "case_id": "unreported-training-seed",
+        "evidence_id": "E14",
+        "valid": true
+      },
+      {
+        "run": "round-1-mechanism",
+        "case_id": "unreported-training-seed",
+        "evidence_id": "E15",
+        "valid": true
+      },
+      {
+        "run": "round-1-mechanism",
+        "case_id": "unreported-training-seed",
+        "evidence_id": "E16",
+        "valid": true
+      },
+      {
+        "run": "round-1-mechanism",
+        "case_id": "unreported-training-seed",
+        "evidence_id": "E17",
+        "valid": true
+      },
+      {
+        "run": "round-1-mechanism",
+        "case_id": "unreported-training-seed",
+        "evidence_id": "E18",
+        "valid": true
+      },
+      {
+        "run": "round-1-policy",
+        "case_id": "dpo-instructgpt-object-and-stage",
+        "evidence_id": "E2",
+        "valid": true
+      },
+      {
+        "run": "round-1-policy",
+        "case_id": "dpo-instructgpt-object-and-stage",
+        "evidence_id": "E3",
+        "valid": true
+      },
+      {
+        "run": "round-1-policy",
+        "case_id": "dpo-instructgpt-object-and-stage",
+        "evidence_id": "E11",
+        "valid": true
+      },
+      {
+        "run": "round-1-policy",
+        "case_id": "dpo-instructgpt-object-and-stage",
+        "evidence_id": "E18",
+        "valid": true
+      },
+      {
+        "run": "round-1-policy",
+        "case_id": "dpo-instructgpt-object-and-stage",
+        "evidence_id": "E19",
+        "valid": true
+      },
+      {
+        "run": "round-1-policy",
+        "case_id": "dpo-instructgpt-object-and-stage",
+        "evidence_id": "E20",
+        "valid": true
+      },
+      {
+        "run": "round-1-policy",
+        "case_id": "dpo-instructgpt-object-and-stage",
+        "evidence_id": "E1",
+        "valid": true
+      },
+      {
+        "run": "round-1-policy",
+        "case_id": "dpo-instructgpt-object-and-stage",
+        "evidence_id": "E4",
+        "valid": true
+      },
+      {
+        "run": "round-1-policy",
+        "case_id": "dpo-instructgpt-object-and-stage",
+        "evidence_id": "E5",
+        "valid": true
+      },
+      {
+        "run": "round-1-policy",
+        "case_id": "dpo-instructgpt-object-and-stage",
+        "evidence_id": "E6",
+        "valid": true
+      },
+      {
+        "run": "round-1-policy",
+        "case_id": "dpo-instructgpt-object-and-stage",
+        "evidence_id": "E7",
+        "valid": true
+      },
+      {
+        "run": "round-1-policy",
+        "case_id": "dpo-instructgpt-object-and-stage",
+        "evidence_id": "E8",
+        "valid": true
+      },
+      {
+        "run": "round-1-policy",
+        "case_id": "dpo-instructgpt-object-and-stage",
+        "evidence_id": "E9",
+        "valid": true
+      },
+      {
+        "run": "round-1-policy",
+        "case_id": "dpo-instructgpt-object-and-stage",
+        "evidence_id": "E10",
+        "valid": true
+      },
+      {
+        "run": "round-1-policy",
+        "case_id": "dpo-instructgpt-object-and-stage",
+        "evidence_id": "E12",
+        "valid": true
+      },
+      {
+        "run": "round-1-policy",
+        "case_id": "dpo-instructgpt-object-and-stage",
+        "evidence_id": "E13",
+        "valid": true
+      },
+      {
+        "run": "round-1-policy",
+        "case_id": "dpo-instructgpt-object-and-stage",
+        "evidence_id": "E14",
+        "valid": true
+      },
+      {
+        "run": "round-1-policy",
+        "case_id": "dpo-instructgpt-object-and-stage",
+        "evidence_id": "E15",
+        "valid": true
+      },
+      {
+        "run": "round-1-policy",
+        "case_id": "dpo-instructgpt-object-and-stage",
+        "evidence_id": "E16",
+        "valid": true
+      },
+      {
+        "run": "round-1-policy",
+        "case_id": "dpo-instructgpt-object-and-stage",
+        "evidence_id": "E17",
+        "valid": true
+      },
+      {
+        "run": "round-1-policy",
+        "case_id": "dpo-reject-global-analytic-and-sampling-free",
+        "evidence_id": "E1",
+        "valid": true
+      },
+      {
+        "run": "round-1-policy",
+        "case_id": "dpo-reject-global-analytic-and-sampling-free",
+        "evidence_id": "E2",
+        "valid": true
+      },
+      {
+        "run": "round-1-policy",
+        "case_id": "dpo-reject-global-analytic-and-sampling-free",
+        "evidence_id": "E3",
+        "valid": true
+      },
+      {
+        "run": "round-1-policy",
+        "case_id": "dpo-reject-global-analytic-and-sampling-free",
+        "evidence_id": "E4",
+        "valid": true
+      },
+      {
+        "run": "round-1-policy",
+        "case_id": "dpo-reject-global-analytic-and-sampling-free",
+        "evidence_id": "E5",
+        "valid": true
+      },
+      {
+        "run": "round-1-policy",
+        "case_id": "dpo-reject-global-analytic-and-sampling-free",
+        "evidence_id": "E6",
+        "valid": true
+      },
+      {
+        "run": "round-1-policy",
+        "case_id": "dpo-reject-global-analytic-and-sampling-free",
+        "evidence_id": "E7",
+        "valid": true
+      },
+      {
+        "run": "round-1-policy",
+        "case_id": "dpo-reject-global-analytic-and-sampling-free",
+        "evidence_id": "E8",
+        "valid": true
+      },
+      {
+        "run": "round-1-policy",
+        "case_id": "dpo-reject-global-analytic-and-sampling-free",
+        "evidence_id": "E9",
+        "valid": true
+      },
+      {
+        "run": "round-1-policy",
+        "case_id": "dpo-reject-global-analytic-and-sampling-free",
+        "evidence_id": "E10",
+        "valid": true
+      },
+      {
+        "run": "round-1-policy",
+        "case_id": "dpo-reject-global-analytic-and-sampling-free",
+        "evidence_id": "E11",
+        "valid": true
+      },
+      {
+        "run": "round-1-policy",
+        "case_id": "dpo-reject-global-analytic-and-sampling-free",
+        "evidence_id": "E12",
+        "valid": true
+      },
+      {
+        "run": "round-1-policy",
+        "case_id": "dpo-reject-global-analytic-and-sampling-free",
+        "evidence_id": "E13",
+        "valid": true
+      },
+      {
+        "run": "round-1-policy",
+        "case_id": "dpo-reject-global-analytic-and-sampling-free",
+        "evidence_id": "E14",
+        "valid": true
+      },
+      {
+        "run": "round-1-policy",
+        "case_id": "dpo-reject-global-analytic-and-sampling-free",
+        "evidence_id": "E15",
+        "valid": true
+      },
+      {
+        "run": "round-1-policy",
+        "case_id": "dpo-reject-global-analytic-and-sampling-free",
+        "evidence_id": "E16",
+        "valid": true
+      },
+      {
+        "run": "round-1-policy",
+        "case_id": "dpo-reject-global-analytic-and-sampling-free",
+        "evidence_id": "E17",
+        "valid": true
+      },
+      {
+        "run": "round-1-policy",
+        "case_id": "dpo-reject-global-analytic-and-sampling-free",
+        "evidence_id": "E18",
+        "valid": true
+      },
+      {
+        "run": "round-1-policy",
+        "case_id": "dpo-reject-global-analytic-and-sampling-free",
+        "evidence_id": "E19",
+        "valid": true
+      },
+      {
+        "run": "round-1-policy",
+        "case_id": "dpo-reject-global-analytic-and-sampling-free",
+        "evidence_id": "E20",
+        "valid": true
+      },
+      {
+        "run": "round-2-mechanism",
+        "case_id": "lora-qlora-mechanism",
+        "evidence_id": "E1",
+        "valid": true
+      },
+      {
+        "run": "round-2-mechanism",
+        "case_id": "lora-qlora-mechanism",
+        "evidence_id": "E2",
+        "valid": true
+      },
+      {
+        "run": "round-2-mechanism",
+        "case_id": "lora-qlora-mechanism",
+        "evidence_id": "E3",
+        "valid": true
+      },
+      {
+        "run": "round-2-mechanism",
+        "case_id": "lora-qlora-mechanism",
+        "evidence_id": "E5",
+        "valid": true
+      },
+      {
+        "run": "round-2-mechanism",
+        "case_id": "lora-qlora-mechanism",
+        "evidence_id": "E9",
+        "valid": true
+      },
+      {
+        "run": "round-2-mechanism",
+        "case_id": "lora-qlora-mechanism",
+        "evidence_id": "E15",
+        "valid": true
+      },
+      {
+        "run": "round-2-mechanism",
+        "case_id": "lora-qlora-mechanism",
+        "evidence_id": "E16",
+        "valid": true
+      },
+      {
+        "run": "round-2-mechanism",
+        "case_id": "lora-qlora-mechanism",
+        "evidence_id": "E19",
+        "valid": true
+      },
+      {
+        "run": "round-2-mechanism",
+        "case_id": "lora-qlora-mechanism",
+        "evidence_id": "E4",
+        "valid": true
+      },
+      {
+        "run": "round-2-mechanism",
+        "case_id": "lora-qlora-mechanism",
+        "evidence_id": "E6",
+        "valid": true
+      },
+      {
+        "run": "round-2-mechanism",
+        "case_id": "lora-qlora-mechanism",
+        "evidence_id": "E7",
+        "valid": true
+      },
+      {
+        "run": "round-2-mechanism",
+        "case_id": "lora-qlora-mechanism",
+        "evidence_id": "E8",
+        "valid": true
+      },
+      {
+        "run": "round-2-mechanism",
+        "case_id": "lora-qlora-mechanism",
+        "evidence_id": "E10",
+        "valid": true
+      },
+      {
+        "run": "round-2-mechanism",
+        "case_id": "lora-qlora-mechanism",
+        "evidence_id": "E11",
+        "valid": true
+      },
+      {
+        "run": "round-2-mechanism",
+        "case_id": "lora-qlora-mechanism",
+        "evidence_id": "E12",
+        "valid": true
+      },
+      {
+        "run": "round-2-mechanism",
+        "case_id": "lora-qlora-mechanism",
+        "evidence_id": "E13",
+        "valid": true
+      },
+      {
+        "run": "round-2-mechanism",
+        "case_id": "lora-qlora-mechanism",
+        "evidence_id": "E14",
+        "valid": true
+      },
+      {
+        "run": "round-2-mechanism",
+        "case_id": "lora-qlora-mechanism",
+        "evidence_id": "E17",
+        "valid": true
+      },
+      {
+        "run": "round-2-mechanism",
+        "case_id": "lora-qlora-mechanism",
+        "evidence_id": "E18",
+        "valid": true
+      },
+      {
+        "run": "round-2-mechanism",
+        "case_id": "lora-qlora-mechanism",
+        "evidence_id": "E20",
+        "valid": true
+      },
+      {
+        "run": "round-2-mechanism",
+        "case_id": "unreported-training-seed",
+        "evidence_id": "E1",
+        "valid": true
+      },
+      {
+        "run": "round-2-mechanism",
+        "case_id": "unreported-training-seed",
+        "evidence_id": "E2",
+        "valid": true
+      },
+      {
+        "run": "round-2-mechanism",
+        "case_id": "unreported-training-seed",
+        "evidence_id": "E3",
+        "valid": true
+      },
+      {
+        "run": "round-2-mechanism",
+        "case_id": "unreported-training-seed",
+        "evidence_id": "E4",
+        "valid": true
+      },
+      {
+        "run": "round-2-mechanism",
+        "case_id": "unreported-training-seed",
+        "evidence_id": "E5",
+        "valid": true
+      },
+      {
+        "run": "round-2-mechanism",
+        "case_id": "unreported-training-seed",
+        "evidence_id": "E6",
+        "valid": true
+      },
+      {
+        "run": "round-2-mechanism",
+        "case_id": "unreported-training-seed",
+        "evidence_id": "E7",
+        "valid": true
+      },
+      {
+        "run": "round-2-mechanism",
+        "case_id": "unreported-training-seed",
+        "evidence_id": "E8",
+        "valid": true
+      },
+      {
+        "run": "round-2-mechanism",
+        "case_id": "unreported-training-seed",
+        "evidence_id": "E9",
+        "valid": true
+      },
+      {
+        "run": "round-2-mechanism",
+        "case_id": "unreported-training-seed",
+        "evidence_id": "E10",
+        "valid": true
+      },
+      {
+        "run": "round-2-mechanism",
+        "case_id": "unreported-training-seed",
+        "evidence_id": "E11",
+        "valid": true
+      },
+      {
+        "run": "round-2-mechanism",
+        "case_id": "unreported-training-seed",
+        "evidence_id": "E12",
+        "valid": true
+      },
+      {
+        "run": "round-2-mechanism",
+        "case_id": "unreported-training-seed",
+        "evidence_id": "E13",
+        "valid": true
+      },
+      {
+        "run": "round-2-mechanism",
+        "case_id": "unreported-training-seed",
+        "evidence_id": "E14",
+        "valid": true
+      },
+      {
+        "run": "round-2-mechanism",
+        "case_id": "unreported-training-seed",
+        "evidence_id": "E15",
+        "valid": true
+      },
+      {
+        "run": "round-2-mechanism",
+        "case_id": "unreported-training-seed",
+        "evidence_id": "E16",
+        "valid": true
+      },
+      {
+        "run": "round-2-mechanism",
+        "case_id": "unreported-training-seed",
+        "evidence_id": "E17",
+        "valid": true
+      },
+      {
+        "run": "round-2-mechanism",
+        "case_id": "unreported-training-seed",
+        "evidence_id": "E18",
+        "valid": true
+      },
+      {
+        "run": "round-2-policy",
+        "case_id": "dpo-instructgpt-object-and-stage",
+        "evidence_id": "E2",
+        "valid": true
+      },
+      {
+        "run": "round-2-policy",
+        "case_id": "dpo-instructgpt-object-and-stage",
+        "evidence_id": "E3",
+        "valid": true
+      },
+      {
+        "run": "round-2-policy",
+        "case_id": "dpo-instructgpt-object-and-stage",
+        "evidence_id": "E11",
+        "valid": true
+      },
+      {
+        "run": "round-2-policy",
+        "case_id": "dpo-instructgpt-object-and-stage",
+        "evidence_id": "E18",
+        "valid": true
+      },
+      {
+        "run": "round-2-policy",
+        "case_id": "dpo-instructgpt-object-and-stage",
+        "evidence_id": "E19",
+        "valid": true
+      },
+      {
+        "run": "round-2-policy",
+        "case_id": "dpo-instructgpt-object-and-stage",
+        "evidence_id": "E20",
+        "valid": true
+      },
+      {
+        "run": "round-2-policy",
+        "case_id": "dpo-instructgpt-object-and-stage",
+        "evidence_id": "E1",
+        "valid": true
+      },
+      {
+        "run": "round-2-policy",
+        "case_id": "dpo-instructgpt-object-and-stage",
+        "evidence_id": "E4",
+        "valid": true
+      },
+      {
+        "run": "round-2-policy",
+        "case_id": "dpo-instructgpt-object-and-stage",
+        "evidence_id": "E5",
+        "valid": true
+      },
+      {
+        "run": "round-2-policy",
+        "case_id": "dpo-instructgpt-object-and-stage",
+        "evidence_id": "E6",
+        "valid": true
+      },
+      {
+        "run": "round-2-policy",
+        "case_id": "dpo-instructgpt-object-and-stage",
+        "evidence_id": "E7",
+        "valid": true
+      },
+      {
+        "run": "round-2-policy",
+        "case_id": "dpo-instructgpt-object-and-stage",
+        "evidence_id": "E8",
+        "valid": true
+      },
+      {
+        "run": "round-2-policy",
+        "case_id": "dpo-instructgpt-object-and-stage",
+        "evidence_id": "E9",
+        "valid": true
+      },
+      {
+        "run": "round-2-policy",
+        "case_id": "dpo-instructgpt-object-and-stage",
+        "evidence_id": "E10",
+        "valid": true
+      },
+      {
+        "run": "round-2-policy",
+        "case_id": "dpo-instructgpt-object-and-stage",
+        "evidence_id": "E12",
+        "valid": true
+      },
+      {
+        "run": "round-2-policy",
+        "case_id": "dpo-instructgpt-object-and-stage",
+        "evidence_id": "E13",
+        "valid": true
+      },
+      {
+        "run": "round-2-policy",
+        "case_id": "dpo-instructgpt-object-and-stage",
+        "evidence_id": "E14",
+        "valid": true
+      },
+      {
+        "run": "round-2-policy",
+        "case_id": "dpo-instructgpt-object-and-stage",
+        "evidence_id": "E15",
+        "valid": true
+      },
+      {
+        "run": "round-2-policy",
+        "case_id": "dpo-instructgpt-object-and-stage",
+        "evidence_id": "E16",
+        "valid": true
+      },
+      {
+        "run": "round-2-policy",
+        "case_id": "dpo-instructgpt-object-and-stage",
+        "evidence_id": "E17",
+        "valid": true
+      },
+      {
+        "run": "round-2-policy",
+        "case_id": "dpo-reject-global-analytic-and-sampling-free",
+        "evidence_id": "E1",
+        "valid": true
+      },
+      {
+        "run": "round-2-policy",
+        "case_id": "dpo-reject-global-analytic-and-sampling-free",
+        "evidence_id": "E2",
+        "valid": true
+      },
+      {
+        "run": "round-2-policy",
+        "case_id": "dpo-reject-global-analytic-and-sampling-free",
+        "evidence_id": "E3",
+        "valid": true
+      },
+      {
+        "run": "round-2-policy",
+        "case_id": "dpo-reject-global-analytic-and-sampling-free",
+        "evidence_id": "E4",
+        "valid": true
+      },
+      {
+        "run": "round-2-policy",
+        "case_id": "dpo-reject-global-analytic-and-sampling-free",
+        "evidence_id": "E5",
+        "valid": true
+      },
+      {
+        "run": "round-2-policy",
+        "case_id": "dpo-reject-global-analytic-and-sampling-free",
+        "evidence_id": "E6",
+        "valid": true
+      },
+      {
+        "run": "round-2-policy",
+        "case_id": "dpo-reject-global-analytic-and-sampling-free",
+        "evidence_id": "E7",
+        "valid": true
+      },
+      {
+        "run": "round-2-policy",
+        "case_id": "dpo-reject-global-analytic-and-sampling-free",
+        "evidence_id": "E8",
+        "valid": true
+      },
+      {
+        "run": "round-2-policy",
+        "case_id": "dpo-reject-global-analytic-and-sampling-free",
+        "evidence_id": "E9",
+        "valid": true
+      },
+      {
+        "run": "round-2-policy",
+        "case_id": "dpo-reject-global-analytic-and-sampling-free",
+        "evidence_id": "E10",
+        "valid": true
+      },
+      {
+        "run": "round-2-policy",
+        "case_id": "dpo-reject-global-analytic-and-sampling-free",
+        "evidence_id": "E11",
+        "valid": true
+      },
+      {
+        "run": "round-2-policy",
+        "case_id": "dpo-reject-global-analytic-and-sampling-free",
+        "evidence_id": "E12",
+        "valid": true
+      },
+      {
+        "run": "round-2-policy",
+        "case_id": "dpo-reject-global-analytic-and-sampling-free",
+        "evidence_id": "E13",
+        "valid": true
+      },
+      {
+        "run": "round-2-policy",
+        "case_id": "dpo-reject-global-analytic-and-sampling-free",
+        "evidence_id": "E14",
+        "valid": true
+      },
+      {
+        "run": "round-2-policy",
+        "case_id": "dpo-reject-global-analytic-and-sampling-free",
+        "evidence_id": "E15",
+        "valid": true
+      },
+      {
+        "run": "round-2-policy",
+        "case_id": "dpo-reject-global-analytic-and-sampling-free",
+        "evidence_id": "E16",
+        "valid": true
+      },
+      {
+        "run": "round-2-policy",
+        "case_id": "dpo-reject-global-analytic-and-sampling-free",
+        "evidence_id": "E17",
+        "valid": true
+      },
+      {
+        "run": "round-2-policy",
+        "case_id": "dpo-reject-global-analytic-and-sampling-free",
+        "evidence_id": "E18",
+        "valid": true
+      },
+      {
+        "run": "round-2-policy",
+        "case_id": "dpo-reject-global-analytic-and-sampling-free",
+        "evidence_id": "E19",
+        "valid": true
+      },
+      {
+        "run": "round-2-policy",
+        "case_id": "dpo-reject-global-analytic-and-sampling-free",
+        "evidence_id": "E20",
+        "valid": true
+      }
+    ],
+    "review_anchor_count": 40,
+    "review_anchors_all_valid": true,
+    "review_anchor_checks": [
+      {
+        "evidence_id": "R1",
+        "valid": true
+      },
+      {
+        "evidence_id": "R2",
+        "valid": true
+      },
+      {
+        "evidence_id": "R3",
+        "valid": true
+      },
+      {
+        "evidence_id": "R4",
+        "valid": true
+      },
+      {
+        "evidence_id": "R5",
+        "valid": true
+      },
+      {
+        "evidence_id": "R6",
+        "valid": true
+      },
+      {
+        "evidence_id": "R7",
+        "valid": true
+      },
+      {
+        "evidence_id": "R8",
+        "valid": true
+      },
+      {
+        "evidence_id": "R9",
+        "valid": true
+      },
+      {
+        "evidence_id": "R10",
+        "valid": true
+      },
+      {
+        "evidence_id": "R11",
+        "valid": true
+      },
+      {
+        "evidence_id": "R12",
+        "valid": true
+      },
+      {
+        "evidence_id": "R13",
+        "valid": true
+      },
+      {
+        "evidence_id": "R14",
+        "valid": true
+      },
+      {
+        "evidence_id": "R15",
+        "valid": true
+      },
+      {
+        "evidence_id": "R16",
+        "valid": true
+      },
+      {
+        "evidence_id": "R17",
+        "valid": true
+      },
+      {
+        "evidence_id": "R18",
+        "valid": true
+      },
+      {
+        "evidence_id": "R19",
+        "valid": true
+      },
+      {
+        "evidence_id": "R20",
+        "valid": true
+      },
+      {
+        "evidence_id": "R21",
+        "valid": true
+      },
+      {
+        "evidence_id": "R22",
+        "valid": true
+      },
+      {
+        "evidence_id": "R23",
+        "valid": true
+      },
+      {
+        "evidence_id": "R24",
+        "valid": true
+      },
+      {
+        "evidence_id": "R25",
+        "valid": true
+      },
+      {
+        "evidence_id": "R26",
+        "valid": true
+      },
+      {
+        "evidence_id": "R27",
+        "valid": true
+      },
+      {
+        "evidence_id": "R28",
+        "valid": true
+      },
+      {
+        "evidence_id": "R29",
+        "valid": true
+      },
+      {
+        "evidence_id": "R30",
+        "valid": true
+      },
+      {
+        "evidence_id": "R31",
+        "valid": true
+      },
+      {
+        "evidence_id": "R32",
+        "valid": true
+      },
+      {
+        "evidence_id": "R33",
+        "valid": true
+      },
+      {
+        "evidence_id": "R34",
+        "valid": true
+      },
+      {
+        "evidence_id": "R35",
+        "valid": true
+      },
+      {
+        "evidence_id": "R36",
+        "valid": true
+      },
+      {
+        "evidence_id": "G1",
+        "valid": true
+      },
+      {
+        "evidence_id": "G2",
+        "valid": true
+      },
+      {
+        "evidence_id": "G3",
+        "valid": true
+      },
+      {
+        "evidence_id": "G4",
+        "valid": true
+      }
+    ],
+    "old_immutable_count": 50,
+    "old_changed": [],
+    "backend_regression": {
+      "name": "pytest",
+      "errors": "0",
+      "failures": "0",
+      "skipped": "0",
+      "tests": "1266",
+      "time": "9.513",
+      "timestamp": "2026-10-16T14:16:41.695085+08:00",
+      "hostname": "LAPTOP-SDLMH7KC"
+    },
+    "frontend_regression": {
+      "tests": 42,
+      "failures": 0
+    },
+    "typecheck": "passed_observed_exit_0",
+    "acceptance_8018_stopped": true,
+    "official_basic_coverage_inherited": {
+      "files": 39,
+      "pages": 1986
+    },
+    "current_source_new_generation": false,
+    "production_library_modified": false,
+    "git_mutated": false,
+    "whole_project_released": false
+  },
+  "secret_scan_findings": [],
+  "manual_review": {
+    "date": "2026-10-16",
+    "scope": "One real 20-paper review and two four-question fixed-saved-evidence generation rounds on different candidates; no new 39-question round and no completed fresh BGE runtime suite.",
+    "cloud_calls": 9,
+    "automatic_model_retries": 0,
+    "fixed_evidence_provenance": "Reused exact question/excerpt/order/score/bbox dictionaries from prior release-mechanism and release-policy reports; checked all original PDF/AST SHAs and every source anchor locally. Saved answers are never sent. Fresh generation is real DeepSeek; old BGE provenance is not new retrieval evidence.",
+    "rounds": [
+      {
+        "directories": [
+          "round-1-mechanism",
+          "round-1-policy"
+        ],
+        "app_sha256": "e712bee8e7d9c72aaede1bcbba71ce404e99dc9991241710607adf0d043f71b8",
+        "original_machine_result": "2/4",
+        "notes": "Both positive questions returned valid structured fields but nonempty unused answer summaries caused whole-response fallback. Those failures remain. Seed refusal and DPO counterexample were machine-passed, but these are fixed-old-evidence generation, not fresh BGE runtime successes.",
+        "raw_positive_review": "LoRA raw five requested fields have core source support. DPO raw four fields include both original IDs but still attribute reward-model then PPO workflow to InstructGPT using an own-paper result passage that does not directly describe reward-model training. Keep whole DPO quality on hold."
+      },
+      {
+        "directories": [
+          "round-2-mechanism",
+          "round-2-policy"
+        ],
+        "app_sha256": "ff294112d9acfd06b5a620bc8347d72ea9c5052cb09f70ec326bbfab658d0a6d",
+        "original_machine_result": "1/4",
+        "cases": [
+          {
+            "case": "lora-qlora-mechanism",
+            "original_machine_status": "failed",
+            "published_claims": 5,
+            "core_status": "five_requested_core_claims_source_confirmed",
+            "notes": "Both-original relation states frozen base/trainable low-rank adapters with 4-bit frozen-base gradient flow. Other fields cover quantization storage/computation, normal-weight NF4 allocation, quantized constants, and CPU/GPU optimizer-state paging. No invented LoRA mandatory precision. Failure is omission detector missing the allocation wording 可让…分配到相同数量. Current zero-call replay keeps five and marks fields covered; not a new successful generation."
+          },
+          {
+            "case": "unreported-training-seed",
+            "original_machine_status": "source_checks_passed",
+            "core_status": "confirmed_scoped_refusal",
+            "notes": "Does not invent an integer or substitute 100K training steps; quoted settings agree with pinned v1 source. No proof claimed about all external sources."
+          },
+          {
+            "case": "dpo-instructgpt-object-and-stage",
+            "original_machine_status": "failed",
+            "published_claims": 4,
+            "core_status": "DPO_object_objective_and_sampling_scope_supported",
+            "whole_quality_status": "hold_direct_own_paper_citation_gap",
+            "notes": "Optimal-policy closed form, policy learning via classification/cross-entropy, and LM sampling during fine-tuning have direct DPO evidence. Two-original comparison now exists and is explicitly inferred, but the text attributes reward-model/PPO/KL pipeline details to InstructGPT while its cited E4 is physical page 11 result discussion, not direct methods proof. DPO's generic description of existing RLHF does not replace that original's method evidence. Literal checker also missed 二分类/交叉熵; fixing it does not close this scientific gap."
+          },
+          {
+            "case": "dpo-reject-global-analytic-and-sampling-free",
+            "original_machine_status": "failed",
+            "raw_claims": 4,
+            "published_claims": 3,
+            "core_status": "four_raw_core_claims_source_confirmed_original_publication_incomplete",
+            "notes": "Correct optimal-policy/learning-object distinction with 而不是 closed-form neural weights was held as a positive analytic-fit claim. Other clauses preserve LM/fine-tuning scope, dataset completion sampling and experiment-specific generation temperatures. Proposition splitting now retains the negative continuation, but tests ensure an affirmative wrong fit followed by a negative contrast remains rejected. Current raw replay is not another generation."
+          }
+        ]
+      }
+    ],
+    "review": {
+      "app_sha256": "e4e7435e963229aeb726782f5730bdece4d9020160abbac30715ec5bde6e885e",
+      "original_machine_status": "source_checks_passed",
+      "raw_items": 7,
+      "original_published_claims": 4,
+      "whole_quality_status": "hold",
+      "claims": [
+        {
+          "index": 0,
+          "status": "bounded_core_confirmed",
+          "evidence": [
+            "R12",
+            "R17"
+          ],
+          "notes": "Frozen base and trainable low-rank adaptation versus frozen 4-bit base/gradient flow and memory reduction agree with the two abstracts. Does not impose an unsupported attention-only or mandatory precision restriction."
+        },
+        {
+          "index": 1,
+          "status": "hold_sampling_phase_and_object_omitted",
+          "evidence": [
+            "R15",
+            "R18"
+          ],
+          "notes": "InstructGPT human-preference statement retains human evaluation and own prompt distribution. DPO clause says 避开RLHF采样, losing LM generation and fine-tuning scope. The source-triggered sampling guard lacked this positive action synonym; now held locally. Do not silently rewrite the model clause."
+        },
+        {
+          "index": 2,
+          "status": "bounded_core_confirmed",
+          "evidence": [
+            "R14"
+          ],
+          "notes": "CoT intermediate examples, arithmetic/commonsense/symbolic tasks and PaLM 540B/eight exemplars/GSM8K match the original abstract; 当时最佳 is bounded to publication, not a current-2026 ranking."
+        },
+        {
+          "index": 3,
+          "status": "bounded_core_confirmed",
+          "evidence": [
+            "R4"
+          ],
+          "notes": "ZeRO redundancy removal, evaluated over-100B/400-GPU/superlinear/15-Petaflop statement matches abstract. Does not assert the separately planned stage-3 trillion-capacity feature was implemented."
+        }
+      ],
+      "other_raw_items": "Two single-original claims misplaced in cross-paper bucket were held; a FlashAttention negative-FLOP statement without actually cited comparison evidence was also held. Do not relabel or move them to create a pass.",
+      "zero_call_replay": "Three bounded claims retained after new sampling guard; only one true two-original comparison remains. Not a newly generated accepted review or proof of 20-paper published coverage."
+    },
+    "adjacent_context": {
+      "count_budget": 40,
+      "max_quote_chars": 2400,
+      "max_total_added_chars": 8000,
+      "actual_added_chars": 5273,
+      "GPT3_page5_R27": {
+        "block_ids": [
+          "p5-b2",
+          "p5-b3"
+        ],
+        "quote_chars": 1559,
+        "status": "literal_full_page_verified_before_generation",
+        "notes": "Now includes the complete immediately following no-gradient-update paragraph. In AST it is figure_caption-typed but starts Figure 1.2 illustrates, a body narrative rather than a Figure 1.2: caption label; full-page image confirms its role. No page/heading jump or after-the-fact citation attachment."
+      },
+      "important_limit": "New review did not make a GPT-3/no-gradient claim, so this is evidence-input repair, not a new generated answer confirming that exact claim. Future Work pool/counts remain separately maintained and budget-independent."
+    },
+    "retrieval_gap_followup": {
+      "diagnostic": "pipeline-recall.json",
+      "kind": "BM25_only_no_generation_no_fresh_BGE",
+      "notes": "Question-derived procedure/pipeline/steps glossary found InstructGPT's own high-level methodology/Step-3 body among candidates. No reward-model answer, expected page or paper identity is encoded in production. Final reranked/fused selection and new generated attribution still need confirmation."
+    },
+    "whole_project_released": false,
+    "git_mutated": false
+  },
+  "artifacts": [
+    {
+      "path": "backend/tmp/official-explanation-fields-2026-10-16/audit_fields.py",
+      "sha256": "812422ffc224091f201091ed4d4154e56a43d2eb27d9ccf3e19098cf76ca2b5c"
+    },
+    {
+      "path": "backend/tmp/official-explanation-fields-2026-10-16/backend-candidate.xml",
+      "sha256": "ce85bb186b1bb993c1cf00ca610ec2072a0f46f6e04abe55bac071ee3db8ddf4"
+    },
+    {
+      "path": "backend/tmp/official-explanation-fields-2026-10-16/backend-final.xml",
+      "sha256": "2760cbe5802adf2b2bf7290f90dda9c2eeaba379ba744f3340fb8e78e9dcad48"
+    },
+    {
+      "path": "backend/tmp/official-explanation-fields-2026-10-16/backend-initial.xml",
+      "sha256": "f1b1ec670c82937e522820565d8457c474709fcd7bd7ee80b951cd7e231acba9"
+    },
+    {
+      "path": "backend/tmp/official-explanation-fields-2026-10-16/backend-post-generation.xml",
+      "sha256": "099246cada5b3880e28e47ba543877246f15aa4ccc0436c94cf7814e1611c420"
+    },
+    {
+      "path": "backend/tmp/official-explanation-fields-2026-10-16/final-audit.json",
+      "sha256": "8c424c2d74b5aa430913a82578439fb161957db2a975254bf24ed2dec8929a95"
+    },
+    {
+      "path": "backend/tmp/official-explanation-fields-2026-10-16/frontend-tests.xml",
+      "sha256": "99b65d586358901102eb96a03bfe02f804e0a73f01105b46f02e1085d6a46d02"
+    },
+    {
+      "path": "backend/tmp/official-explanation-fields-2026-10-16/gpt3-5.png",
+      "sha256": "bf17a0d3e400a0356c2013bfabbd48448d4d772d8ae206a6dda1451212a51797"
+    },
+    {
+      "path": "backend/tmp/official-explanation-fields-2026-10-16/manual-source-review.json",
+      "sha256": "91b2b1ff29721a970054d339a9beb2e3784e9282d7ca9dd358dae47cfe832a22"
+    },
+    {
+      "path": "backend/tmp/official-explanation-fields-2026-10-16/pipeline-recall.json",
+      "sha256": "1422c30c2368906d74f0ec527e355544979b9490c8d0badaa637cc85f30a44cd"
+    },
+    {
+      "path": "backend/tmp/official-explanation-fields-2026-10-16/post-repair-replay.json",
+      "sha256": "57d822924eb8f44184a2eccd5a03e8cf025640e07cfbdd901d6977e325376fa7"
+    },
+    {
+      "path": "backend/tmp/official-explanation-fields-2026-10-16/review/calls.json",
+      "sha256": "2261ece0528b18bc69e8b904d3bca42e4a7b86a94d04d1206bb9716fec64355d"
+    },
+    {
+      "path": "backend/tmp/official-explanation-fields-2026-10-16/review/generated-review.json",
+      "sha256": "1f932e8069a7973196a739476a19e7d0fa69f2248c1ec46d19d553e89c1e6714"
+    },
+    {
+      "path": "backend/tmp/official-explanation-fields-2026-10-16/review/report.json",
+      "sha256": "dff87a4d6fd5178275c19b4dda0cb6eac7456a640466b14755621a1056a9b850"
+    },
+    {
+      "path": "backend/tmp/official-explanation-fields-2026-10-16/round-1-mechanism/calls.json",
+      "sha256": "61ba6ff41889a4a8ea9960c4d2dbaac134b83e309c94de2761dd5e750ac8646c"
+    },
+    {
+      "path": "backend/tmp/official-explanation-fields-2026-10-16/round-1-mechanism/report.json",
+      "sha256": "3aa4de986839e869a99df9131699a36095ad0e8ca4d9610861d3f7257c9cec83"
+    },
+    {
+      "path": "backend/tmp/official-explanation-fields-2026-10-16/round-1-policy/calls.json",
+      "sha256": "ea5b9e827541f0af174c23d564ca968a7eff68efbc342666a349d58ad5619bf8"
+    },
+    {
+      "path": "backend/tmp/official-explanation-fields-2026-10-16/round-1-policy/report.json",
+      "sha256": "559715713587c0a77a2130803d404d73863978e5c0d4a82d7e6ac4b8d24cb564"
+    },
+    {
+      "path": "backend/tmp/official-explanation-fields-2026-10-16/round-2-mechanism/calls.json",
+      "sha256": "b214fa810566f22ccb33d5ac1b7218ab69a324886d3ceba58a40ed7f4d07d693"
+    },
+    {
+      "path": "backend/tmp/official-explanation-fields-2026-10-16/round-2-mechanism/report.json",
+      "sha256": "9c67ac81070649ec8f933e889580a45f3be0080ecfa64952a197feebba2af746"
+    },
+    {
+      "path": "backend/tmp/official-explanation-fields-2026-10-16/round-2-policy/calls.json",
+      "sha256": "88e72850f540d5f8585f524b29ee974ae36946afb9dd5e9005824a390dbdaf8f"
+    },
+    {
+      "path": "backend/tmp/official-explanation-fields-2026-10-16/round-2-policy/report.json",
+      "sha256": "1eaf364ad1274881e6644371d82f8343a647baddcaf49295c10405cdef03eaa0"
+    },
+    {
+      "path": "backend/tmp/official-explanation-fields-2026-10-16/runtime-fixture/fixture.json",
+      "sha256": "d7730edb860bcb4b6ba77311de22d749684d6fc726ea5d38b5762afc308c117f"
+    },
+    {
+      "path": "backend/tmp/official-explanation-fields-2026-10-16/runtime-fixture/parsed/114bfa0d-d6cf-573d-82b2-cfaed94b58b6.json",
+      "sha256": "6710c78824d61e72e1b0c15aaddf534ce0872570051a9b95d6f2f39c786645d7"
+    },
+    {
+      "path": "backend/tmp/official-explanation-fields-2026-10-16/runtime-fixture/parsed/20d9fad6-9e6f-543d-a2e1-095d8056c5ff.json",
+      "sha256": "4a05a089a864b8fc603470e4f28fc480526b8184b8c5a89039db83b07bdded3d"
+    },
+    {
+      "path": "backend/tmp/official-explanation-fields-2026-10-16/runtime-fixture/parsed/855562a1-8309-57b2-b7b0-b9e7016207dc.json",
+      "sha256": "0bdf9ab2be963a5e42b3560e72b14fd247e2723c299ffc3e340682b02394db97"
+    },
+    {
+      "path": "backend/tmp/official-explanation-fields-2026-10-16/runtime-fixture/parsed/bc90bcf2-cccd-5364-94f6-5815603802f7.json",
+      "sha256": "2f5bdb78b265127069fbaf7c9841afe6e181a0d93c3209856c420d678c7825d0"
+    },
+    {
+      "path": "backend/tmp/official-explanation-fields-2026-10-16/runtime-fixture/parsed/cd05de96-3b20-5178-8953-d8ee090a4f23.json",
+      "sha256": "0ab6909920de99d93d12d57d963fe93c684446cbcfdba40bf2df1ed080d7b414"
+    },
+    {
+      "path": "backend/tmp/official-explanation-fields-2026-10-16/runtime-fixture/preparation.json",
+      "sha256": "856dd9d79313822509ba1f12ecea214328ad0ae9d681e2d3c261fabde68c2e02"
+    },
+    {
+      "path": "backend/tmp/official-explanation-fields-2026-10-16/runtime-fixture-confirm/fixture.json",
+      "sha256": "d7730edb860bcb4b6ba77311de22d749684d6fc726ea5d38b5762afc308c117f"
+    },
+    {
+      "path": "backend/tmp/official-explanation-fields-2026-10-16/runtime-fixture-confirm/parsed/114bfa0d-d6cf-573d-82b2-cfaed94b58b6.json",
+      "sha256": "6710c78824d61e72e1b0c15aaddf534ce0872570051a9b95d6f2f39c786645d7"
+    },
+    {
+      "path": "backend/tmp/official-explanation-fields-2026-10-16/runtime-fixture-confirm/parsed/20d9fad6-9e6f-543d-a2e1-095d8056c5ff.json",
+      "sha256": "4a05a089a864b8fc603470e4f28fc480526b8184b8c5a89039db83b07bdded3d"
+    },
+    {
+      "path": "backend/tmp/official-explanation-fields-2026-10-16/runtime-fixture-confirm/parsed/855562a1-8309-57b2-b7b0-b9e7016207dc.json",
+      "sha256": "0bdf9ab2be963a5e42b3560e72b14fd247e2723c299ffc3e340682b02394db97"
+    },
+    {
+      "path": "backend/tmp/official-explanation-fields-2026-10-16/runtime-fixture-confirm/parsed/bc90bcf2-cccd-5364-94f6-5815603802f7.json",
+      "sha256": "2f5bdb78b265127069fbaf7c9841afe6e181a0d93c3209856c420d678c7825d0"
+    },
+    {
+      "path": "backend/tmp/official-explanation-fields-2026-10-16/runtime-fixture-confirm/parsed/cd05de96-3b20-5178-8953-d8ee090a4f23.json",
+      "sha256": "0ab6909920de99d93d12d57d963fe93c684446cbcfdba40bf2df1ed080d7b414"
+    },
+    {
+      "path": "backend/tmp/official-explanation-fields-2026-10-16/runtime-fixture-confirm/preparation.json",
+      "sha256": "856dd9d79313822509ba1f12ecea214328ad0ae9d681e2d3c261fabde68c2e02"
+    },
+    {
+      "path": "backend/tmp/official-explanation-fields-2026-10-16/startup-failures.json",
+      "sha256": "0e3a81e5f0e79ae019c75d02f27d781a7b22779698eef09f0e2af0fb279623ad"
+    },
+    {
+      "path": "backend/app/llm/__init__.py",
+      "sha256": "6cadb3ccfdbdbf1370a9bd9ad4c9415a1a28ca74f6ec5e3bae778454a45629e7"
+    },
+    {
+      "path": "backend/app/llm/explanation_fields.py",
+      "sha256": "e8aee591253b2bdc4fed8541ba9528e9fab2c0de83145177184efc5cff147f96"
+    },
+    {
+      "path": "backend/app/llm/openai_responses.py",
+      "sha256": "703f60d527fd9abc0fca7c81553f886ea8d5033f1819303d3e9400697d2c3ec2"
+    },
+    {
+      "path": "backend/app/agent/harness.py",
+      "sha256": "2ee60044bafadd82cbde64a274535fb0d04213cb5a80d2389c910b2651a1eca5"
+    },
+    {
+      "path": "backend/app/services/review_context.py",
+      "sha256": "c3eaabe23b43603f63672c35e463fec62ea3a6bd524f8d9e17ed6a0a0a3184f4"
+    },
+    {
+      "path": "backend/app/services/evidence_review.py",
+      "sha256": "b785b2a235ff4746597de31a68eef9c5db6ccd69455c9b45b203ac08db30f5cb"
+    },
+    {
+      "path": "backend/app/services/claim_semantics.py",
+      "sha256": "262a03a47e25196344d4d44c33e82caf2b2cea2ac67812c16cac3278274052c5"
+    },
+    {
+      "path": "backend/app/services/mechanism_evidence.py",
+      "sha256": "35126c14d130af3f1f53c1f564cfa4b4650ec749b95b6998de575545f33d8cc1"
+    },
+    {
+      "path": "backend/app/services/retrieval_policy.py",
+      "sha256": "99d37d10f8604ea37504197f09fe63a8b9d5cacac62016555a7555106efa54c3"
+    },
+    {
+      "path": "backend/scripts/verify_official_candidate_qa.py",
+      "sha256": "6edff45af30db03ed18a4e2f1b916ee223ab4e7eb33f8c77bff8715c2716afac"
+    },
+    {
+      "path": "backend/tests/test_explanation_fields.py",
+      "sha256": "0b00d5616f485a1497929660e39f0bf919779d38f497db07c788165aa8b845b5"
+    },
+    {
+      "path": "backend/tests/test_review_context.py",
+      "sha256": "30ac668c7e87660d2bf1548819359fc8ff0ed31adee6305235bbcf408dbc896c"
+    },
+    {
+      "path": "backend/tests/test_policy_optimization_scope.py",
+      "sha256": "7d2bbcdf9bec1b39875561511976c857b335809b211a0b190a9a0a22c88d7ee6"
+    },
+    {
+      "path": "backend/tests/test_llm_import_safety.py",
+      "sha256": "f4d700982f13bbf6301f87c99c900ef51efa1de0cbcf7b76f438e0c8c7bd4511"
+    },
+    {
+      "path": "backend/tests/test_official_candidate_runtime_safety.py",
+      "sha256": "9e638293bd77d5d2314bfc7e4d411422dc6a0a99d2ec31289d708d1776f1ceb5"
+    },
+    {
+      "path": "backend/tests/test_mechanism_parts.py",
+      "sha256": "470283fad6ac8000cec56c63447f957396e27a95536d6fc680f5395fd12e4abb"
+    },
+    {
+      "path": "backend/tests/test_explicit_source_focus.py",
+      "sha256": "87648618e378c4302a90da53c0ea84c05f0c37e8e5ab4ff924eca25757a56f25"
+    },
+    {
+      "path": "docs/acceptance-progress.md",
+      "sha256": "26400d080a9ee1530a89bab4006733031f45d9e70406b3e1e84619cdd252709b"
+    },
+    {
+      "path": "docs/competition-verification-gates.md",
+      "sha256": "3283e082d0485024d00fa266c282f18e77049d1508dc241d784003c97f9e2a64"
+    },
+    {
+      "path": "docs/competition-delivery-checklist.md",
+      "sha256": "cfe7cc9cde3b4b669831fd127168fbed12b0b9bfb89a8d68ba0bb36547bc3620"
+    },
+    {
+      "path": "docs/official-explanation-fields-acceptance-2026-10-16.md",
+      "sha256": "4dbe98f869a8cd6b4ef14791ea02dc57012a14ff37fd072299641ec3d0a911ce"
+    }
+  ]
+}

@@ -142,3 +142,41 @@ def test_missing_parsed_document_remains_as_warned_node(tmp_path, monkeypatch) -
     assert len(graph.nodes) == 1
     assert graph.nodes[0].role == "isolated"
     assert "缺少结构化解析结果" in graph.warnings[0]
+
+
+def test_merged_bibliography_exact_targets_do_not_depend_on_selection_order(tmp_path, monkeypatch):
+    from app.services import storage as storage_module
+
+    parsed_dir = tmp_path / "parsed"
+    parsed_dir.mkdir()
+    monkeypatch.setattr(storage_module.settings, "parsed_dir", parsed_dir)
+    source = _document("source", "Review of Learning Methods")
+    first = _document("first", "Language Models are Few-Shot Learners", arxiv_id="2005.14165")
+    second = _document("second", "Evaluating Large Language Models Trained on Code", arxiv_id="2107.03374")
+    _write_parsed(storage_module, source.id, [_reference(1,
+        "Brown. Language models are few-shot learners. arXiv:2005.14165. "
+        "Chen. Evaluating large language models trained on code. arXiv:2107.03374.")])
+    _write_parsed(storage_module, first.id, [])
+    _write_parsed(storage_module, second.id, [])
+    a = CitationGraphService().build([source, first, second])
+    b = CitationGraphService().build([second, source, first])
+    assert {(e.source_document_id, e.target_document_id) for e in a.edges} == {
+        ("source", "first"), ("source", "second")}
+    assert sorted((e.model_dump() for e in a.edges), key=lambda e: e["edge_id"]) == sorted(
+        (e.model_dump() for e in b.edges), key=lambda e: e["edge_id"])
+    assert a.stats.matched_references == 1 and a.stats.total_references == 1
+    assert a.stats.relation_count == 2
+    assert all(e.mention_count == 0 for e in a.edges)
+    assert any("不分配" in warning for warning in a.warnings)
+
+
+def test_ambiguous_fuzzy_reference_does_not_pick_first_document():
+    from app.services.citation_graph import _PaperIdentity, match_local_references
+
+    papers = []
+    for identity in ("a", "b"):
+        doc = _document(identity, "Efficient Training of Large Neural Models")
+        papers.append(_PaperIdentity(doc, doc.title, normalize_title(doc.title), title_terms(doc.title), None))
+    text = "Efficient training methods for large neural language models."
+    assert match_local_references(text, "source", papers, threshold=0.5) == []
+    assert match_local_references(text, "source", list(reversed(papers)), threshold=0.5) == []

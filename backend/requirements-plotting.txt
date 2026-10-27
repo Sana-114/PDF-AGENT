@@ -1,0 +1,3 @@
+# Optional: execute exported plotting scripts, not required for API/SVG generation.
+# Version used in the local artifact-rendering acceptance.
+matplotlib==3.10.9

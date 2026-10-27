@@ -37,7 +37,7 @@ TABLE_PAGE_HINT = re.compile(r"(?:^|\s)(?:table|表)\s*\d+", re.IGNORECASE)
 CAPTION_PROSE = re.compile(
     r"^(?:fig(?:ure)?\.?|table)\s*\d+\s+"
     r"(?:shows?|summari[sz]es?|lists?|reports?|presents?|compares?|illustrates?|"
-    r"gives?|contains?|depicts?|demonstrates?|is|are)\b|"
+    r"gives?|contains?|depicts?|demonstrates?|decomposes?|describes?|discusses?|is|are)\b|"
     r"^(?:图|表)\s*\d+\s*(?:显示|总结|列出|给出|说明|比较|是|为)",
     re.IGNORECASE,
 )
@@ -121,6 +121,7 @@ class RawTextBlock:
     char_weight: int
     # Preserve front-matter line geometry, not the entire book's span payload.
     lines: list[dict[str, Any]] = field(default_factory=list)
+    is_footnote: bool = False
 
 
 @dataclass(slots=True)
@@ -129,6 +130,7 @@ class TableSnapshot:
     rows: list[list[str]]
     cells: list[list[float] | None]
     column_count: int
+    caption_bbox: list[float] | None = None
 
 
 def extract_text_blocks(page_dict: dict[str, Any], page_number: int) -> list[RawTextBlock]:
@@ -270,10 +272,67 @@ def body_font_size(blocks: list[RawTextBlock]) -> float:
     return weighted[-1][0]
 
 
+def mark_rule_separated_footnotes(
+    blocks: list[RawTextBlock], page_width: float, page_height: float,
+    separators: list[list[float]], excluded_boxes: list[list[float]],
+) -> None:
+    """Mark only small bottom-page prose immediately below a native short rule.
+
+    Keep the original text and geometry. No rule means no guess; table/figure
+    regions and normal-font paragraphs are excluded. Raster OCR is separate.
+    """
+    body_size = body_font_size(blocks)
+    for block in blocks:
+        note_signal = (
+            block.text.rstrip().endswith((".", "。"))
+            or re.match(r"^(?:[*†‡]|\d{1,2}(?:[.)]|\s+[A-Z]|[A-Z]))", block.text)
+            or re.search(r"https?://|@", block.text)
+        )
+        if (block.bbox[1] < page_height * 0.6 or block.font_size > body_size * 0.94
+                or not note_signal
+                or len(block.text) < 30 or block.bbox[2] - block.bbox[0] > page_width * 0.6
+                or is_figure_caption(block.text) or is_table_caption(block.text)):
+            continue
+        if any(min(block.bbox[2], box[2]) > max(block.bbox[0], box[0])
+               and min(block.bbox[3], box[3]) > max(block.bbox[1], box[1])
+               for box in excluded_boxes):
+            continue
+        if any(18 <= line[2] - line[0] <= page_width * 0.42
+               and abs(line[3] - line[1]) <= 1
+               and 0 <= block.bbox[1] - line[3] <= 36
+               and abs(block.bbox[0] - line[0]) <= 8 for line in separators):
+            block.is_footnote = True
+
+
 def order_page_blocks(
     blocks: list[RawTextBlock], page_width: float
 ) -> list[tuple[RawTextBlock, int]]:
-    """Order full-width bands, then each column inside the band below it."""
+    """Use column order only when real parallel text establishes two columns.
+
+    A centered single-column paragraph can be narrower than the wide-band
+    threshold. Its short left-aligned headings are not a separate left column.
+    """
+
+    notes = [block for block in blocks if block.is_footnote]
+    if notes:
+        body = [block for block in blocks if not block.is_footnote]
+        return [*order_page_blocks(body, page_width),
+                *((block, _column_number(block, page_width))
+                  for block in sorted(notes, key=lambda b: (b.bbox[1], b.bbox[0])))]
+    candidates = [block for block in blocks if block.line_count >= 2
+                  and block.char_weight >= 40
+                  and page_width * 0.18 <= block.bbox[2] - block.bbox[0] <= page_width * 0.55]
+    left = [block for block in candidates if block.bbox[2] <= page_width * 0.54]
+    right = [block for block in candidates if block.bbox[0] >= page_width * 0.46]
+    two_columns = any(
+        right_block.bbox[0] - left_block.bbox[2] >= page_width * 0.02
+        and min(left_block.bbox[3], right_block.bbox[3])
+        - max(left_block.bbox[1], right_block.bbox[1])
+        >= min(left_block.font_size, right_block.font_size)
+        for left_block in left for right_block in right)
+    if not two_columns:
+        return [(block, 0) for block in sorted(blocks, key=lambda item: (
+            item.bbox[1], item.bbox[0]))]
 
     wide: list[RawTextBlock] = []
     narrow: list[RawTextBlock] = []
@@ -302,6 +361,8 @@ def classify_block(
     title: str | None,
 ) -> tuple[str, int | None]:
     text = raw.text.strip()
+    if raw.is_footnote:
+        return "footnote", None
     width = max(0.0, raw.bbox[2] - raw.bbox[0])
     height = max(0.0, raw.bbox[3] - raw.bbox[1])
     is_vertical_margin = height > 72 and height > width * 1.5
@@ -470,6 +531,8 @@ def extract_references(pages: list[Any]) -> list[ReferenceNode]:
             else page.blocks
         )
         for block in ordered:
+            if block.type == "footnote":
+                continue
             if (
                 block.bbox[1] < page.height * 0.08
                 and running_headers[block.text] > 1
@@ -496,7 +559,12 @@ def extract_references(pages: list[Any]) -> list[ReferenceNode]:
                 numbered = True
             author_year = bool(
                 not numbered
-                and re.match(r"^[A-ZÀ-ÖØ-Þ][\w.'’–-]*(?:\s+|,\s*)[A-ZÀ-ÖØ-Þ]", block.text)
+                and (
+                    re.match(r"^[A-ZÀ-ÖØ-Þ][\w.'’´`\u0300-\u036f–-]*(?:\s+|,\s*)[A-ZÀ-ÖØ-Þ]",
+                             block.text)
+                    or (re.match(r"^[A-ZÀ-ÖØ-Þ]", block.text)
+                        and re.search(r"https?\s*:\s*//", block.text))
+                )
                 and re.search(r"\b(?:19|20)\d{2}[a-z]?\b", block.text)
                 and len(block.text) > 40
             )
@@ -692,12 +760,17 @@ def make_figure_nodes(
         if not area or (page_area and area / page_area >= 0.75):
             continue
         caption = nearest_caption(blocks, bbox, "figure_caption")
+        table_caption = nearest_caption(blocks, bbox, "table_caption", max_distance=25)
+        separate_chart = bool(
+            info.get("clipped_chart_like") and caption and table_caption
+            and table_caption.bbox[3] <= bbox[1] and bbox[3] <= caption.bbox[1]
+        )
         # Vector rules and table grids are not standalone figures. Only accept
         # caption-supported vector regions, never a caption in the other column.
         if info.get("vector") and (
             caption is None
             or bbox[1] >= caption.bbox[3]
-            or nearest_caption(blocks, bbox, "table_caption", max_distance=25) is not None
+            or (table_caption is not None and not separate_chart)
         ):
             continue
         if caption and caption.block_id in grouped:

@@ -1,0 +1,2070 @@
+{
+  "schema_version": 1,
+  "date": "2026-10-20",
+  "status": "partial_project_acceptance",
+  "whole_project_released": false,
+  "current_backend_source": {
+    "python_version": "3.12.14",
+    "app_files": 139,
+    "app_sha256": "667b38f6c766e71f2edd459ca641fdc4136a78526d1980205ff4ae1900bfc4ea",
+    "requirements_sha256": "b0e75e31a3ca8f034e095fd0667e3be7e380975548c5acce90db94f96ed7283f"
+  },
+  "git": {
+    "branch": "codex/stage94-official-failed-qa-retest",
+    "head": "a119f5609cda544e5d587588c5a338051da129a1",
+    "refs_mutated": false,
+    "commit_created": false,
+    "pushed": false
+  },
+  "official_inputs_unchanged": 39,
+  "prior_raw_artifacts_unchanged": 1450,
+  "prior_manifest_counts": {
+    "official-response-integrity-acceptance-2026-10-19": 387,
+    "official-scope-repair-acceptance-2026-10-19": 331,
+    "official-completion-acceptance-2026-10-19": 519,
+    "official-batch-acceptance-2026-10-18": 150,
+    "official-grouped-reader-acceptance-2026-10-18": 63
+  },
+  "regression": {
+    "backend": {
+      "executed": 1586,
+      "passed": 1586
+    },
+    "frontend": {
+      "executed": 46,
+      "passed": 46
+    },
+    "static_checks": {
+      "ruff": {
+        "exit_code": 0,
+        "passed": true
+      },
+      "typescript": {
+        "exit_code": 0,
+        "passed": true
+      },
+      "diff_check": {
+        "exit_code": 0,
+        "passed": true
+      }
+    }
+  },
+  "cloud_calls": {
+    "actual_requests": 58,
+    "primary_generations": 40,
+    "comparison_editors": 18,
+    "automatic_retries": 0,
+    "per_run": {
+      "comparison": 6,
+      "comparison-fixed": 6,
+      "comparison-review-final": 6,
+      "comparison-stability": 6,
+      "comparison-release-a": 5,
+      "comparison-release-b": 6,
+      "comparison-boundaries-a": 5,
+      "comparison-boundaries-b": 6,
+      "comparison-lexical-release": 6,
+      "comparison-formula-release": 6
+    }
+  },
+  "four_question_rounds": [
+    {
+      "run": "comparison",
+      "runtime_source": {
+        "python_version": "3.12.14",
+        "app_files": 139,
+        "app_sha256": "4aa110faa28d4ded918d01ff52592a5a1c147da1a82002ffb35c133e4e105083",
+        "requirements_sha256": "b0e75e31a3ca8f034e095fd0667e3be7e380975548c5acce90db94f96ed7283f"
+      },
+      "cases": [
+        {
+          "case_id": "dpo-instructgpt-object-and-stage",
+          "status": "failed",
+          "checks": {
+            "real_deepseek_not_fallback": true,
+            "not_insufficient": false,
+            "published_sources_scoped_and_hybrid_reranked": true,
+            "policy_object_and_learning_objective_present": true,
+            "sampling_object_and_stage_in_same_published_claim": false,
+            "one_comparison_cites_both_originals": true,
+            "all_raw_source_anchors_valid": true
+          },
+          "cloud_calls": 2,
+          "provider": "deepseek",
+          "model": "deepseek-flash"
+        },
+        {
+          "case_id": "dpo-reject-global-analytic-and-sampling-free",
+          "status": "machine_passed_pending_source_review",
+          "checks": {
+            "real_deepseek_not_fallback": true,
+            "not_insufficient": true,
+            "published_sources_scoped_and_hybrid_reranked": true,
+            "policy_object_and_learning_objective_present": true,
+            "sampling_object_and_stage_in_same_published_claim": true,
+            "explicitly_rejects_overgeneralization": true,
+            "all_raw_source_anchors_valid": true
+          },
+          "cloud_calls": 1,
+          "provider": "deepseek",
+          "model": "deepseek-flash"
+        },
+        {
+          "case_id": "lora-qlora-mechanism",
+          "status": "machine_passed_pending_source_review",
+          "checks": {
+            "real_deepseek_not_fallback": true,
+            "not_insufficient": true,
+            "one_claim_has_both_originals": true,
+            "all_published_sources_in_scope": true,
+            "all_used_anchors_hybrid_reranked": true,
+            "quantization_and_memory_methods": true,
+            "all_raw_source_anchors_valid": true
+          },
+          "cloud_calls": 2,
+          "provider": "deepseek",
+          "model": "deepseek-flash"
+        },
+        {
+          "case_id": "unreported-training-seed",
+          "status": "machine_passed_pending_source_review",
+          "checks": {
+            "configured_deepseek": true,
+            "no_out_of_scope_published_source": true,
+            "refuses_without_published_seed_claim": true,
+            "no_positive_seed_number": true,
+            "all_raw_source_anchors_valid": true
+          },
+          "cloud_calls": 1,
+          "provider": "deepseek",
+          "model": "deepseek-flash"
+        }
+      ],
+      "machine_passed": 3,
+      "indexed_chunks": 1237,
+      "operation_counts": {
+        "collection_exists": 1,
+        "create_collection": 1,
+        "create_payload_index": 1,
+        "delete": 5,
+        "upsert": 311,
+        "count": 6,
+        "query_points": 6
+      },
+      "max_upsert_ms": 108.71,
+      "embedding_calls": 317,
+      "cloud_calls": 6
+    },
+    {
+      "run": "comparison-fixed",
+      "runtime_source": {
+        "python_version": "3.12.14",
+        "app_files": 139,
+        "app_sha256": "d5e9de29785a64cbab2cb00fd4513fb0f331ec87a94e06eb06571a408c12fdbb",
+        "requirements_sha256": "b0e75e31a3ca8f034e095fd0667e3be7e380975548c5acce90db94f96ed7283f"
+      },
+      "cases": [
+        {
+          "case_id": "dpo-instructgpt-object-and-stage",
+          "status": "failed",
+          "checks": {
+            "real_deepseek_not_fallback": true,
+            "not_insufficient": false,
+            "published_sources_scoped_and_hybrid_reranked": true,
+            "policy_object_and_learning_objective_present": true,
+            "sampling_object_and_stage_in_same_published_claim": true,
+            "one_comparison_cites_both_originals": false,
+            "all_raw_source_anchors_valid": true
+          },
+          "cloud_calls": 2,
+          "provider": "deepseek",
+          "model": "deepseek-flash"
+        },
+        {
+          "case_id": "dpo-reject-global-analytic-and-sampling-free",
+          "status": "machine_passed_pending_source_review",
+          "checks": {
+            "real_deepseek_not_fallback": true,
+            "not_insufficient": true,
+            "published_sources_scoped_and_hybrid_reranked": true,
+            "policy_object_and_learning_objective_present": true,
+            "sampling_object_and_stage_in_same_published_claim": true,
+            "explicitly_rejects_overgeneralization": true,
+            "all_raw_source_anchors_valid": true
+          },
+          "cloud_calls": 1,
+          "provider": "deepseek",
+          "model": "deepseek-flash"
+        },
+        {
+          "case_id": "lora-qlora-mechanism",
+          "status": "machine_passed_pending_source_review",
+          "checks": {
+            "real_deepseek_not_fallback": true,
+            "not_insufficient": true,
+            "one_claim_has_both_originals": true,
+            "all_published_sources_in_scope": true,
+            "all_used_anchors_hybrid_reranked": true,
+            "quantization_and_memory_methods": true,
+            "all_raw_source_anchors_valid": true
+          },
+          "cloud_calls": 2,
+          "provider": "deepseek",
+          "model": "deepseek-flash"
+        },
+        {
+          "case_id": "unreported-training-seed",
+          "status": "machine_passed_pending_source_review",
+          "checks": {
+            "configured_deepseek": true,
+            "no_out_of_scope_published_source": true,
+            "refuses_without_published_seed_claim": true,
+            "no_positive_seed_number": true,
+            "all_raw_source_anchors_valid": true
+          },
+          "cloud_calls": 1,
+          "provider": "deepseek",
+          "model": "deepseek-flash"
+        }
+      ],
+      "machine_passed": 3,
+      "indexed_chunks": 1237,
+      "operation_counts": {
+        "collection_exists": 1,
+        "create_collection": 1,
+        "create_payload_index": 1,
+        "delete": 5,
+        "upsert": 311,
+        "count": 6,
+        "query_points": 6
+      },
+      "max_upsert_ms": 51.18,
+      "embedding_calls": 317,
+      "cloud_calls": 6
+    },
+    {
+      "run": "comparison-review-final",
+      "runtime_source": {
+        "python_version": "3.12.14",
+        "app_files": 139,
+        "app_sha256": "d822eb642b6a3694938336e083b701b782228e0464689b9beade1d31bfd23d8d",
+        "requirements_sha256": "b0e75e31a3ca8f034e095fd0667e3be7e380975548c5acce90db94f96ed7283f"
+      },
+      "cases": [
+        {
+          "case_id": "dpo-instructgpt-object-and-stage",
+          "status": "machine_passed_pending_source_review",
+          "checks": {
+            "real_deepseek_not_fallback": true,
+            "not_insufficient": true,
+            "published_sources_scoped_and_hybrid_reranked": true,
+            "policy_object_and_learning_objective_present": true,
+            "sampling_object_and_stage_in_same_published_claim": true,
+            "one_comparison_cites_both_originals": true,
+            "all_raw_source_anchors_valid": true
+          },
+          "cloud_calls": 2,
+          "provider": "deepseek",
+          "model": "deepseek-flash"
+        },
+        {
+          "case_id": "dpo-reject-global-analytic-and-sampling-free",
+          "status": "machine_passed_pending_source_review",
+          "checks": {
+            "real_deepseek_not_fallback": true,
+            "not_insufficient": true,
+            "published_sources_scoped_and_hybrid_reranked": true,
+            "policy_object_and_learning_objective_present": true,
+            "sampling_object_and_stage_in_same_published_claim": true,
+            "explicitly_rejects_overgeneralization": true,
+            "all_raw_source_anchors_valid": true
+          },
+          "cloud_calls": 1,
+          "provider": "deepseek",
+          "model": "deepseek-flash"
+        },
+        {
+          "case_id": "lora-qlora-mechanism",
+          "status": "machine_passed_pending_source_review",
+          "checks": {
+            "real_deepseek_not_fallback": true,
+            "not_insufficient": true,
+            "one_claim_has_both_originals": true,
+            "all_published_sources_in_scope": true,
+            "all_used_anchors_hybrid_reranked": true,
+            "quantization_and_memory_methods": true,
+            "all_raw_source_anchors_valid": true
+          },
+          "cloud_calls": 2,
+          "provider": "deepseek",
+          "model": "deepseek-flash"
+        },
+        {
+          "case_id": "unreported-training-seed",
+          "status": "machine_passed_pending_source_review",
+          "checks": {
+            "configured_deepseek": true,
+            "no_out_of_scope_published_source": true,
+            "refuses_without_published_seed_claim": true,
+            "no_positive_seed_number": true,
+            "all_raw_source_anchors_valid": true
+          },
+          "cloud_calls": 1,
+          "provider": "deepseek",
+          "model": "deepseek-flash"
+        }
+      ],
+      "machine_passed": 4,
+      "indexed_chunks": 1237,
+      "operation_counts": {
+        "collection_exists": 1,
+        "create_collection": 1,
+        "create_payload_index": 1,
+        "delete": 5,
+        "upsert": 311,
+        "count": 6,
+        "query_points": 6
+      },
+      "max_upsert_ms": 151.14,
+      "embedding_calls": 317,
+      "cloud_calls": 6
+    },
+    {
+      "run": "comparison-stability",
+      "runtime_source": {
+        "python_version": "3.12.14",
+        "app_files": 139,
+        "app_sha256": "d822eb642b6a3694938336e083b701b782228e0464689b9beade1d31bfd23d8d",
+        "requirements_sha256": "b0e75e31a3ca8f034e095fd0667e3be7e380975548c5acce90db94f96ed7283f"
+      },
+      "cases": [
+        {
+          "case_id": "dpo-instructgpt-object-and-stage",
+          "status": "machine_passed_pending_source_review",
+          "checks": {
+            "real_deepseek_not_fallback": true,
+            "not_insufficient": true,
+            "published_sources_scoped_and_hybrid_reranked": true,
+            "policy_object_and_learning_objective_present": true,
+            "sampling_object_and_stage_in_same_published_claim": true,
+            "one_comparison_cites_both_originals": true,
+            "all_raw_source_anchors_valid": true
+          },
+          "cloud_calls": 2,
+          "provider": "deepseek",
+          "model": "deepseek-flash"
+        },
+        {
+          "case_id": "dpo-reject-global-analytic-and-sampling-free",
+          "status": "failed",
+          "checks": {
+            "real_deepseek_not_fallback": true,
+            "not_insufficient": false,
+            "published_sources_scoped_and_hybrid_reranked": true,
+            "policy_object_and_learning_objective_present": false,
+            "sampling_object_and_stage_in_same_published_claim": true,
+            "explicitly_rejects_overgeneralization": true,
+            "all_raw_source_anchors_valid": true
+          },
+          "cloud_calls": 1,
+          "provider": "deepseek",
+          "model": "deepseek-flash"
+        },
+        {
+          "case_id": "lora-qlora-mechanism",
+          "status": "machine_passed_pending_source_review",
+          "checks": {
+            "real_deepseek_not_fallback": true,
+            "not_insufficient": true,
+            "one_claim_has_both_originals": true,
+            "all_published_sources_in_scope": true,
+            "all_used_anchors_hybrid_reranked": true,
+            "quantization_and_memory_methods": true,
+            "all_raw_source_anchors_valid": true
+          },
+          "cloud_calls": 2,
+          "provider": "deepseek",
+          "model": "deepseek-flash"
+        },
+        {
+          "case_id": "unreported-training-seed",
+          "status": "machine_passed_pending_source_review",
+          "checks": {
+            "configured_deepseek": true,
+            "no_out_of_scope_published_source": true,
+            "refuses_without_published_seed_claim": true,
+            "no_positive_seed_number": true,
+            "all_raw_source_anchors_valid": true
+          },
+          "cloud_calls": 1,
+          "provider": "deepseek",
+          "model": "deepseek-flash"
+        }
+      ],
+      "machine_passed": 3,
+      "indexed_chunks": 1237,
+      "operation_counts": {
+        "collection_exists": 1,
+        "create_collection": 1,
+        "create_payload_index": 1,
+        "delete": 5,
+        "upsert": 311,
+        "count": 6,
+        "query_points": 6
+      },
+      "max_upsert_ms": 104.12,
+      "embedding_calls": 317,
+      "cloud_calls": 6
+    },
+    {
+      "run": "comparison-release-a",
+      "runtime_source": {
+        "python_version": "3.12.14",
+        "app_files": 139,
+        "app_sha256": "fed60194b0c9a0262aa1f60125bf5b9056173e4042ec74dce3e18f187af98941",
+        "requirements_sha256": "b0e75e31a3ca8f034e095fd0667e3be7e380975548c5acce90db94f96ed7283f"
+      },
+      "cases": [
+        {
+          "case_id": "dpo-instructgpt-object-and-stage",
+          "status": "failed",
+          "checks": {
+            "real_deepseek_not_fallback": false,
+            "not_insufficient": false,
+            "published_sources_scoped_and_hybrid_reranked": true,
+            "policy_object_and_learning_objective_present": false,
+            "sampling_object_and_stage_in_same_published_claim": false,
+            "one_comparison_cites_both_originals": false,
+            "all_raw_source_anchors_valid": true
+          },
+          "cloud_calls": 1,
+          "provider": "extractive",
+          "model": null
+        },
+        {
+          "case_id": "dpo-reject-global-analytic-and-sampling-free",
+          "status": "machine_passed_pending_source_review",
+          "checks": {
+            "real_deepseek_not_fallback": true,
+            "not_insufficient": true,
+            "published_sources_scoped_and_hybrid_reranked": true,
+            "policy_object_and_learning_objective_present": true,
+            "sampling_object_and_stage_in_same_published_claim": true,
+            "explicitly_rejects_overgeneralization": true,
+            "all_raw_source_anchors_valid": true
+          },
+          "cloud_calls": 1,
+          "provider": "deepseek",
+          "model": "deepseek-flash"
+        },
+        {
+          "case_id": "lora-qlora-mechanism",
+          "status": "machine_passed_pending_source_review",
+          "checks": {
+            "real_deepseek_not_fallback": true,
+            "not_insufficient": true,
+            "one_claim_has_both_originals": true,
+            "all_published_sources_in_scope": true,
+            "all_used_anchors_hybrid_reranked": true,
+            "quantization_and_memory_methods": true,
+            "all_raw_source_anchors_valid": true
+          },
+          "cloud_calls": 2,
+          "provider": "deepseek",
+          "model": "deepseek-flash"
+        },
+        {
+          "case_id": "unreported-training-seed",
+          "status": "machine_passed_pending_source_review",
+          "checks": {
+            "configured_deepseek": true,
+            "no_out_of_scope_published_source": true,
+            "refuses_without_published_seed_claim": true,
+            "no_positive_seed_number": true,
+            "all_raw_source_anchors_valid": true
+          },
+          "cloud_calls": 1,
+          "provider": "deepseek",
+          "model": "deepseek-flash"
+        }
+      ],
+      "machine_passed": 3,
+      "indexed_chunks": 1237,
+      "operation_counts": {
+        "collection_exists": 1,
+        "create_collection": 1,
+        "create_payload_index": 1,
+        "delete": 5,
+        "upsert": 311,
+        "count": 6,
+        "query_points": 6
+      },
+      "max_upsert_ms": 321.16,
+      "embedding_calls": 317,
+      "cloud_calls": 5
+    },
+    {
+      "run": "comparison-release-b",
+      "runtime_source": {
+        "python_version": "3.12.14",
+        "app_files": 139,
+        "app_sha256": "fed60194b0c9a0262aa1f60125bf5b9056173e4042ec74dce3e18f187af98941",
+        "requirements_sha256": "b0e75e31a3ca8f034e095fd0667e3be7e380975548c5acce90db94f96ed7283f"
+      },
+      "cases": [
+        {
+          "case_id": "dpo-instructgpt-object-and-stage",
+          "status": "machine_passed_pending_source_review",
+          "checks": {
+            "real_deepseek_not_fallback": true,
+            "not_insufficient": true,
+            "published_sources_scoped_and_hybrid_reranked": true,
+            "policy_object_and_learning_objective_present": true,
+            "sampling_object_and_stage_in_same_published_claim": true,
+            "one_comparison_cites_both_originals": true,
+            "all_raw_source_anchors_valid": true
+          },
+          "cloud_calls": 2,
+          "provider": "deepseek",
+          "model": "deepseek-flash"
+        },
+        {
+          "case_id": "dpo-reject-global-analytic-and-sampling-free",
+          "status": "failed",
+          "checks": {
+            "real_deepseek_not_fallback": true,
+            "not_insufficient": false,
+            "published_sources_scoped_and_hybrid_reranked": true,
+            "policy_object_and_learning_objective_present": true,
+            "sampling_object_and_stage_in_same_published_claim": true,
+            "explicitly_rejects_overgeneralization": true,
+            "all_raw_source_anchors_valid": true
+          },
+          "cloud_calls": 1,
+          "provider": "deepseek",
+          "model": "deepseek-flash"
+        },
+        {
+          "case_id": "lora-qlora-mechanism",
+          "status": "machine_passed_pending_source_review",
+          "checks": {
+            "real_deepseek_not_fallback": true,
+            "not_insufficient": true,
+            "one_claim_has_both_originals": true,
+            "all_published_sources_in_scope": true,
+            "all_used_anchors_hybrid_reranked": true,
+            "quantization_and_memory_methods": true,
+            "all_raw_source_anchors_valid": true
+          },
+          "cloud_calls": 2,
+          "provider": "deepseek",
+          "model": "deepseek-flash"
+        },
+        {
+          "case_id": "unreported-training-seed",
+          "status": "machine_passed_pending_source_review",
+          "checks": {
+            "configured_deepseek": true,
+            "no_out_of_scope_published_source": true,
+            "refuses_without_published_seed_claim": true,
+            "no_positive_seed_number": true,
+            "all_raw_source_anchors_valid": true
+          },
+          "cloud_calls": 1,
+          "provider": "deepseek",
+          "model": "deepseek-flash"
+        }
+      ],
+      "machine_passed": 3,
+      "indexed_chunks": 1237,
+      "operation_counts": {
+        "collection_exists": 1,
+        "create_collection": 1,
+        "create_payload_index": 1,
+        "delete": 5,
+        "upsert": 311,
+        "count": 6,
+        "query_points": 6
+      },
+      "max_upsert_ms": 137.86,
+      "embedding_calls": 317,
+      "cloud_calls": 6
+    },
+    {
+      "run": "comparison-boundaries-a",
+      "runtime_source": {
+        "python_version": "3.12.14",
+        "app_files": 139,
+        "app_sha256": "489a2ecbc9f31e99741975b844f97486f0e2a83576a787724e55edb07f480535",
+        "requirements_sha256": "b0e75e31a3ca8f034e095fd0667e3be7e380975548c5acce90db94f96ed7283f"
+      },
+      "cases": [
+        {
+          "case_id": "dpo-instructgpt-object-and-stage",
+          "status": "machine_passed_pending_source_review",
+          "checks": {
+            "real_deepseek_not_fallback": true,
+            "not_insufficient": true,
+            "published_sources_scoped_and_hybrid_reranked": true,
+            "policy_object_and_learning_objective_present": true,
+            "sampling_object_and_stage_in_same_published_claim": true,
+            "one_comparison_cites_both_originals": true,
+            "all_raw_source_anchors_valid": true
+          },
+          "cloud_calls": 2,
+          "provider": "deepseek",
+          "model": "deepseek-flash"
+        },
+        {
+          "case_id": "dpo-reject-global-analytic-and-sampling-free",
+          "status": "failed",
+          "checks": {
+            "real_deepseek_not_fallback": true,
+            "not_insufficient": false,
+            "published_sources_scoped_and_hybrid_reranked": true,
+            "policy_object_and_learning_objective_present": false,
+            "sampling_object_and_stage_in_same_published_claim": true,
+            "explicitly_rejects_overgeneralization": true,
+            "all_raw_source_anchors_valid": true
+          },
+          "cloud_calls": 1,
+          "provider": "deepseek",
+          "model": "deepseek-flash"
+        },
+        {
+          "case_id": "lora-qlora-mechanism",
+          "status": "failed",
+          "checks": {
+            "real_deepseek_not_fallback": true,
+            "not_insufficient": false,
+            "one_claim_has_both_originals": false,
+            "all_published_sources_in_scope": true,
+            "all_used_anchors_hybrid_reranked": true,
+            "quantization_and_memory_methods": false,
+            "all_raw_source_anchors_valid": true
+          },
+          "cloud_calls": 1,
+          "provider": "deepseek",
+          "model": "deepseek-flash"
+        },
+        {
+          "case_id": "unreported-training-seed",
+          "status": "machine_passed_pending_source_review",
+          "checks": {
+            "configured_deepseek": true,
+            "no_out_of_scope_published_source": true,
+            "refuses_without_published_seed_claim": true,
+            "no_positive_seed_number": true,
+            "all_raw_source_anchors_valid": true
+          },
+          "cloud_calls": 1,
+          "provider": "deepseek",
+          "model": "deepseek-flash"
+        }
+      ],
+      "machine_passed": 2,
+      "indexed_chunks": 1237,
+      "operation_counts": {
+        "collection_exists": 1,
+        "create_collection": 1,
+        "create_payload_index": 1,
+        "delete": 5,
+        "upsert": 311,
+        "count": 6,
+        "query_points": 6
+      },
+      "max_upsert_ms": 154.49,
+      "embedding_calls": 317,
+      "cloud_calls": 5
+    },
+    {
+      "run": "comparison-boundaries-b",
+      "runtime_source": {
+        "python_version": "3.12.14",
+        "app_files": 139,
+        "app_sha256": "489a2ecbc9f31e99741975b844f97486f0e2a83576a787724e55edb07f480535",
+        "requirements_sha256": "b0e75e31a3ca8f034e095fd0667e3be7e380975548c5acce90db94f96ed7283f"
+      },
+      "cases": [
+        {
+          "case_id": "dpo-instructgpt-object-and-stage",
+          "status": "machine_passed_pending_source_review",
+          "checks": {
+            "real_deepseek_not_fallback": true,
+            "not_insufficient": true,
+            "published_sources_scoped_and_hybrid_reranked": true,
+            "policy_object_and_learning_objective_present": true,
+            "sampling_object_and_stage_in_same_published_claim": true,
+            "one_comparison_cites_both_originals": true,
+            "all_raw_source_anchors_valid": true
+          },
+          "cloud_calls": 2,
+          "provider": "deepseek",
+          "model": "deepseek-flash"
+        },
+        {
+          "case_id": "dpo-reject-global-analytic-and-sampling-free",
+          "status": "machine_passed_pending_source_review",
+          "checks": {
+            "real_deepseek_not_fallback": true,
+            "not_insufficient": true,
+            "published_sources_scoped_and_hybrid_reranked": true,
+            "policy_object_and_learning_objective_present": true,
+            "sampling_object_and_stage_in_same_published_claim": true,
+            "explicitly_rejects_overgeneralization": true,
+            "all_raw_source_anchors_valid": true
+          },
+          "cloud_calls": 1,
+          "provider": "deepseek",
+          "model": "deepseek-flash"
+        },
+        {
+          "case_id": "lora-qlora-mechanism",
+          "status": "machine_passed_pending_source_review",
+          "checks": {
+            "real_deepseek_not_fallback": true,
+            "not_insufficient": true,
+            "one_claim_has_both_originals": true,
+            "all_published_sources_in_scope": true,
+            "all_used_anchors_hybrid_reranked": true,
+            "quantization_and_memory_methods": true,
+            "all_raw_source_anchors_valid": true
+          },
+          "cloud_calls": 2,
+          "provider": "deepseek",
+          "model": "deepseek-flash"
+        },
+        {
+          "case_id": "unreported-training-seed",
+          "status": "machine_passed_pending_source_review",
+          "checks": {
+            "configured_deepseek": true,
+            "no_out_of_scope_published_source": true,
+            "refuses_without_published_seed_claim": true,
+            "no_positive_seed_number": true,
+            "all_raw_source_anchors_valid": true
+          },
+          "cloud_calls": 1,
+          "provider": "deepseek",
+          "model": "deepseek-flash"
+        }
+      ],
+      "machine_passed": 4,
+      "indexed_chunks": 1237,
+      "operation_counts": {
+        "collection_exists": 1,
+        "create_collection": 1,
+        "create_payload_index": 1,
+        "delete": 5,
+        "upsert": 311,
+        "count": 6,
+        "query_points": 6
+      },
+      "max_upsert_ms": 129.27,
+      "embedding_calls": 317,
+      "cloud_calls": 6
+    },
+    {
+      "run": "comparison-lexical-release",
+      "runtime_source": {
+        "python_version": "3.12.14",
+        "app_files": 139,
+        "app_sha256": "2fca812db00425e3c082acfb519135ed1923c01e1de0ac8bc1755ee1301ec63d",
+        "requirements_sha256": "b0e75e31a3ca8f034e095fd0667e3be7e380975548c5acce90db94f96ed7283f"
+      },
+      "cases": [
+        {
+          "case_id": "dpo-instructgpt-object-and-stage",
+          "status": "failed",
+          "checks": {
+            "real_deepseek_not_fallback": true,
+            "not_insufficient": false,
+            "published_sources_scoped_and_hybrid_reranked": true,
+            "policy_object_and_learning_objective_present": true,
+            "sampling_object_and_stage_in_same_published_claim": true,
+            "one_comparison_cites_both_originals": true,
+            "all_raw_source_anchors_valid": true
+          },
+          "cloud_calls": 2,
+          "provider": "deepseek",
+          "model": "deepseek-flash"
+        },
+        {
+          "case_id": "dpo-reject-global-analytic-and-sampling-free",
+          "status": "machine_passed_pending_source_review",
+          "checks": {
+            "real_deepseek_not_fallback": true,
+            "not_insufficient": true,
+            "published_sources_scoped_and_hybrid_reranked": true,
+            "policy_object_and_learning_objective_present": true,
+            "sampling_object_and_stage_in_same_published_claim": true,
+            "explicitly_rejects_overgeneralization": true,
+            "all_raw_source_anchors_valid": true
+          },
+          "cloud_calls": 1,
+          "provider": "deepseek",
+          "model": "deepseek-flash"
+        },
+        {
+          "case_id": "lora-qlora-mechanism",
+          "status": "machine_passed_pending_source_review",
+          "checks": {
+            "real_deepseek_not_fallback": true,
+            "not_insufficient": true,
+            "one_claim_has_both_originals": true,
+            "all_published_sources_in_scope": true,
+            "all_used_anchors_hybrid_reranked": true,
+            "quantization_and_memory_methods": true,
+            "all_raw_source_anchors_valid": true
+          },
+          "cloud_calls": 2,
+          "provider": "deepseek",
+          "model": "deepseek-flash"
+        },
+        {
+          "case_id": "unreported-training-seed",
+          "status": "machine_passed_pending_source_review",
+          "checks": {
+            "configured_deepseek": true,
+            "no_out_of_scope_published_source": true,
+            "refuses_without_published_seed_claim": true,
+            "no_positive_seed_number": true,
+            "all_raw_source_anchors_valid": true
+          },
+          "cloud_calls": 1,
+          "provider": "deepseek",
+          "model": "deepseek-flash"
+        }
+      ],
+      "machine_passed": 3,
+      "indexed_chunks": 1237,
+      "operation_counts": {
+        "collection_exists": 1,
+        "create_collection": 1,
+        "create_payload_index": 1,
+        "delete": 5,
+        "upsert": 311,
+        "count": 6,
+        "query_points": 6
+      },
+      "max_upsert_ms": 127.69,
+      "embedding_calls": 317,
+      "cloud_calls": 6
+    },
+    {
+      "run": "comparison-formula-release",
+      "runtime_source": {
+        "python_version": "3.12.14",
+        "app_files": 139,
+        "app_sha256": "667b38f6c766e71f2edd459ca641fdc4136a78526d1980205ff4ae1900bfc4ea",
+        "requirements_sha256": "b0e75e31a3ca8f034e095fd0667e3be7e380975548c5acce90db94f96ed7283f"
+      },
+      "cases": [
+        {
+          "case_id": "dpo-instructgpt-object-and-stage",
+          "status": "failed",
+          "checks": {
+            "real_deepseek_not_fallback": true,
+            "not_insufficient": false,
+            "published_sources_scoped_and_hybrid_reranked": true,
+            "policy_object_and_learning_objective_present": true,
+            "sampling_object_and_stage_in_same_published_claim": true,
+            "one_comparison_cites_both_originals": false,
+            "all_raw_source_anchors_valid": true
+          },
+          "cloud_calls": 2,
+          "provider": "deepseek",
+          "model": "deepseek-flash"
+        },
+        {
+          "case_id": "dpo-reject-global-analytic-and-sampling-free",
+          "status": "machine_passed_pending_source_review",
+          "checks": {
+            "real_deepseek_not_fallback": true,
+            "not_insufficient": true,
+            "published_sources_scoped_and_hybrid_reranked": true,
+            "policy_object_and_learning_objective_present": true,
+            "sampling_object_and_stage_in_same_published_claim": true,
+            "explicitly_rejects_overgeneralization": true,
+            "all_raw_source_anchors_valid": true
+          },
+          "cloud_calls": 1,
+          "provider": "deepseek",
+          "model": "deepseek-flash"
+        },
+        {
+          "case_id": "lora-qlora-mechanism",
+          "status": "failed",
+          "checks": {
+            "real_deepseek_not_fallback": true,
+            "not_insufficient": false,
+            "one_claim_has_both_originals": false,
+            "all_published_sources_in_scope": true,
+            "all_used_anchors_hybrid_reranked": true,
+            "quantization_and_memory_methods": false,
+            "all_raw_source_anchors_valid": true
+          },
+          "cloud_calls": 2,
+          "provider": "deepseek",
+          "model": "deepseek-flash"
+        },
+        {
+          "case_id": "unreported-training-seed",
+          "status": "machine_passed_pending_source_review",
+          "checks": {
+            "configured_deepseek": true,
+            "no_out_of_scope_published_source": true,
+            "refuses_without_published_seed_claim": true,
+            "no_positive_seed_number": true,
+            "all_raw_source_anchors_valid": true
+          },
+          "cloud_calls": 1,
+          "provider": "deepseek",
+          "model": "deepseek-flash"
+        }
+      ],
+      "machine_passed": 2,
+      "indexed_chunks": 1237,
+      "operation_counts": {
+        "collection_exists": 1,
+        "create_collection": 1,
+        "create_payload_index": 1,
+        "delete": 5,
+        "upsert": 311,
+        "count": 6,
+        "query_points": 6
+      },
+      "max_upsert_ms": 140.06,
+      "embedding_calls": 317,
+      "cloud_calls": 6
+    }
+  ],
+  "scientific_review": {
+    "date": "2026-10-20",
+    "runtime_source": {
+      "python_version": "3.12.14",
+      "app_files": 139,
+      "app_sha256": "667b38f6c766e71f2edd459ca641fdc4136a78526d1980205ff4ae1900bfc4ea",
+      "requirements_sha256": "b0e75e31a3ca8f034e095fd0667e3be7e380975548c5acce90db94f96ed7283f"
+    },
+    "method": "Compare final claims with selected literal original excerpts and complete rendered pages. Separate core scientific support, format, full answer completion and stability.",
+    "final_run": "comparison-formula-release",
+    "cases": 4,
+    "machine_passed": 2,
+    "core_source_checks": [
+      {
+        "case_id": "dpo-reject-global-analytic-and-sampling-free",
+        "decision": "core_pass",
+        "source_pages": {
+          "2305.18290v3.pdf": [
+            1,
+            5,
+            9,
+            17
+          ]
+        },
+        "checks": [
+          "Closed form describes the corresponding optimal policy, not a one-step neural-weight fit.",
+          "LM sampling exemption retains fine-tuning; data preparation still samples reference-policy completions.",
+          "No global sampling-free inference or data-pipeline claim is made."
+        ]
+      },
+      {
+        "case_id": "unreported-training-seed",
+        "decision": "core_pass_refusal",
+        "source_pages": {
+          "1706.03762v1.pdf": [
+            7,
+            9
+          ]
+        },
+        "checks": [
+          "No seed integer is invented or replaced by an optimizer value or step count.",
+          "Absence is limited to supplied evidence, not the entire paper or corpus."
+        ]
+      },
+      {
+        "case_id": "dpo-instructgpt-object-and-stage",
+        "decision": "partial_details_only_comparison_held",
+        "source_pages": {
+          "2305.18290v3.pdf": [
+            1,
+            2,
+            9,
+            16
+          ],
+          "2203.02155v1.pdf": [
+            6
+          ]
+        },
+        "checks": [
+          "Published policy-object, classification-objective and fine-tuning LM-sampling details follow original passages.",
+          "Shared KL constraint lacks support in selected InstructGPT Step 1-3 paragraphs; historical plausibility is not selected-source proof.",
+          "The guard first rejects unexpanded SFT in the comparison. The editor verdict cannot override final source restrictions.",
+          "Separate details are not presented as a completed cross-paper answer."
+        ]
+      },
+      {
+        "case_id": "lora-qlora-mechanism",
+        "decision": "partial_details_only_comparison_held",
+        "source_pages": {
+          "2106.09685v2.pdf": [
+            1,
+            2
+          ],
+          "2305.14314v1.pdf": [
+            1,
+            3,
+            4,
+            5,
+            6
+          ]
+        },
+        "checks": [
+          "4-bit storage is separate from usual BFloat16 computation.",
+          "NF4 retains normally distributed weights; double quantization targets quantization constants.",
+          "Paged optimizer states move between GPU memory and CPU RAM.",
+          "Duplicate reason keys intentionally invalidate the editor JSON, even when repeated values match."
+        ],
+        "wording_reservation": "No-degradation wording is a cited experimental report, not a universal guarantee. Full prose quality is not released."
+      }
+    ],
+    "earlier_full_pass_rounds": [
+      "comparison-review-final",
+      "comparison-boundaries-b"
+    ],
+    "earlier_pass_scope": "Core original pages checked; historical source fingerprints differ and do not establish final-source stability.",
+    "full_pages_viewed": [
+      "backend/tmp/official-batch-acceptance-2026-10-18/dpo-01.png",
+      "backend/tmp/official-batch-acceptance-2026-10-18/dpo-02.png",
+      "backend/tmp/official-batch-acceptance-2026-10-18/dpo-math-16.png",
+      "backend/tmp/official-batch-acceptance-2026-10-18/instructgpt-06.png",
+      "backend/tmp/official-batch-acceptance-2026-10-18/lora-02.png",
+      "backend/tmp/official-batch-acceptance-2026-10-18/qlora-04.png",
+      "backend/tmp/official-batch-acceptance-2026-10-18/qlora-05.png",
+      "backend/tmp/official-batch-acceptance-2026-10-18/qlora-performance-06.png",
+      "backend/tmp/official-vector-recovery-2026-10-20/source-pages/2305.18290v3-p5.png",
+      "backend/tmp/official-vector-recovery-2026-10-20/source-pages/2305.18290v3-p17.png",
+      "backend/tmp/official-vector-recovery-2026-10-20/source-pages/2106.09685v2-p1.png",
+      "backend/tmp/official-vector-recovery-2026-10-20/source-pages/2305.14314v1-p3.png",
+      "backend/tmp/official-vector-recovery-2026-10-20/source-pages/1706.03762v1-p7.png",
+      "backend/tmp/official-vector-recovery-2026-10-20/source-pages/1706.03762v1-p9.png"
+    ],
+    "not_asserted": [
+      "New whole-corpus parsing or generation accuracy",
+      "Final-source stability",
+      "Independent expert review of every sentence",
+      "Automatic global resolution of Future Work",
+      "Final project or public deployment acceptance"
+    ]
+  },
+  "local_failure_replay": {
+    "runtime_source": {
+      "python_version": "3.12.14",
+      "app_files": 139,
+      "app_sha256": "667b38f6c766e71f2edd459ca641fdc4136a78526d1980205ff4ae1900bfc4ea",
+      "requirements_sha256": "b0e75e31a3ca8f034e095fd0667e3be7e380975548c5acce90db94f96ed7283f"
+    },
+    "cloud_calls": 0,
+    "new_retrieval_calls": 0,
+    "new_generation_accuracy": false,
+    "scope": "Saved outputs under current local rules only",
+    "checks": [
+      {
+        "check": "explicit_finetuning_alias",
+        "saved_run": "comparison",
+        "accepted_unchanged": true,
+        "grounding_audit": {
+          "input_claim_count": 1,
+          "accepted_claim_count": 1,
+          "document_claim_counts": {
+            "114bfa0d-d6cf-573d-82b2-cfaed94b58b6": 1
+          },
+          "rejections": []
+        }
+      },
+      {
+        "check": "demonstrative_not_reported_denial",
+        "saved_run": "comparison-stability",
+        "accepted_unchanged": true,
+        "grounding_audit": {
+          "input_claim_count": 1,
+          "accepted_claim_count": 1,
+          "document_claim_counts": {
+            "114bfa0d-d6cf-573d-82b2-cfaed94b58b6": 1
+          },
+          "rejections": []
+        }
+      },
+      {
+        "check": "explicit_not_saying_denial",
+        "saved_run": "comparison-boundaries-a",
+        "accepted_unchanged": true,
+        "grounding_audit": {
+          "input_claim_count": 1,
+          "accepted_claim_count": 1,
+          "document_claim_counts": {
+            "114bfa0d-d6cf-573d-82b2-cfaed94b58b6": 1
+          },
+          "rejections": []
+        }
+      },
+      {
+        "check": "positive_scope_not_erased_by_later_denial",
+        "saved_run": "comparison-release-b",
+        "missing_fields": []
+      },
+      {
+        "check": "direct_policy_formula_covers_the_published_field",
+        "saved_run": "comparison-lexical-release",
+        "missing_fields": []
+      },
+      {
+        "check": "bfloat16_premise_reaches_editor",
+        "saved_run": "comparison-boundaries-a",
+        "premise_ids": [
+          "E11",
+          "E19",
+          "E18",
+          "E2"
+        ]
+      },
+      {
+        "check": "unsupported_original_precision_still_blocked",
+        "error": "比较子句不能从冻结／低秩说明推断未报告的原始精度。"
+      },
+      {
+        "check": "malformed_primary_not_repaired",
+        "saved_run": "comparison-release-a",
+        "blocked": true
+      },
+      {
+        "check": "legacy_self_report_not_reinterpreted",
+        "saved_run": "comparison-fixed",
+        "blocked": true
+      }
+    ],
+    "input_hashes": [
+      {
+        "path": "backend/tmp/official-vector-recovery-2026-10-20/comparison/report.json",
+        "sha256": "25badef86391cdc58dd0573c1175f7a34126a85d6336828ab6d8db0763ba4e3d"
+      },
+      {
+        "path": "backend/tmp/official-vector-recovery-2026-10-20/comparison/model-calls.json",
+        "sha256": "095ae53fa6e12a40192284111e2a7bdb8212e7e95ee05b2dfe2f80f496151792"
+      },
+      {
+        "path": "backend/tmp/official-vector-recovery-2026-10-20/comparison-stability/report.json",
+        "sha256": "77e05c72af5717dd1634ecb45619da75b1fbdbbce52ac2cec77aa73825d516b2"
+      },
+      {
+        "path": "backend/tmp/official-vector-recovery-2026-10-20/comparison-stability/model-calls.json",
+        "sha256": "32ab9833498798a69dca033807a6e4a3c0cdca3b339239c7a3f37310ec5c578b"
+      },
+      {
+        "path": "backend/tmp/official-vector-recovery-2026-10-20/comparison-release-b/report.json",
+        "sha256": "bba82fd09dfaa616c6b941e175ef0740c4f5b77ef4193eb225e8310d0c3ba0b5"
+      },
+      {
+        "path": "backend/tmp/official-vector-recovery-2026-10-20/comparison-release-b/model-calls.json",
+        "sha256": "ab6442538e6547d86e22d1a726009d51b2965a08ff829c55d3ca677d6151922b"
+      },
+      {
+        "path": "backend/tmp/official-vector-recovery-2026-10-20/comparison-boundaries-a/report.json",
+        "sha256": "5aa75568f4a3469e5b6d1f3f2a8d8fed0c9323e612b9986cf90290d946ad0309"
+      },
+      {
+        "path": "backend/tmp/official-vector-recovery-2026-10-20/comparison-boundaries-a/model-calls.json",
+        "sha256": "5b3d7463acf91c083b3d65c778825fdfbeeb8a0774b7ea9780a0d2e90757115a"
+      },
+      {
+        "path": "backend/tmp/official-vector-recovery-2026-10-20/comparison-release-a/report.json",
+        "sha256": "57bb135b90f516ad071b3e8b890f752c30772586dc73785429ac475a4b5c14b3"
+      },
+      {
+        "path": "backend/tmp/official-vector-recovery-2026-10-20/comparison-release-a/model-calls.json",
+        "sha256": "b54f962360bd4872e63891e1df720e86c3e8d84b4a30ee3b10236eef94a68bf2"
+      },
+      {
+        "path": "backend/tmp/official-vector-recovery-2026-10-20/comparison-fixed/report.json",
+        "sha256": "3d9f4fbae9c3d8a02f37ba466484c17ce8b8ebf7495fca25c9856bd0cb433741"
+      },
+      {
+        "path": "backend/tmp/official-vector-recovery-2026-10-20/comparison-fixed/model-calls.json",
+        "sha256": "d609a3cf290a7c20e4e06a1c24ecf033649f5ec604cf69763cbcd8b897ab8387"
+      },
+      {
+        "path": "backend/tmp/official-vector-recovery-2026-10-20/comparison-lexical-release/report.json",
+        "sha256": "a9a038cfe9f2b9ff60aa80cda81bd9920646447b540acba18e7640abe1264d6a"
+      },
+      {
+        "path": "backend/tmp/official-vector-recovery-2026-10-20/comparison-lexical-release/model-calls.json",
+        "sha256": "e551312a0047e5cb5dd9d9f81c96c199136cb7ad6f192c34025eb3c4756d12e5"
+      }
+    ]
+  },
+  "runtime_recovery": {
+    "observed_at_utc": "2026-10-20T05:10:35.639561+00:00",
+    "scope": "Read-only follow-up snapshot after manually starting the absent Docker Desktop",
+    "cloud_calls": 0,
+    "docker_started_by_this_script": false,
+    "volumes_deleted": false,
+    "production_database_written": false,
+    "health": [
+      {
+        "name": "bge",
+        "url": "http://127.0.0.1:8001/health",
+        "system_proxy_used": false,
+        "status": "responded",
+        "http_status": 200,
+        "duration_ms": 3.4
+      },
+      {
+        "name": "reranker",
+        "url": "http://127.0.0.1:8002/health",
+        "system_proxy_used": false,
+        "status": "responded",
+        "http_status": 200,
+        "duration_ms": 12.68
+      },
+      {
+        "name": "qdrant",
+        "url": "http://127.0.0.1:7333/healthz",
+        "system_proxy_used": false,
+        "status": "responded",
+        "http_status": 200,
+        "duration_ms": 2.69
+      }
+    ],
+    "docker_memory_bytes": {
+      "exit_code": 0,
+      "value": "16565092352"
+    },
+    "docker_stats": {
+      "exit_code": 0,
+      "value": "{\"BlockIO\":\"109MB / 99.3MB\",\"CPUPerc\":\"0.00%\",\"Container\":\"0acc4e042b4e58c044ea0f9e61549df847399d94e54635f9850b31bcb24eab5f\",\"ID\":\"0acc4e042b4e\",\"MemPerc\":\"0.22%\",\"MemUsage\":\"34.34MiB / 15.43GiB\",\"Name\":\"pdfagent-beat-1\",\"NetIO\":\"3.71kB / 1.33kB\",\"PIDs\":\"32\"}\n{\"BlockIO\":\"1.65GB / 125MB\",\"CPUPerc\":\"0.02%\",\"Container\":\"3afd48c4555fd189e9fb58bf5b8376d9873ae1ef81988ad924a7945f7e04ea8f\",\"ID\":\"3afd48c4555f\",\"MemPerc\":\"0.55%\",\"MemUsage\":\"86.36MiB / 15.43GiB\",\"Name\":\"pdfagent-worker-1\",\"NetIO\":\"859kB / 980kB\",\"PIDs\":\"3\"}\n{\"BlockIO\":\"1.86GB / 71.7MB\",\"CPUPerc\":\"0.09%\",\"Container\":\"77a20568be41a7fca4cadd0a4960ca9a98c3da7b71a392d0c9ca3b7340833a74\",\"ID\":\"77a20568be41\",\"MemPerc\":\"0.43%\",\"MemUsage\":\"67.45MiB / 15.43GiB\",\"Name\":\"pdfagent-backend-1\",\"NetIO\":\"6.91kB / 6.92kB\",\"PIDs\":\"37\"}\n{\"BlockIO\":\"4.77GB / 35.5MB\",\"CPUPerc\":\"0.00%\",\"Container\":\"9ddd5d3911f9af73ff3bdcc040829fce620d8b5d05ffa80ba0d256a50a9091a1\",\"ID\":\"9ddd5d3911f9\",\"MemPerc\":\"0.18%\",\"MemUsage\":\"28.76MiB / 15.43GiB\",\"Name\":\"pdfagent-frontend-1\",\"NetIO\":\"3.04kB / 126B\",\"PIDs\":\"12\"}\n{\"BlockIO\":\"3.61GB / 12.3MB\",\"CPUPerc\":\"0.00%\",\"Container\":\"6e2c05e6ac4ff76201737054c334629ac89a37f0fe12dd0bec45fc98e3a1d50b\",\"ID\":\"6e2c05e6ac4f\",\"MemPerc\":\"0.11%\",\"MemUsage\":\"17.51MiB / 15.43GiB\",\"Name\":\"pdfagent-postgres-1\",\"NetIO\":\"9.75kB / 4.2kB\",\"PIDs\":\"7\"}\n{\"BlockIO\":\"2.26GB / 2.74MB\",\"CPUPerc\":\"0.27%\",\"Container\":\"aad0fbbb807e59d6bad6b4265b84e67a06d9aed27c6b2dcd0dff11fd5d93b94c\",\"ID\":\"aad0fbbb807e\",\"MemPerc\":\"0.02%\",\"MemUsage\":\"3.324MiB / 15.43GiB\",\"Name\":\"pdfagent-redis-1\",\"NetIO\":\"984kB / 858kB\",\"PIDs\":\"6\"}\n{\"BlockIO\":\"4.86GB / 319MB\",\"CPUPerc\":\"0.56%\",\"Container\":\"0a16e51b581662e6ab0c93a77172b0c9f516327dea4a9acfb4cecc8dc7168fe8\",\"ID\":\"0a16e51b5816\",\"MemPerc\":\"1.63%\",\"MemUsage\":\"258.1MiB / 15.43GiB\",\"Name\":\"pdfagent-qdrant-1\",\"NetIO\":\"93.8MB / 2.5MB\",\"PIDs\":\"125\"}\n{\"BlockIO\":\"5.84GB / 1.27GB\",\"CPUPerc\":\"1.88%\",\"Container\":\"baa789000bfd25285ac8331c96fe285488258f18fd45e240e3020ea1e0656aea\",\"ID\":\"baa789000bfd\",\"MemPerc\":\"40.07%\",\"MemUsage\":\"6.182GiB / 15.43GiB\",\"Name\":\"pdfagent-bge-reranker-1\",\"NetIO\":\"1.7MB / 181kB\",\"PIDs\":\"70\"}\n{\"BlockIO\":\"8.12GB / 2.94GB\",\"CPUPerc\":\"1.30%\",\"Container\":\"a542fecf10363d76ca5383bdb11e858a9f4e924e606e871de50fb4194cfe2595\",\"ID\":\"a542fecf1036\",\"MemPerc\":\"31.88%\",\"MemUsage\":\"4.918GiB / 15.43GiB\",\"Name\":\"pdfagent-bge-embedding-1\",\"NetIO\":\"5.22MB / 81.3MB\",\"PIDs\":\"70\"}\n{\"BlockIO\":\"7.85GB / 34.4MB\",\"CPUPerc\":\"0.94%\",\"Container\":\"cda95dc72604fdafa8af00f2e70ec4afd8e8f9a6bc74d1931dfe09248e1b2bae\",\"ID\":\"cda95dc72604\",\"MemPerc\":\"0.49%\",\"MemUsage\":\"77.05MiB / 15.43GiB\",\"Name\":\"pdfagent-minio-1\",\"NetIO\":\"8.89kB / 2.98kB\",\"PIDs\":\"32\"}\n{\"BlockIO\":\"2.86GB / 174MB\",\"CPUPerc\":\"0.53%\",\"Container\":\"a41b1bca853b6eb40f213ba408f3b5651982cf33b1a5e9d9745000c0a12d0679\",\"ID\":\"a41b1bca853b\",\"MemPerc\":\"5.55%\",\"MemUsage\":\"876.4MiB / 15.43GiB\",\"Name\":\"langfuse-langfuse-web-1\",\"NetIO\":\"177kB / 61.6kB\",\"PIDs\":\"45\"}\n{\"BlockIO\":\"8.37GB / 229MB\",\"CPUPerc\":\"0.94%\",\"Container\":\"e9e66263ee19afa2b8a762fc9d788d7972bc39bbd7c88e9ec582cbdf2bf99315\",\"ID\":\"e9e66263ee19\",\"MemPerc\":\"4.76%\",\"MemUsage\":\"752.1MiB / 15.43GiB\",\"Name\":\"langfuse-langfuse-worker-1\",\"NetIO\":\"6.46MB / 23.5MB\",\"PIDs\":\"45\"}\n{\"BlockIO\":\"53.9GB / 525MB\",\"CPUPerc\":\"7.27%\",\"Container\":\"cc92212eaf03090217969167c9e5756da678846b108ce5fa7fd6b2de9304ea54\",\"ID\":\"cc92212eaf03\",\"MemPerc\":\"4.49%\",\"MemUsage\":\"709.5MiB / 15.43GiB\",\"Name\":\"langfuse-clickhouse-1\",\"NetIO\":\"68.8kB / 51.9kB\",\"PIDs\":\"741\"}\n{\"BlockIO\":\"3.3GB / 6.09MB\",\"CPUPerc\":\"2.52%\",\"Container\":\"900902cb082a94c4cba6d675b5187c826fde3b36ae7e59487b1f6db56f260d4d\",\"ID\":\"900902cb082a\",\"MemPerc\":\"0.18%\",\"MemUsage\":\"28.32MiB / 15.43GiB\",\"Name\":\"langfuse-redis-1\",\"NetIO\":\"23MB / 6.3MB\",\"PIDs\":\"6\"}\n{\"BlockIO\":\"5.65GB / 8.33MB\",\"CPUPerc\":\"4.60%\",\"Container\":\"abb7fb767fa995f8c8c170ffb80969e8d8e7d7cd292041a5b0373ae592159b3d\",\"ID\":\"abb7fb767fa9\",\"MemPerc\":\"0.45%\",\"MemUsage\":\"71.1MiB / 15.43GiB\",\"Name\":\"langfuse-postgres-1\",\"NetIO\":\"456kB / 273kB\",\"PIDs\":\"10\"}\n{\"BlockIO\":\"14.9GB / 35.3MB\",\"CPUPerc\":\"5.74%\",\"Container\":\"aa7f9841cd7780fb3ffc9d38f3c7e2b56e7de061017b49fae5a71f3c5b4f618f\",\"ID\":\"aa7f9841cd77\",\"MemPerc\":\"0.60%\",\"MemUsage\":\"94.29MiB / 15.43GiB\",\"Name\":\"langfuse-minio-1\",\"NetIO\":\"2.62kB / 126B\",\"PIDs\":\"37\"}"
+    },
+    "old_timeout_collection": {
+      "collection": "official_comparison_batch_866ac7c2519f414388f88cd305303bf4_semantic_d790e73745_1024",
+      "status": "green",
+      "optimizer_status": "ok",
+      "points_count": 513,
+      "documents": [
+        {
+          "filename": "1706.03762v1.pdf",
+          "sql_expected_chunks": 106,
+          "persisted_points": 106
+        },
+        {
+          "filename": "2106.09685v2.pdf",
+          "sql_expected_chunks": 279,
+          "persisted_points": 279
+        },
+        {
+          "filename": "2305.14314v1.pdf",
+          "sql_expected_chunks": 219,
+          "persisted_points": 128
+        },
+        {
+          "filename": "2305.18290v3.pdf",
+          "sql_expected_chunks": 307,
+          "persisted_points": 0
+        },
+        {
+          "filename": "2203.02155v1.pdf",
+          "sql_expected_chunks": 326,
+          "persisted_points": 0
+        }
+      ],
+      "embedding_requests_returned": 33,
+      "embedding_inputs_returned": 513
+    },
+    "interpretation": [
+      "Client timeout does not establish rollback: all 513 previously embedded points persist.",
+      "The old run lacks operation-level telemetry; exact historical timeout cause remains unproven.",
+      "Memory values are a snapshot, not peak consumption or a measured optimization result."
+    ]
+  },
+  "whole_corpus_reparsed": false,
+  "whole_corpus_generation_accuracy_assigned": false,
+  "fixed_suite_cross_round_stability_released": false,
+  "production_image_replaced": false,
+  "production_database_migrated": false,
+  "production_database_bitwise_unchanged_asserted": false,
+  "docker_desktop_started_once": true,
+  "volumes_deleted": false,
+  "formal_service_containers_manually_stopped": false,
+  "secret_scan_findings": [],
+  "source_and_document_files": [
+    {
+      "path": "backend/app/llm/comparison_review.py",
+      "sha256": "b427f29b19241fb221178bb1d94624b9012c7e6b4ad24bbebf4e59193fac79b4"
+    },
+    {
+      "path": "backend/app/llm/comparison_support.py",
+      "sha256": "d5344131272103c0291c2ab8c63536ad5eae164293c4b5e4bf9ef2d6e321c0bc"
+    },
+    {
+      "path": "backend/app/llm/openai_responses.py",
+      "sha256": "57f64eb390b8cb99c730d1d9047db8029134f0a7c53ab18491b198ebf87d1d34"
+    },
+    {
+      "path": "backend/app/services/text_features.py",
+      "sha256": "91b6f520787b162e3db5362856a7de03556c2eaa1d3e468414d5230967aefba2"
+    },
+    {
+      "path": "backend/app/services/claim_semantics.py",
+      "sha256": "f219e69105d43d9cc2fa6d7cf9b6398a15c3ec4e78fb39622911a69d19eeceb8"
+    },
+    {
+      "path": "backend/app/services/answer_completeness.py",
+      "sha256": "b874af04356a5e0794c5cea4dc9b26822c5f227dd014e5f959d14facd91c1616"
+    },
+    {
+      "path": "backend/scripts/official_vector_audit.py",
+      "sha256": "007a70a9a67e3912fc43323bdaf4bdc64e946a90c94771e1ef295b991b11ae3c"
+    },
+    {
+      "path": "backend/scripts/verify_official_comparison_batch.py",
+      "sha256": "023b6de33ad09b2b616fd1120757e2d83c88057741302c3a3e198e8dd8199093"
+    },
+    {
+      "path": "backend/tests/test_official_vector_audit.py",
+      "sha256": "4fc0a3774f2158e78ef22b69f70bdbc38b686ef338a094412e3771c63663104b"
+    },
+    {
+      "path": "backend/tests/test_policy_optimization_scope.py",
+      "sha256": "c82352fb5fee940d4081874d55de2caca407a91f7716bddc75d3e424e93285ec"
+    },
+    {
+      "path": "backend/tests/test_policy_scope_completeness.py",
+      "sha256": "6355d8d59b0d7e781f2092fa561450aa4aacc57a7e7e628e8b00b3a5cb90a3c1"
+    },
+    {
+      "path": "backend/tests/test_comparison_review.py",
+      "sha256": "c32c04942a649a804ee3e0b8f1c7cc451c1c3af3e2f35a2693c27553c2899bf0"
+    },
+    {
+      "path": "backend/tests/test_comparison_support.py",
+      "sha256": "09e656b862987b186a59cf6c6c972cf9e41dd1ee092608d73168b633119e0c19"
+    },
+    {
+      "path": "backend/tests/test_explanation_fields.py",
+      "sha256": "597b33ae80a0faac939c2cb864207110a179449e3c6e277c91bcd89260926397"
+    },
+    {
+      "path": "README.md",
+      "sha256": "18b1f2df1672bbb5ce78e33f320fd8b016ca58dd5695d5eae71ef7ba7e2b8129"
+    },
+    {
+      "path": "docs/acceptance-progress.md",
+      "sha256": "a38c139e32540335034304e90fa0172c40b977ca4995bf22311b5a764ae98bbd"
+    },
+    {
+      "path": "docs/competition-verification-gates.md",
+      "sha256": "8e39607e07563bba8dab89d408502babc4ccbad5e03f433cc6b2ac1c1eb18710"
+    },
+    {
+      "path": "docs/competition-delivery-checklist.md",
+      "sha256": "39b1d40f7d2fbcce2faab6c8a5d19bb0cefa4fee29c013838b3d91fdc4779e69"
+    },
+    {
+      "path": "docs/official-vector-recovery-acceptance-2026-10-20.md",
+      "sha256": "59616dc5d503b5e8d6d993c64e7e6572cedb22c47a58a642df63efeef967f8fb"
+    }
+  ],
+  "artifacts": [
+    {
+      "path": "backend/tmp/official-vector-recovery-2026-10-20/backend-final.xml",
+      "sha256": "e251ffb8df8292aaf12f4894d381107641cf4c1351ac71d1679ef4126eaa2635"
+    },
+    {
+      "path": "backend/tmp/official-vector-recovery-2026-10-20/backend-formula.xml",
+      "sha256": "87cd71985b4ed596a1d38fc5b02b45b06a700612c04f4001c7253b7c8bd824e5"
+    },
+    {
+      "path": "backend/tmp/official-vector-recovery-2026-10-20/backend-lexical.xml",
+      "sha256": "b98cb1dc28ffc58179173dc4d3e0185ea8b200f6c3109b4fe22116f9b7730207"
+    },
+    {
+      "path": "backend/tmp/official-vector-recovery-2026-10-20/backend-release.xml",
+      "sha256": "506e12b5cdcaf1f024630b65b42e53b26909805149d3aee435e2f40e17aca5ae"
+    },
+    {
+      "path": "backend/tmp/official-vector-recovery-2026-10-20/comparison/acceptance.db",
+      "sha256": "d5dedd398285c2ce2298fbcd20fdab0ffbf60bd5cf26a942162b4185d013530d"
+    },
+    {
+      "path": "backend/tmp/official-vector-recovery-2026-10-20/comparison/fixture.json",
+      "sha256": "d7730edb860bcb4b6ba77311de22d749684d6fc726ea5d38b5762afc308c117f"
+    },
+    {
+      "path": "backend/tmp/official-vector-recovery-2026-10-20/comparison/model-calls.json",
+      "sha256": "095ae53fa6e12a40192284111e2a7bdb8212e7e95ee05b2dfe2f80f496151792"
+    },
+    {
+      "path": "backend/tmp/official-vector-recovery-2026-10-20/comparison/parsed/114bfa0d-d6cf-573d-82b2-cfaed94b58b6.json",
+      "sha256": "6710c78824d61e72e1b0c15aaddf534ce0872570051a9b95d6f2f39c786645d7"
+    },
+    {
+      "path": "backend/tmp/official-vector-recovery-2026-10-20/comparison/parsed/20d9fad6-9e6f-543d-a2e1-095d8056c5ff.json",
+      "sha256": "4a05a089a864b8fc603470e4f28fc480526b8184b8c5a89039db83b07bdded3d"
+    },
+    {
+      "path": "backend/tmp/official-vector-recovery-2026-10-20/comparison/parsed/855562a1-8309-57b2-b7b0-b9e7016207dc.json",
+      "sha256": "0bdf9ab2be963a5e42b3560e72b14fd247e2723c299ffc3e340682b02394db97"
+    },
+    {
+      "path": "backend/tmp/official-vector-recovery-2026-10-20/comparison/parsed/bc90bcf2-cccd-5364-94f6-5815603802f7.json",
+      "sha256": "2f5bdb78b265127069fbaf7c9841afe6e181a0d93c3209856c420d678c7825d0"
+    },
+    {
+      "path": "backend/tmp/official-vector-recovery-2026-10-20/comparison/parsed/cd05de96-3b20-5178-8953-d8ee090a4f23.json",
+      "sha256": "0ab6909920de99d93d12d57d963fe93c684446cbcfdba40bf2df1ed080d7b414"
+    },
+    {
+      "path": "backend/tmp/official-vector-recovery-2026-10-20/comparison/report.json",
+      "sha256": "25badef86391cdc58dd0573c1175f7a34126a85d6336828ab6d8db0763ba4e3d"
+    },
+    {
+      "path": "backend/tmp/official-vector-recovery-2026-10-20/comparison/uploads/114bfa0d-d6cf-573d-82b2-cfaed94b58b6.pdf",
+      "sha256": "92cb3a2b71362acda98a789b03d88688fd33cf5fcf13f81d2b1de30ee7d3b67a"
+    },
+    {
+      "path": "backend/tmp/official-vector-recovery-2026-10-20/comparison/uploads/20d9fad6-9e6f-543d-a2e1-095d8056c5ff.pdf",
+      "sha256": "0a9bff1be3575cf9fe26a4a3d3a9175bc791ecec90de8b9deba4cff75d2b9476"
+    },
+    {
+      "path": "backend/tmp/official-vector-recovery-2026-10-20/comparison/uploads/855562a1-8309-57b2-b7b0-b9e7016207dc.pdf",
+      "sha256": "33a4e757c19d6ea8d3cca8958fce8fe405e290272e135c99ee66065c775d5bd1"
+    },
+    {
+      "path": "backend/tmp/official-vector-recovery-2026-10-20/comparison/uploads/bc90bcf2-cccd-5364-94f6-5815603802f7.pdf",
+      "sha256": "e9a0d3128767db616085dc0f4e6e455e672e89af823e8ed1282793682787395a"
+    },
+    {
+      "path": "backend/tmp/official-vector-recovery-2026-10-20/comparison/uploads/cd05de96-3b20-5178-8953-d8ee090a4f23.pdf",
+      "sha256": "c1984bb50a5b90fddb895fdc3a0f72e5bc977148c9f63ef6040cbe7a3e1f0d98"
+    },
+    {
+      "path": "backend/tmp/official-vector-recovery-2026-10-20/comparison-boundaries-a/acceptance.db",
+      "sha256": "5aebf071f3d5bb9ac1f9caaa1a824e9bf94c31d6c11eb842fe312248d65127ef"
+    },
+    {
+      "path": "backend/tmp/official-vector-recovery-2026-10-20/comparison-boundaries-a/fixture.json",
+      "sha256": "d7730edb860bcb4b6ba77311de22d749684d6fc726ea5d38b5762afc308c117f"
+    },
+    {
+      "path": "backend/tmp/official-vector-recovery-2026-10-20/comparison-boundaries-a/model-calls.json",
+      "sha256": "5b3d7463acf91c083b3d65c778825fdfbeeb8a0774b7ea9780a0d2e90757115a"
+    },
+    {
+      "path": "backend/tmp/official-vector-recovery-2026-10-20/comparison-boundaries-a/parsed/114bfa0d-d6cf-573d-82b2-cfaed94b58b6.json",
+      "sha256": "6710c78824d61e72e1b0c15aaddf534ce0872570051a9b95d6f2f39c786645d7"
+    },
+    {
+      "path": "backend/tmp/official-vector-recovery-2026-10-20/comparison-boundaries-a/parsed/20d9fad6-9e6f-543d-a2e1-095d8056c5ff.json",
+      "sha256": "4a05a089a864b8fc603470e4f28fc480526b8184b8c5a89039db83b07bdded3d"
+    },
+    {
+      "path": "backend/tmp/official-vector-recovery-2026-10-20/comparison-boundaries-a/parsed/855562a1-8309-57b2-b7b0-b9e7016207dc.json",
+      "sha256": "0bdf9ab2be963a5e42b3560e72b14fd247e2723c299ffc3e340682b02394db97"
+    },
+    {
+      "path": "backend/tmp/official-vector-recovery-2026-10-20/comparison-boundaries-a/parsed/bc90bcf2-cccd-5364-94f6-5815603802f7.json",
+      "sha256": "2f5bdb78b265127069fbaf7c9841afe6e181a0d93c3209856c420d678c7825d0"
+    },
+    {
+      "path": "backend/tmp/official-vector-recovery-2026-10-20/comparison-boundaries-a/parsed/cd05de96-3b20-5178-8953-d8ee090a4f23.json",
+      "sha256": "0ab6909920de99d93d12d57d963fe93c684446cbcfdba40bf2df1ed080d7b414"
+    },
+    {
+      "path": "backend/tmp/official-vector-recovery-2026-10-20/comparison-boundaries-a/report.json",
+      "sha256": "5aa75568f4a3469e5b6d1f3f2a8d8fed0c9323e612b9986cf90290d946ad0309"
+    },
+    {
+      "path": "backend/tmp/official-vector-recovery-2026-10-20/comparison-boundaries-a/uploads/114bfa0d-d6cf-573d-82b2-cfaed94b58b6.pdf",
+      "sha256": "92cb3a2b71362acda98a789b03d88688fd33cf5fcf13f81d2b1de30ee7d3b67a"
+    },
+    {
+      "path": "backend/tmp/official-vector-recovery-2026-10-20/comparison-boundaries-a/uploads/20d9fad6-9e6f-543d-a2e1-095d8056c5ff.pdf",
+      "sha256": "0a9bff1be3575cf9fe26a4a3d3a9175bc791ecec90de8b9deba4cff75d2b9476"
+    },
+    {
+      "path": "backend/tmp/official-vector-recovery-2026-10-20/comparison-boundaries-a/uploads/855562a1-8309-57b2-b7b0-b9e7016207dc.pdf",
+      "sha256": "33a4e757c19d6ea8d3cca8958fce8fe405e290272e135c99ee66065c775d5bd1"
+    },
+    {
+      "path": "backend/tmp/official-vector-recovery-2026-10-20/comparison-boundaries-a/uploads/bc90bcf2-cccd-5364-94f6-5815603802f7.pdf",
+      "sha256": "e9a0d3128767db616085dc0f4e6e455e672e89af823e8ed1282793682787395a"
+    },
+    {
+      "path": "backend/tmp/official-vector-recovery-2026-10-20/comparison-boundaries-a/uploads/cd05de96-3b20-5178-8953-d8ee090a4f23.pdf",
+      "sha256": "c1984bb50a5b90fddb895fdc3a0f72e5bc977148c9f63ef6040cbe7a3e1f0d98"
+    },
+    {
+      "path": "backend/tmp/official-vector-recovery-2026-10-20/comparison-boundaries-b/acceptance.db",
+      "sha256": "ae025139c961e2186ef62122ad0366ed11193e133fdabc7ca9fa2db46c3a43da"
+    },
+    {
+      "path": "backend/tmp/official-vector-recovery-2026-10-20/comparison-boundaries-b/fixture.json",
+      "sha256": "d7730edb860bcb4b6ba77311de22d749684d6fc726ea5d38b5762afc308c117f"
+    },
+    {
+      "path": "backend/tmp/official-vector-recovery-2026-10-20/comparison-boundaries-b/model-calls.json",
+      "sha256": "0cece950ddb7859812770d3a32fb86b77e0a4a594e35d959a03cd6efd6a7e6d5"
+    },
+    {
+      "path": "backend/tmp/official-vector-recovery-2026-10-20/comparison-boundaries-b/parsed/114bfa0d-d6cf-573d-82b2-cfaed94b58b6.json",
+      "sha256": "6710c78824d61e72e1b0c15aaddf534ce0872570051a9b95d6f2f39c786645d7"
+    },
+    {
+      "path": "backend/tmp/official-vector-recovery-2026-10-20/comparison-boundaries-b/parsed/20d9fad6-9e6f-543d-a2e1-095d8056c5ff.json",
+      "sha256": "4a05a089a864b8fc603470e4f28fc480526b8184b8c5a89039db83b07bdded3d"
+    },
+    {
+      "path": "backend/tmp/official-vector-recovery-2026-10-20/comparison-boundaries-b/parsed/855562a1-8309-57b2-b7b0-b9e7016207dc.json",
+      "sha256": "0bdf9ab2be963a5e42b3560e72b14fd247e2723c299ffc3e340682b02394db97"
+    },
+    {
+      "path": "backend/tmp/official-vector-recovery-2026-10-20/comparison-boundaries-b/parsed/bc90bcf2-cccd-5364-94f6-5815603802f7.json",
+      "sha256": "2f5bdb78b265127069fbaf7c9841afe6e181a0d93c3209856c420d678c7825d0"
+    },
+    {
+      "path": "backend/tmp/official-vector-recovery-2026-10-20/comparison-boundaries-b/parsed/cd05de96-3b20-5178-8953-d8ee090a4f23.json",
+      "sha256": "0ab6909920de99d93d12d57d963fe93c684446cbcfdba40bf2df1ed080d7b414"
+    },
+    {
+      "path": "backend/tmp/official-vector-recovery-2026-10-20/comparison-boundaries-b/report.json",
+      "sha256": "068eb203fa77fc341d7ba7ba87d31c4b32914511291720a94656e54c59d63b91"
+    },
+    {
+      "path": "backend/tmp/official-vector-recovery-2026-10-20/comparison-boundaries-b/uploads/114bfa0d-d6cf-573d-82b2-cfaed94b58b6.pdf",
+      "sha256": "92cb3a2b71362acda98a789b03d88688fd33cf5fcf13f81d2b1de30ee7d3b67a"
+    },
+    {
+      "path": "backend/tmp/official-vector-recovery-2026-10-20/comparison-boundaries-b/uploads/20d9fad6-9e6f-543d-a2e1-095d8056c5ff.pdf",
+      "sha256": "0a9bff1be3575cf9fe26a4a3d3a9175bc791ecec90de8b9deba4cff75d2b9476"
+    },
+    {
+      "path": "backend/tmp/official-vector-recovery-2026-10-20/comparison-boundaries-b/uploads/855562a1-8309-57b2-b7b0-b9e7016207dc.pdf",
+      "sha256": "33a4e757c19d6ea8d3cca8958fce8fe405e290272e135c99ee66065c775d5bd1"
+    },
+    {
+      "path": "backend/tmp/official-vector-recovery-2026-10-20/comparison-boundaries-b/uploads/bc90bcf2-cccd-5364-94f6-5815603802f7.pdf",
+      "sha256": "e9a0d3128767db616085dc0f4e6e455e672e89af823e8ed1282793682787395a"
+    },
+    {
+      "path": "backend/tmp/official-vector-recovery-2026-10-20/comparison-boundaries-b/uploads/cd05de96-3b20-5178-8953-d8ee090a4f23.pdf",
+      "sha256": "c1984bb50a5b90fddb895fdc3a0f72e5bc977148c9f63ef6040cbe7a3e1f0d98"
+    },
+    {
+      "path": "backend/tmp/official-vector-recovery-2026-10-20/comparison-fixed/acceptance.db",
+      "sha256": "cc240320d54cec8fb52fc7dde037efdf5be4dbc606be5deb018c7765bc78e4df"
+    },
+    {
+      "path": "backend/tmp/official-vector-recovery-2026-10-20/comparison-fixed/fixture.json",
+      "sha256": "d7730edb860bcb4b6ba77311de22d749684d6fc726ea5d38b5762afc308c117f"
+    },
+    {
+      "path": "backend/tmp/official-vector-recovery-2026-10-20/comparison-fixed/model-calls.json",
+      "sha256": "d609a3cf290a7c20e4e06a1c24ecf033649f5ec604cf69763cbcd8b897ab8387"
+    },
+    {
+      "path": "backend/tmp/official-vector-recovery-2026-10-20/comparison-fixed/parsed/114bfa0d-d6cf-573d-82b2-cfaed94b58b6.json",
+      "sha256": "6710c78824d61e72e1b0c15aaddf534ce0872570051a9b95d6f2f39c786645d7"
+    },
+    {
+      "path": "backend/tmp/official-vector-recovery-2026-10-20/comparison-fixed/parsed/20d9fad6-9e6f-543d-a2e1-095d8056c5ff.json",
+      "sha256": "4a05a089a864b8fc603470e4f28fc480526b8184b8c5a89039db83b07bdded3d"
+    },
+    {
+      "path": "backend/tmp/official-vector-recovery-2026-10-20/comparison-fixed/parsed/855562a1-8309-57b2-b7b0-b9e7016207dc.json",
+      "sha256": "0bdf9ab2be963a5e42b3560e72b14fd247e2723c299ffc3e340682b02394db97"
+    },
+    {
+      "path": "backend/tmp/official-vector-recovery-2026-10-20/comparison-fixed/parsed/bc90bcf2-cccd-5364-94f6-5815603802f7.json",
+      "sha256": "2f5bdb78b265127069fbaf7c9841afe6e181a0d93c3209856c420d678c7825d0"
+    },
+    {
+      "path": "backend/tmp/official-vector-recovery-2026-10-20/comparison-fixed/parsed/cd05de96-3b20-5178-8953-d8ee090a4f23.json",
+      "sha256": "0ab6909920de99d93d12d57d963fe93c684446cbcfdba40bf2df1ed080d7b414"
+    },
+    {
+      "path": "backend/tmp/official-vector-recovery-2026-10-20/comparison-fixed/report.json",
+      "sha256": "3d9f4fbae9c3d8a02f37ba466484c17ce8b8ebf7495fca25c9856bd0cb433741"
+    },
+    {
+      "path": "backend/tmp/official-vector-recovery-2026-10-20/comparison-fixed/uploads/114bfa0d-d6cf-573d-82b2-cfaed94b58b6.pdf",
+      "sha256": "92cb3a2b71362acda98a789b03d88688fd33cf5fcf13f81d2b1de30ee7d3b67a"
+    },
+    {
+      "path": "backend/tmp/official-vector-recovery-2026-10-20/comparison-fixed/uploads/20d9fad6-9e6f-543d-a2e1-095d8056c5ff.pdf",
+      "sha256": "0a9bff1be3575cf9fe26a4a3d3a9175bc791ecec90de8b9deba4cff75d2b9476"
+    },
+    {
+      "path": "backend/tmp/official-vector-recovery-2026-10-20/comparison-fixed/uploads/855562a1-8309-57b2-b7b0-b9e7016207dc.pdf",
+      "sha256": "33a4e757c19d6ea8d3cca8958fce8fe405e290272e135c99ee66065c775d5bd1"
+    },
+    {
+      "path": "backend/tmp/official-vector-recovery-2026-10-20/comparison-fixed/uploads/bc90bcf2-cccd-5364-94f6-5815603802f7.pdf",
+      "sha256": "e9a0d3128767db616085dc0f4e6e455e672e89af823e8ed1282793682787395a"
+    },
+    {
+      "path": "backend/tmp/official-vector-recovery-2026-10-20/comparison-fixed/uploads/cd05de96-3b20-5178-8953-d8ee090a4f23.pdf",
+      "sha256": "c1984bb50a5b90fddb895fdc3a0f72e5bc977148c9f63ef6040cbe7a3e1f0d98"
+    },
+    {
+      "path": "backend/tmp/official-vector-recovery-2026-10-20/comparison-formula-release/acceptance.db",
+      "sha256": "206e38711dd2e6ae49f26571ac96bf5782fd554228d72a854e1237b852473adf"
+    },
+    {
+      "path": "backend/tmp/official-vector-recovery-2026-10-20/comparison-formula-release/fixture.json",
+      "sha256": "d7730edb860bcb4b6ba77311de22d749684d6fc726ea5d38b5762afc308c117f"
+    },
+    {
+      "path": "backend/tmp/official-vector-recovery-2026-10-20/comparison-formula-release/model-calls.json",
+      "sha256": "9830cf6b191329c150bf7c3cb4301414fdaeb9da36504a152476607f7429b5d3"
+    },
+    {
+      "path": "backend/tmp/official-vector-recovery-2026-10-20/comparison-formula-release/parsed/114bfa0d-d6cf-573d-82b2-cfaed94b58b6.json",
+      "sha256": "6710c78824d61e72e1b0c15aaddf534ce0872570051a9b95d6f2f39c786645d7"
+    },
+    {
+      "path": "backend/tmp/official-vector-recovery-2026-10-20/comparison-formula-release/parsed/20d9fad6-9e6f-543d-a2e1-095d8056c5ff.json",
+      "sha256": "4a05a089a864b8fc603470e4f28fc480526b8184b8c5a89039db83b07bdded3d"
+    },
+    {
+      "path": "backend/tmp/official-vector-recovery-2026-10-20/comparison-formula-release/parsed/855562a1-8309-57b2-b7b0-b9e7016207dc.json",
+      "sha256": "0bdf9ab2be963a5e42b3560e72b14fd247e2723c299ffc3e340682b02394db97"
+    },
+    {
+      "path": "backend/tmp/official-vector-recovery-2026-10-20/comparison-formula-release/parsed/bc90bcf2-cccd-5364-94f6-5815603802f7.json",
+      "sha256": "2f5bdb78b265127069fbaf7c9841afe6e181a0d93c3209856c420d678c7825d0"
+    },
+    {
+      "path": "backend/tmp/official-vector-recovery-2026-10-20/comparison-formula-release/parsed/cd05de96-3b20-5178-8953-d8ee090a4f23.json",
+      "sha256": "0ab6909920de99d93d12d57d963fe93c684446cbcfdba40bf2df1ed080d7b414"
+    },
+    {
+      "path": "backend/tmp/official-vector-recovery-2026-10-20/comparison-formula-release/report.json",
+      "sha256": "e20be139de87b6dc5ba584b0b51eb8a364575401a7ab89b44dca2fa629dd3f63"
+    },
+    {
+      "path": "backend/tmp/official-vector-recovery-2026-10-20/comparison-formula-release/uploads/114bfa0d-d6cf-573d-82b2-cfaed94b58b6.pdf",
+      "sha256": "92cb3a2b71362acda98a789b03d88688fd33cf5fcf13f81d2b1de30ee7d3b67a"
+    },
+    {
+      "path": "backend/tmp/official-vector-recovery-2026-10-20/comparison-formula-release/uploads/20d9fad6-9e6f-543d-a2e1-095d8056c5ff.pdf",
+      "sha256": "0a9bff1be3575cf9fe26a4a3d3a9175bc791ecec90de8b9deba4cff75d2b9476"
+    },
+    {
+      "path": "backend/tmp/official-vector-recovery-2026-10-20/comparison-formula-release/uploads/855562a1-8309-57b2-b7b0-b9e7016207dc.pdf",
+      "sha256": "33a4e757c19d6ea8d3cca8958fce8fe405e290272e135c99ee66065c775d5bd1"
+    },
+    {
+      "path": "backend/tmp/official-vector-recovery-2026-10-20/comparison-formula-release/uploads/bc90bcf2-cccd-5364-94f6-5815603802f7.pdf",
+      "sha256": "e9a0d3128767db616085dc0f4e6e455e672e89af823e8ed1282793682787395a"
+    },
+    {
+      "path": "backend/tmp/official-vector-recovery-2026-10-20/comparison-formula-release/uploads/cd05de96-3b20-5178-8953-d8ee090a4f23.pdf",
+      "sha256": "c1984bb50a5b90fddb895fdc3a0f72e5bc977148c9f63ef6040cbe7a3e1f0d98"
+    },
+    {
+      "path": "backend/tmp/official-vector-recovery-2026-10-20/comparison-lexical-release/acceptance.db",
+      "sha256": "07ba32bc42827acfd288683d773c71c1f6059bc8a5b9c4c94fff2e9596c89d4c"
+    },
+    {
+      "path": "backend/tmp/official-vector-recovery-2026-10-20/comparison-lexical-release/fixture.json",
+      "sha256": "d7730edb860bcb4b6ba77311de22d749684d6fc726ea5d38b5762afc308c117f"
+    },
+    {
+      "path": "backend/tmp/official-vector-recovery-2026-10-20/comparison-lexical-release/model-calls.json",
+      "sha256": "e551312a0047e5cb5dd9d9f81c96c199136cb7ad6f192c34025eb3c4756d12e5"
+    },
+    {
+      "path": "backend/tmp/official-vector-recovery-2026-10-20/comparison-lexical-release/parsed/114bfa0d-d6cf-573d-82b2-cfaed94b58b6.json",
+      "sha256": "6710c78824d61e72e1b0c15aaddf534ce0872570051a9b95d6f2f39c786645d7"
+    },
+    {
+      "path": "backend/tmp/official-vector-recovery-2026-10-20/comparison-lexical-release/parsed/20d9fad6-9e6f-543d-a2e1-095d8056c5ff.json",
+      "sha256": "4a05a089a864b8fc603470e4f28fc480526b8184b8c5a89039db83b07bdded3d"
+    },
+    {
+      "path": "backend/tmp/official-vector-recovery-2026-10-20/comparison-lexical-release/parsed/855562a1-8309-57b2-b7b0-b9e7016207dc.json",
+      "sha256": "0bdf9ab2be963a5e42b3560e72b14fd247e2723c299ffc3e340682b02394db97"
+    },
+    {
+      "path": "backend/tmp/official-vector-recovery-2026-10-20/comparison-lexical-release/parsed/bc90bcf2-cccd-5364-94f6-5815603802f7.json",
+      "sha256": "2f5bdb78b265127069fbaf7c9841afe6e181a0d93c3209856c420d678c7825d0"
+    },
+    {
+      "path": "backend/tmp/official-vector-recovery-2026-10-20/comparison-lexical-release/parsed/cd05de96-3b20-5178-8953-d8ee090a4f23.json",
+      "sha256": "0ab6909920de99d93d12d57d963fe93c684446cbcfdba40bf2df1ed080d7b414"
+    },
+    {
+      "path": "backend/tmp/official-vector-recovery-2026-10-20/comparison-lexical-release/report.json",
+      "sha256": "a9a038cfe9f2b9ff60aa80cda81bd9920646447b540acba18e7640abe1264d6a"
+    },
+    {
+      "path": "backend/tmp/official-vector-recovery-2026-10-20/comparison-lexical-release/uploads/114bfa0d-d6cf-573d-82b2-cfaed94b58b6.pdf",
+      "sha256": "92cb3a2b71362acda98a789b03d88688fd33cf5fcf13f81d2b1de30ee7d3b67a"
+    },
+    {
+      "path": "backend/tmp/official-vector-recovery-2026-10-20/comparison-lexical-release/uploads/20d9fad6-9e6f-543d-a2e1-095d8056c5ff.pdf",
+      "sha256": "0a9bff1be3575cf9fe26a4a3d3a9175bc791ecec90de8b9deba4cff75d2b9476"
+    },
+    {
+      "path": "backend/tmp/official-vector-recovery-2026-10-20/comparison-lexical-release/uploads/855562a1-8309-57b2-b7b0-b9e7016207dc.pdf",
+      "sha256": "33a4e757c19d6ea8d3cca8958fce8fe405e290272e135c99ee66065c775d5bd1"
+    },
+    {
+      "path": "backend/tmp/official-vector-recovery-2026-10-20/comparison-lexical-release/uploads/bc90bcf2-cccd-5364-94f6-5815603802f7.pdf",
+      "sha256": "e9a0d3128767db616085dc0f4e6e455e672e89af823e8ed1282793682787395a"
+    },
+    {
+      "path": "backend/tmp/official-vector-recovery-2026-10-20/comparison-lexical-release/uploads/cd05de96-3b20-5178-8953-d8ee090a4f23.pdf",
+      "sha256": "c1984bb50a5b90fddb895fdc3a0f72e5bc977148c9f63ef6040cbe7a3e1f0d98"
+    },
+    {
+      "path": "backend/tmp/official-vector-recovery-2026-10-20/comparison-release-a/acceptance.db",
+      "sha256": "735cd61d9d205ebe7a9b453339f27872efbe7756c46afe95c8438a13914f3949"
+    },
+    {
+      "path": "backend/tmp/official-vector-recovery-2026-10-20/comparison-release-a/fixture.json",
+      "sha256": "d7730edb860bcb4b6ba77311de22d749684d6fc726ea5d38b5762afc308c117f"
+    },
+    {
+      "path": "backend/tmp/official-vector-recovery-2026-10-20/comparison-release-a/model-calls.json",
+      "sha256": "b54f962360bd4872e63891e1df720e86c3e8d84b4a30ee3b10236eef94a68bf2"
+    },
+    {
+      "path": "backend/tmp/official-vector-recovery-2026-10-20/comparison-release-a/parsed/114bfa0d-d6cf-573d-82b2-cfaed94b58b6.json",
+      "sha256": "6710c78824d61e72e1b0c15aaddf534ce0872570051a9b95d6f2f39c786645d7"
+    },
+    {
+      "path": "backend/tmp/official-vector-recovery-2026-10-20/comparison-release-a/parsed/20d9fad6-9e6f-543d-a2e1-095d8056c5ff.json",
+      "sha256": "4a05a089a864b8fc603470e4f28fc480526b8184b8c5a89039db83b07bdded3d"
+    },
+    {
+      "path": "backend/tmp/official-vector-recovery-2026-10-20/comparison-release-a/parsed/855562a1-8309-57b2-b7b0-b9e7016207dc.json",
+      "sha256": "0bdf9ab2be963a5e42b3560e72b14fd247e2723c299ffc3e340682b02394db97"
+    },
+    {
+      "path": "backend/tmp/official-vector-recovery-2026-10-20/comparison-release-a/parsed/bc90bcf2-cccd-5364-94f6-5815603802f7.json",
+      "sha256": "2f5bdb78b265127069fbaf7c9841afe6e181a0d93c3209856c420d678c7825d0"
+    },
+    {
+      "path": "backend/tmp/official-vector-recovery-2026-10-20/comparison-release-a/parsed/cd05de96-3b20-5178-8953-d8ee090a4f23.json",
+      "sha256": "0ab6909920de99d93d12d57d963fe93c684446cbcfdba40bf2df1ed080d7b414"
+    },
+    {
+      "path": "backend/tmp/official-vector-recovery-2026-10-20/comparison-release-a/report.json",
+      "sha256": "57bb135b90f516ad071b3e8b890f752c30772586dc73785429ac475a4b5c14b3"
+    },
+    {
+      "path": "backend/tmp/official-vector-recovery-2026-10-20/comparison-release-a/uploads/114bfa0d-d6cf-573d-82b2-cfaed94b58b6.pdf",
+      "sha256": "92cb3a2b71362acda98a789b03d88688fd33cf5fcf13f81d2b1de30ee7d3b67a"
+    },
+    {
+      "path": "backend/tmp/official-vector-recovery-2026-10-20/comparison-release-a/uploads/20d9fad6-9e6f-543d-a2e1-095d8056c5ff.pdf",
+      "sha256": "0a9bff1be3575cf9fe26a4a3d3a9175bc791ecec90de8b9deba4cff75d2b9476"
+    },
+    {
+      "path": "backend/tmp/official-vector-recovery-2026-10-20/comparison-release-a/uploads/855562a1-8309-57b2-b7b0-b9e7016207dc.pdf",
+      "sha256": "33a4e757c19d6ea8d3cca8958fce8fe405e290272e135c99ee66065c775d5bd1"
+    },
+    {
+      "path": "backend/tmp/official-vector-recovery-2026-10-20/comparison-release-a/uploads/bc90bcf2-cccd-5364-94f6-5815603802f7.pdf",
+      "sha256": "e9a0d3128767db616085dc0f4e6e455e672e89af823e8ed1282793682787395a"
+    },
+    {
+      "path": "backend/tmp/official-vector-recovery-2026-10-20/comparison-release-a/uploads/cd05de96-3b20-5178-8953-d8ee090a4f23.pdf",
+      "sha256": "c1984bb50a5b90fddb895fdc3a0f72e5bc977148c9f63ef6040cbe7a3e1f0d98"
+    },
+    {
+      "path": "backend/tmp/official-vector-recovery-2026-10-20/comparison-release-b/acceptance.db",
+      "sha256": "a218b324100a2ac67a288a8eb6f831fd04846a1de7f701668868bae15e4ca3b4"
+    },
+    {
+      "path": "backend/tmp/official-vector-recovery-2026-10-20/comparison-release-b/fixture.json",
+      "sha256": "d7730edb860bcb4b6ba77311de22d749684d6fc726ea5d38b5762afc308c117f"
+    },
+    {
+      "path": "backend/tmp/official-vector-recovery-2026-10-20/comparison-release-b/model-calls.json",
+      "sha256": "ab6442538e6547d86e22d1a726009d51b2965a08ff829c55d3ca677d6151922b"
+    },
+    {
+      "path": "backend/tmp/official-vector-recovery-2026-10-20/comparison-release-b/parsed/114bfa0d-d6cf-573d-82b2-cfaed94b58b6.json",
+      "sha256": "6710c78824d61e72e1b0c15aaddf534ce0872570051a9b95d6f2f39c786645d7"
+    },
+    {
+      "path": "backend/tmp/official-vector-recovery-2026-10-20/comparison-release-b/parsed/20d9fad6-9e6f-543d-a2e1-095d8056c5ff.json",
+      "sha256": "4a05a089a864b8fc603470e4f28fc480526b8184b8c5a89039db83b07bdded3d"
+    },
+    {
+      "path": "backend/tmp/official-vector-recovery-2026-10-20/comparison-release-b/parsed/855562a1-8309-57b2-b7b0-b9e7016207dc.json",
+      "sha256": "0bdf9ab2be963a5e42b3560e72b14fd247e2723c299ffc3e340682b02394db97"
+    },
+    {
+      "path": "backend/tmp/official-vector-recovery-2026-10-20/comparison-release-b/parsed/bc90bcf2-cccd-5364-94f6-5815603802f7.json",
+      "sha256": "2f5bdb78b265127069fbaf7c9841afe6e181a0d93c3209856c420d678c7825d0"
+    },
+    {
+      "path": "backend/tmp/official-vector-recovery-2026-10-20/comparison-release-b/parsed/cd05de96-3b20-5178-8953-d8ee090a4f23.json",
+      "sha256": "0ab6909920de99d93d12d57d963fe93c684446cbcfdba40bf2df1ed080d7b414"
+    },
+    {
+      "path": "backend/tmp/official-vector-recovery-2026-10-20/comparison-release-b/report.json",
+      "sha256": "bba82fd09dfaa616c6b941e175ef0740c4f5b77ef4193eb225e8310d0c3ba0b5"
+    },
+    {
+      "path": "backend/tmp/official-vector-recovery-2026-10-20/comparison-release-b/uploads/114bfa0d-d6cf-573d-82b2-cfaed94b58b6.pdf",
+      "sha256": "92cb3a2b71362acda98a789b03d88688fd33cf5fcf13f81d2b1de30ee7d3b67a"
+    },
+    {
+      "path": "backend/tmp/official-vector-recovery-2026-10-20/comparison-release-b/uploads/20d9fad6-9e6f-543d-a2e1-095d8056c5ff.pdf",
+      "sha256": "0a9bff1be3575cf9fe26a4a3d3a9175bc791ecec90de8b9deba4cff75d2b9476"
+    },
+    {
+      "path": "backend/tmp/official-vector-recovery-2026-10-20/comparison-release-b/uploads/855562a1-8309-57b2-b7b0-b9e7016207dc.pdf",
+      "sha256": "33a4e757c19d6ea8d3cca8958fce8fe405e290272e135c99ee66065c775d5bd1"
+    },
+    {
+      "path": "backend/tmp/official-vector-recovery-2026-10-20/comparison-release-b/uploads/bc90bcf2-cccd-5364-94f6-5815603802f7.pdf",
+      "sha256": "e9a0d3128767db616085dc0f4e6e455e672e89af823e8ed1282793682787395a"
+    },
+    {
+      "path": "backend/tmp/official-vector-recovery-2026-10-20/comparison-release-b/uploads/cd05de96-3b20-5178-8953-d8ee090a4f23.pdf",
+      "sha256": "c1984bb50a5b90fddb895fdc3a0f72e5bc977148c9f63ef6040cbe7a3e1f0d98"
+    },
+    {
+      "path": "backend/tmp/official-vector-recovery-2026-10-20/comparison-review-final/acceptance.db",
+      "sha256": "15fd8c571b535e5623db1dfdb0c3bbc625723530d42ba0cf151db260d9cced02"
+    },
+    {
+      "path": "backend/tmp/official-vector-recovery-2026-10-20/comparison-review-final/fixture.json",
+      "sha256": "d7730edb860bcb4b6ba77311de22d749684d6fc726ea5d38b5762afc308c117f"
+    },
+    {
+      "path": "backend/tmp/official-vector-recovery-2026-10-20/comparison-review-final/model-calls.json",
+      "sha256": "ca2d124f9496fed723dbd219d9e92af2968fd8a0e292db500d93edcb19f61a23"
+    },
+    {
+      "path": "backend/tmp/official-vector-recovery-2026-10-20/comparison-review-final/parsed/114bfa0d-d6cf-573d-82b2-cfaed94b58b6.json",
+      "sha256": "6710c78824d61e72e1b0c15aaddf534ce0872570051a9b95d6f2f39c786645d7"
+    },
+    {
+      "path": "backend/tmp/official-vector-recovery-2026-10-20/comparison-review-final/parsed/20d9fad6-9e6f-543d-a2e1-095d8056c5ff.json",
+      "sha256": "4a05a089a864b8fc603470e4f28fc480526b8184b8c5a89039db83b07bdded3d"
+    },
+    {
+      "path": "backend/tmp/official-vector-recovery-2026-10-20/comparison-review-final/parsed/855562a1-8309-57b2-b7b0-b9e7016207dc.json",
+      "sha256": "0bdf9ab2be963a5e42b3560e72b14fd247e2723c299ffc3e340682b02394db97"
+    },
+    {
+      "path": "backend/tmp/official-vector-recovery-2026-10-20/comparison-review-final/parsed/bc90bcf2-cccd-5364-94f6-5815603802f7.json",
+      "sha256": "2f5bdb78b265127069fbaf7c9841afe6e181a0d93c3209856c420d678c7825d0"
+    },
+    {
+      "path": "backend/tmp/official-vector-recovery-2026-10-20/comparison-review-final/parsed/cd05de96-3b20-5178-8953-d8ee090a4f23.json",
+      "sha256": "0ab6909920de99d93d12d57d963fe93c684446cbcfdba40bf2df1ed080d7b414"
+    },
+    {
+      "path": "backend/tmp/official-vector-recovery-2026-10-20/comparison-review-final/report.json",
+      "sha256": "4f262fb4e48881a46a49f6303109c81a9ac3b06b6174b15f700c2f7ea1ff3711"
+    },
+    {
+      "path": "backend/tmp/official-vector-recovery-2026-10-20/comparison-review-final/uploads/114bfa0d-d6cf-573d-82b2-cfaed94b58b6.pdf",
+      "sha256": "92cb3a2b71362acda98a789b03d88688fd33cf5fcf13f81d2b1de30ee7d3b67a"
+    },
+    {
+      "path": "backend/tmp/official-vector-recovery-2026-10-20/comparison-review-final/uploads/20d9fad6-9e6f-543d-a2e1-095d8056c5ff.pdf",
+      "sha256": "0a9bff1be3575cf9fe26a4a3d3a9175bc791ecec90de8b9deba4cff75d2b9476"
+    },
+    {
+      "path": "backend/tmp/official-vector-recovery-2026-10-20/comparison-review-final/uploads/855562a1-8309-57b2-b7b0-b9e7016207dc.pdf",
+      "sha256": "33a4e757c19d6ea8d3cca8958fce8fe405e290272e135c99ee66065c775d5bd1"
+    },
+    {
+      "path": "backend/tmp/official-vector-recovery-2026-10-20/comparison-review-final/uploads/bc90bcf2-cccd-5364-94f6-5815603802f7.pdf",
+      "sha256": "e9a0d3128767db616085dc0f4e6e455e672e89af823e8ed1282793682787395a"
+    },
+    {
+      "path": "backend/tmp/official-vector-recovery-2026-10-20/comparison-review-final/uploads/cd05de96-3b20-5178-8953-d8ee090a4f23.pdf",
+      "sha256": "c1984bb50a5b90fddb895fdc3a0f72e5bc977148c9f63ef6040cbe7a3e1f0d98"
+    },
+    {
+      "path": "backend/tmp/official-vector-recovery-2026-10-20/comparison-stability/acceptance.db",
+      "sha256": "1276220d2e8b679e00382043a6e7b593e19fe2b3c8a0dd1270381cefd08dcd96"
+    },
+    {
+      "path": "backend/tmp/official-vector-recovery-2026-10-20/comparison-stability/fixture.json",
+      "sha256": "d7730edb860bcb4b6ba77311de22d749684d6fc726ea5d38b5762afc308c117f"
+    },
+    {
+      "path": "backend/tmp/official-vector-recovery-2026-10-20/comparison-stability/model-calls.json",
+      "sha256": "32ab9833498798a69dca033807a6e4a3c0cdca3b339239c7a3f37310ec5c578b"
+    },
+    {
+      "path": "backend/tmp/official-vector-recovery-2026-10-20/comparison-stability/parsed/114bfa0d-d6cf-573d-82b2-cfaed94b58b6.json",
+      "sha256": "6710c78824d61e72e1b0c15aaddf534ce0872570051a9b95d6f2f39c786645d7"
+    },
+    {
+      "path": "backend/tmp/official-vector-recovery-2026-10-20/comparison-stability/parsed/20d9fad6-9e6f-543d-a2e1-095d8056c5ff.json",
+      "sha256": "4a05a089a864b8fc603470e4f28fc480526b8184b8c5a89039db83b07bdded3d"
+    },
+    {
+      "path": "backend/tmp/official-vector-recovery-2026-10-20/comparison-stability/parsed/855562a1-8309-57b2-b7b0-b9e7016207dc.json",
+      "sha256": "0bdf9ab2be963a5e42b3560e72b14fd247e2723c299ffc3e340682b02394db97"
+    },
+    {
+      "path": "backend/tmp/official-vector-recovery-2026-10-20/comparison-stability/parsed/bc90bcf2-cccd-5364-94f6-5815603802f7.json",
+      "sha256": "2f5bdb78b265127069fbaf7c9841afe6e181a0d93c3209856c420d678c7825d0"
+    },
+    {
+      "path": "backend/tmp/official-vector-recovery-2026-10-20/comparison-stability/parsed/cd05de96-3b20-5178-8953-d8ee090a4f23.json",
+      "sha256": "0ab6909920de99d93d12d57d963fe93c684446cbcfdba40bf2df1ed080d7b414"
+    },
+    {
+      "path": "backend/tmp/official-vector-recovery-2026-10-20/comparison-stability/report.json",
+      "sha256": "77e05c72af5717dd1634ecb45619da75b1fbdbbce52ac2cec77aa73825d516b2"
+    },
+    {
+      "path": "backend/tmp/official-vector-recovery-2026-10-20/comparison-stability/uploads/114bfa0d-d6cf-573d-82b2-cfaed94b58b6.pdf",
+      "sha256": "92cb3a2b71362acda98a789b03d88688fd33cf5fcf13f81d2b1de30ee7d3b67a"
+    },
+    {
+      "path": "backend/tmp/official-vector-recovery-2026-10-20/comparison-stability/uploads/20d9fad6-9e6f-543d-a2e1-095d8056c5ff.pdf",
+      "sha256": "0a9bff1be3575cf9fe26a4a3d3a9175bc791ecec90de8b9deba4cff75d2b9476"
+    },
+    {
+      "path": "backend/tmp/official-vector-recovery-2026-10-20/comparison-stability/uploads/855562a1-8309-57b2-b7b0-b9e7016207dc.pdf",
+      "sha256": "33a4e757c19d6ea8d3cca8958fce8fe405e290272e135c99ee66065c775d5bd1"
+    },
+    {
+      "path": "backend/tmp/official-vector-recovery-2026-10-20/comparison-stability/uploads/bc90bcf2-cccd-5364-94f6-5815603802f7.pdf",
+      "sha256": "e9a0d3128767db616085dc0f4e6e455e672e89af823e8ed1282793682787395a"
+    },
+    {
+      "path": "backend/tmp/official-vector-recovery-2026-10-20/comparison-stability/uploads/cd05de96-3b20-5178-8953-d8ee090a4f23.pdf",
+      "sha256": "c1984bb50a5b90fddb895fdc3a0f72e5bc977148c9f63ef6040cbe7a3e1f0d98"
+    },
+    {
+      "path": "backend/tmp/official-vector-recovery-2026-10-20/finalize_evidence.py",
+      "sha256": "de4c169f493cdbefb3f2528960296a2e8a5b9b0548f99e95ca3504859e7397c0"
+    },
+    {
+      "path": "backend/tmp/official-vector-recovery-2026-10-20/formula-final.xml",
+      "sha256": "d10baf67845bea550e468fd234d6b8d68d7f56c988470649d5191cabb75c16f2"
+    },
+    {
+      "path": "backend/tmp/official-vector-recovery-2026-10-20/frontend-final.xml",
+      "sha256": "02ed84a65879d09659d0c550366c214878f98e27676ea12604efb5f69034abb7"
+    },
+    {
+      "path": "backend/tmp/official-vector-recovery-2026-10-20/lexical-final.xml",
+      "sha256": "2baf8f1cbdd2d673f216e8c4baae7bc141194f03bf7df9601ef1208146a80f4c"
+    },
+    {
+      "path": "backend/tmp/official-vector-recovery-2026-10-20/local-failure-replay-final.json",
+      "sha256": "2e79f715f368c1e7e96f81a4c342a14c55bb4e10cb4071b345cfefde1108e017"
+    },
+    {
+      "path": "backend/tmp/official-vector-recovery-2026-10-20/local-failure-replay-sealed.json",
+      "sha256": "cbc7a061f796c164835f1fc97492a70a8b8bece4659d8bc9ba08713bb802a501"
+    },
+    {
+      "path": "backend/tmp/official-vector-recovery-2026-10-20/local-failure-replay.json",
+      "sha256": "573b04f937499be993f3d23c917add9705bd89c5782d2dc5df204a5a22324669"
+    },
+    {
+      "path": "backend/tmp/official-vector-recovery-2026-10-20/manual-source-review.json",
+      "sha256": "6f4d11ea87261fd856fb106c90267b1265121278920f7c2cdeeb0a8541291f7c"
+    },
+    {
+      "path": "backend/tmp/official-vector-recovery-2026-10-20/observe_recovery.py",
+      "sha256": "2794fb8c9dcf82cf9e7ebda3774e76eac19843a310aa5b68e340c5a27848e8c2"
+    },
+    {
+      "path": "backend/tmp/official-vector-recovery-2026-10-20/policy-boundaries-fixed.xml",
+      "sha256": "7728b8204b49e0f9eeeb7326564ee11d00dd12997cab0101c1cd4b48ae01ded3"
+    },
+    {
+      "path": "backend/tmp/official-vector-recovery-2026-10-20/policy-boundaries.xml",
+      "sha256": "9bd51b949589edea2ef292f4fd563b05a769cbae0cc5f1687a93315b16b71205"
+    },
+    {
+      "path": "backend/tmp/official-vector-recovery-2026-10-20/policy-negation.xml",
+      "sha256": "a9edb72b597ed889e6f0798f194eab226bfdfb65056385b6aaa501a74f620514"
+    },
+    {
+      "path": "backend/tmp/official-vector-recovery-2026-10-20/regression-final/test.db",
+      "sha256": "0cca52d04e2e1533c6ecc02234e34a017b975c9c528f576caabfba3423e2a59e"
+    },
+    {
+      "path": "backend/tmp/official-vector-recovery-2026-10-20/regression-formula/test.db",
+      "sha256": "2538836cd4cb11bd139d162d455d3099f28e8d93f2d2bc666cc8f21f6a26dcda"
+    },
+    {
+      "path": "backend/tmp/official-vector-recovery-2026-10-20/regression-lexical/test.db",
+      "sha256": "f96a4c43ce3a54009e2554a4df75177882ccc658e4db7bbcf9cb28e0c9cbd77e"
+    },
+    {
+      "path": "backend/tmp/official-vector-recovery-2026-10-20/regression-release/test.db",
+      "sha256": "867cffa0cf755b86574022a0cdc3895241111aba615f22834b942f921ecce9d5"
+    },
+    {
+      "path": "backend/tmp/official-vector-recovery-2026-10-20/replay_failures.py",
+      "sha256": "3c9f88c7c9cca715071f49648c3a93c04bbc8d39e80eed199c1e71bc80dc029e"
+    },
+    {
+      "path": "backend/tmp/official-vector-recovery-2026-10-20/review-wire-fixed.xml",
+      "sha256": "ac95717347fa0d271ff3748431cde19194bf24a3506dedb717b1d015a61dd756"
+    },
+    {
+      "path": "backend/tmp/official-vector-recovery-2026-10-20/runtime-recovery.json",
+      "sha256": "a93f33ed3d572c8f001476e1145c8da124137871e9f7585f5865ca3d17aff5c1"
+    },
+    {
+      "path": "backend/tmp/official-vector-recovery-2026-10-20/source-pages/1706.03762v1-p7.png",
+      "sha256": "86d34116fb739e3989aa67f9ab344895327e32f5a1b1958408539e4ededb0d1d"
+    },
+    {
+      "path": "backend/tmp/official-vector-recovery-2026-10-20/source-pages/1706.03762v1-p9.png",
+      "sha256": "4e88117fa62817f38291411f4b4e6c61333832d607fc4e280a7a7079669811cf"
+    },
+    {
+      "path": "backend/tmp/official-vector-recovery-2026-10-20/source-pages/2106.09685v2-p1.png",
+      "sha256": "802a28af9c4612f7ecd9b67e8a6f09c24dcda636a7ecfb48855b8cb4653ee012"
+    },
+    {
+      "path": "backend/tmp/official-vector-recovery-2026-10-20/source-pages/2305.14314v1-p3.png",
+      "sha256": "a61ab32ebcafde32e81e20e5777cbe3bc801f70148a78bad741e21d66457236e"
+    },
+    {
+      "path": "backend/tmp/official-vector-recovery-2026-10-20/source-pages/2305.18290v3-p17.png",
+      "sha256": "9367bc810bd621443f5dcf53081edf02986496315073f2ba149590aebc259839"
+    },
+    {
+      "path": "backend/tmp/official-vector-recovery-2026-10-20/source-pages/2305.18290v3-p5.png",
+      "sha256": "8d162c35e1a54c93cf6187614bc6080d56b3617154b48dba0d1927269a01ca94"
+    },
+    {
+      "path": "backend/tmp/official-vector-recovery-2026-10-20/stage-alias-before.xml",
+      "sha256": "54b0c38941bebaa4eb560fea1fd212d6a178335cb2f985cf1dcedc53f8ba752a"
+    },
+    {
+      "path": "backend/tmp/official-vector-recovery-2026-10-20/stage-alias-fixed.xml",
+      "sha256": "5708662216a2ef1401eede97fed4c92effc6d3a2978f1488004c09287f74c80b"
+    },
+    {
+      "path": "backend/tmp/official-vector-recovery-2026-10-20/static-checks.json",
+      "sha256": "aca7d40555d5370352a14d00c8de354198c94df2b0f06208e7130e34f5a1e21a"
+    },
+    {
+      "path": "backend/tmp/official-vector-recovery-2026-10-20/vector-audit.xml",
+      "sha256": "220fa25981ba0ded81c597d2d7f282134cc66155c2d33b88be313d2d8baae4ea"
+    }
+  ]
+}

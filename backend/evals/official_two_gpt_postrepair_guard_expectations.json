@@ -1,0 +1,8 @@
+{
+  "policy_id": "two-original-gpt-postrepair-saved-output-guard-expectations-2026-10-11",
+  "notes": "Both run-2 saved raw outputs should now retain source-qualified assignments. This checks current guard behavior with zero model calls, not fresh generation acceptance. Do not apply this policy to run-1 or change original scientific gold.",
+  "cases": {
+    "gpt-parameter-evolution": {"insufficient_evidence": false, "missing_fields": []},
+    "context-evolution": {"insufficient_evidence": false, "missing_fields": []}
+  }
+}

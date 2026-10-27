@@ -1,0 +1,27 @@
+{
+  "policy_id": "all-corpus-targeted-three-original-question-source-review-2026-10-11",
+  "fact_overrides": {
+    "gpt-parameter-evolution": {
+      "gpt1-from-gpt2-baseline-table": {"claim_contains_any_groups": [["GPT-1", "GPT1", "原始 GPT"]]},
+      "gpt2-largest": {"claim_contains_any_groups": [["GPT-2", "GPT2"]]},
+      "gpt3-largest": {"claim_contains_any_groups": [["GPT-3", "GPT3"]]}
+    },
+    "context-evolution": {
+      "gpt1-context-from-gpt2-report": {"claim_contains_any_groups": [["GPT-1", "GPT1", "原始 GPT"]]},
+      "gpt2-context": {"claim_contains_any_groups": [["GPT-2", "GPT2"]]},
+      "gpt3-context": {"claim_contains_any_groups": [["GPT-3", "GPT3"]]}
+    },
+    "bleu-improvement": {
+      "difference-derived-not-source-quote": {"source_text_contains_all": ["28.4", "26.36"]}
+    }
+  },
+  "source_inspection": {
+    "reviewer": "code_assistant_preserved_published_claims_and_complete_original_source_pages",
+    "scope": "Three once-only fresh generations. Examined complete Poppler pages for Transformer p8, GPT-2 p4, GPT-3 p8 and p43, source-pinned native GPT-1 training text and published claims. These source PDFs match prior fully inspected originals. Review is not independent expert review, nine-case candidate acceptance, frontend acceptance or all-corpus acceptance. Raw free-form summaries are preserved but the product publishes checked claims, not the unchecked summary.",
+    "cases": {
+      "bleu-improvement": {"passed": true, "reason": "Published score and previous-best including ensembles select the same EN-DE BLEU column: 28.4 versus ConvS2S Ensemble 26.36; published deterministic 2.04 subtraction is explicitly derived. No published contradictory refusal remains. A generated derived claim was filtered, but its validated table proof is published with original table anchor."},
+      "gpt-parameter-evolution": {"passed": true, "reason": "Published largest GPT-2 1542M and qualified original-GPT 117M baseline inference match GPT-2 p4 table/equivalence; GPT-3 1750 yi/175B main variant and eight sizes match p8. Scientific claims are supported, but live runtime wrongly marks GPT-3 incomplete because it misses a parenthetical equivalent count before the parameter label. Preserve the live failure; later grammar repair is only offline confirmation."},
+      "context-evolution": {"passed": true, "reason": "Published GPT-2 1024 and GPT-3 full-window 2048 match architectural configuration and full-window descriptions. Published GPT-1 512 is explicitly labelled as an inference from the GPT-2 named OpenAI-GPT architectural baseline and 512-to-1024 comparison, not from GPT-1 training-sequence length. The source limitation is separate from this inference. The unchecked raw summary contradicts this inference but is not the published answer; both raw and checked outputs remain preserved."}
+    }
+  }
+}

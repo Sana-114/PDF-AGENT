@@ -58,5 +58,6 @@ async def test_segment_translation_accepts_fenced_complete_json() -> None:
     '{"translations":[{"block_id":"p1-b1","translation":null}]}',
 ])
 async def test_segment_translation_rejects_invalid_schema(text: str) -> None:
-    with pytest.raises(LLMResponseError):
+    with pytest.raises(LLMResponseError) as failure:
         await provider_for(text).translate_segments([("p1-b1", "text")], "en", "zh")
+    assert failure.value.raw_translation_output == json.loads(text)

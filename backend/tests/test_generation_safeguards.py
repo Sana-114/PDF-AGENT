@@ -1,3 +1,5 @@
+import re
+
 import pytest
 
 from app.agent.harness import ResearchAgent
@@ -146,11 +148,12 @@ async def test_reader_rejects_invalid_blocks_or_protected_token_mutation(mode):
                 return GeneratedSegmentTranslations(items={"b": value, "extra": "invented"})
             if mode == "blank":
                 return GeneratedSegmentTranslations(items={"b": " "})
+            token = re.search(r"`__PAPERPILOT_[A-Z_]+__`", value).group()
             return GeneratedSegmentTranslations(
                 items={
                     "b": value.replace(
-                        "`__PAPERPILOT_A__`",
-                        "" if mode == "drop_token" else "`__PAPERPILOT_A__`" * 2,
+                        token,
+                        "" if mode == "drop_token" else token * 2,
                     )
                 }
             )

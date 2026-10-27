@@ -1,0 +1,751 @@
+{
+  "schema_version": 1,
+  "summary": {
+    "date": "2026-10-17",
+    "current_source": {
+      "python_version": "3.12.14",
+      "app_files": 129,
+      "app_sha256": "21237c2a8ae3d9991c10bfb44932254c78963c47a1c6651e772536852ad85650",
+      "requirements_sha256": "b0e75e31a3ca8f034e095fd0667e3be7e380975548c5acce90db94f96ed7283f"
+    },
+    "generated_source": {
+      "python_version": "3.12.14",
+      "app_files": 129,
+      "app_sha256": "e854587e25793bf2a5bcd9abd4bfefc27038a2098e554b12fc234b03da65871d",
+      "requirements_sha256": "b0e75e31a3ca8f034e095fd0667e3be7e380975548c5acce90db94f96ed7283f"
+    },
+    "current_source_new_generation": false,
+    "cloud_calls": 4,
+    "automatic_model_retries": 0,
+    "original_machine_passes": 3,
+    "original_case_count": 4,
+    "reports": [
+      {
+        "suite": "policy",
+        "original_status": "source_checks_passed",
+        "original_cases": [
+          "source_checks_passed",
+          "source_checks_passed"
+        ]
+      },
+      {
+        "suite": "mechanism",
+        "original_status": "failed",
+        "original_cases": [
+          "failed",
+          "source_checks_passed"
+        ]
+      }
+    ],
+    "qa_anchors": 78,
+    "qa_anchor_checks": [
+      {
+        "case_id": "dpo-instructgpt-object-and-stage",
+        "evidence_id": "E3",
+        "valid": true,
+        "hybrid_reranked": true
+      },
+      {
+        "case_id": "dpo-instructgpt-object-and-stage",
+        "evidence_id": "E6",
+        "valid": true,
+        "hybrid_reranked": true
+      },
+      {
+        "case_id": "dpo-instructgpt-object-and-stage",
+        "evidence_id": "E9",
+        "valid": true,
+        "hybrid_reranked": true
+      },
+      {
+        "case_id": "dpo-instructgpt-object-and-stage",
+        "evidence_id": "E11",
+        "valid": true,
+        "hybrid_reranked": true
+      },
+      {
+        "case_id": "dpo-instructgpt-object-and-stage",
+        "evidence_id": "E15",
+        "valid": true,
+        "hybrid_reranked": true
+      },
+      {
+        "case_id": "dpo-instructgpt-object-and-stage",
+        "evidence_id": "E17",
+        "valid": true,
+        "hybrid_reranked": true
+      },
+      {
+        "case_id": "dpo-instructgpt-object-and-stage",
+        "evidence_id": "E20",
+        "valid": true,
+        "hybrid_reranked": true
+      },
+      {
+        "case_id": "dpo-instructgpt-object-and-stage",
+        "evidence_id": "E1",
+        "valid": true,
+        "hybrid_reranked": true
+      },
+      {
+        "case_id": "dpo-instructgpt-object-and-stage",
+        "evidence_id": "E2",
+        "valid": true,
+        "hybrid_reranked": true
+      },
+      {
+        "case_id": "dpo-instructgpt-object-and-stage",
+        "evidence_id": "E4",
+        "valid": true,
+        "hybrid_reranked": true
+      },
+      {
+        "case_id": "dpo-instructgpt-object-and-stage",
+        "evidence_id": "E5",
+        "valid": true,
+        "hybrid_reranked": true
+      },
+      {
+        "case_id": "dpo-instructgpt-object-and-stage",
+        "evidence_id": "E7",
+        "valid": true,
+        "hybrid_reranked": true
+      },
+      {
+        "case_id": "dpo-instructgpt-object-and-stage",
+        "evidence_id": "E8",
+        "valid": true,
+        "hybrid_reranked": true
+      },
+      {
+        "case_id": "dpo-instructgpt-object-and-stage",
+        "evidence_id": "E10",
+        "valid": true,
+        "hybrid_reranked": true
+      },
+      {
+        "case_id": "dpo-instructgpt-object-and-stage",
+        "evidence_id": "E12",
+        "valid": true,
+        "hybrid_reranked": true
+      },
+      {
+        "case_id": "dpo-instructgpt-object-and-stage",
+        "evidence_id": "E13",
+        "valid": true,
+        "hybrid_reranked": true
+      },
+      {
+        "case_id": "dpo-instructgpt-object-and-stage",
+        "evidence_id": "E14",
+        "valid": true,
+        "hybrid_reranked": true
+      },
+      {
+        "case_id": "dpo-instructgpt-object-and-stage",
+        "evidence_id": "E16",
+        "valid": true,
+        "hybrid_reranked": true
+      },
+      {
+        "case_id": "dpo-instructgpt-object-and-stage",
+        "evidence_id": "E18",
+        "valid": true,
+        "hybrid_reranked": true
+      },
+      {
+        "case_id": "dpo-instructgpt-object-and-stage",
+        "evidence_id": "E19",
+        "valid": true,
+        "hybrid_reranked": true
+      },
+      {
+        "case_id": "dpo-reject-global-analytic-and-sampling-free",
+        "evidence_id": "E1",
+        "valid": true,
+        "hybrid_reranked": true
+      },
+      {
+        "case_id": "dpo-reject-global-analytic-and-sampling-free",
+        "evidence_id": "E2",
+        "valid": true,
+        "hybrid_reranked": true
+      },
+      {
+        "case_id": "dpo-reject-global-analytic-and-sampling-free",
+        "evidence_id": "E3",
+        "valid": true,
+        "hybrid_reranked": true
+      },
+      {
+        "case_id": "dpo-reject-global-analytic-and-sampling-free",
+        "evidence_id": "E4",
+        "valid": true,
+        "hybrid_reranked": true
+      },
+      {
+        "case_id": "dpo-reject-global-analytic-and-sampling-free",
+        "evidence_id": "E5",
+        "valid": true,
+        "hybrid_reranked": true
+      },
+      {
+        "case_id": "dpo-reject-global-analytic-and-sampling-free",
+        "evidence_id": "E6",
+        "valid": true,
+        "hybrid_reranked": true
+      },
+      {
+        "case_id": "dpo-reject-global-analytic-and-sampling-free",
+        "evidence_id": "E7",
+        "valid": true,
+        "hybrid_reranked": true
+      },
+      {
+        "case_id": "dpo-reject-global-analytic-and-sampling-free",
+        "evidence_id": "E8",
+        "valid": true,
+        "hybrid_reranked": true
+      },
+      {
+        "case_id": "dpo-reject-global-analytic-and-sampling-free",
+        "evidence_id": "E9",
+        "valid": true,
+        "hybrid_reranked": true
+      },
+      {
+        "case_id": "dpo-reject-global-analytic-and-sampling-free",
+        "evidence_id": "E10",
+        "valid": true,
+        "hybrid_reranked": true
+      },
+      {
+        "case_id": "dpo-reject-global-analytic-and-sampling-free",
+        "evidence_id": "E11",
+        "valid": true,
+        "hybrid_reranked": true
+      },
+      {
+        "case_id": "dpo-reject-global-analytic-and-sampling-free",
+        "evidence_id": "E12",
+        "valid": true,
+        "hybrid_reranked": true
+      },
+      {
+        "case_id": "dpo-reject-global-analytic-and-sampling-free",
+        "evidence_id": "E13",
+        "valid": true,
+        "hybrid_reranked": true
+      },
+      {
+        "case_id": "dpo-reject-global-analytic-and-sampling-free",
+        "evidence_id": "E14",
+        "valid": true,
+        "hybrid_reranked": true
+      },
+      {
+        "case_id": "dpo-reject-global-analytic-and-sampling-free",
+        "evidence_id": "E15",
+        "valid": true,
+        "hybrid_reranked": true
+      },
+      {
+        "case_id": "dpo-reject-global-analytic-and-sampling-free",
+        "evidence_id": "E16",
+        "valid": true,
+        "hybrid_reranked": true
+      },
+      {
+        "case_id": "dpo-reject-global-analytic-and-sampling-free",
+        "evidence_id": "E17",
+        "valid": true,
+        "hybrid_reranked": true
+      },
+      {
+        "case_id": "dpo-reject-global-analytic-and-sampling-free",
+        "evidence_id": "E18",
+        "valid": true,
+        "hybrid_reranked": true
+      },
+      {
+        "case_id": "dpo-reject-global-analytic-and-sampling-free",
+        "evidence_id": "E19",
+        "valid": true,
+        "hybrid_reranked": true
+      },
+      {
+        "case_id": "dpo-reject-global-analytic-and-sampling-free",
+        "evidence_id": "E20",
+        "valid": true,
+        "hybrid_reranked": true
+      },
+      {
+        "case_id": "lora-qlora-mechanism",
+        "evidence_id": "E1",
+        "valid": true,
+        "hybrid_reranked": true
+      },
+      {
+        "case_id": "lora-qlora-mechanism",
+        "evidence_id": "E2",
+        "valid": true,
+        "hybrid_reranked": true
+      },
+      {
+        "case_id": "lora-qlora-mechanism",
+        "evidence_id": "E3",
+        "valid": true,
+        "hybrid_reranked": true
+      },
+      {
+        "case_id": "lora-qlora-mechanism",
+        "evidence_id": "E5",
+        "valid": true,
+        "hybrid_reranked": true
+      },
+      {
+        "case_id": "lora-qlora-mechanism",
+        "evidence_id": "E9",
+        "valid": true,
+        "hybrid_reranked": true
+      },
+      {
+        "case_id": "lora-qlora-mechanism",
+        "evidence_id": "E15",
+        "valid": true,
+        "hybrid_reranked": true
+      },
+      {
+        "case_id": "lora-qlora-mechanism",
+        "evidence_id": "E16",
+        "valid": true,
+        "hybrid_reranked": true
+      },
+      {
+        "case_id": "lora-qlora-mechanism",
+        "evidence_id": "E19",
+        "valid": true,
+        "hybrid_reranked": true
+      },
+      {
+        "case_id": "lora-qlora-mechanism",
+        "evidence_id": "E4",
+        "valid": true,
+        "hybrid_reranked": true
+      },
+      {
+        "case_id": "lora-qlora-mechanism",
+        "evidence_id": "E6",
+        "valid": true,
+        "hybrid_reranked": true
+      },
+      {
+        "case_id": "lora-qlora-mechanism",
+        "evidence_id": "E7",
+        "valid": true,
+        "hybrid_reranked": true
+      },
+      {
+        "case_id": "lora-qlora-mechanism",
+        "evidence_id": "E8",
+        "valid": true,
+        "hybrid_reranked": true
+      },
+      {
+        "case_id": "lora-qlora-mechanism",
+        "evidence_id": "E10",
+        "valid": true,
+        "hybrid_reranked": true
+      },
+      {
+        "case_id": "lora-qlora-mechanism",
+        "evidence_id": "E11",
+        "valid": true,
+        "hybrid_reranked": true
+      },
+      {
+        "case_id": "lora-qlora-mechanism",
+        "evidence_id": "E12",
+        "valid": true,
+        "hybrid_reranked": true
+      },
+      {
+        "case_id": "lora-qlora-mechanism",
+        "evidence_id": "E13",
+        "valid": true,
+        "hybrid_reranked": true
+      },
+      {
+        "case_id": "lora-qlora-mechanism",
+        "evidence_id": "E14",
+        "valid": true,
+        "hybrid_reranked": true
+      },
+      {
+        "case_id": "lora-qlora-mechanism",
+        "evidence_id": "E17",
+        "valid": true,
+        "hybrid_reranked": true
+      },
+      {
+        "case_id": "lora-qlora-mechanism",
+        "evidence_id": "E18",
+        "valid": true,
+        "hybrid_reranked": true
+      },
+      {
+        "case_id": "lora-qlora-mechanism",
+        "evidence_id": "E20",
+        "valid": true,
+        "hybrid_reranked": true
+      },
+      {
+        "case_id": "unreported-training-seed",
+        "evidence_id": "E1",
+        "valid": true,
+        "hybrid_reranked": true
+      },
+      {
+        "case_id": "unreported-training-seed",
+        "evidence_id": "E2",
+        "valid": true,
+        "hybrid_reranked": true
+      },
+      {
+        "case_id": "unreported-training-seed",
+        "evidence_id": "E3",
+        "valid": true,
+        "hybrid_reranked": true
+      },
+      {
+        "case_id": "unreported-training-seed",
+        "evidence_id": "E4",
+        "valid": true,
+        "hybrid_reranked": true
+      },
+      {
+        "case_id": "unreported-training-seed",
+        "evidence_id": "E5",
+        "valid": true,
+        "hybrid_reranked": true
+      },
+      {
+        "case_id": "unreported-training-seed",
+        "evidence_id": "E6",
+        "valid": true,
+        "hybrid_reranked": true
+      },
+      {
+        "case_id": "unreported-training-seed",
+        "evidence_id": "E7",
+        "valid": true,
+        "hybrid_reranked": true
+      },
+      {
+        "case_id": "unreported-training-seed",
+        "evidence_id": "E8",
+        "valid": true,
+        "hybrid_reranked": true
+      },
+      {
+        "case_id": "unreported-training-seed",
+        "evidence_id": "E9",
+        "valid": true,
+        "hybrid_reranked": true
+      },
+      {
+        "case_id": "unreported-training-seed",
+        "evidence_id": "E10",
+        "valid": true,
+        "hybrid_reranked": true
+      },
+      {
+        "case_id": "unreported-training-seed",
+        "evidence_id": "E11",
+        "valid": true,
+        "hybrid_reranked": true
+      },
+      {
+        "case_id": "unreported-training-seed",
+        "evidence_id": "E12",
+        "valid": true,
+        "hybrid_reranked": true
+      },
+      {
+        "case_id": "unreported-training-seed",
+        "evidence_id": "E13",
+        "valid": true,
+        "hybrid_reranked": true
+      },
+      {
+        "case_id": "unreported-training-seed",
+        "evidence_id": "E14",
+        "valid": true,
+        "hybrid_reranked": true
+      },
+      {
+        "case_id": "unreported-training-seed",
+        "evidence_id": "E15",
+        "valid": true,
+        "hybrid_reranked": true
+      },
+      {
+        "case_id": "unreported-training-seed",
+        "evidence_id": "E16",
+        "valid": true,
+        "hybrid_reranked": true
+      },
+      {
+        "case_id": "unreported-training-seed",
+        "evidence_id": "E17",
+        "valid": true,
+        "hybrid_reranked": true
+      },
+      {
+        "case_id": "unreported-training-seed",
+        "evidence_id": "E18",
+        "valid": true,
+        "hybrid_reranked": true
+      }
+    ],
+    "all_qa_anchors_valid_hybrid_reranked": true,
+    "proof_spans": [
+      {
+        "case_id": "dpo-instructgpt-object-and-stage",
+        "subject": "DPO",
+        "evidence_id": "E11",
+        "verbatim": true
+      },
+      {
+        "case_id": "dpo-instructgpt-object-and-stage",
+        "subject": "DPO",
+        "evidence_id": "E1",
+        "verbatim": true
+      },
+      {
+        "case_id": "dpo-instructgpt-object-and-stage",
+        "subject": "InstructGPT",
+        "evidence_id": "E2",
+        "verbatim": true
+      },
+      {
+        "case_id": "dpo-instructgpt-object-and-stage",
+        "subject": "InstructGPT",
+        "evidence_id": "E4",
+        "verbatim": true
+      },
+      {
+        "case_id": "lora-qlora-mechanism",
+        "subject": "LoRA",
+        "evidence_id": "E11",
+        "verbatim": true
+      },
+      {
+        "case_id": "lora-qlora-mechanism",
+        "subject": "LoRA",
+        "evidence_id": "E19",
+        "verbatim": true
+      },
+      {
+        "case_id": "lora-qlora-mechanism",
+        "subject": "QLoRA",
+        "evidence_id": "E18",
+        "verbatim": true
+      },
+      {
+        "case_id": "lora-qlora-mechanism",
+        "subject": "QLoRA",
+        "evidence_id": "E6",
+        "verbatim": true
+      },
+      {
+        "case_id": "lora-qlora-mechanism",
+        "subject": "QLoRA",
+        "evidence_id": "E2",
+        "verbatim": true
+      }
+    ],
+    "proof_spans_are_entailment_proof": false,
+    "read_only_index_points_verified": 1237,
+    "old_immutable_count": 56,
+    "old_changed": [],
+    "tests": {
+      "backend-postrepair.xml": {
+        "tests": 1319,
+        "failures": 0,
+        "errors": 0
+      },
+      "frontend-tests.xml": {
+        "tests": 42,
+        "failures": 0,
+        "errors": 0
+      }
+    },
+    "typecheck": "observed_exit_0",
+    "ruff": "observed_exit_0",
+    "acceptance_8018_stopped": true,
+    "production_library_modified": false,
+    "git_mutated": false,
+    "same_build_scientific_stability_released": false,
+    "official_basic_coverage_inherited": {
+      "files": 39,
+      "pages": 1986
+    },
+    "whole_project_released": false
+  },
+  "manual_review": {
+    "date": "2026-10-17",
+    "kind": "bounded_manual_review_separate_from_machine_results",
+    "basis": "Complete rendered InstructGPT physical page 6; complete native DPO pages 5, 9 and 16 and QLoRA pages 4, 5 and 6, plus all declared source chunks.",
+    "whole_project_released": false,
+    "cases": [
+      {
+        "case_id": "dpo-instructgpt-object-and-stage",
+        "original_machine_status": "source_checks_passed",
+        "requested_core": "confirmed_with_both_original_method_steps",
+        "detail": "Published comparison cites InstructGPT E2 reward-model collection/training and E4 PPO optimization. The mathematical object, objective, LM sampling and fine-tuning scope all have declared support. No shared KL assertion is borrowed for the other original.",
+        "remaining_limit": "An unpublished source-statement adds that steps can iterate, absent from its short verbatim span though present in the full E4 chunk. Exact-span validation is not a general entailment verifier. One generation is not stability."
+      },
+      {
+        "case_id": "dpo-reject-global-analytic-and-sampling-free",
+        "original_machine_status": "source_checks_passed",
+        "requested_core": "confirmed",
+        "detail": "Published response separates optimal-policy expression from learning parameters, retains LM/fine-tuning sampling scope and cites preparation/evaluation examples.",
+        "remaining_limit": "Additional deployment-absence and gradient-descent wording is not counted as a separately verified implementation result. Whole-answer scientific acceptance is not declared."
+      },
+      {
+        "case_id": "lora-qlora-mechanism",
+        "original_machine_status": "failed",
+        "requested_core": "partial_four_details_published_comparison_withheld",
+        "detail": "The new proof checks withhold comparison while preserving four detail fields. QLoRA source statement includes 16-bit computation, but its chosen short quote says BFloat16 without the explicit 16-bit sentence; comparison IDs also omit E2 although its proof uses E2. The full original contains the sentence, but it must not be silently added. LoRA merge/deployment elaboration is also outside its selected short spans.",
+        "remaining_limit": "Memory mechanisms and storage/computation distinction have original core support. The whole comparison remains failed, not repaired by borrowing another field's citations."
+      },
+      {
+        "case_id": "unreported-training-seed",
+        "original_machine_status": "source_checks_passed",
+        "requested_core": "correct_refusal_and_insufficient_flag",
+        "detail": "No seed number is invented. Related training settings are supported, but they do not satisfy the requested seed; incomplete status is now correctly retained."
+      }
+    ],
+    "next_action": "Improve minimal single-source statement coverage and natural-language clause entailment, then run a finite same-build confirmation. Do not rerun all 39 PDFs or interpret rule tests as scientific accuracy."
+  },
+  "secret_scan_findings": [],
+  "artifacts": [
+    {
+      "path": "backend/app/llm/comparison_support.py",
+      "sha256": "1cc57aff8254d9a712cdcd3cb204511d2a38750d03d26a32817dd67dd6411be2"
+    },
+    {
+      "path": "backend/app/llm/explanation_fields.py",
+      "sha256": "587a922d3752ad3e1583debbba0bb9553912ca79efcec5e99c9f5acea02d1257"
+    },
+    {
+      "path": "backend/app/llm/openai_responses.py",
+      "sha256": "724921ba87603645c3cebd835f6705ae1b3a06aa77122198d948afdb768c1a33"
+    },
+    {
+      "path": "backend/tests/test_comparison_support.py",
+      "sha256": "c370eb52ec997d36e4a752df6b689e3456af03b21262d2c257e1929a0b69d330"
+    },
+    {
+      "path": "backend/tests/test_explanation_fields.py",
+      "sha256": "24e9f5b5ebcecfe22d67e36ab3f138d5fb1dd6dfaef6bfbb013445fe7fca4ebe"
+    },
+    {
+      "path": "backend/tmp/official-atomic-citations-2026-10-17/audit_atomic.py",
+      "sha256": "ba5e9ea686587a793ecbc4b0c700397f49220992155f30fa99a1800ab34b8b3e"
+    },
+    {
+      "path": "backend/tmp/official-atomic-citations-2026-10-17/backend-final.xml",
+      "sha256": "9ae00df032c3a479c106bed10691497388aa996dbdbe31393ae31cda7f1b9bb2"
+    },
+    {
+      "path": "backend/tmp/official-atomic-citations-2026-10-17/backend-postrepair.xml",
+      "sha256": "5f5f9857f27504ff4544657ce4d84e02b064b3949127bae2bbe138757c4927cb"
+    },
+    {
+      "path": "backend/tmp/official-atomic-citations-2026-10-17/final-audit.json",
+      "sha256": "5eef05247f451af276c509b2c9c2981bab0f02e03f19baaad3da4a6faedebe80"
+    },
+    {
+      "path": "backend/tmp/official-atomic-citations-2026-10-17/frontend-tests.xml",
+      "sha256": "6ff2bd480c2ec6b3d6f9fb213b93d78f47dbb0330c063f3ed582ace132774997"
+    },
+    {
+      "path": "backend/tmp/official-atomic-citations-2026-10-17/instructgpt-6.png",
+      "sha256": "ca5b698f830aba5c1ad6d63401dc707e3b70cd9717012112e755a5ebb99afc02"
+    },
+    {
+      "path": "backend/tmp/official-atomic-citations-2026-10-17/manual-source-review.json",
+      "sha256": "6672b02061f82766864c414b85471781091c904373e9e65b9d27168032385885"
+    },
+    {
+      "path": "backend/tmp/official-atomic-citations-2026-10-17/mechanism/report.json",
+      "sha256": "05b0674ecf2e228b73739a55c2ab69ecaa68f434d8e870591335c0b81f36ea99"
+    },
+    {
+      "path": "backend/tmp/official-atomic-citations-2026-10-17/policy/report.json",
+      "sha256": "492ab4905e1dab87b3b5301d3f69b0b5fb360e8228d5b6cdb133b6003fe988c2"
+    },
+    {
+      "path": "backend/tmp/official-atomic-citations-2026-10-17/post-repair-replay.json",
+      "sha256": "2cce3350320acdf095f1d2c5d75de0c6627d30939def31650c98011d6130db68"
+    },
+    {
+      "path": "backend/tmp/official-atomic-citations-2026-10-17/runtime-fixture/fixture.json",
+      "sha256": "d7730edb860bcb4b6ba77311de22d749684d6fc726ea5d38b5762afc308c117f"
+    },
+    {
+      "path": "backend/tmp/official-atomic-citations-2026-10-17/runtime-fixture/parsed/114bfa0d-d6cf-573d-82b2-cfaed94b58b6.json",
+      "sha256": "6710c78824d61e72e1b0c15aaddf534ce0872570051a9b95d6f2f39c786645d7"
+    },
+    {
+      "path": "backend/tmp/official-atomic-citations-2026-10-17/runtime-fixture/parsed/20d9fad6-9e6f-543d-a2e1-095d8056c5ff.json",
+      "sha256": "4a05a089a864b8fc603470e4f28fc480526b8184b8c5a89039db83b07bdded3d"
+    },
+    {
+      "path": "backend/tmp/official-atomic-citations-2026-10-17/runtime-fixture/parsed/855562a1-8309-57b2-b7b0-b9e7016207dc.json",
+      "sha256": "0bdf9ab2be963a5e42b3560e72b14fd247e2723c299ffc3e340682b02394db97"
+    },
+    {
+      "path": "backend/tmp/official-atomic-citations-2026-10-17/runtime-fixture/parsed/bc90bcf2-cccd-5364-94f6-5815603802f7.json",
+      "sha256": "2f5bdb78b265127069fbaf7c9841afe6e181a0d93c3209856c420d678c7825d0"
+    },
+    {
+      "path": "backend/tmp/official-atomic-citations-2026-10-17/runtime-fixture/parsed/cd05de96-3b20-5178-8953-d8ee090a4f23.json",
+      "sha256": "0ab6909920de99d93d12d57d963fe93c684446cbcfdba40bf2df1ed080d7b414"
+    },
+    {
+      "path": "backend/tmp/official-atomic-citations-2026-10-17/runtime-fixture/preparation.json",
+      "sha256": "856dd9d79313822509ba1f12ecea214328ad0ae9d681e2d3c261fabde68c2e02"
+    },
+    {
+      "path": "backend/tmp/official-atomic-citations-2026-10-17/runtime-fixture/retrieval-preflight.json",
+      "sha256": "1f6e8a05137c30b8831d85e00de89b695111d2a1335ac28a2cf84ae5d45cedf8"
+    },
+    {
+      "path": "backend/tmp/official-atomic-citations-2026-10-17/runtime-fixture/runtime-calls.json",
+      "sha256": "5f4a34a912bc62c6b62c997e1b31d8bc94332dd0030e4e50dcf59a40b01c3696"
+    },
+    {
+      "path": "backend/tmp/official-atomic-citations-2026-10-17/runtime-fixture/server-source.json",
+      "sha256": "b3944dfa58e6ecd8648a4aa6388cf9f5a314a2f259eb9d8288b3c1929d1944aa"
+    },
+    {
+      "path": "docs/acceptance-progress.md",
+      "sha256": "d916782d4575c364e71dd7c58edc6fcfb10c58378f26693b793b37cefd2a938b"
+    },
+    {
+      "path": "docs/competition-delivery-checklist.md",
+      "sha256": "e293e711f753cce3595cc68d0043f00cdc75c15595a65413667c171dbe4eae72"
+    },
+    {
+      "path": "docs/competition-verification-gates.md",
+      "sha256": "02dad64144ba4af4903dbc113fdeccd12b4980e4f196847387fb0e3d886b31cc"
+    },
+    {
+      "path": "docs/official-atomic-citations-acceptance-2026-10-17.md",
+      "sha256": "b0a205960f4a8d3ecfe3645dd75d11731383ee689ccd2bfc02b4c765d51fb990"
+    }
+  ]
+}

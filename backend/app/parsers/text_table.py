@@ -2,13 +2,23 @@
 
 from __future__ import annotations
 
+import re
 from collections import Counter
 from dataclasses import dataclass
 from statistics import median
 
 import fitz
 
-from app.parsers.layout import RawTextBlock, TableSnapshot, is_table_caption, union_bbox
+from app.parsers.layout import (
+    RawTextBlock,
+    TableSnapshot,
+    is_figure_caption,
+    is_probable_section_heading,
+    is_table_caption,
+    union_bbox,
+)
+
+CELL_VALUE = re.compile(r"(?:[-+−]?\d[\d,.]*(?:[eE][-+]?\d+)?%?|[-–—]|N/A)", re.I)
 
 
 @dataclass(slots=True)
@@ -28,8 +38,9 @@ def extract_borderless_tables(
     raw_blocks: list[RawTextBlock],
     *,
     textpage: fitz.TextPage | None = None,
+    excluded_boxes: list[list[float]] | None = None,
 ) -> list[TableSnapshot]:
-    """Recover aligned text tables below numbered captions.
+    """Recover aligned text tables adjacent to numbered captions.
 
     The routine does not search arbitrary prose. A numbered table caption and at
     least two consistently aligned multi-cell rows are required.
@@ -46,15 +57,64 @@ def extract_borderless_tables(
         for word in page.get_text("words", textpage=textpage, sort=True)
         if str(word[4]).strip()
     ]
-    results: list[TableSnapshot] = []
+    options: list[tuple[RawTextBlock, list[TableSnapshot]]] = []
     for caption in sorted(captions, key=lambda item: item.bbox[1]):
-        region = _candidate_region(caption, raw_blocks, page.rect.width)
-        if region is None:
-            continue
-        region_words = [word for word in words if _center_inside(word.bbox, region)]
-        snapshot = _snapshot_from_words(region_words)
-        if snapshot is not None:
-            results.append(snapshot)
+        candidates: list[TableSnapshot] = []
+        for above in (False, True):
+            region = _candidate_region(
+                caption, raw_blocks, page.rect.width, above=above,
+                excluded_boxes=excluded_boxes,
+                allow_merged_caption=textpage is not None,
+            )
+            if region is None:
+                continue
+            region_words = [
+                word for word in words
+                if _center_inside(word.bbox, region)
+                and not any(_center_inside(word.bbox, box) for box in excluded_boxes or [])
+            ]
+            snapshot = _snapshot_from_words(region_words)
+            if snapshot is not None:
+                candidates.append(snapshot)
+        if candidates:
+            options.append((caption, candidates))
+    return _assign_caption_grids(options)
+
+
+def _assign_caption_grids(
+    options: list[tuple[RawTextBlock, list[TableSnapshot]]],
+) -> list[TableSnapshot]:
+    """Assign one grid per caption, never reuse a neighboring grid twice.
+
+    A multi-line caption may end closer to the NEXT grid than its own grid.
+    Resolve the whole page's bounded candidate graph with augmenting paths,
+    rather than independent nearest-neighbor choices or exponential search.
+    """
+    owners = {}
+    assignments = {}
+
+    def assign(index, visited):
+        caption, candidates = options[index]
+        for table in sorted(candidates, key=lambda t: max(
+            0, t.bbox[1] - caption.bbox[3], caption.bbox[1] - t.bbox[3],
+        )):
+            key = tuple(table.bbox)
+            if key in visited:
+                continue
+            visited.add(key)
+            owner = owners.get(key)
+            if owner is None or assign(owner, visited):
+                owners[key] = index
+                assignments[index] = table
+                return True
+        return False
+
+    for index in sorted(range(len(options)), key=lambda i: len(options[i][1])):
+        assign(index, set())
+    results = []
+    for index, table in sorted(assignments.items()):
+        table.caption_bbox = list(options[index][0].bbox)
+        results.append(table)
     return results
 
 
@@ -62,41 +122,53 @@ def _candidate_region(
     caption: RawTextBlock,
     raw_blocks: list[RawTextBlock],
     page_width: float,
+    *,
+    above: bool = False,
+    excluded_boxes: list[list[float]] | None = None,
+    allow_merged_caption: bool = False,
 ) -> list[float] | None:
     # OCR can put the caption and the entire table into ONE block. Use its
     # own bounded region only when it contains several data lines; the row
     # alignment gate still rejects ordinary prose and long captions.
-    if (caption.line_count >= 4 and caption.bbox[3] - caption.bbox[1] >= 50
+    if (allow_merged_caption and not above and caption.line_count >= 4
+            and caption.bbox[3] - caption.bbox[1] >= 50
             and sum(character.isdigit() for character in caption.text) >= 4):
         return list(caption.bbox)
-    below = sorted(
+    adjacent = sorted(
         (
             block
             for block in raw_blocks
-            if block is not caption and block.bbox[1] >= caption.bbox[3] - 1
+            if block is not caption and (
+                block.bbox[3] <= caption.bbox[1] + 1 if above
+                else block.bbox[1] >= caption.bbox[3] - 1
+            )
         ),
-        key=lambda item: (item.bbox[1], item.bbox[0]),
+        key=lambda item: (-item.bbox[3] if above else item.bbox[1], item.bbox[0]),
     )
     selected: list[RawTextBlock] = []
-    cursor = caption.bbox[3]
-    for block in below:
-        if is_table_caption(block.text):
-            break
-        gap = block.bbox[1] - cursor
-        if gap > (60 if not selected else 24):
-            break
+    cursor = caption.bbox[1] if above else caption.bbox[3]
+    for block in adjacent:
         if _horizontal_overlap(block.bbox, caption.bbox, page_width) < 0.15:
             continue
+        if (
+            is_table_caption(block.text) or is_figure_caption(block.text)
+            or is_probable_section_heading(block.text)
+            or any(_center_inside(block.bbox, box) for box in excluded_boxes or [])
+        ):
+            break
+        gap = cursor - block.bbox[3] if above else block.bbox[1] - cursor
+        if gap > (60 if not selected else 24):
+            break
         selected.append(block)
-        cursor = max(cursor, block.bbox[3])
+        cursor = min(cursor, block.bbox[1]) if above else max(cursor, block.bbox[3])
     if not selected:
         return None
     content_bbox = union_bbox([block.bbox for block in selected])
     return [
         max(0.0, content_bbox[0] - 3),
-        caption.bbox[3],
+        content_bbox[1] - 2 if above else caption.bbox[3],
         min(page_width, content_bbox[2] + 3),
-        content_bbox[3] + 2,
+        caption.bbox[1] if above else content_bbox[3] + 2,
     ]
 
 
@@ -123,9 +195,21 @@ def _snapshot_from_words(words: list[PositionedWord]) -> TableSnapshot | None:
     output_rows: list[list[str]] = []
     output_cells: list[list[float] | None] = []
     accepted_boxes: list[list[float]] = []
-    for row in split_rows:
+    for index, row in enumerate(split_rows):
         if not row:
             continue
+        # A full-width prose line is not a sparse table row. Keep short cell
+        # continuations, but stop before a single cell crosses the next column.
+        if len(row) == 1:
+            column = min(range(column_count), key=lambda i: abs(row[0].bbox[0] - anchors[i]))
+            spans_columns = any(row[0].bbox[0] + 3 < anchor < row[0].bbox[2] - 3
+                                for anchor in anchors[column + 1:])
+            following = split_rows[index + 1] if index + 1 < len(split_rows) else []
+            # Short, spanning group headers are legitimate when followed by
+            # another grid row. A trailing paragraph must not gain this exception.
+            group_header = len(row[0].text.split()) <= 8 and 2 <= len(following) <= column_count
+            if spans_columns and not group_header:
+                break
         values = [""] * column_count
         boxes: list[list[list[float]]] = [[] for _ in range(column_count)]
         if len(row) == column_count:
@@ -178,10 +262,31 @@ def _split_cells(words: list[PositionedWord]) -> list[TextCell]:
         return []
     typical_height = median(max(1.0, word.bbox[3] - word.bbox[1]) for word in words)
     minimum_gap = max(7.0, typical_height * 0.78)
+    # Dense numeric columns can have only a few points of whitespace. Restrict
+    # this extra boundary rule to a trailing run of standalone values, not
+    # numbers scattered through prose or superscripts within a formula.
+    start = len(words)
+    while start and CELL_VALUE.fullmatch(words[start - 1].text):
+        start -= 1
+    dense_run = len(words) - start >= 2
     groups: list[list[PositionedWord]] = [[words[0]]]
-    for word in words[1:]:
+    for index, word in enumerate(words[1:], start=1):
         previous_right = max(item.bbox[2] for item in groups[-1])
-        if word.bbox[0] - previous_right >= minimum_gap:
+        gap = word.bbox[0] - previous_right
+        previous = words[index - 1]
+        starts_value = index > start or (index == start and (
+            "." in word.text or word.text in {"-", "–", "—", "N/A"}
+        ))
+        spaced_thousands = bool(
+            re.fullmatch(r"[-+]?\d{1,3}", previous.text)
+            and re.fullmatch(r"\d{3}", word.text)
+        )
+        dense_boundary = (
+            dense_run and starts_value and not spaced_thousands
+            and gap >= max(1.0, typical_height * 0.08)
+            and _vertical_overlap(previous.bbox, word.bbox) >= 0.75
+        )
+        if gap >= minimum_gap or dense_boundary:
             groups.append([word])
         else:
             groups[-1].append(word)

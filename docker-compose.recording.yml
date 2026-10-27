@@ -1,0 +1,110 @@
+# Isolated local recording runtime. Never combine with docker-compose.yml:
+# only the existing BGE/Qdrant network is shared, not application data or queues.
+name: pdfagent-recording-20261024
+
+x-app: &app
+  image: pdfagent-backend:recording-20261024
+  build:
+    context: ./backend
+  env_file:
+    - .env
+  environment: &environment
+    APP_ENV: development
+    DATABASE_URL: postgresql+psycopg://recording:recording-local@recording-postgres:5432/recording
+    REDIS_URL: redis://recording-redis:6379/0
+    DATA_DIR: /app/data
+    UPLOAD_DIR: /app/data/uploads
+    PARSED_DIR: /app/data/parsed
+    TRANSLATION_DIR: /app/data/translations
+    FRONTEND_ORIGIN: http://127.0.0.1:3344
+    CELERY_TASK_ALWAYS_EAGER: "false"
+    VECTOR_SEARCH_ENABLED: "true"
+    VECTOR_COLLECTION: recording_20261024_public_v1
+    VECTOR_TIMEOUT_SECONDS: "60"
+    QDRANT_URL: http://qdrant:6333
+    EMBEDDING_PROVIDER: openai-compatible
+    EMBEDDING_MODEL: BAAI/bge-m3
+    EMBEDDING_DIMENSIONS: "1024"
+    EMBEDDING_BATCH_SIZE: "8"
+    EMBEDDING_BASE_URL: http://bge-embedding/v1
+    EMBEDDING_TIMEOUT_SECONDS: "120"
+    RERANKER_PROVIDER: tei
+    RERANKER_BASE_URL: http://bge-reranker
+    RERANKER_TIMEOUT_SECONDS: "120"
+    NO_PROXY: localhost,127.0.0.1,recording-postgres,recording-redis,qdrant,bge-embedding,bge-reranker
+  volumes:
+    - ./backend/tmp/official-recording-release-2026-10-24/data:/app/data
+  networks: [default, model-services]
+  depends_on:
+    recording-postgres:
+      condition: service_healthy
+    recording-redis:
+      condition: service_healthy
+
+services:
+  recording-postgres:
+    image: postgres:17-alpine
+    environment:
+      POSTGRES_DB: recording
+      POSTGRES_USER: recording
+      POSTGRES_PASSWORD: recording-local
+    volumes:
+      - recording_postgres:/var/lib/postgresql/data
+    healthcheck:
+      test: [CMD-SHELL, "pg_isready -U recording -d recording"]
+      interval: 5s
+      timeout: 5s
+      retries: 15
+
+  recording-redis:
+    image: redis:7-alpine
+    command: redis-server --appendonly yes
+    volumes:
+      - recording_redis:/data
+    healthcheck:
+      test: [CMD, redis-cli, ping]
+      interval: 5s
+      timeout: 5s
+      retries: 15
+
+  recording-api:
+    <<: *app
+    ports: ["127.0.0.1:8024:8000"]
+    healthcheck:
+      test: [CMD, python, -c, "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8000/api/v1/health', timeout=5)"]
+      interval: 10s
+      timeout: 6s
+      retries: 20
+
+  recording-worker:
+    <<: *app
+    command: celery -A app.workers.celery_app:celery_app worker --pool=solo --concurrency=1 --loglevel=INFO
+    depends_on:
+      recording-api:
+        condition: service_healthy
+
+  recording-frontend:
+    image: pdfagent-frontend:recording-20261024
+    build:
+      context: ./frontend
+      target: runner
+      args:
+        NEXT_PUBLIC_API_BASE_URL: http://127.0.0.1:8024/api/v1
+    ports: ["127.0.0.1:3344:3000"]
+    depends_on:
+      recording-api:
+        condition: service_healthy
+    healthcheck:
+      test: [CMD, node, -e, "fetch('http://127.0.0.1:3000/').then(r=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))"]
+      interval: 10s
+      timeout: 5s
+      retries: 20
+
+networks:
+  model-services:
+    external: true
+    name: pdfagent_default
+
+volumes:
+  recording_postgres:
+  recording_redis:

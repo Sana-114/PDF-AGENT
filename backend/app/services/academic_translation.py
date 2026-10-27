@@ -69,15 +69,16 @@ def _span_kind(value: str) -> str:
 def _protect_source(
     text: str,
     glossary: list[tuple[str, str]],
+    *, namespace: str = "",
 ) -> tuple[str, list[ProtectedSpan], list[GlossaryApplicationRead]]:
     spans: list[ProtectedSpan] = []
 
     def protect(value: str, kind: str) -> str:
         candidate_index = len(spans)
-        token = f"`__PAPERPILOT_{_letters(candidate_index)}__`"
+        token = f"`__PAPERPILOT_{namespace}{_letters(candidate_index)}__`"
         while token in text or any(item.token == token for item in spans):
             candidate_index += 1
-            token = f"`__PAPERPILOT_{_letters(candidate_index)}__`"
+            token = f"`__PAPERPILOT_{namespace}{_letters(candidate_index)}__`"
         spans.append(ProtectedSpan(token=token, value=value, kind=kind))
         return token
 
@@ -154,23 +155,50 @@ async def translate_protected_segments(
     source_language: str,
     target_language: str,
 ) -> GeneratedSegmentTranslations:
+    if len({block_id for block_id, _ in segments}) != len(segments):
+        raise LLMResponseError("待翻译文本块 ID 重复。")
     protected_segments: list[tuple[str, str]] = []
     protections: dict[str, list[ProtectedSpan]] = {}
-    for block_id, text in segments:
-        protected, spans, _ = _protect_source(text, [])
+    passthrough: dict[str, str] = {}
+    for index, (block_id, text) in enumerate(segments):
+        # Tokens must name one block, not different facts in every block of a batch.
+        protected, spans, _ = _protect_source(text, [], namespace=f"{_letters(index)}_")
+        remainder = protected
+        for span in spans:
+            remainder = remainder.replace(span.token, "")
+        if spans and re.fullmatch(r"[\s,.;:!?()\[\]{}+*/=<>\-]*", remainder):
+            # Stand-alone code/formulas/numbers need no model inference. A model
+            # otherwise may replace a token from the context of a nearby caption.
+            passthrough[block_id] = text
+            continue
         protected_segments.append((block_id, protected))
         protections[block_id] = spans
-    result = await provider.translate_segments(protected_segments, source_language, target_language)
-    if set(result.items) != set(protections) or any(
-        not value.strip() for value in result.items.values()
-    ):
-        raise LLMResponseError("翻译结果缺少文本块、包含未知文本块或空译文。")
-    return GeneratedSegmentTranslations(
-        items={
-            block_id: _restore_spans(value, protections[block_id])
-            for block_id, value in result.items.items()
-        }
-    )
+    translated: dict[str, str] = {}
+    # Bound each model request, not the page coverage. Validate each batch before
+    # accepting it; a later failed batch must never make a page look complete.
+    for batch in _batch_segments(protected_segments):
+        result = await provider.translate_segments(batch, source_language, target_language)
+        if set(result.items) != {block_id for block_id, _ in batch} or any(
+            not value.strip() for value in result.items.values()
+        ):
+            raise LLMResponseError("翻译结果缺少文本块、包含未知文本块或空译文。")
+        translated.update(result.items)
+    restored = dict(passthrough)
+    all_tokens = {span.token for spans in protections.values() for span in spans}
+    protected_by_id = dict(protected_segments)
+    for block_id, value in translated.items():
+        try:
+            own = {span.token for span in protections[block_id]}
+            if any(token in value for token in all_tokens - own):
+                raise LLMResponseError("译文混入其他文本块的保护占位符。")
+            restored[block_id] = _restore_spans(value, protections[block_id])
+        except LLMResponseError as exc:
+            exc.raw_translation_output = {
+                "block_id": block_id, "protected_source": protected_by_id[block_id],
+                "returned_translation": value,
+            }
+            raise
+    return GeneratedSegmentTranslations(items=restored)
 
 
 class AcademicTranslationService:

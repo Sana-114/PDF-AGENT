@@ -3,6 +3,7 @@ name: pdfagent
 services:
   postgres:
     image: postgres:17-alpine
+    restart: unless-stopped
     environment:
       POSTGRES_DB: ${POSTGRES_DB:-pdfagent}
       POSTGRES_USER: ${POSTGRES_USER:-pdfagent}
@@ -19,6 +20,7 @@ services:
 
   redis:
     image: redis:7-alpine
+    restart: unless-stopped
     command: redis-server --appendonly yes
     healthcheck:
       test: ["CMD", "redis-cli", "ping"]
@@ -32,6 +34,7 @@ services:
 
   qdrant:
     image: qdrant/qdrant:v1.19.1
+    restart: unless-stopped
     volumes:
       - qdrant_data:/qdrant/storage
     ports:
@@ -40,6 +43,7 @@ services:
 
   minio:
     image: minio/minio:latest
+    restart: unless-stopped
     command: server /data --console-address ":9001"
     environment:
       MINIO_ROOT_USER: ${MINIO_ROOT_USER:-pdfagent}

@@ -1,0 +1,26 @@
+{
+  "original_report_sha256": "497bc138d4a97f2b342943e31c132b523568f902b009d9f8c81b71df614023d6",
+  "reviewer": "code_assistant_full_original_page_visual_review",
+  "scope": "Current candidate, original nine questions, each generated once. All 26 published claims reviewed against complete physical source pages; inference versus direct-report scope checked. Not independent expert review, statistical stability, all 39 whole answers or all six modules.",
+  "machine_passed": 9,
+  "requested_core_accepted": 9,
+  "published_claims_reviewed": 26,
+  "cases": {
+    "sixth-author": {"accepted": true, "proofs": [[0,"E1",1],[1,"E1",1],[1,"E2",1],[2,"E1",1],[2,"E2",1]], "note": "按排版顺序认定第六作者，区分署名机构与工作地点脚注；邮箱与脚注也已核查。"},
+    "adam-settings": {"accepted": true, "proofs": [[0,"E1",7],[0,"E2",7]], "note": "两个变量及其数值正确对应，不把变量下标计为参数值。"},
+    "base-gpus": {"accepted": true, "proofs": [[0,"E1",7],[1,"E1",7]], "note": "数量、型号同段，额外的 base 训练步数和时长也符合该段。"},
+    "bleu-improvement": {"accepted": true, "proofs": [[0,"E1",8],[0,"E2",7],[0,"E4",1],[1,"E1",8],[1,"E3",8],[2,"E3",8],[3,"E3",8],[4,"E3",8]], "note": "正确读取 EN-DE 而不是 EN-FR；包含 ensemble，并把精确差值标为同表推导。回答有部分重复，不影响本次字段与数值通过。"},
+    "layernorm-reference": {"accepted": true, "proofs": [[0,"E1",10],[0,"E2",10]], "note": "三名作者和年份均与指定参考条目一致。"},
+    "bert-inheritance": {"accepted": true, "proofs": [[0,"E4",3],[0,"E5",2],[0,"E9",2],[1,"E4",3],[1,"E5",2],[1,"E9",2],[1,"E18",13],[2,"E9",2],[2,"E4",3],[3,"E9",2],[3,"E4",3],[3,"E18",13]], "note": "继承 encoder、去除 decoder 及其交叉注意力的结构对照有两篇依据；不同层数与维度没有混用为相同配置。结论是架构对照，不是作者对继承历史的直接陈述。"},
+    "gpt-parameter-evolution": {"accepted": true, "proofs": [[0,"E2",4],[0,"E5",4],[1,"E2",4],[1,"E5",4],[2,"E9",8],[2,"E3",8]], "note": "GPT-1 规模明确标为后出论文识别基线的推断；GPT-2 表中最大版本与 GPT-3 最大版本数值、单位正确。"},
+    "gpt2-ln-change": {"accepted": true, "proofs": [[0,"E8",4],[1,"E8",4],[2,"E8",4],[3,"E1",5]], "note": "子模块输入端及最终额外 LN 均有原文。末条仅限定本次给出的 GPT-1 摘录未说明位置，不误称 GPT-1 全文绝无图示。"},
+    "context-evolution": {"accepted": true, "proofs": [[0,"E1",3],[0,"E2",4],[0,"E4",5],[0,"E5",12],[1,"E2",4],[1,"E5",12],[2,"E3",43]], "note": "不以 GPT-1 训练序列长度单独确立窗口；GPT-2 的基线身份、递增说明和 GPT-3 明确窗口有完整依据，推断与直接报告已区分。"}
+  },
+  "inspected_sources": {
+    "1706.03762v1.pdf": [1,2,7,8,10],
+    "N19-1423.pdf": [3,13],
+    "gpt2-openai-2019.pdf": [4,12],
+    "2005.14165v4.pdf": [8,43],
+    "language_understanding_paper.pdf": [3,5]
+  }
+}

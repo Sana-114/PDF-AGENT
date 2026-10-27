@@ -10,6 +10,7 @@ from app.schemas.diagram import (
     DiagramNodeRead,
     DiagramScriptRead,
 )
+from app.services.plot_script_fonts import MATPLOTLIB_FONT_SETUP
 
 MAX_NODES = 30
 MAX_EDGES = 60
@@ -277,23 +278,39 @@ def _matplotlib_script(
     content = f'''import matplotlib.pyplot as plt
 from matplotlib.patches import FancyBboxPatch
 
+{MATPLOTLIB_FONT_SETUP}
 title = {title!r}
 nodes = {node_data!r}
 edges = {edge_data!r}
 canvas_width = {canvas_width}
 canvas_height = {canvas_height}
+node_half_width, node_half_height = 76, 27
+
+def _edge_anchor(node, other):
+    dx, dy = other["x"] - node["x"], other["y"] - node["y"]
+    if dx == 0 and dy == 0:
+        return node["x"], node["y"]
+    scale = min(node_half_width / abs(dx) if dx else float("inf"),
+                node_half_height / abs(dy) if dy else float("inf"))
+    return node["x"] + dx * scale, node["y"] + dy * scale
 
 fig, ax = plt.subplots(figsize=(12, 7), constrained_layout=True)
 for source, target in edges:
     start, end = nodes[source], nodes[target]
+    # Use box boundaries in data coordinates, not a fixed point-distance that
+    # can leave the arrowhead hidden underneath a differently scaled node.
+    reciprocal = (target, source) in edges
+    backwards = (end["x"] < start["x"]) or (end["x"] == start["x"] and end["y"] < start["y"])
     ax.annotate(
-        "", xy=(end["x"], end["y"]), xytext=(start["x"], start["y"]),
-        arrowprops=dict(arrowstyle="-|>", color="#66756d", lw=1.4, shrinkA=48, shrinkB=48),
+        "", xy=_edge_anchor(end, start), xytext=_edge_anchor(start, end),
+        arrowprops=dict(arrowstyle="-|>", color="#66756d", lw=1.4, shrinkA=2, shrinkB=2,
+                        connectionstyle="arc3,rad=0.16" if reciprocal or backwards else "arc3"),
         zorder=1,
     )
 for node in nodes.values():
     box = FancyBboxPatch(
-        (node["x"] - 76, node["y"] - 27), 152, 54,
+        (node["x"] - node_half_width, node["y"] - node_half_height),
+        2 * node_half_width, 2 * node_half_height,
         boxstyle="round,pad=0.03,rounding_size=8",
         facecolor="#edf4ef", edgecolor="#25734f", linewidth=1.5, zorder=2,
     )

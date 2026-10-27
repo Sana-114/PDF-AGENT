@@ -1,0 +1,634 @@
+{
+  "schema_version": 1,
+  "date": "2026-10-15",
+  "record_kind": "mechanism_comparison_closure_and_review_scope_followup",
+  "summary": {
+    "evaluation_kind": "bounded_followup_evidence_audit_not_new_generation",
+    "current_source": {
+      "python_version": "3.12.14",
+      "app_files": 127,
+      "app_sha256": "a664dc3abfe522ecca05354e42dd38e8cd74018a80df79431e4dc2463a46a5a0",
+      "requirements_sha256": "b0e75e31a3ca8f034e095fd0667e3be7e380975548c5acce90db94f96ed7283f"
+    },
+    "qa_runtime_source": {
+      "python_version": "3.12.14",
+      "app_files": 127,
+      "app_sha256": "5bc752e48e5530e8d6306fc627898c4db8d2a93d7a4caa6a4ce92c3c959b5d33",
+      "requirements_sha256": "b0e75e31a3ca8f034e095fd0667e3be7e380975548c5acce90db94f96ed7283f"
+    },
+    "qa_machine_status": "source_checks_passed",
+    "qa_anchor_checks": [
+      {
+        "case_id": "lora-qlora-mechanism",
+        "evidence_id": "E1",
+        "valid": true
+      },
+      {
+        "case_id": "lora-qlora-mechanism",
+        "evidence_id": "E2",
+        "valid": true
+      },
+      {
+        "case_id": "lora-qlora-mechanism",
+        "evidence_id": "E7",
+        "valid": true
+      },
+      {
+        "case_id": "lora-qlora-mechanism",
+        "evidence_id": "E3",
+        "valid": true
+      },
+      {
+        "case_id": "lora-qlora-mechanism",
+        "evidence_id": "E4",
+        "valid": true
+      },
+      {
+        "case_id": "lora-qlora-mechanism",
+        "evidence_id": "E5",
+        "valid": true
+      },
+      {
+        "case_id": "lora-qlora-mechanism",
+        "evidence_id": "E6",
+        "valid": true
+      },
+      {
+        "case_id": "lora-qlora-mechanism",
+        "evidence_id": "E8",
+        "valid": true
+      },
+      {
+        "case_id": "lora-qlora-mechanism",
+        "evidence_id": "E9",
+        "valid": true
+      },
+      {
+        "case_id": "lora-qlora-mechanism",
+        "evidence_id": "E10",
+        "valid": true
+      },
+      {
+        "case_id": "lora-qlora-mechanism",
+        "evidence_id": "E11",
+        "valid": true
+      },
+      {
+        "case_id": "lora-qlora-mechanism",
+        "evidence_id": "E12",
+        "valid": true
+      },
+      {
+        "case_id": "lora-qlora-mechanism",
+        "evidence_id": "E13",
+        "valid": true
+      },
+      {
+        "case_id": "lora-qlora-mechanism",
+        "evidence_id": "E14",
+        "valid": true
+      },
+      {
+        "case_id": "lora-qlora-mechanism",
+        "evidence_id": "E15",
+        "valid": true
+      },
+      {
+        "case_id": "lora-qlora-mechanism",
+        "evidence_id": "E16",
+        "valid": true
+      },
+      {
+        "case_id": "lora-qlora-mechanism",
+        "evidence_id": "E17",
+        "valid": true
+      },
+      {
+        "case_id": "lora-qlora-mechanism",
+        "evidence_id": "E18",
+        "valid": true
+      },
+      {
+        "case_id": "lora-qlora-mechanism",
+        "evidence_id": "E19",
+        "valid": true
+      },
+      {
+        "case_id": "lora-qlora-mechanism",
+        "evidence_id": "E20",
+        "valid": true
+      },
+      {
+        "case_id": "unreported-training-seed",
+        "evidence_id": "E1",
+        "valid": true
+      },
+      {
+        "case_id": "unreported-training-seed",
+        "evidence_id": "E2",
+        "valid": true
+      },
+      {
+        "case_id": "unreported-training-seed",
+        "evidence_id": "E3",
+        "valid": true
+      },
+      {
+        "case_id": "unreported-training-seed",
+        "evidence_id": "E4",
+        "valid": true
+      },
+      {
+        "case_id": "unreported-training-seed",
+        "evidence_id": "E5",
+        "valid": true
+      },
+      {
+        "case_id": "unreported-training-seed",
+        "evidence_id": "E6",
+        "valid": true
+      },
+      {
+        "case_id": "unreported-training-seed",
+        "evidence_id": "E7",
+        "valid": true
+      },
+      {
+        "case_id": "unreported-training-seed",
+        "evidence_id": "E8",
+        "valid": true
+      },
+      {
+        "case_id": "unreported-training-seed",
+        "evidence_id": "E9",
+        "valid": true
+      },
+      {
+        "case_id": "unreported-training-seed",
+        "evidence_id": "E10",
+        "valid": true
+      },
+      {
+        "case_id": "unreported-training-seed",
+        "evidence_id": "E11",
+        "valid": true
+      },
+      {
+        "case_id": "unreported-training-seed",
+        "evidence_id": "E12",
+        "valid": true
+      },
+      {
+        "case_id": "unreported-training-seed",
+        "evidence_id": "E13",
+        "valid": true
+      },
+      {
+        "case_id": "unreported-training-seed",
+        "evidence_id": "E14",
+        "valid": true
+      },
+      {
+        "case_id": "unreported-training-seed",
+        "evidence_id": "E15",
+        "valid": true
+      },
+      {
+        "case_id": "unreported-training-seed",
+        "evidence_id": "E16",
+        "valid": true
+      },
+      {
+        "case_id": "unreported-training-seed",
+        "evidence_id": "E17",
+        "valid": true
+      },
+      {
+        "case_id": "unreported-training-seed",
+        "evidence_id": "E18",
+        "valid": true
+      }
+    ],
+    "qa_all_anchors_valid": true,
+    "old_immutable_count": 40,
+    "old_immutable_unchanged": 40,
+    "old_changed": [],
+    "backend_regression": {
+      "name": "pytest",
+      "errors": "0",
+      "failures": "0",
+      "skipped": "0",
+      "tests": "1175",
+      "time": "8.649",
+      "timestamp": "2026-10-15T19:26:44.486554+08:00",
+      "hostname": "LAPTOP-SDLMH7KC"
+    },
+    "frontend_regression": {
+      "tests": 42,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    "saved_qa_omission_replay_not_new_generation": [],
+    "reviews": [
+      {
+        "directory": "generated-review",
+        "runtime_source": {
+          "python_version": "3.12.14",
+          "app_files": 127,
+          "app_sha256": "4664c6aac6dea3509ff5bb4b7572e9a504cc215cc5a0f57400ee3516e3a60e2c",
+          "requirements_sha256": "b0e75e31a3ca8f034e095fd0667e3be7e380975548c5acce90db94f96ed7283f"
+        },
+        "published_claims": 7,
+        "multi_source_claims": 5,
+        "cloud_calls": 1,
+        "warnings": [
+          "正文证据预算为 36，已按文献均衡选择 36 条；另有 43 条候选未发送。",
+          "综述生成仅获得 4 条有原页锚点的明确书目关联；未发送的图谱边不作为生成依据。书目匹配不证明贡献继承或科研影响。",
+          "主题条目 review_item_2 暂缓：跨文条目必须有两篇不同论文的正文，不以同篇多块或书目充数。"
+        ]
+      },
+      {
+        "directory": "generated-review-confirm",
+        "runtime_source": {
+          "python_version": "3.12.14",
+          "app_files": 127,
+          "app_sha256": "4e74e53015a10ae52a5d0eb759f2ce5e7f0534359b1c064df2471d012a3f1940",
+          "requirements_sha256": "b0e75e31a3ca8f034e095fd0667e3be7e380975548c5acce90db94f96ed7283f"
+        },
+        "published_claims": 4,
+        "multi_source_claims": 3,
+        "cloud_calls": 1,
+        "warnings": [
+          "正文证据预算为 36，已按文献均衡选择 36 条；另有 43 条候选未发送。",
+          "综述生成仅获得 4 条有原页锚点的明确书目关联；未发送的图谱边不作为生成依据。书目匹配不证明贡献继承或科研影响。",
+          "主题条目 review_item_5 暂缓：单篇条目与多篇正文引用不一致，请明确比较类型。",
+          "已暂缓 1 条将预热动机扩大为无条件必要的陈述；请保留学习率条件或文中设置，不能由局部稳定性分析推断所有配置都必须预热。"
+        ]
+      }
+    ],
+    "cloud_calls": 4,
+    "automatic_retries": 0,
+    "full_review_quality_passed": false,
+    "production_library_modified": false,
+    "git_mutated": false
+  },
+  "manual_review": {
+    "date": "2026-10-15",
+    "scope": "Bounded follow-up to the same LoRA/QLoRA question and same 20-paper review pool; not a 39-answer rerun",
+    "cloud_calls": 4,
+    "automatic_retries": 0,
+    "runtime_qa": {
+      "app_sha256": "5bc752e48e5530e8d6306fc627898c4db8d2a93d7a4caa6a4ce92c3c959b5d33",
+      "original_question_unchanged": true,
+      "status": "requested_mechanisms_and_two_original_sources_confirmed",
+      "published_claims": 5,
+      "claim_reviews": [
+        {
+          "index": 0,
+          "status": "confirmed",
+          "sources": [
+            "LoRA physical 1 and 2",
+            "QLoRA physical 1 and 3"
+          ],
+          "evidence": [
+            "E11",
+            "E5",
+            "E18",
+            "E20"
+          ],
+          "note": "Both freeze base weights and update low-rank adapters; QLoRA additionally stores the frozen base in four bits. Memory-gradient/optimizer-state explanation matches LoRA body, not a filename-derived answer."
+        },
+        {
+          "index": 1,
+          "status": "confirmed",
+          "sources": [
+            "QLoRA physical 4 and 1"
+          ],
+          "evidence": [
+            "E2",
+            "E18"
+          ],
+          "note": "Four-bit storage is kept distinct from BFloat16 computation and dequantization."
+        },
+        {
+          "index": 2,
+          "status": "requested_core_confirmed",
+          "sources": [
+            "QLoRA physical 4 and 1",
+            "QLoRA physical 7"
+          ],
+          "evidence": [
+            "E2",
+            "E18",
+            "E4"
+          ],
+          "note": "NF4 represents normally distributed weights in a low-bit datatype, with quantile-based precision rationale. The FP4 comparison is an extra reported empirical fact, not universal optimality for arbitrary weight distributions."
+        },
+        {
+          "index": 3,
+          "status": "requested_core_confirmed",
+          "sources": [
+            "QLoRA physical 1 and 6"
+          ],
+          "evidence": [
+            "E18",
+            "E16",
+            "E4"
+          ],
+          "note": "Quantizes quantization constants to reduce their storage overhead. Extra no-degradation and model-size remarks are reported experimental context, not guarantees for all settings. Physical page 5 independently confirms the mechanism but was not silently added as a model citation."
+        },
+        {
+          "index": 4,
+          "status": "confirmed",
+          "sources": [
+            "QLoRA physical 5, 4 and 3"
+          ],
+          "evidence": [
+            "E14",
+            "E2",
+            "E6"
+          ],
+          "note": "Optimizer-state paging between CPU/GPU and checkpointing memory spikes are explained, rather than just listing paged optimizers."
+        }
+      ],
+      "old_failure_preserved": true,
+      "old_four_bit_rejection": "The earlier E7/E8 training excerpts do not explicitly contain a four-bit value. The prior numeric rejection was not globally exempted; the new generation cites actual four-bit source passages.",
+      "limitations": [
+        "One fixed question, not multi-question accuracy or stability",
+        "NF4/DQ answer contains some unrequested performance context",
+        "This successful runtime candidate precedes later review-only guard changes"
+      ]
+    },
+    "seed_counterexample": {
+      "status": "confirmed_requested_refusal",
+      "positive_seed_number_invented": false,
+      "native_entire_PDF_absence_prechecked_locally": true,
+      "insufficient_evidence_retained": true
+    },
+    "first_new_review": {
+      "directory": "generated-review",
+      "app_sha256": "4664c6aac6dea3509ff5bb4b7572e9a504cc215cc5a0f57400ee3516e3a60e2c",
+      "published_claims": 7,
+      "status": "hold_scope_omissions_not_overwritten",
+      "issues": [
+        "Warm-up wording omitted large-learning-rate scope",
+        "FLOP comparison omitted standard-attention baseline and backward-recomputation scope",
+        "Preference wording retained prompt distribution but omitted human evaluation; alternate phrasing bypassed the initial guard"
+      ]
+    },
+    "confirm_review": {
+      "directory": "generated-review-confirm",
+      "app_sha256": "4e74e53015a10ae52a5d0eb759f2ce5e7f0534359b1c064df2471d012a3f1940",
+      "machine_status": "source_checks_passed",
+      "published_claims": 4,
+      "multi_source_claims": 3,
+      "claim_reviews": [
+        {
+          "index": 0,
+          "status": "bounded_core_confirmed",
+          "evidence": [
+            "R4",
+            "R35"
+          ],
+          "sources": [
+            "ZeRO physical 1",
+            "FlashAttention physical 6"
+          ],
+          "note": "Memory-redundancy versus IO constraint comparison; explicitly cites the actual higher-FLOP passage, names standard attention, and retains backward recomputation. No numerical speedup extrapolation."
+        },
+        {
+          "index": 1,
+          "status": "bounded_core_confirmed",
+          "evidence": [
+            "R8",
+            "R24"
+          ],
+          "sources": [
+            "GPT-3 physical 1",
+            "T5 physical 1"
+          ],
+          "note": "Inference-time few-shot no-gradient use versus pretrain/fine-tune transfer; does not claim GPT-3 was never pretrained or can never be fine-tuned."
+        },
+        {
+          "index": 2,
+          "status": "hold_closed_form_object_and_sampling_scope",
+          "evidence": [
+            "R18",
+            "R15"
+          ],
+          "sources": [
+            "DPO physical 1",
+            "InstructGPT physical 1"
+          ],
+          "note": "Core optimization/pipeline contrast has support. But the wording merges extraction of the corresponding optimal policy in closed form with learning the classifier loss; it may incorrectly imply model fitting itself is a closed-form solve. The sampling omission should explicitly be LM sampling during fine-tuning. Do not count the complete review as accepted."
+        },
+        {
+          "index": 3,
+          "status": "bounded_core_confirmed",
+          "evidence": [
+            "R21"
+          ],
+          "sources": [
+            "Layer Normalization physical 10 section 6.7"
+          ],
+          "note": "Preserves preliminary convolutional experiment scope, no-normalization baseline, and authors' future-study statement; does not describe it as a currently unresolved field-wide problem."
+        }
+      ],
+      "withheld": [
+        "Original row 5 combined two originals in the single-paper bucket",
+        "Original row 0 omitted the large-learning-rate condition for warm-up and was withheld, not repaired silently"
+      ],
+      "full_quality_status": "hold_one_published_mathematical_scope_ambiguity_and_incomplete_topic_coverage",
+      "limitations": [
+        "Three of four published claims have bounded original-page core confirmation, not a general accuracy percentage",
+        "Pre-LN and human preference guards have local positive/negative tests, but this confirmation did not publish those facts and cannot prove their new-generation success",
+        "Saved AST synthesis is not a new BGE retrieval benchmark"
+      ]
+    },
+    "original_pages_inspected": [
+      "backend/tmp/qlora-mechanism-p5-20261015.png",
+      "backend/tmp/official-mechanism-closure-2026-10-15/lora-2.png",
+      "backend/tmp/official-mechanism-closure-2026-10-15/qlora-4.png",
+      "backend/tmp/official-mechanism-closure-2026-10-15/t5-1.png",
+      "backend/tmp/official-mechanism-closure-2026-10-15/gpt3-1.png",
+      "backend/tmp/official-mechanism-closure-2026-10-15/layernorm-10.png",
+      "backend/tmp/official-mechanism-closure-2026-10-15/dpo-1.png",
+      "backend/tmp/official-source-scope-2026-10-14/source-pages/ln-transformer-1.png",
+      "backend/tmp/official-review-runtime-2026-10-15/source-pages/instructgpt-1.png",
+      "backend/tmp/official-source-scope-2026-10-14/source-pages/flash-6.png",
+      "backend/tmp/official-source-scope-2026-10-14/source-pages/zero-1.png"
+    ]
+  },
+  "secret_scan_findings": [],
+  "artifacts": [
+    {
+      "path": "backend/tmp/official-mechanism-closure-2026-10-15/audit_followup.py",
+      "sha256": "894622645daa19ebd68a289cd181d3fc1c6bed5d3a207dcfb78658e74a46e624"
+    },
+    {
+      "path": "backend/tmp/official-mechanism-closure-2026-10-15/backend-closure-final.xml",
+      "sha256": "0f0154a2e9ae561562772370e954e7980d3d1de4f694068690df4d67ee5c6142"
+    },
+    {
+      "path": "backend/tmp/official-mechanism-closure-2026-10-15/backend-final.xml",
+      "sha256": "6c0a188e949bbbc145602b9c3334246d0d89edeea076d23ec0aae3d3af720d6d"
+    },
+    {
+      "path": "backend/tmp/official-mechanism-closure-2026-10-15/backend-regression.xml",
+      "sha256": "16a3e29d4b71d35fd4ab2272e748943eff6d8c470f730a89dd91d0ca5e1db568"
+    },
+    {
+      "path": "backend/tmp/official-mechanism-closure-2026-10-15/backend-release-check.xml",
+      "sha256": "39e5c8ecb130347cf0666428d1dd77da823059780c8c13529128110c1196a61f"
+    },
+    {
+      "path": "backend/tmp/official-mechanism-closure-2026-10-15/dpo-1.png",
+      "sha256": "d867587de967d200c58e0456f11f3b860e423f03eb453defdedf5d7b9eec30f4"
+    },
+    {
+      "path": "backend/tmp/official-mechanism-closure-2026-10-15/frontend-tests.xml",
+      "sha256": "abf8b89b1dc8db51d37be29b34ded4a451fbba117b81996d98c5d8fb5c9056e7"
+    },
+    {
+      "path": "backend/tmp/official-mechanism-closure-2026-10-15/generated-review/calls.json",
+      "sha256": "653ae4001dfa705ed86637f8cc89057e848ccced17bc3218df53bb024d593afe"
+    },
+    {
+      "path": "backend/tmp/official-mechanism-closure-2026-10-15/generated-review/generated-review.json",
+      "sha256": "dcfafab3324712f52389ed7e43c0659e76167f7231d61239157c8d0023443ba3"
+    },
+    {
+      "path": "backend/tmp/official-mechanism-closure-2026-10-15/generated-review/report.json",
+      "sha256": "7f247defeaee8085b9fbc92c3f418273525380d397b6d1df66a50b4a829d3c82"
+    },
+    {
+      "path": "backend/tmp/official-mechanism-closure-2026-10-15/generated-review-confirm/calls.json",
+      "sha256": "3b0864c8e05718237336e39eb4d7bb46c051f1be313cdc4387948104af25c205"
+    },
+    {
+      "path": "backend/tmp/official-mechanism-closure-2026-10-15/generated-review-confirm/generated-review.json",
+      "sha256": "70deab04a142a24653a91859dd27b71726fd7c9df7ec68b50b31666d45942f08"
+    },
+    {
+      "path": "backend/tmp/official-mechanism-closure-2026-10-15/generated-review-confirm/report.json",
+      "sha256": "fa550acb6a729aa8aa0bf84b14aad545bbce91c76bdf4d8c95ec4759b36feac6"
+    },
+    {
+      "path": "backend/tmp/official-mechanism-closure-2026-10-15/gpt3-1.png",
+      "sha256": "0aad6afcaf4f055c879d6e84d7431a8dfb988bfa7f83b2be3483e7da486092ab"
+    },
+    {
+      "path": "backend/tmp/official-mechanism-closure-2026-10-15/layernorm-10.png",
+      "sha256": "87f32bd40511481137a6e80a46d337207a7715061ffce43bab77c1e0697c948f"
+    },
+    {
+      "path": "backend/tmp/official-mechanism-closure-2026-10-15/lora-2.png",
+      "sha256": "b4a3a8b413b38e934f3fe92fba9fa1deac041a3a63e2dbbd6836f07371a81f89"
+    },
+    {
+      "path": "backend/tmp/official-mechanism-closure-2026-10-15/manual-source-review.json",
+      "sha256": "9e6ef7b92d828ef7e4797300ea24374d57981d347d8f26c65f872c09e6795c25"
+    },
+    {
+      "path": "backend/tmp/official-mechanism-closure-2026-10-15/post-generation-audit-final.json",
+      "sha256": "81ed40995ef2f510d5d3b118843b5e823e7c56a078a2e04c61c8ef0c157a4cc7"
+    },
+    {
+      "path": "backend/tmp/official-mechanism-closure-2026-10-15/post-generation-audit.json",
+      "sha256": "39bafce22d14dd6a9d3dffd71ab32136305f69017e8b66cfe5f252f0a157bb6f"
+    },
+    {
+      "path": "backend/tmp/official-mechanism-closure-2026-10-15/qlora-4.png",
+      "sha256": "a39f36f89647806831fc001c7056098a1915b9b06118bdaf56de716514c68079"
+    },
+    {
+      "path": "backend/tmp/official-mechanism-closure-2026-10-15/runtime-fixture/fixture.json",
+      "sha256": "3d534c89f0ec7c14a452d891cf987c03bf267e000487afe0dfa80c5e617b7ffc"
+    },
+    {
+      "path": "backend/tmp/official-mechanism-closure-2026-10-15/runtime-fixture/parsed/20d9fad6-9e6f-543d-a2e1-095d8056c5ff.json",
+      "sha256": "4a05a089a864b8fc603470e4f28fc480526b8184b8c5a89039db83b07bdded3d"
+    },
+    {
+      "path": "backend/tmp/official-mechanism-closure-2026-10-15/runtime-fixture/parsed/855562a1-8309-57b2-b7b0-b9e7016207dc.json",
+      "sha256": "0bdf9ab2be963a5e42b3560e72b14fd247e2723c299ffc3e340682b02394db97"
+    },
+    {
+      "path": "backend/tmp/official-mechanism-closure-2026-10-15/runtime-fixture/parsed/bc90bcf2-cccd-5364-94f6-5815603802f7.json",
+      "sha256": "2f5bdb78b265127069fbaf7c9841afe6e181a0d93c3209856c420d678c7825d0"
+    },
+    {
+      "path": "backend/tmp/official-mechanism-closure-2026-10-15/runtime-fixture/preparation.json",
+      "sha256": "ac6dcba1a940dd7923270044ab768894f5f9a93a335d7470676fa951fbaaa6f3"
+    },
+    {
+      "path": "backend/tmp/official-mechanism-closure-2026-10-15/runtime-fixture/runtime-calls.json",
+      "sha256": "a9770714843cb76936c8b8b13badeeb2cabe92d66ed0316f06a453ebc2e820dd"
+    },
+    {
+      "path": "backend/tmp/official-mechanism-closure-2026-10-15/runtime-fixture/server-source.json",
+      "sha256": "3b3c2ff884087642c0b6c5a5678fc71be2b6bbd106e951fb425e52c872c5c8d4"
+    },
+    {
+      "path": "backend/tmp/official-mechanism-closure-2026-10-15/runtime-qa/report.json",
+      "sha256": "0de9173599263aff0375d3c9dc6375134e4659e01bddce85fa152efbb27fa1ec"
+    },
+    {
+      "path": "backend/tmp/official-mechanism-closure-2026-10-15/t5-1.png",
+      "sha256": "08294bc959c47febdd23674397486f84535c136cf450275ac72461361f9709f9"
+    },
+    {
+      "path": "backend/app/services/mechanism_evidence.py",
+      "sha256": "532fb08f0710646ee4d47a4f7957ba4ce2634c64b1658139a0ad677bab68bcd3"
+    },
+    {
+      "path": "backend/app/services/retrieval.py",
+      "sha256": "67f78a848ab6c5004125c15001c42ab5bbe40851eccda6e2a1fb7ff042fff5f2"
+    },
+    {
+      "path": "backend/app/services/retrieval_policy.py",
+      "sha256": "75e45c14f3e0702642b9a9c3a64d968692dfa0e6cfb7a43c0019724b72e99296"
+    },
+    {
+      "path": "backend/app/services/answer_completeness.py",
+      "sha256": "a4ab5f0e531a91e9f5d5ac3e17bf3a2c275a60266b191702905478ae0b7e4ae2"
+    },
+    {
+      "path": "backend/app/llm/openai_responses.py",
+      "sha256": "0b92c9c21b40476e3d0d3d65040b6fbd280da7c632a5570bc0b98248c0213ef7"
+    },
+    {
+      "path": "backend/app/llm/review_limits.py",
+      "sha256": "6a6f1e0c7288caef5bd25a3f699661c9e714bc4a6856a7de036b9b637b78f33f"
+    },
+    {
+      "path": "backend/tests/test_mechanism_parts.py",
+      "sha256": "51e187a4cf5c1b2bfb48d7e3558a5ea70e4d82148a3559eb1c5b82d5a36ed297"
+    },
+    {
+      "path": "backend/tests/test_review_scope_completion.py",
+      "sha256": "3bdfe4972522830f7ec44514c14adc6f1ca148fe2f1d31856879cea7c0d962a7"
+    },
+    {
+      "path": "docs/official-mechanism-acceptance-2026-10-15.md",
+      "sha256": "74f7a22cb231236ef9a4f98d44dcbfe5da65d69c3c8db00cbee2cc156f720712"
+    },
+    {
+      "path": "docs/acceptance-progress.md",
+      "sha256": "84b83c626e9c6d380d0e360e35ad23900f94d7e36fc97696076cc77ca52dbcb3"
+    },
+    {
+      "path": "docs/competition-verification-gates.md",
+      "sha256": "2bdc394a31fd28705a3c93e2eddc1508581043a2a85697c562b38cbc4e6f1654"
+    },
+    {
+      "path": "docs/competition-delivery-checklist.md",
+      "sha256": "249359e838e965ff98b725c6d4d3b8c52f07d4ca697c40dd24d9ee8549bfcc5b"
+    },
+    {
+      "path": "backend/tmp/qlora-mechanism-p5-20261015.png",
+      "sha256": "ce4982c36618df03605f377c37b46e53e26d32a5e21bbf4cb21070846d23e938"
+    }
+  ]
+}

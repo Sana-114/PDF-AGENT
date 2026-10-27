@@ -1,0 +1,1810 @@
+{
+  "schema_version": 1,
+  "date": "2026-10-19",
+  "status": "partial_project_acceptance",
+  "whole_project_released": false,
+  "current_backend_source": {
+    "python_version": "3.12.14",
+    "app_files": 137,
+    "app_sha256": "adc89390b17746a43ecfd87fad438886bf3d8d9a04cbe402204d15a536925388",
+    "requirements_sha256": "b0e75e31a3ca8f034e095fd0667e3be7e380975548c5acce90db94f96ed7283f"
+  },
+  "git": {
+    "branch": "codex/stage94-official-failed-qa-retest",
+    "head": "a119f5609cda544e5d587588c5a338051da129a1",
+    "refs_mutated": false,
+    "commit_created": false,
+    "pushed": false
+  },
+  "scope": "Scientific scope repairs, a reject-only review stage and bounded per-goal progress assessment; no new all-file parsing or universal resolution claim",
+  "official_inputs_unchanged": 39,
+  "previous_run_raw_artifacts_unchanged": 519,
+  "older_raw_artifacts_unchanged": 213,
+  "regression": {
+    "backend": {
+      "executed": 1459,
+      "passed": 1459
+    },
+    "frontend": {
+      "executed": 45,
+      "passed": 45
+    },
+    "typescript": "passed"
+  },
+  "static_checks": {
+    "ruff_touched_sources": "passed",
+    "git_diff_check": "passed"
+  },
+  "cloud_calls": {
+    "actual_requests": 18,
+    "primary_generations": 14,
+    "comparison_editors": 3,
+    "semantic_reviewers": 1,
+    "automatic_retries": 0,
+    "per_run": {
+      "browser-runtime": 1,
+      "comparison": 6,
+      "future-assessment-2": 3,
+      "future-assessment-final": 3,
+      "mechanism-confirmation": 2,
+      "review": 1,
+      "review-audited": 2
+    },
+    "response_envelopes_returned_not_all_valid_business_json": true
+  },
+  "scientific_review": {
+    "date": "2026-10-19",
+    "method": "Check explicitly cited excerpts against rendered complete original pages. Record scoped core support separately from machine scores, reviewer opinions and project acceptance.",
+    "comparison": {
+      "run": "comparison",
+      "machine_passed": 3,
+      "executed": 4,
+      "source_checked_core_cases": [
+        "dpo-instructgpt-object-and-stage",
+        "dpo-reject-global-analytic-and-sampling-free",
+        "unreported-training-seed"
+      ],
+      "checks": [
+        "The analytical object is the optimal policy, not a closed-form fit of network parameters; optimization and policy extraction remain distinct.",
+        "Avoiding sampling retains language-model generation and the fine-tuning stage. This is not a claim that preference-data preparation or the whole pipeline is sampling-free.",
+        "The negative-control answer assigns the HH temperature and summarization temperature to their own tasks, as shown on DPO physical pages 24 and 25.",
+        "The seed case withholds a seed claim for the selected evidence; this is not a global assertion that the paper never reports a seed."
+      ],
+      "failed_case": "lora-qlora-mechanism",
+      "failure": "The comparison editor returned malformed JSON. The service withheld the missing comparison and explicitly retained an incomplete answer; it did not silently retry.",
+      "whole_round_accepted": false
+    },
+    "mechanism_confirmation": {
+      "run": "mechanism-confirmation",
+      "machine_passed": 1,
+      "executed": 1,
+      "core_source_checks": 5,
+      "checks": [
+        "Frozen base weights and trainable low-rank adapters are supported by each original.",
+        "QLoRA distinguishes four-bit storage from dequantized BFloat16 computation.",
+        "NF4 is qualified by normally distributed weights, not universal quantization superiority.",
+        "Double quantization concerns quantization constants and memory overhead.",
+        "Paged optimizers transfer optimizer states between GPU and CPU to manage memory spikes; an explicit Chinese transfer action is no longer treated as missing."
+      ],
+      "status": "passed_scoped_single_sample",
+      "not_a_new_four_question_round": true
+    },
+    "review": {
+      "initial_run": "review",
+      "initial_issue": "A published restricted-attention claim reversed the maximum-path-length direction. The original response is preserved; the deterministic guard now withholds that saved error.",
+      "audited_run": "review-audited",
+      "originals_in_pool": 20,
+      "reviewer_input_claims": 4,
+      "reviewer_accepted_claims": 3,
+      "published_core_source_checks": 3,
+      "checks": [
+        "The preference-learning contrast preserves the optimal-policy object and fine-tuning sampling scope.",
+        "The adapter contrast preserves frozen base weights and quantized-base gradient flow.",
+        "The Layer Normalization discussion preserves preliminary experiments and the ConvNet limitation, rather than claiming universal superiority."
+      ],
+      "status": "passed_scoped_core_with_qualifier_warnings",
+      "remaining_qualifier_warnings": [
+        "Larger-model capacity and preliminary acceleration remain qualitative shorthand; they are not universal superiority claims or independently verified numerical comparisons.",
+        "The separate-context model reviewer is fallible and sometimes conservative. Its rejected attention contrast is not itself a ground-truth label.",
+        "Twenty papers in the evidence pool do not mean twenty independently validated summaries or stable generation over repeated runs."
+      ]
+    },
+    "future_progress": {
+      "run": "future-assessment-final",
+      "machine_passed": 3,
+      "executed": 3,
+      "core_source_checked": 3,
+      "cases": [
+        {
+          "case": "transformer-vs-vit-partial",
+          "expected": "partial_progress",
+          "reason": "The selected ViT abstract supports an image-classification application, not every input/output modality, local-attention plan or less-sequential generation goal."
+        },
+        {
+          "case": "lora-vs-qlora-partial",
+          "expected": "partial_progress",
+          "reason": "The selected all-linear-layer observation is partial evidence for a compound plan also mentioning LayerNorm and biases. The selected excerpt alone does not establish those other components or their absence from the entire paper."
+        },
+        {
+          "case": "paging-vs-reasoning-unrelated",
+          "expected": "insufficient",
+          "reason": "A later reasoning abstract is not evidence of measured optimizer paging slowdowns."
+        }
+      ],
+      "workflow_checks_passed": 4,
+      "automatically_resolved": false,
+      "boundary": "Goal coverage is lexical and intentionally conservative. Literal evidence, later dates and model assessments do not prove worldwide resolution; human decisions remain separate."
+    },
+    "browser": {
+      "run": "browser",
+      "passed": 7,
+      "executed": 7,
+      "injected_http_503": 1,
+      "actual_model_requests": 1,
+      "source_jump": "Real ViT PDF physical page 1 with painted pixels and highlighted selected abstract.",
+      "production_library_modified": false
+    },
+    "offline_replay": {
+      "detected_preserved_errors": 3,
+      "cloud_calls": 0,
+      "new_retrieval_calls": 0,
+      "is_new_generation_accuracy": false
+    },
+    "preserved_failures": [
+      "future-assessment: missing harness import before any model call",
+      "future-assessment-2: original 2/3, with a PDF Latin word-wrap false rejection",
+      "comparison: original 3/4, malformed comparison-editor JSON",
+      "review: restricted-attention path-length direction error",
+      "first temporary Next start: telemetry configuration EXDEV, recovered with a process-local setting"
+    ],
+    "whole_project_released": false
+  },
+  "comparison_rounds": [
+    {
+      "run": "comparison",
+      "runtime_source": {
+        "python_version": "3.12.14",
+        "app_files": 136,
+        "app_sha256": "ea6c2df6b24c279a973129ab4634938c085694f0be5e29822bcc4b90abe2c6e4",
+        "requirements_sha256": "b0e75e31a3ca8f034e095fd0667e3be7e380975548c5acce90db94f96ed7283f"
+      },
+      "cases": [
+        {
+          "case_id": "dpo-instructgpt-object-and-stage",
+          "original_status": "machine_passed_pending_source_review",
+          "checks": {
+            "real_deepseek_not_fallback": true,
+            "not_insufficient": true,
+            "published_sources_scoped_and_hybrid_reranked": true,
+            "policy_object_and_learning_objective_present": true,
+            "sampling_object_and_stage_in_same_published_claim": true,
+            "one_comparison_cites_both_originals": true,
+            "all_raw_source_anchors_valid": true
+          }
+        },
+        {
+          "case_id": "dpo-reject-global-analytic-and-sampling-free",
+          "original_status": "machine_passed_pending_source_review",
+          "checks": {
+            "real_deepseek_not_fallback": true,
+            "not_insufficient": true,
+            "published_sources_scoped_and_hybrid_reranked": true,
+            "policy_object_and_learning_objective_present": true,
+            "sampling_object_and_stage_in_same_published_claim": true,
+            "explicitly_rejects_overgeneralization": true,
+            "all_raw_source_anchors_valid": true
+          }
+        },
+        {
+          "case_id": "lora-qlora-mechanism",
+          "original_status": "failed",
+          "checks": {
+            "real_deepseek_not_fallback": true,
+            "not_insufficient": false,
+            "one_claim_has_both_originals": false,
+            "all_published_sources_in_scope": true,
+            "all_used_anchors_hybrid_reranked": true,
+            "quantization_and_memory_methods": false,
+            "all_raw_source_anchors_valid": true
+          }
+        },
+        {
+          "case_id": "unreported-training-seed",
+          "original_status": "machine_passed_pending_source_review",
+          "checks": {
+            "configured_deepseek": true,
+            "no_out_of_scope_published_source": true,
+            "refuses_without_published_seed_claim": true,
+            "no_positive_seed_number": true,
+            "all_raw_source_anchors_valid": true
+          }
+        }
+      ]
+    },
+    {
+      "run": "mechanism-confirmation",
+      "runtime_source": {
+        "python_version": "3.12.14",
+        "app_files": 137,
+        "app_sha256": "adc89390b17746a43ecfd87fad438886bf3d8d9a04cbe402204d15a536925388",
+        "requirements_sha256": "b0e75e31a3ca8f034e095fd0667e3be7e380975548c5acce90db94f96ed7283f"
+      },
+      "cases": [
+        {
+          "case_id": "lora-qlora-mechanism",
+          "original_status": "machine_passed_pending_source_review",
+          "checks": {
+            "real_deepseek_not_fallback": true,
+            "not_insufficient": true,
+            "one_claim_has_both_originals": true,
+            "all_published_sources_in_scope": true,
+            "all_used_anchors_hybrid_reranked": true,
+            "quantization_and_memory_methods": true,
+            "all_raw_source_anchors_valid": true
+          }
+        }
+      ]
+    }
+  ],
+  "review": {
+    "runtime_source": {
+      "python_version": "3.12.14",
+      "app_files": 137,
+      "app_sha256": "d9ad248fa0ca71f74dfc12f8d28d388367c43447ad8d75983f3283556a4a88fa",
+      "requirements_sha256": "b0e75e31a3ca8f034e095fd0667e3be7e380975548c5acce90db94f96ed7283f"
+    },
+    "checks": {
+      "actual_deepseek": true,
+      "semantic_review_completed": true,
+      "twenty_papers_in_pool": true,
+      "claims_have_valid_ids": true,
+      "short_review": true,
+      "at_least_two_cross_paper_claims": true,
+      "themes_with_published_indices": true,
+      "source_copies_unchanged": true
+    },
+    "published_claims": 3
+  },
+  "future_progress": {
+    "runtime_source": {
+      "python_version": "3.12.14",
+      "app_files": 137,
+      "app_sha256": "d9ad248fa0ca71f74dfc12f8d28d388367c43447ad8d75983f3283556a4a88fa",
+      "requirements_sha256": "b0e75e31a3ca8f034e095fd0667e3be7e380975548c5acce90db94f96ed7283f"
+    },
+    "cases": [
+      {
+        "case": "transformer-vs-vit-partial",
+        "direction_id": "future-31d544918448afeb0bd82ded",
+        "checks": {
+          "api_200": true,
+          "one_actual_request": true,
+          "expected_scope_not_resolution": true,
+          "not_automatically_resolved": true,
+          "no_human_confirmation_written": true,
+          "persisted_and_revalidated": true
+        },
+        "status": "checks_passed"
+      },
+      {
+        "case": "lora-vs-qlora-partial",
+        "direction_id": "future-79991f1aa526d968664b5410",
+        "checks": {
+          "api_200": true,
+          "one_actual_request": true,
+          "expected_scope_not_resolution": true,
+          "not_automatically_resolved": true,
+          "no_human_confirmation_written": true,
+          "persisted_and_revalidated": true
+        },
+        "status": "checks_passed"
+      },
+      {
+        "case": "paging-vs-reasoning-unrelated",
+        "direction_id": "future-3d8248ada90e7e23e2e7524f",
+        "checks": {
+          "api_200": true,
+          "one_actual_request": true,
+          "expected_scope_not_resolution": true,
+          "not_automatically_resolved": true,
+          "no_human_confirmation_written": true,
+          "persisted_and_revalidated": true
+        },
+        "status": "checks_passed"
+      }
+    ],
+    "workflow_checks": {
+      "review_read_200": true,
+      "three_assessments_recovered": true,
+      "human_resolution_not_fabricated": true,
+      "no_extra_generation_on_read": true
+    },
+    "automatically_resolved": false
+  },
+  "browser": {
+    "status": "passed_scoped_ui_checks",
+    "checks": {
+      "cached_real_assessment_visible": true,
+      "error_visible_without_silent_retry": true,
+      "actual_generation_and_manual_recovery": true,
+      "proof_jump_has_real_pdf_pixels": true,
+      "mobile_no_horizontal_overflow": true,
+      "no_javascript_errors": true,
+      "no_unrelated_mutations": true
+    },
+    "page_errors": [],
+    "forbidden_requests": [],
+    "injected_errors": 1,
+    "actual_assessment_posts": 1,
+    "production_library_modified": false
+  },
+  "cleanup": {
+    "api_pid": 20856,
+    "frontend_child": 21588,
+    "frontend_parent": 35000,
+    "api_port": 8041,
+    "frontend_port": 3341,
+    "identities_verified": true,
+    "api_still_listening": false,
+    "frontend_still_listening": false,
+    "first_frontend_start": "EXDEV telemetry configuration; no model calls; recovered with process-local NEXT_TELEMETRY_DISABLED=1",
+    "production_services_stopped": false,
+    "temporary_next_type_paths_restored": true
+  },
+  "new_full_fixed_four_round_at_final_source": false,
+  "production_database_modified": false,
+  "production_image_replaced": false,
+  "secret_scan_findings": [],
+  "source_and_document_files": [
+    {
+      "path": "backend/app/services/scope_provenance.py",
+      "sha256": "325217f0e88aee72ae4e47fe424a48722332fe87d2e3b1ddd8cc6370e57a1606"
+    },
+    {
+      "path": "backend/app/services/future_progress.py",
+      "sha256": "5a1aae318174f680784e3bd12d77b8fda838edbd44565d3879328814fb73709f"
+    },
+    {
+      "path": "backend/app/llm/future_assessment.py",
+      "sha256": "9f086bd78bdeaeeb9eb1c3472820c46fe091e8eb42007d2912f89b19bb2f05dc"
+    },
+    {
+      "path": "backend/app/llm/claim_review.py",
+      "sha256": "646fa07655397e513503a533a5256675844110b323057ffd643e17d92235cff7"
+    },
+    {
+      "path": "backend/app/services/claim_semantics.py",
+      "sha256": "ca7f52a0c6f2094629e43d4d3e3da7d6d6fb787ebceda59938dd9697fa560504"
+    },
+    {
+      "path": "backend/app/services/grounded_text.py",
+      "sha256": "9b81a24383cf846daf37a012a67587d3f75c24de638cd99bab7c9167918650d2"
+    },
+    {
+      "path": "backend/app/services/mechanism_evidence.py",
+      "sha256": "58c840564986e3be6cd3cb16f26dd328a00191af9f507e0a47f84f4ad77c1f9f"
+    },
+    {
+      "path": "backend/app/services/evidence_review.py",
+      "sha256": "9291028b226ac1d6551810f054f25827d78df51592eab89dc8586c142c7a0fb4"
+    },
+    {
+      "path": "backend/app/llm/openai_responses.py",
+      "sha256": "5963223c11c7c8eb2173edeafe49029b9dba287148c1ecd5748b265d9cf75e9b"
+    },
+    {
+      "path": "backend/app/schemas/review.py",
+      "sha256": "cff6ed82b8f28467d48c89d54937f2f710571a65f44145215000f3df4050e1c4"
+    },
+    {
+      "path": "backend/app/models/future_work.py",
+      "sha256": "cd11be63b255b3cadcbdad995b40b95329350a2c98396471083210140fdf445a"
+    },
+    {
+      "path": "backend/app/models/__init__.py",
+      "sha256": "95e4fbad3c9716791805a98d830d855cad03a3c46d40466f4db84692cbb6f576"
+    },
+    {
+      "path": "backend/app/api/routes/reviews.py",
+      "sha256": "85aead681a3a395c7943c0e2aea5d60784b399fa4b1cecc05207784135ab20a3"
+    },
+    {
+      "path": "backend/app/api/routes/documents.py",
+      "sha256": "7681604b83868b422afe22c5962921c8770a19511d0d4b8fa89f43b6da857795"
+    },
+    {
+      "path": "backend/tests/test_scope_provenance.py",
+      "sha256": "cc5227435c669944a5f6a1eb77634d7283b2b11a73c84bed44025a978a55c4ae"
+    },
+    {
+      "path": "backend/tests/test_future_progress.py",
+      "sha256": "7c3b9feaaee17e208d40350a2644884e35b7e75d03cf392530bf29b8755c46d3"
+    },
+    {
+      "path": "backend/tests/test_semantic_claim_review.py",
+      "sha256": "b34feb1304fa61d40bfb9eb174483553cd5a86194b92ceaae6a54b5822d9d954"
+    },
+    {
+      "path": "backend/tests/test_mechanism_parts.py",
+      "sha256": "f0b838f7b0fc0929231985fde7aebd9c643d1a62be8511be20ae7925ef64863c"
+    },
+    {
+      "path": "backend/scripts/verify_official_future_assessment.py",
+      "sha256": "54b965dbdfc203bb6489b1e6c51b56881e8ff39a80ddb095d9e6e9a6a57ae56e"
+    },
+    {
+      "path": "backend/scripts/replay_official_scope_repairs.py",
+      "sha256": "6e15cc9cd53b5f9ef8510fa878d162cc71113cf30b3ce1898a2b9154134b283c"
+    },
+    {
+      "path": "backend/scripts/verify_official_synthesis_batch.py",
+      "sha256": "30046ee91582d239925780743c423596834c19b163136434adb02e42366c31fd"
+    },
+    {
+      "path": "frontend/lib/api.ts",
+      "sha256": "8c07fe140b3a8819b0493e91e3e31ca768d0a342ca650a7306fa404ca1f39d07"
+    },
+    {
+      "path": "frontend/lib/futureProgress.ts",
+      "sha256": "5ae0650780621ad9c7f4093d1685e2125f65ff392dc828e8b888ee2995966fe0"
+    },
+    {
+      "path": "frontend/lib/futureProgress.test.mjs",
+      "sha256": "196bb4ed527bee0540df68b746c1af3457f409c80655161030ce182d5c125d69"
+    },
+    {
+      "path": "frontend/components/ResearchReview.tsx",
+      "sha256": "b5f4cf11bdba27b6d2e7e2d177912d58d344093bc0b10b578a2f8640098cf786"
+    },
+    {
+      "path": "frontend/e2e/futureProgress.mjs",
+      "sha256": "cb69a48de641f0ac23bad0221178513047fc987ade372609ad5861c2ad5109f9"
+    },
+    {
+      "path": "README.md",
+      "sha256": "1946999dac4a9dc0d99094d6e3eda7e59d8ffe63ab124c9a6655a4becd8bbcbf"
+    },
+    {
+      "path": "docs/acceptance-progress.md",
+      "sha256": "4ca08ed139485edfd34ffe142cf1424e5d345ffd9c8bd38bb13ba756ef414550"
+    },
+    {
+      "path": "docs/competition-verification-gates.md",
+      "sha256": "61a1cd53378837050b361d1c0553119b466a6f9b3d0f630e9f68d1063dd11ede"
+    },
+    {
+      "path": "docs/competition-delivery-checklist.md",
+      "sha256": "63e3c395a43051483511cf7888f0f45b9a7b60479a095bef55cef7b0d9bed731"
+    },
+    {
+      "path": "docs/official-scope-repair-acceptance-2026-10-19.md",
+      "sha256": "12bf52c010e2a02d961ccb97bd614d505664baabf4bd978f66457d741ab39ee6"
+    }
+  ],
+  "artifacts": [
+    {
+      "path": "backend/tmp/official-scope-repair-2026-10-19/backend-final.xml",
+      "sha256": "6d18e6989b9f0bff882b35e01bc40e91a2b8e7f4e77fa671065b952cc3963d4b"
+    },
+    {
+      "path": "backend/tmp/official-scope-repair-2026-10-19/browser/desktop.png",
+      "sha256": "81aef93807f667637380fe5881c381b8b1b82611d203b919ec5c4dfe542101c9"
+    },
+    {
+      "path": "backend/tmp/official-scope-repair-2026-10-19/browser/mobile.png",
+      "sha256": "1a8840f9a70093990c7b46c0da7178afe703aa3056c7b607b3aa0e44fdebf134"
+    },
+    {
+      "path": "backend/tmp/official-scope-repair-2026-10-19/browser/report.json",
+      "sha256": "b2d45302339417615a415fd901d4c781eee3449cf01b4ae4ec3a364b18062b1a"
+    },
+    {
+      "path": "backend/tmp/official-scope-repair-2026-10-19/browser/source-jump.png",
+      "sha256": "ae13199ef0ae730f76c1c750b1d0e405616b99630b6db21b0225f5e793a51bc2"
+    },
+    {
+      "path": "backend/tmp/official-scope-repair-2026-10-19/browser-runtime/acceptance.db",
+      "sha256": "59c2007328140198f3dc160e8827b58c32d83a616e6f1b961e1372e948bfc90b"
+    },
+    {
+      "path": "backend/tmp/official-scope-repair-2026-10-19/browser-runtime/calls.json",
+      "sha256": "32fbf5177a6ace40871dc4d8fe728205c04869565a56444d3b48677bbc399308"
+    },
+    {
+      "path": "backend/tmp/official-scope-repair-2026-10-19/browser-runtime/fixture.json",
+      "sha256": "b0e3614bd274dcf0533299daf03f45ba1ce32cf6b6213bb3ea45772d14e52c18"
+    },
+    {
+      "path": "backend/tmp/official-scope-repair-2026-10-19/browser-runtime/parsed/0188171d-87ae-5a2f-acc2-87f71bc5db58.json",
+      "sha256": "3f8ba5424477c2a804034dd7507f1d96c9bdb43212f4fad6faa7006faf7bc5db"
+    },
+    {
+      "path": "backend/tmp/official-scope-repair-2026-10-19/browser-runtime/parsed/0fedc9b8-1c87-5178-87a1-3bb5a02de3b8.json",
+      "sha256": "21b96849bb3533789c4c02f82faa6ec53ecca023e2b10de4d99759adc3d275d0"
+    },
+    {
+      "path": "backend/tmp/official-scope-repair-2026-10-19/browser-runtime/parsed/114bfa0d-d6cf-573d-82b2-cfaed94b58b6.json",
+      "sha256": "3d79cf8e2b8b99965e5f3e17320aae2cbb2296b031a000f86a11ed71a1e7ea26"
+    },
+    {
+      "path": "backend/tmp/official-scope-repair-2026-10-19/browser-runtime/parsed/1ae43cdf-aa5d-533e-8caa-c65a403deaf2.json",
+      "sha256": "1a35482e1c3334b843d4436ab0c9d3effe75a7c3d91c9ca46665bbb8e1eaedb8"
+    },
+    {
+      "path": "backend/tmp/official-scope-repair-2026-10-19/browser-runtime/parsed/1f104048-0d8e-59ac-bc55-92c6c3773d08.json",
+      "sha256": "26debba89ab51ae930bd4b4bb6628e6bb3390a9f67a2c515d51549a30f00cfdf"
+    },
+    {
+      "path": "backend/tmp/official-scope-repair-2026-10-19/browser-runtime/parsed/20d9fad6-9e6f-543d-a2e1-095d8056c5ff.json",
+      "sha256": "17b79909f6ccfbef761befa41518b887e954b41bc1b74d8cfe071d519f8db5de"
+    },
+    {
+      "path": "backend/tmp/official-scope-repair-2026-10-19/browser-runtime/parsed/431d388b-53d5-59e3-ad1a-1bf9f281f789.json",
+      "sha256": "43df9075cfb8c7ac92ddd3f4f05722d89b7ea4e0567869f02a6f2debcd3e1bc8"
+    },
+    {
+      "path": "backend/tmp/official-scope-repair-2026-10-19/browser-runtime/parsed/4ac3cbf3-13b9-5022-863f-a2dbe9391e58.json",
+      "sha256": "018e83626b4fb76cbb6f3ab0564e63421def0980e7a141f950a03b6b8e291300"
+    },
+    {
+      "path": "backend/tmp/official-scope-repair-2026-10-19/browser-runtime/parsed/4eb9ae9c-2278-5530-ad02-d02e38f9088c.json",
+      "sha256": "50d4d7c3778fa657fb04a90677968faaeb8ea2563591321d946c416c2c3780d9"
+    },
+    {
+      "path": "backend/tmp/official-scope-repair-2026-10-19/browser-runtime/parsed/518cf49d-121d-55b9-834e-4160cf927fe9.json",
+      "sha256": "74fea9249eeb42511e8c7377eec7d30a20542725a3a1efcf6fa205b60a889a17"
+    },
+    {
+      "path": "backend/tmp/official-scope-repair-2026-10-19/browser-runtime/parsed/5b4ad1aa-0c85-5a2b-a5ca-97eb8dd4d2aa.json",
+      "sha256": "42397f5218611853c9656882312597e19c365d37800e75671ddc0517311633fa"
+    },
+    {
+      "path": "backend/tmp/official-scope-repair-2026-10-19/browser-runtime/parsed/788f47ff-23de-5f78-896b-7d3fe6e1bb92.json",
+      "sha256": "9983d55bb64e32504484f86909be883abfc3f9df9a5fb7bd1f0764821450b293"
+    },
+    {
+      "path": "backend/tmp/official-scope-repair-2026-10-19/browser-runtime/parsed/806425fa-1015-5452-91ee-cdb6b106183f.json",
+      "sha256": "cd54a7ad67fa78babfb38b65ec9d6a49e88a1d93b11f5ceb8012c160433c7754"
+    },
+    {
+      "path": "backend/tmp/official-scope-repair-2026-10-19/browser-runtime/parsed/855562a1-8309-57b2-b7b0-b9e7016207dc.json",
+      "sha256": "bc6bf19d9c8b3c14822915f77d4c7a4ba3c31822ea75bed70d36ee50fa2a0ccf"
+    },
+    {
+      "path": "backend/tmp/official-scope-repair-2026-10-19/browser-runtime/parsed/86e85629-7347-5f1a-92d7-089475d96cdb.json",
+      "sha256": "5558cf8741cc5bf08c0f8c1e203a0a63d18d30d136d41a9ca8058abe275db95e"
+    },
+    {
+      "path": "backend/tmp/official-scope-repair-2026-10-19/browser-runtime/parsed/9f2229cc-c150-5bbc-a615-53046bc74763.json",
+      "sha256": "1988ef13dfd02dc2a5da4841109c85a15cb4b70bd6a283b492f6e55c3748cb14"
+    },
+    {
+      "path": "backend/tmp/official-scope-repair-2026-10-19/browser-runtime/parsed/bc90bcf2-cccd-5364-94f6-5815603802f7.json",
+      "sha256": "23bc7ada43098ad5aa2b2b4c58a0b1d25425db44b82e2bbfc826c2c4f4709656"
+    },
+    {
+      "path": "backend/tmp/official-scope-repair-2026-10-19/browser-runtime/parsed/cd05de96-3b20-5178-8953-d8ee090a4f23.json",
+      "sha256": "a61558d6c24855d4b62c07f16de7c9f6a83ab2e87b712fc4703cf8811e829d98"
+    },
+    {
+      "path": "backend/tmp/official-scope-repair-2026-10-19/browser-runtime/parsed/d9d5065d-9706-53db-b856-427c2c58bd1a.json",
+      "sha256": "ccbde08a7acfeb1eb48b2c4b9991fa3b989fed9fd0500821d6c705cd4872964a"
+    },
+    {
+      "path": "backend/tmp/official-scope-repair-2026-10-19/browser-runtime/parsed/f5b4ca83-6f08-5d85-b64f-a292b7b1f7b6.json",
+      "sha256": "c6b8e49d209d46fb92135269da3ce33f6c7c33810dbd82a33341124251e62657"
+    },
+    {
+      "path": "backend/tmp/official-scope-repair-2026-10-19/browser-runtime/parsed/fefabe1a-496e-5b57-83cf-c73f831b1275.json",
+      "sha256": "6cbe2080ce0d14ca0770b52ea07ba0ad3acfe7cd73cdba071f8ce2e539513da5"
+    },
+    {
+      "path": "backend/tmp/official-scope-repair-2026-10-19/browser-runtime/runtime.json",
+      "sha256": "e7c8eb5b284039ae81cf048562a800a39b009ac0d8e2a31098341ee3b0b01df8"
+    },
+    {
+      "path": "backend/tmp/official-scope-repair-2026-10-19/browser-runtime/uploads/0188171d-87ae-5a2f-acc2-87f71bc5db58.pdf",
+      "sha256": "c464f839fb8d59f7fde92f9b4caa67c2d1f2f196b88f93fb60502249df0aaef7"
+    },
+    {
+      "path": "backend/tmp/official-scope-repair-2026-10-19/browser-runtime/uploads/0fedc9b8-1c87-5178-87a1-3bb5a02de3b8.pdf",
+      "sha256": "f340f6ace31abf7d0730ef461404279f40d3c890e9cc2daeb7068b3304afdbd6"
+    },
+    {
+      "path": "backend/tmp/official-scope-repair-2026-10-19/browser-runtime/uploads/114bfa0d-d6cf-573d-82b2-cfaed94b58b6.pdf",
+      "sha256": "92cb3a2b71362acda98a789b03d88688fd33cf5fcf13f81d2b1de30ee7d3b67a"
+    },
+    {
+      "path": "backend/tmp/official-scope-repair-2026-10-19/browser-runtime/uploads/1ae43cdf-aa5d-533e-8caa-c65a403deaf2.pdf",
+      "sha256": "6478b6e571a7d6fcd846d8ef77bfd60c285f1986abb8f475eedc43de403074f5"
+    },
+    {
+      "path": "backend/tmp/official-scope-repair-2026-10-19/browser-runtime/uploads/1f104048-0d8e-59ac-bc55-92c6c3773d08.pdf",
+      "sha256": "e78feadadbdbb0b601b3c2bcc81404722cd431a489b307545f9b7bea1e8c4f5b"
+    },
+    {
+      "path": "backend/tmp/official-scope-repair-2026-10-19/browser-runtime/uploads/20d9fad6-9e6f-543d-a2e1-095d8056c5ff.pdf",
+      "sha256": "0a9bff1be3575cf9fe26a4a3d3a9175bc791ecec90de8b9deba4cff75d2b9476"
+    },
+    {
+      "path": "backend/tmp/official-scope-repair-2026-10-19/browser-runtime/uploads/431d388b-53d5-59e3-ad1a-1bf9f281f789.pdf",
+      "sha256": "b191b0a365a64b4ab2791d117069ed17a2933d03554a662ced58b37df52018f4"
+    },
+    {
+      "path": "backend/tmp/official-scope-repair-2026-10-19/browser-runtime/uploads/4ac3cbf3-13b9-5022-863f-a2dbe9391e58.pdf",
+      "sha256": "c531734c7d9ee647fda9b4f0e1a6abd6d58ad34e862bc945451b09032be3167e"
+    },
+    {
+      "path": "backend/tmp/official-scope-repair-2026-10-19/browser-runtime/uploads/4eb9ae9c-2278-5530-ad02-d02e38f9088c.pdf",
+      "sha256": "97fd272f1fdfc18677462d0292f5fbf26ca86b4d1b485c2dba03269b643a0e83"
+    },
+    {
+      "path": "backend/tmp/official-scope-repair-2026-10-19/browser-runtime/uploads/518cf49d-121d-55b9-834e-4160cf927fe9.pdf",
+      "sha256": "ca7f9fda10b90fc05dd291a3accc85e9c1a4a860b99b31928dab03ed3fcb14e4"
+    },
+    {
+      "path": "backend/tmp/official-scope-repair-2026-10-19/browser-runtime/uploads/5b4ad1aa-0c85-5a2b-a5ca-97eb8dd4d2aa.pdf",
+      "sha256": "7d9f878c23b460e4566aa4ec9201b1abfb3b8faefb2b1356e411cb90fef72a12"
+    },
+    {
+      "path": "backend/tmp/official-scope-repair-2026-10-19/browser-runtime/uploads/788f47ff-23de-5f78-896b-7d3fe6e1bb92.pdf",
+      "sha256": "8ce7b83971a14508ca711a27c875c9b6914c4f6767cf3150fb1ca6c07aa056d6"
+    },
+    {
+      "path": "backend/tmp/official-scope-repair-2026-10-19/browser-runtime/uploads/806425fa-1015-5452-91ee-cdb6b106183f.pdf",
+      "sha256": "a41bd7877fd1a6bcbba096b2619618bd2f90e02488f2365644903eb2f7c6a494"
+    },
+    {
+      "path": "backend/tmp/official-scope-repair-2026-10-19/browser-runtime/uploads/855562a1-8309-57b2-b7b0-b9e7016207dc.pdf",
+      "sha256": "33a4e757c19d6ea8d3cca8958fce8fe405e290272e135c99ee66065c775d5bd1"
+    },
+    {
+      "path": "backend/tmp/official-scope-repair-2026-10-19/browser-runtime/uploads/86e85629-7347-5f1a-92d7-089475d96cdb.pdf",
+      "sha256": "987545ffb087f1ece898142c403a516baeabeb70ce19089397fac6f7db12c3d4"
+    },
+    {
+      "path": "backend/tmp/official-scope-repair-2026-10-19/browser-runtime/uploads/9f2229cc-c150-5bbc-a615-53046bc74763.pdf",
+      "sha256": "e1fa0519ed8e09a676d56c983e99ead5effd7ef840ae86a186729287469bf883"
+    },
+    {
+      "path": "backend/tmp/official-scope-repair-2026-10-19/browser-runtime/uploads/bc90bcf2-cccd-5364-94f6-5815603802f7.pdf",
+      "sha256": "e9a0d3128767db616085dc0f4e6e455e672e89af823e8ed1282793682787395a"
+    },
+    {
+      "path": "backend/tmp/official-scope-repair-2026-10-19/browser-runtime/uploads/cd05de96-3b20-5178-8953-d8ee090a4f23.pdf",
+      "sha256": "c1984bb50a5b90fddb895fdc3a0f72e5bc977148c9f63ef6040cbe7a3e1f0d98"
+    },
+    {
+      "path": "backend/tmp/official-scope-repair-2026-10-19/browser-runtime/uploads/d9d5065d-9706-53db-b856-427c2c58bd1a.pdf",
+      "sha256": "ad07e47cedf437a4156419ce5d3076e08a3e59bbfd6dac7cc53df1009cdcbe7f"
+    },
+    {
+      "path": "backend/tmp/official-scope-repair-2026-10-19/browser-runtime/uploads/f5b4ca83-6f08-5d85-b64f-a292b7b1f7b6.pdf",
+      "sha256": "eb81a65e0856bd38e855e1f1de6ee12e7c3eb92ae05c8270d345a475beb631d0"
+    },
+    {
+      "path": "backend/tmp/official-scope-repair-2026-10-19/browser-runtime/uploads/fefabe1a-496e-5b57-83cf-c73f831b1275.pdf",
+      "sha256": "ebae72ea0e8a5eb2ecbccdb985aec6cc1254a7c4d29e6d4de7866db1e66c4855"
+    },
+    {
+      "path": "backend/tmp/official-scope-repair-2026-10-19/cleanup.json",
+      "sha256": "5ee45206632a218bc098958c0ce86dbedee3b2470b63adca8e2c9a042dc6bda6"
+    },
+    {
+      "path": "backend/tmp/official-scope-repair-2026-10-19/comparison/acceptance.db",
+      "sha256": "31469e3bfd410d522e26956129483673987c68639ba0bd68531fe041749008aa"
+    },
+    {
+      "path": "backend/tmp/official-scope-repair-2026-10-19/comparison/fixture.json",
+      "sha256": "d7730edb860bcb4b6ba77311de22d749684d6fc726ea5d38b5762afc308c117f"
+    },
+    {
+      "path": "backend/tmp/official-scope-repair-2026-10-19/comparison/model-calls.json",
+      "sha256": "101badf481f0ef4d2bad452e1c4756ef6e8eefd675e41e2d826244754d5c20ba"
+    },
+    {
+      "path": "backend/tmp/official-scope-repair-2026-10-19/comparison/parsed/114bfa0d-d6cf-573d-82b2-cfaed94b58b6.json",
+      "sha256": "6710c78824d61e72e1b0c15aaddf534ce0872570051a9b95d6f2f39c786645d7"
+    },
+    {
+      "path": "backend/tmp/official-scope-repair-2026-10-19/comparison/parsed/20d9fad6-9e6f-543d-a2e1-095d8056c5ff.json",
+      "sha256": "4a05a089a864b8fc603470e4f28fc480526b8184b8c5a89039db83b07bdded3d"
+    },
+    {
+      "path": "backend/tmp/official-scope-repair-2026-10-19/comparison/parsed/855562a1-8309-57b2-b7b0-b9e7016207dc.json",
+      "sha256": "0bdf9ab2be963a5e42b3560e72b14fd247e2723c299ffc3e340682b02394db97"
+    },
+    {
+      "path": "backend/tmp/official-scope-repair-2026-10-19/comparison/parsed/bc90bcf2-cccd-5364-94f6-5815603802f7.json",
+      "sha256": "2f5bdb78b265127069fbaf7c9841afe6e181a0d93c3209856c420d678c7825d0"
+    },
+    {
+      "path": "backend/tmp/official-scope-repair-2026-10-19/comparison/parsed/cd05de96-3b20-5178-8953-d8ee090a4f23.json",
+      "sha256": "0ab6909920de99d93d12d57d963fe93c684446cbcfdba40bf2df1ed080d7b414"
+    },
+    {
+      "path": "backend/tmp/official-scope-repair-2026-10-19/comparison/report.json",
+      "sha256": "12d4d3086b98a02e8636be6ce02d60c739cd8753978de506039d4c5c9ca113e9"
+    },
+    {
+      "path": "backend/tmp/official-scope-repair-2026-10-19/comparison/uploads/114bfa0d-d6cf-573d-82b2-cfaed94b58b6.pdf",
+      "sha256": "92cb3a2b71362acda98a789b03d88688fd33cf5fcf13f81d2b1de30ee7d3b67a"
+    },
+    {
+      "path": "backend/tmp/official-scope-repair-2026-10-19/comparison/uploads/20d9fad6-9e6f-543d-a2e1-095d8056c5ff.pdf",
+      "sha256": "0a9bff1be3575cf9fe26a4a3d3a9175bc791ecec90de8b9deba4cff75d2b9476"
+    },
+    {
+      "path": "backend/tmp/official-scope-repair-2026-10-19/comparison/uploads/855562a1-8309-57b2-b7b0-b9e7016207dc.pdf",
+      "sha256": "33a4e757c19d6ea8d3cca8958fce8fe405e290272e135c99ee66065c775d5bd1"
+    },
+    {
+      "path": "backend/tmp/official-scope-repair-2026-10-19/comparison/uploads/bc90bcf2-cccd-5364-94f6-5815603802f7.pdf",
+      "sha256": "e9a0d3128767db616085dc0f4e6e455e672e89af823e8ed1282793682787395a"
+    },
+    {
+      "path": "backend/tmp/official-scope-repair-2026-10-19/comparison/uploads/cd05de96-3b20-5178-8953-d8ee090a4f23.pdf",
+      "sha256": "c1984bb50a5b90fddb895fdc3a0f72e5bc977148c9f63ef6040cbe7a3e1f0d98"
+    },
+    {
+      "path": "backend/tmp/official-scope-repair-2026-10-19/finalize_evidence.py",
+      "sha256": "82b3913e510bbcc47385a91cff5cbe354382c2f3c9bf4964b0f37e56d7146ceb"
+    },
+    {
+      "path": "backend/tmp/official-scope-repair-2026-10-19/fixed.xml",
+      "sha256": "eeac4b04dbbaaa52774009517a90a99c7bb5ababfb6bec72db0b71410dabe38d"
+    },
+    {
+      "path": "backend/tmp/official-scope-repair-2026-10-19/frontend-final.xml",
+      "sha256": "bce056fb82430e83e7bbea2313a7ede57c8068a6f908a7f1cd6d292d5f9833a0"
+    },
+    {
+      "path": "backend/tmp/official-scope-repair-2026-10-19/future-assessment/acceptance.db",
+      "sha256": "3b1bd967c824dcbe8610593268da9e5aef2a61d3593488dae6bfaa9ef59eed5c"
+    },
+    {
+      "path": "backend/tmp/official-scope-repair-2026-10-19/future-assessment/fixture.json",
+      "sha256": "b0e3614bd274dcf0533299daf03f45ba1ce32cf6b6213bb3ea45772d14e52c18"
+    },
+    {
+      "path": "backend/tmp/official-scope-repair-2026-10-19/future-assessment/parsed/0188171d-87ae-5a2f-acc2-87f71bc5db58.json",
+      "sha256": "3f8ba5424477c2a804034dd7507f1d96c9bdb43212f4fad6faa7006faf7bc5db"
+    },
+    {
+      "path": "backend/tmp/official-scope-repair-2026-10-19/future-assessment/parsed/0fedc9b8-1c87-5178-87a1-3bb5a02de3b8.json",
+      "sha256": "21b96849bb3533789c4c02f82faa6ec53ecca023e2b10de4d99759adc3d275d0"
+    },
+    {
+      "path": "backend/tmp/official-scope-repair-2026-10-19/future-assessment/parsed/114bfa0d-d6cf-573d-82b2-cfaed94b58b6.json",
+      "sha256": "3d79cf8e2b8b99965e5f3e17320aae2cbb2296b031a000f86a11ed71a1e7ea26"
+    },
+    {
+      "path": "backend/tmp/official-scope-repair-2026-10-19/future-assessment/parsed/1ae43cdf-aa5d-533e-8caa-c65a403deaf2.json",
+      "sha256": "1a35482e1c3334b843d4436ab0c9d3effe75a7c3d91c9ca46665bbb8e1eaedb8"
+    },
+    {
+      "path": "backend/tmp/official-scope-repair-2026-10-19/future-assessment/parsed/1f104048-0d8e-59ac-bc55-92c6c3773d08.json",
+      "sha256": "26debba89ab51ae930bd4b4bb6628e6bb3390a9f67a2c515d51549a30f00cfdf"
+    },
+    {
+      "path": "backend/tmp/official-scope-repair-2026-10-19/future-assessment/parsed/20d9fad6-9e6f-543d-a2e1-095d8056c5ff.json",
+      "sha256": "17b79909f6ccfbef761befa41518b887e954b41bc1b74d8cfe071d519f8db5de"
+    },
+    {
+      "path": "backend/tmp/official-scope-repair-2026-10-19/future-assessment/parsed/431d388b-53d5-59e3-ad1a-1bf9f281f789.json",
+      "sha256": "43df9075cfb8c7ac92ddd3f4f05722d89b7ea4e0567869f02a6f2debcd3e1bc8"
+    },
+    {
+      "path": "backend/tmp/official-scope-repair-2026-10-19/future-assessment/parsed/4ac3cbf3-13b9-5022-863f-a2dbe9391e58.json",
+      "sha256": "018e83626b4fb76cbb6f3ab0564e63421def0980e7a141f950a03b6b8e291300"
+    },
+    {
+      "path": "backend/tmp/official-scope-repair-2026-10-19/future-assessment/parsed/4eb9ae9c-2278-5530-ad02-d02e38f9088c.json",
+      "sha256": "50d4d7c3778fa657fb04a90677968faaeb8ea2563591321d946c416c2c3780d9"
+    },
+    {
+      "path": "backend/tmp/official-scope-repair-2026-10-19/future-assessment/parsed/518cf49d-121d-55b9-834e-4160cf927fe9.json",
+      "sha256": "74fea9249eeb42511e8c7377eec7d30a20542725a3a1efcf6fa205b60a889a17"
+    },
+    {
+      "path": "backend/tmp/official-scope-repair-2026-10-19/future-assessment/parsed/5b4ad1aa-0c85-5a2b-a5ca-97eb8dd4d2aa.json",
+      "sha256": "42397f5218611853c9656882312597e19c365d37800e75671ddc0517311633fa"
+    },
+    {
+      "path": "backend/tmp/official-scope-repair-2026-10-19/future-assessment/parsed/788f47ff-23de-5f78-896b-7d3fe6e1bb92.json",
+      "sha256": "9983d55bb64e32504484f86909be883abfc3f9df9a5fb7bd1f0764821450b293"
+    },
+    {
+      "path": "backend/tmp/official-scope-repair-2026-10-19/future-assessment/parsed/806425fa-1015-5452-91ee-cdb6b106183f.json",
+      "sha256": "cd54a7ad67fa78babfb38b65ec9d6a49e88a1d93b11f5ceb8012c160433c7754"
+    },
+    {
+      "path": "backend/tmp/official-scope-repair-2026-10-19/future-assessment/parsed/855562a1-8309-57b2-b7b0-b9e7016207dc.json",
+      "sha256": "bc6bf19d9c8b3c14822915f77d4c7a4ba3c31822ea75bed70d36ee50fa2a0ccf"
+    },
+    {
+      "path": "backend/tmp/official-scope-repair-2026-10-19/future-assessment/parsed/86e85629-7347-5f1a-92d7-089475d96cdb.json",
+      "sha256": "5558cf8741cc5bf08c0f8c1e203a0a63d18d30d136d41a9ca8058abe275db95e"
+    },
+    {
+      "path": "backend/tmp/official-scope-repair-2026-10-19/future-assessment/parsed/9f2229cc-c150-5bbc-a615-53046bc74763.json",
+      "sha256": "1988ef13dfd02dc2a5da4841109c85a15cb4b70bd6a283b492f6e55c3748cb14"
+    },
+    {
+      "path": "backend/tmp/official-scope-repair-2026-10-19/future-assessment/parsed/bc90bcf2-cccd-5364-94f6-5815603802f7.json",
+      "sha256": "23bc7ada43098ad5aa2b2b4c58a0b1d25425db44b82e2bbfc826c2c4f4709656"
+    },
+    {
+      "path": "backend/tmp/official-scope-repair-2026-10-19/future-assessment/parsed/cd05de96-3b20-5178-8953-d8ee090a4f23.json",
+      "sha256": "a61558d6c24855d4b62c07f16de7c9f6a83ab2e87b712fc4703cf8811e829d98"
+    },
+    {
+      "path": "backend/tmp/official-scope-repair-2026-10-19/future-assessment/parsed/d9d5065d-9706-53db-b856-427c2c58bd1a.json",
+      "sha256": "ccbde08a7acfeb1eb48b2c4b9991fa3b989fed9fd0500821d6c705cd4872964a"
+    },
+    {
+      "path": "backend/tmp/official-scope-repair-2026-10-19/future-assessment/parsed/f5b4ca83-6f08-5d85-b64f-a292b7b1f7b6.json",
+      "sha256": "c6b8e49d209d46fb92135269da3ce33f6c7c33810dbd82a33341124251e62657"
+    },
+    {
+      "path": "backend/tmp/official-scope-repair-2026-10-19/future-assessment/parsed/fefabe1a-496e-5b57-83cf-c73f831b1275.json",
+      "sha256": "6cbe2080ce0d14ca0770b52ea07ba0ad3acfe7cd73cdba071f8ce2e539513da5"
+    },
+    {
+      "path": "backend/tmp/official-scope-repair-2026-10-19/future-assessment/report.json",
+      "sha256": "0b358dee9738b2bb6c18dcc359e3b3802f9ff7ca533672c59f7a8cea9c55a944"
+    },
+    {
+      "path": "backend/tmp/official-scope-repair-2026-10-19/future-assessment/review-before.json",
+      "sha256": "9815d8cb4a9377251b0aa47e0fed75179165be05a51c0f7ab86b20544a7cb20e"
+    },
+    {
+      "path": "backend/tmp/official-scope-repair-2026-10-19/future-assessment/uploads/0188171d-87ae-5a2f-acc2-87f71bc5db58.pdf",
+      "sha256": "c464f839fb8d59f7fde92f9b4caa67c2d1f2f196b88f93fb60502249df0aaef7"
+    },
+    {
+      "path": "backend/tmp/official-scope-repair-2026-10-19/future-assessment/uploads/0fedc9b8-1c87-5178-87a1-3bb5a02de3b8.pdf",
+      "sha256": "f340f6ace31abf7d0730ef461404279f40d3c890e9cc2daeb7068b3304afdbd6"
+    },
+    {
+      "path": "backend/tmp/official-scope-repair-2026-10-19/future-assessment/uploads/114bfa0d-d6cf-573d-82b2-cfaed94b58b6.pdf",
+      "sha256": "92cb3a2b71362acda98a789b03d88688fd33cf5fcf13f81d2b1de30ee7d3b67a"
+    },
+    {
+      "path": "backend/tmp/official-scope-repair-2026-10-19/future-assessment/uploads/1ae43cdf-aa5d-533e-8caa-c65a403deaf2.pdf",
+      "sha256": "6478b6e571a7d6fcd846d8ef77bfd60c285f1986abb8f475eedc43de403074f5"
+    },
+    {
+      "path": "backend/tmp/official-scope-repair-2026-10-19/future-assessment/uploads/1f104048-0d8e-59ac-bc55-92c6c3773d08.pdf",
+      "sha256": "e78feadadbdbb0b601b3c2bcc81404722cd431a489b307545f9b7bea1e8c4f5b"
+    },
+    {
+      "path": "backend/tmp/official-scope-repair-2026-10-19/future-assessment/uploads/20d9fad6-9e6f-543d-a2e1-095d8056c5ff.pdf",
+      "sha256": "0a9bff1be3575cf9fe26a4a3d3a9175bc791ecec90de8b9deba4cff75d2b9476"
+    },
+    {
+      "path": "backend/tmp/official-scope-repair-2026-10-19/future-assessment/uploads/431d388b-53d5-59e3-ad1a-1bf9f281f789.pdf",
+      "sha256": "b191b0a365a64b4ab2791d117069ed17a2933d03554a662ced58b37df52018f4"
+    },
+    {
+      "path": "backend/tmp/official-scope-repair-2026-10-19/future-assessment/uploads/4ac3cbf3-13b9-5022-863f-a2dbe9391e58.pdf",
+      "sha256": "c531734c7d9ee647fda9b4f0e1a6abd6d58ad34e862bc945451b09032be3167e"
+    },
+    {
+      "path": "backend/tmp/official-scope-repair-2026-10-19/future-assessment/uploads/4eb9ae9c-2278-5530-ad02-d02e38f9088c.pdf",
+      "sha256": "97fd272f1fdfc18677462d0292f5fbf26ca86b4d1b485c2dba03269b643a0e83"
+    },
+    {
+      "path": "backend/tmp/official-scope-repair-2026-10-19/future-assessment/uploads/518cf49d-121d-55b9-834e-4160cf927fe9.pdf",
+      "sha256": "ca7f9fda10b90fc05dd291a3accc85e9c1a4a860b99b31928dab03ed3fcb14e4"
+    },
+    {
+      "path": "backend/tmp/official-scope-repair-2026-10-19/future-assessment/uploads/5b4ad1aa-0c85-5a2b-a5ca-97eb8dd4d2aa.pdf",
+      "sha256": "7d9f878c23b460e4566aa4ec9201b1abfb3b8faefb2b1356e411cb90fef72a12"
+    },
+    {
+      "path": "backend/tmp/official-scope-repair-2026-10-19/future-assessment/uploads/788f47ff-23de-5f78-896b-7d3fe6e1bb92.pdf",
+      "sha256": "8ce7b83971a14508ca711a27c875c9b6914c4f6767cf3150fb1ca6c07aa056d6"
+    },
+    {
+      "path": "backend/tmp/official-scope-repair-2026-10-19/future-assessment/uploads/806425fa-1015-5452-91ee-cdb6b106183f.pdf",
+      "sha256": "a41bd7877fd1a6bcbba096b2619618bd2f90e02488f2365644903eb2f7c6a494"
+    },
+    {
+      "path": "backend/tmp/official-scope-repair-2026-10-19/future-assessment/uploads/855562a1-8309-57b2-b7b0-b9e7016207dc.pdf",
+      "sha256": "33a4e757c19d6ea8d3cca8958fce8fe405e290272e135c99ee66065c775d5bd1"
+    },
+    {
+      "path": "backend/tmp/official-scope-repair-2026-10-19/future-assessment/uploads/86e85629-7347-5f1a-92d7-089475d96cdb.pdf",
+      "sha256": "987545ffb087f1ece898142c403a516baeabeb70ce19089397fac6f7db12c3d4"
+    },
+    {
+      "path": "backend/tmp/official-scope-repair-2026-10-19/future-assessment/uploads/9f2229cc-c150-5bbc-a615-53046bc74763.pdf",
+      "sha256": "e1fa0519ed8e09a676d56c983e99ead5effd7ef840ae86a186729287469bf883"
+    },
+    {
+      "path": "backend/tmp/official-scope-repair-2026-10-19/future-assessment/uploads/bc90bcf2-cccd-5364-94f6-5815603802f7.pdf",
+      "sha256": "e9a0d3128767db616085dc0f4e6e455e672e89af823e8ed1282793682787395a"
+    },
+    {
+      "path": "backend/tmp/official-scope-repair-2026-10-19/future-assessment/uploads/cd05de96-3b20-5178-8953-d8ee090a4f23.pdf",
+      "sha256": "c1984bb50a5b90fddb895fdc3a0f72e5bc977148c9f63ef6040cbe7a3e1f0d98"
+    },
+    {
+      "path": "backend/tmp/official-scope-repair-2026-10-19/future-assessment/uploads/d9d5065d-9706-53db-b856-427c2c58bd1a.pdf",
+      "sha256": "ad07e47cedf437a4156419ce5d3076e08a3e59bbfd6dac7cc53df1009cdcbe7f"
+    },
+    {
+      "path": "backend/tmp/official-scope-repair-2026-10-19/future-assessment/uploads/f5b4ca83-6f08-5d85-b64f-a292b7b1f7b6.pdf",
+      "sha256": "eb81a65e0856bd38e855e1f1de6ee12e7c3eb92ae05c8270d345a475beb631d0"
+    },
+    {
+      "path": "backend/tmp/official-scope-repair-2026-10-19/future-assessment/uploads/fefabe1a-496e-5b57-83cf-c73f831b1275.pdf",
+      "sha256": "ebae72ea0e8a5eb2ecbccdb985aec6cc1254a7c4d29e6d4de7866db1e66c4855"
+    },
+    {
+      "path": "backend/tmp/official-scope-repair-2026-10-19/future-assessment-2/acceptance.db",
+      "sha256": "cd1cf138db2fee6ca7cd6afeba88bf9b9f7dc3a2dcf40f63ef87b907078de7da"
+    },
+    {
+      "path": "backend/tmp/official-scope-repair-2026-10-19/future-assessment-2/calls.json",
+      "sha256": "fceeed468fee29338eb10410ef08cc9a19fd068a91842f166e1de063db26c0c2"
+    },
+    {
+      "path": "backend/tmp/official-scope-repair-2026-10-19/future-assessment-2/fixture.json",
+      "sha256": "b0e3614bd274dcf0533299daf03f45ba1ce32cf6b6213bb3ea45772d14e52c18"
+    },
+    {
+      "path": "backend/tmp/official-scope-repair-2026-10-19/future-assessment-2/lora-vs-qlora-partial.json",
+      "sha256": "08791101d563133dcbdaf3a37f1d4fee9b8336edab2f5d4360072814051ca71a"
+    },
+    {
+      "path": "backend/tmp/official-scope-repair-2026-10-19/future-assessment-2/paging-vs-reasoning-unrelated.json",
+      "sha256": "fd935e4db066f6b35a65d395c912a838be030adbdb54d49305add618400b33ca"
+    },
+    {
+      "path": "backend/tmp/official-scope-repair-2026-10-19/future-assessment-2/parsed/0188171d-87ae-5a2f-acc2-87f71bc5db58.json",
+      "sha256": "3f8ba5424477c2a804034dd7507f1d96c9bdb43212f4fad6faa7006faf7bc5db"
+    },
+    {
+      "path": "backend/tmp/official-scope-repair-2026-10-19/future-assessment-2/parsed/0fedc9b8-1c87-5178-87a1-3bb5a02de3b8.json",
+      "sha256": "21b96849bb3533789c4c02f82faa6ec53ecca023e2b10de4d99759adc3d275d0"
+    },
+    {
+      "path": "backend/tmp/official-scope-repair-2026-10-19/future-assessment-2/parsed/114bfa0d-d6cf-573d-82b2-cfaed94b58b6.json",
+      "sha256": "3d79cf8e2b8b99965e5f3e17320aae2cbb2296b031a000f86a11ed71a1e7ea26"
+    },
+    {
+      "path": "backend/tmp/official-scope-repair-2026-10-19/future-assessment-2/parsed/1ae43cdf-aa5d-533e-8caa-c65a403deaf2.json",
+      "sha256": "1a35482e1c3334b843d4436ab0c9d3effe75a7c3d91c9ca46665bbb8e1eaedb8"
+    },
+    {
+      "path": "backend/tmp/official-scope-repair-2026-10-19/future-assessment-2/parsed/1f104048-0d8e-59ac-bc55-92c6c3773d08.json",
+      "sha256": "26debba89ab51ae930bd4b4bb6628e6bb3390a9f67a2c515d51549a30f00cfdf"
+    },
+    {
+      "path": "backend/tmp/official-scope-repair-2026-10-19/future-assessment-2/parsed/20d9fad6-9e6f-543d-a2e1-095d8056c5ff.json",
+      "sha256": "17b79909f6ccfbef761befa41518b887e954b41bc1b74d8cfe071d519f8db5de"
+    },
+    {
+      "path": "backend/tmp/official-scope-repair-2026-10-19/future-assessment-2/parsed/431d388b-53d5-59e3-ad1a-1bf9f281f789.json",
+      "sha256": "43df9075cfb8c7ac92ddd3f4f05722d89b7ea4e0567869f02a6f2debcd3e1bc8"
+    },
+    {
+      "path": "backend/tmp/official-scope-repair-2026-10-19/future-assessment-2/parsed/4ac3cbf3-13b9-5022-863f-a2dbe9391e58.json",
+      "sha256": "018e83626b4fb76cbb6f3ab0564e63421def0980e7a141f950a03b6b8e291300"
+    },
+    {
+      "path": "backend/tmp/official-scope-repair-2026-10-19/future-assessment-2/parsed/4eb9ae9c-2278-5530-ad02-d02e38f9088c.json",
+      "sha256": "50d4d7c3778fa657fb04a90677968faaeb8ea2563591321d946c416c2c3780d9"
+    },
+    {
+      "path": "backend/tmp/official-scope-repair-2026-10-19/future-assessment-2/parsed/518cf49d-121d-55b9-834e-4160cf927fe9.json",
+      "sha256": "74fea9249eeb42511e8c7377eec7d30a20542725a3a1efcf6fa205b60a889a17"
+    },
+    {
+      "path": "backend/tmp/official-scope-repair-2026-10-19/future-assessment-2/parsed/5b4ad1aa-0c85-5a2b-a5ca-97eb8dd4d2aa.json",
+      "sha256": "42397f5218611853c9656882312597e19c365d37800e75671ddc0517311633fa"
+    },
+    {
+      "path": "backend/tmp/official-scope-repair-2026-10-19/future-assessment-2/parsed/788f47ff-23de-5f78-896b-7d3fe6e1bb92.json",
+      "sha256": "9983d55bb64e32504484f86909be883abfc3f9df9a5fb7bd1f0764821450b293"
+    },
+    {
+      "path": "backend/tmp/official-scope-repair-2026-10-19/future-assessment-2/parsed/806425fa-1015-5452-91ee-cdb6b106183f.json",
+      "sha256": "cd54a7ad67fa78babfb38b65ec9d6a49e88a1d93b11f5ceb8012c160433c7754"
+    },
+    {
+      "path": "backend/tmp/official-scope-repair-2026-10-19/future-assessment-2/parsed/855562a1-8309-57b2-b7b0-b9e7016207dc.json",
+      "sha256": "bc6bf19d9c8b3c14822915f77d4c7a4ba3c31822ea75bed70d36ee50fa2a0ccf"
+    },
+    {
+      "path": "backend/tmp/official-scope-repair-2026-10-19/future-assessment-2/parsed/86e85629-7347-5f1a-92d7-089475d96cdb.json",
+      "sha256": "5558cf8741cc5bf08c0f8c1e203a0a63d18d30d136d41a9ca8058abe275db95e"
+    },
+    {
+      "path": "backend/tmp/official-scope-repair-2026-10-19/future-assessment-2/parsed/9f2229cc-c150-5bbc-a615-53046bc74763.json",
+      "sha256": "1988ef13dfd02dc2a5da4841109c85a15cb4b70bd6a283b492f6e55c3748cb14"
+    },
+    {
+      "path": "backend/tmp/official-scope-repair-2026-10-19/future-assessment-2/parsed/bc90bcf2-cccd-5364-94f6-5815603802f7.json",
+      "sha256": "23bc7ada43098ad5aa2b2b4c58a0b1d25425db44b82e2bbfc826c2c4f4709656"
+    },
+    {
+      "path": "backend/tmp/official-scope-repair-2026-10-19/future-assessment-2/parsed/cd05de96-3b20-5178-8953-d8ee090a4f23.json",
+      "sha256": "a61558d6c24855d4b62c07f16de7c9f6a83ab2e87b712fc4703cf8811e829d98"
+    },
+    {
+      "path": "backend/tmp/official-scope-repair-2026-10-19/future-assessment-2/parsed/d9d5065d-9706-53db-b856-427c2c58bd1a.json",
+      "sha256": "ccbde08a7acfeb1eb48b2c4b9991fa3b989fed9fd0500821d6c705cd4872964a"
+    },
+    {
+      "path": "backend/tmp/official-scope-repair-2026-10-19/future-assessment-2/parsed/f5b4ca83-6f08-5d85-b64f-a292b7b1f7b6.json",
+      "sha256": "c6b8e49d209d46fb92135269da3ce33f6c7c33810dbd82a33341124251e62657"
+    },
+    {
+      "path": "backend/tmp/official-scope-repair-2026-10-19/future-assessment-2/parsed/fefabe1a-496e-5b57-83cf-c73f831b1275.json",
+      "sha256": "6cbe2080ce0d14ca0770b52ea07ba0ad3acfe7cd73cdba071f8ce2e539513da5"
+    },
+    {
+      "path": "backend/tmp/official-scope-repair-2026-10-19/future-assessment-2/report.json",
+      "sha256": "4455365502450744fe213869df48b9b392d0c3414a06d94f4e4d788a9d514078"
+    },
+    {
+      "path": "backend/tmp/official-scope-repair-2026-10-19/future-assessment-2/review-after.json",
+      "sha256": "4c1faccd7f1cae5a3952a3f2b11b243e404c05f5409610405a1b09ad9436aef1"
+    },
+    {
+      "path": "backend/tmp/official-scope-repair-2026-10-19/future-assessment-2/review-before.json",
+      "sha256": "eff99b701478348b7b62d9c9135cc1e9e335ddca58c8158127adb8c2ea85bcae"
+    },
+    {
+      "path": "backend/tmp/official-scope-repair-2026-10-19/future-assessment-2/transformer-vs-vit-partial.json",
+      "sha256": "b6131cd7bf0aa5a5b9856e6b70e35dc6236ff62960efd0ae6a90dc9c666a6b56"
+    },
+    {
+      "path": "backend/tmp/official-scope-repair-2026-10-19/future-assessment-2/uploads/0188171d-87ae-5a2f-acc2-87f71bc5db58.pdf",
+      "sha256": "c464f839fb8d59f7fde92f9b4caa67c2d1f2f196b88f93fb60502249df0aaef7"
+    },
+    {
+      "path": "backend/tmp/official-scope-repair-2026-10-19/future-assessment-2/uploads/0fedc9b8-1c87-5178-87a1-3bb5a02de3b8.pdf",
+      "sha256": "f340f6ace31abf7d0730ef461404279f40d3c890e9cc2daeb7068b3304afdbd6"
+    },
+    {
+      "path": "backend/tmp/official-scope-repair-2026-10-19/future-assessment-2/uploads/114bfa0d-d6cf-573d-82b2-cfaed94b58b6.pdf",
+      "sha256": "92cb3a2b71362acda98a789b03d88688fd33cf5fcf13f81d2b1de30ee7d3b67a"
+    },
+    {
+      "path": "backend/tmp/official-scope-repair-2026-10-19/future-assessment-2/uploads/1ae43cdf-aa5d-533e-8caa-c65a403deaf2.pdf",
+      "sha256": "6478b6e571a7d6fcd846d8ef77bfd60c285f1986abb8f475eedc43de403074f5"
+    },
+    {
+      "path": "backend/tmp/official-scope-repair-2026-10-19/future-assessment-2/uploads/1f104048-0d8e-59ac-bc55-92c6c3773d08.pdf",
+      "sha256": "e78feadadbdbb0b601b3c2bcc81404722cd431a489b307545f9b7bea1e8c4f5b"
+    },
+    {
+      "path": "backend/tmp/official-scope-repair-2026-10-19/future-assessment-2/uploads/20d9fad6-9e6f-543d-a2e1-095d8056c5ff.pdf",
+      "sha256": "0a9bff1be3575cf9fe26a4a3d3a9175bc791ecec90de8b9deba4cff75d2b9476"
+    },
+    {
+      "path": "backend/tmp/official-scope-repair-2026-10-19/future-assessment-2/uploads/431d388b-53d5-59e3-ad1a-1bf9f281f789.pdf",
+      "sha256": "b191b0a365a64b4ab2791d117069ed17a2933d03554a662ced58b37df52018f4"
+    },
+    {
+      "path": "backend/tmp/official-scope-repair-2026-10-19/future-assessment-2/uploads/4ac3cbf3-13b9-5022-863f-a2dbe9391e58.pdf",
+      "sha256": "c531734c7d9ee647fda9b4f0e1a6abd6d58ad34e862bc945451b09032be3167e"
+    },
+    {
+      "path": "backend/tmp/official-scope-repair-2026-10-19/future-assessment-2/uploads/4eb9ae9c-2278-5530-ad02-d02e38f9088c.pdf",
+      "sha256": "97fd272f1fdfc18677462d0292f5fbf26ca86b4d1b485c2dba03269b643a0e83"
+    },
+    {
+      "path": "backend/tmp/official-scope-repair-2026-10-19/future-assessment-2/uploads/518cf49d-121d-55b9-834e-4160cf927fe9.pdf",
+      "sha256": "ca7f9fda10b90fc05dd291a3accc85e9c1a4a860b99b31928dab03ed3fcb14e4"
+    },
+    {
+      "path": "backend/tmp/official-scope-repair-2026-10-19/future-assessment-2/uploads/5b4ad1aa-0c85-5a2b-a5ca-97eb8dd4d2aa.pdf",
+      "sha256": "7d9f878c23b460e4566aa4ec9201b1abfb3b8faefb2b1356e411cb90fef72a12"
+    },
+    {
+      "path": "backend/tmp/official-scope-repair-2026-10-19/future-assessment-2/uploads/788f47ff-23de-5f78-896b-7d3fe6e1bb92.pdf",
+      "sha256": "8ce7b83971a14508ca711a27c875c9b6914c4f6767cf3150fb1ca6c07aa056d6"
+    },
+    {
+      "path": "backend/tmp/official-scope-repair-2026-10-19/future-assessment-2/uploads/806425fa-1015-5452-91ee-cdb6b106183f.pdf",
+      "sha256": "a41bd7877fd1a6bcbba096b2619618bd2f90e02488f2365644903eb2f7c6a494"
+    },
+    {
+      "path": "backend/tmp/official-scope-repair-2026-10-19/future-assessment-2/uploads/855562a1-8309-57b2-b7b0-b9e7016207dc.pdf",
+      "sha256": "33a4e757c19d6ea8d3cca8958fce8fe405e290272e135c99ee66065c775d5bd1"
+    },
+    {
+      "path": "backend/tmp/official-scope-repair-2026-10-19/future-assessment-2/uploads/86e85629-7347-5f1a-92d7-089475d96cdb.pdf",
+      "sha256": "987545ffb087f1ece898142c403a516baeabeb70ce19089397fac6f7db12c3d4"
+    },
+    {
+      "path": "backend/tmp/official-scope-repair-2026-10-19/future-assessment-2/uploads/9f2229cc-c150-5bbc-a615-53046bc74763.pdf",
+      "sha256": "e1fa0519ed8e09a676d56c983e99ead5effd7ef840ae86a186729287469bf883"
+    },
+    {
+      "path": "backend/tmp/official-scope-repair-2026-10-19/future-assessment-2/uploads/bc90bcf2-cccd-5364-94f6-5815603802f7.pdf",
+      "sha256": "e9a0d3128767db616085dc0f4e6e455e672e89af823e8ed1282793682787395a"
+    },
+    {
+      "path": "backend/tmp/official-scope-repair-2026-10-19/future-assessment-2/uploads/cd05de96-3b20-5178-8953-d8ee090a4f23.pdf",
+      "sha256": "c1984bb50a5b90fddb895fdc3a0f72e5bc977148c9f63ef6040cbe7a3e1f0d98"
+    },
+    {
+      "path": "backend/tmp/official-scope-repair-2026-10-19/future-assessment-2/uploads/d9d5065d-9706-53db-b856-427c2c58bd1a.pdf",
+      "sha256": "ad07e47cedf437a4156419ce5d3076e08a3e59bbfd6dac7cc53df1009cdcbe7f"
+    },
+    {
+      "path": "backend/tmp/official-scope-repair-2026-10-19/future-assessment-2/uploads/f5b4ca83-6f08-5d85-b64f-a292b7b1f7b6.pdf",
+      "sha256": "eb81a65e0856bd38e855e1f1de6ee12e7c3eb92ae05c8270d345a475beb631d0"
+    },
+    {
+      "path": "backend/tmp/official-scope-repair-2026-10-19/future-assessment-2/uploads/fefabe1a-496e-5b57-83cf-c73f831b1275.pdf",
+      "sha256": "ebae72ea0e8a5eb2ecbccdb985aec6cc1254a7c4d29e6d4de7866db1e66c4855"
+    },
+    {
+      "path": "backend/tmp/official-scope-repair-2026-10-19/future-assessment-final/acceptance.db",
+      "sha256": "35b553358c6db3716808e68e040289197d7d996935a7c0f8ebef63b846bc264a"
+    },
+    {
+      "path": "backend/tmp/official-scope-repair-2026-10-19/future-assessment-final/calls.json",
+      "sha256": "2d6db9d5fe04eb42a3b0691f059f5459cebaf7beec006893dd75e35d3522ba84"
+    },
+    {
+      "path": "backend/tmp/official-scope-repair-2026-10-19/future-assessment-final/fixture.json",
+      "sha256": "b0e3614bd274dcf0533299daf03f45ba1ce32cf6b6213bb3ea45772d14e52c18"
+    },
+    {
+      "path": "backend/tmp/official-scope-repair-2026-10-19/future-assessment-final/lora-vs-qlora-partial.json",
+      "sha256": "60f4547a1464f8599626ca31133980900afb0e6c7f4e73e674fc69766240caed"
+    },
+    {
+      "path": "backend/tmp/official-scope-repair-2026-10-19/future-assessment-final/paging-vs-reasoning-unrelated.json",
+      "sha256": "1f3347d59ed0ddc7b0aad65cdf1b74a7227c6a31a7ccdf6bb07f14838705c733"
+    },
+    {
+      "path": "backend/tmp/official-scope-repair-2026-10-19/future-assessment-final/parsed/0188171d-87ae-5a2f-acc2-87f71bc5db58.json",
+      "sha256": "3f8ba5424477c2a804034dd7507f1d96c9bdb43212f4fad6faa7006faf7bc5db"
+    },
+    {
+      "path": "backend/tmp/official-scope-repair-2026-10-19/future-assessment-final/parsed/0fedc9b8-1c87-5178-87a1-3bb5a02de3b8.json",
+      "sha256": "21b96849bb3533789c4c02f82faa6ec53ecca023e2b10de4d99759adc3d275d0"
+    },
+    {
+      "path": "backend/tmp/official-scope-repair-2026-10-19/future-assessment-final/parsed/114bfa0d-d6cf-573d-82b2-cfaed94b58b6.json",
+      "sha256": "3d79cf8e2b8b99965e5f3e17320aae2cbb2296b031a000f86a11ed71a1e7ea26"
+    },
+    {
+      "path": "backend/tmp/official-scope-repair-2026-10-19/future-assessment-final/parsed/1ae43cdf-aa5d-533e-8caa-c65a403deaf2.json",
+      "sha256": "1a35482e1c3334b843d4436ab0c9d3effe75a7c3d91c9ca46665bbb8e1eaedb8"
+    },
+    {
+      "path": "backend/tmp/official-scope-repair-2026-10-19/future-assessment-final/parsed/1f104048-0d8e-59ac-bc55-92c6c3773d08.json",
+      "sha256": "26debba89ab51ae930bd4b4bb6628e6bb3390a9f67a2c515d51549a30f00cfdf"
+    },
+    {
+      "path": "backend/tmp/official-scope-repair-2026-10-19/future-assessment-final/parsed/20d9fad6-9e6f-543d-a2e1-095d8056c5ff.json",
+      "sha256": "17b79909f6ccfbef761befa41518b887e954b41bc1b74d8cfe071d519f8db5de"
+    },
+    {
+      "path": "backend/tmp/official-scope-repair-2026-10-19/future-assessment-final/parsed/431d388b-53d5-59e3-ad1a-1bf9f281f789.json",
+      "sha256": "43df9075cfb8c7ac92ddd3f4f05722d89b7ea4e0567869f02a6f2debcd3e1bc8"
+    },
+    {
+      "path": "backend/tmp/official-scope-repair-2026-10-19/future-assessment-final/parsed/4ac3cbf3-13b9-5022-863f-a2dbe9391e58.json",
+      "sha256": "018e83626b4fb76cbb6f3ab0564e63421def0980e7a141f950a03b6b8e291300"
+    },
+    {
+      "path": "backend/tmp/official-scope-repair-2026-10-19/future-assessment-final/parsed/4eb9ae9c-2278-5530-ad02-d02e38f9088c.json",
+      "sha256": "50d4d7c3778fa657fb04a90677968faaeb8ea2563591321d946c416c2c3780d9"
+    },
+    {
+      "path": "backend/tmp/official-scope-repair-2026-10-19/future-assessment-final/parsed/518cf49d-121d-55b9-834e-4160cf927fe9.json",
+      "sha256": "74fea9249eeb42511e8c7377eec7d30a20542725a3a1efcf6fa205b60a889a17"
+    },
+    {
+      "path": "backend/tmp/official-scope-repair-2026-10-19/future-assessment-final/parsed/5b4ad1aa-0c85-5a2b-a5ca-97eb8dd4d2aa.json",
+      "sha256": "42397f5218611853c9656882312597e19c365d37800e75671ddc0517311633fa"
+    },
+    {
+      "path": "backend/tmp/official-scope-repair-2026-10-19/future-assessment-final/parsed/788f47ff-23de-5f78-896b-7d3fe6e1bb92.json",
+      "sha256": "9983d55bb64e32504484f86909be883abfc3f9df9a5fb7bd1f0764821450b293"
+    },
+    {
+      "path": "backend/tmp/official-scope-repair-2026-10-19/future-assessment-final/parsed/806425fa-1015-5452-91ee-cdb6b106183f.json",
+      "sha256": "cd54a7ad67fa78babfb38b65ec9d6a49e88a1d93b11f5ceb8012c160433c7754"
+    },
+    {
+      "path": "backend/tmp/official-scope-repair-2026-10-19/future-assessment-final/parsed/855562a1-8309-57b2-b7b0-b9e7016207dc.json",
+      "sha256": "bc6bf19d9c8b3c14822915f77d4c7a4ba3c31822ea75bed70d36ee50fa2a0ccf"
+    },
+    {
+      "path": "backend/tmp/official-scope-repair-2026-10-19/future-assessment-final/parsed/86e85629-7347-5f1a-92d7-089475d96cdb.json",
+      "sha256": "5558cf8741cc5bf08c0f8c1e203a0a63d18d30d136d41a9ca8058abe275db95e"
+    },
+    {
+      "path": "backend/tmp/official-scope-repair-2026-10-19/future-assessment-final/parsed/9f2229cc-c150-5bbc-a615-53046bc74763.json",
+      "sha256": "1988ef13dfd02dc2a5da4841109c85a15cb4b70bd6a283b492f6e55c3748cb14"
+    },
+    {
+      "path": "backend/tmp/official-scope-repair-2026-10-19/future-assessment-final/parsed/bc90bcf2-cccd-5364-94f6-5815603802f7.json",
+      "sha256": "23bc7ada43098ad5aa2b2b4c58a0b1d25425db44b82e2bbfc826c2c4f4709656"
+    },
+    {
+      "path": "backend/tmp/official-scope-repair-2026-10-19/future-assessment-final/parsed/cd05de96-3b20-5178-8953-d8ee090a4f23.json",
+      "sha256": "a61558d6c24855d4b62c07f16de7c9f6a83ab2e87b712fc4703cf8811e829d98"
+    },
+    {
+      "path": "backend/tmp/official-scope-repair-2026-10-19/future-assessment-final/parsed/d9d5065d-9706-53db-b856-427c2c58bd1a.json",
+      "sha256": "ccbde08a7acfeb1eb48b2c4b9991fa3b989fed9fd0500821d6c705cd4872964a"
+    },
+    {
+      "path": "backend/tmp/official-scope-repair-2026-10-19/future-assessment-final/parsed/f5b4ca83-6f08-5d85-b64f-a292b7b1f7b6.json",
+      "sha256": "c6b8e49d209d46fb92135269da3ce33f6c7c33810dbd82a33341124251e62657"
+    },
+    {
+      "path": "backend/tmp/official-scope-repair-2026-10-19/future-assessment-final/parsed/fefabe1a-496e-5b57-83cf-c73f831b1275.json",
+      "sha256": "6cbe2080ce0d14ca0770b52ea07ba0ad3acfe7cd73cdba071f8ce2e539513da5"
+    },
+    {
+      "path": "backend/tmp/official-scope-repair-2026-10-19/future-assessment-final/report.json",
+      "sha256": "fc1d95fa91a21d068d6fb9d249548326b1c2423a17380e6ddfcb056a208c223a"
+    },
+    {
+      "path": "backend/tmp/official-scope-repair-2026-10-19/future-assessment-final/review-after.json",
+      "sha256": "274895a2f2a7996ac07050e770de5dd735dc661884e15f7976c936362e127dc4"
+    },
+    {
+      "path": "backend/tmp/official-scope-repair-2026-10-19/future-assessment-final/review-before.json",
+      "sha256": "74a276d90d8c0b1be4277b9e38985a0e348160f21577a45ad84145b24cb20534"
+    },
+    {
+      "path": "backend/tmp/official-scope-repair-2026-10-19/future-assessment-final/transformer-vs-vit-partial.json",
+      "sha256": "2b0b0c19cd8f3fc595c1b144dd2a9182f807830140ab7b20d0cb4384f6d8334a"
+    },
+    {
+      "path": "backend/tmp/official-scope-repair-2026-10-19/future-assessment-final/uploads/0188171d-87ae-5a2f-acc2-87f71bc5db58.pdf",
+      "sha256": "c464f839fb8d59f7fde92f9b4caa67c2d1f2f196b88f93fb60502249df0aaef7"
+    },
+    {
+      "path": "backend/tmp/official-scope-repair-2026-10-19/future-assessment-final/uploads/0fedc9b8-1c87-5178-87a1-3bb5a02de3b8.pdf",
+      "sha256": "f340f6ace31abf7d0730ef461404279f40d3c890e9cc2daeb7068b3304afdbd6"
+    },
+    {
+      "path": "backend/tmp/official-scope-repair-2026-10-19/future-assessment-final/uploads/114bfa0d-d6cf-573d-82b2-cfaed94b58b6.pdf",
+      "sha256": "92cb3a2b71362acda98a789b03d88688fd33cf5fcf13f81d2b1de30ee7d3b67a"
+    },
+    {
+      "path": "backend/tmp/official-scope-repair-2026-10-19/future-assessment-final/uploads/1ae43cdf-aa5d-533e-8caa-c65a403deaf2.pdf",
+      "sha256": "6478b6e571a7d6fcd846d8ef77bfd60c285f1986abb8f475eedc43de403074f5"
+    },
+    {
+      "path": "backend/tmp/official-scope-repair-2026-10-19/future-assessment-final/uploads/1f104048-0d8e-59ac-bc55-92c6c3773d08.pdf",
+      "sha256": "e78feadadbdbb0b601b3c2bcc81404722cd431a489b307545f9b7bea1e8c4f5b"
+    },
+    {
+      "path": "backend/tmp/official-scope-repair-2026-10-19/future-assessment-final/uploads/20d9fad6-9e6f-543d-a2e1-095d8056c5ff.pdf",
+      "sha256": "0a9bff1be3575cf9fe26a4a3d3a9175bc791ecec90de8b9deba4cff75d2b9476"
+    },
+    {
+      "path": "backend/tmp/official-scope-repair-2026-10-19/future-assessment-final/uploads/431d388b-53d5-59e3-ad1a-1bf9f281f789.pdf",
+      "sha256": "b191b0a365a64b4ab2791d117069ed17a2933d03554a662ced58b37df52018f4"
+    },
+    {
+      "path": "backend/tmp/official-scope-repair-2026-10-19/future-assessment-final/uploads/4ac3cbf3-13b9-5022-863f-a2dbe9391e58.pdf",
+      "sha256": "c531734c7d9ee647fda9b4f0e1a6abd6d58ad34e862bc945451b09032be3167e"
+    },
+    {
+      "path": "backend/tmp/official-scope-repair-2026-10-19/future-assessment-final/uploads/4eb9ae9c-2278-5530-ad02-d02e38f9088c.pdf",
+      "sha256": "97fd272f1fdfc18677462d0292f5fbf26ca86b4d1b485c2dba03269b643a0e83"
+    },
+    {
+      "path": "backend/tmp/official-scope-repair-2026-10-19/future-assessment-final/uploads/518cf49d-121d-55b9-834e-4160cf927fe9.pdf",
+      "sha256": "ca7f9fda10b90fc05dd291a3accc85e9c1a4a860b99b31928dab03ed3fcb14e4"
+    },
+    {
+      "path": "backend/tmp/official-scope-repair-2026-10-19/future-assessment-final/uploads/5b4ad1aa-0c85-5a2b-a5ca-97eb8dd4d2aa.pdf",
+      "sha256": "7d9f878c23b460e4566aa4ec9201b1abfb3b8faefb2b1356e411cb90fef72a12"
+    },
+    {
+      "path": "backend/tmp/official-scope-repair-2026-10-19/future-assessment-final/uploads/788f47ff-23de-5f78-896b-7d3fe6e1bb92.pdf",
+      "sha256": "8ce7b83971a14508ca711a27c875c9b6914c4f6767cf3150fb1ca6c07aa056d6"
+    },
+    {
+      "path": "backend/tmp/official-scope-repair-2026-10-19/future-assessment-final/uploads/806425fa-1015-5452-91ee-cdb6b106183f.pdf",
+      "sha256": "a41bd7877fd1a6bcbba096b2619618bd2f90e02488f2365644903eb2f7c6a494"
+    },
+    {
+      "path": "backend/tmp/official-scope-repair-2026-10-19/future-assessment-final/uploads/855562a1-8309-57b2-b7b0-b9e7016207dc.pdf",
+      "sha256": "33a4e757c19d6ea8d3cca8958fce8fe405e290272e135c99ee66065c775d5bd1"
+    },
+    {
+      "path": "backend/tmp/official-scope-repair-2026-10-19/future-assessment-final/uploads/86e85629-7347-5f1a-92d7-089475d96cdb.pdf",
+      "sha256": "987545ffb087f1ece898142c403a516baeabeb70ce19089397fac6f7db12c3d4"
+    },
+    {
+      "path": "backend/tmp/official-scope-repair-2026-10-19/future-assessment-final/uploads/9f2229cc-c150-5bbc-a615-53046bc74763.pdf",
+      "sha256": "e1fa0519ed8e09a676d56c983e99ead5effd7ef840ae86a186729287469bf883"
+    },
+    {
+      "path": "backend/tmp/official-scope-repair-2026-10-19/future-assessment-final/uploads/bc90bcf2-cccd-5364-94f6-5815603802f7.pdf",
+      "sha256": "e9a0d3128767db616085dc0f4e6e455e672e89af823e8ed1282793682787395a"
+    },
+    {
+      "path": "backend/tmp/official-scope-repair-2026-10-19/future-assessment-final/uploads/cd05de96-3b20-5178-8953-d8ee090a4f23.pdf",
+      "sha256": "c1984bb50a5b90fddb895fdc3a0f72e5bc977148c9f63ef6040cbe7a3e1f0d98"
+    },
+    {
+      "path": "backend/tmp/official-scope-repair-2026-10-19/future-assessment-final/uploads/d9d5065d-9706-53db-b856-427c2c58bd1a.pdf",
+      "sha256": "ad07e47cedf437a4156419ce5d3076e08a3e59bbfd6dac7cc53df1009cdcbe7f"
+    },
+    {
+      "path": "backend/tmp/official-scope-repair-2026-10-19/future-assessment-final/uploads/f5b4ca83-6f08-5d85-b64f-a292b7b1f7b6.pdf",
+      "sha256": "eb81a65e0856bd38e855e1f1de6ee12e7c3eb92ae05c8270d345a475beb631d0"
+    },
+    {
+      "path": "backend/tmp/official-scope-repair-2026-10-19/future-assessment-final/uploads/fefabe1a-496e-5b57-83cf-c73f831b1275.pdf",
+      "sha256": "ebae72ea0e8a5eb2ecbccdb985aec6cc1254a7c4d29e6d4de7866db1e66c4855"
+    },
+    {
+      "path": "backend/tmp/official-scope-repair-2026-10-19/future-initial.xml",
+      "sha256": "05b2727d1ea59481e47f9679d93a030b1ec4400600a65f59fe71ef8f1ca8c86d"
+    },
+    {
+      "path": "backend/tmp/official-scope-repair-2026-10-19/initial.xml",
+      "sha256": "b68e0d992436f4e709f004d5f00442310e5a1b4ee9a3882a4959c04f6965f385"
+    },
+    {
+      "path": "backend/tmp/official-scope-repair-2026-10-19/manual-source-review.json",
+      "sha256": "64f8a0d37755ac11e6021eb36ede83a04dc3c7e780d327011d7888d20c2f4951"
+    },
+    {
+      "path": "backend/tmp/official-scope-repair-2026-10-19/mechanism-confirmation/acceptance.db",
+      "sha256": "ade31792b3b99f4a203b3f2ee490d521147d5ff5f9b20de1b5a33103e2441b76"
+    },
+    {
+      "path": "backend/tmp/official-scope-repair-2026-10-19/mechanism-confirmation/fixture.json",
+      "sha256": "d7730edb860bcb4b6ba77311de22d749684d6fc726ea5d38b5762afc308c117f"
+    },
+    {
+      "path": "backend/tmp/official-scope-repair-2026-10-19/mechanism-confirmation/model-calls.json",
+      "sha256": "f8a2a68181017a2c6deadb7d76aa13d157d8582bab44a133e8546ea6e86caf2b"
+    },
+    {
+      "path": "backend/tmp/official-scope-repair-2026-10-19/mechanism-confirmation/parsed/114bfa0d-d6cf-573d-82b2-cfaed94b58b6.json",
+      "sha256": "6710c78824d61e72e1b0c15aaddf534ce0872570051a9b95d6f2f39c786645d7"
+    },
+    {
+      "path": "backend/tmp/official-scope-repair-2026-10-19/mechanism-confirmation/parsed/20d9fad6-9e6f-543d-a2e1-095d8056c5ff.json",
+      "sha256": "4a05a089a864b8fc603470e4f28fc480526b8184b8c5a89039db83b07bdded3d"
+    },
+    {
+      "path": "backend/tmp/official-scope-repair-2026-10-19/mechanism-confirmation/parsed/855562a1-8309-57b2-b7b0-b9e7016207dc.json",
+      "sha256": "0bdf9ab2be963a5e42b3560e72b14fd247e2723c299ffc3e340682b02394db97"
+    },
+    {
+      "path": "backend/tmp/official-scope-repair-2026-10-19/mechanism-confirmation/parsed/bc90bcf2-cccd-5364-94f6-5815603802f7.json",
+      "sha256": "2f5bdb78b265127069fbaf7c9841afe6e181a0d93c3209856c420d678c7825d0"
+    },
+    {
+      "path": "backend/tmp/official-scope-repair-2026-10-19/mechanism-confirmation/parsed/cd05de96-3b20-5178-8953-d8ee090a4f23.json",
+      "sha256": "0ab6909920de99d93d12d57d963fe93c684446cbcfdba40bf2df1ed080d7b414"
+    },
+    {
+      "path": "backend/tmp/official-scope-repair-2026-10-19/mechanism-confirmation/report.json",
+      "sha256": "8cbab7a39962e021a41f44fa04aafb37d00ad0f27f9e4bd65e0a73268c6b6477"
+    },
+    {
+      "path": "backend/tmp/official-scope-repair-2026-10-19/mechanism-confirmation/uploads/114bfa0d-d6cf-573d-82b2-cfaed94b58b6.pdf",
+      "sha256": "92cb3a2b71362acda98a789b03d88688fd33cf5fcf13f81d2b1de30ee7d3b67a"
+    },
+    {
+      "path": "backend/tmp/official-scope-repair-2026-10-19/mechanism-confirmation/uploads/20d9fad6-9e6f-543d-a2e1-095d8056c5ff.pdf",
+      "sha256": "0a9bff1be3575cf9fe26a4a3d3a9175bc791ecec90de8b9deba4cff75d2b9476"
+    },
+    {
+      "path": "backend/tmp/official-scope-repair-2026-10-19/mechanism-confirmation/uploads/855562a1-8309-57b2-b7b0-b9e7016207dc.pdf",
+      "sha256": "33a4e757c19d6ea8d3cca8958fce8fe405e290272e135c99ee66065c775d5bd1"
+    },
+    {
+      "path": "backend/tmp/official-scope-repair-2026-10-19/mechanism-confirmation/uploads/bc90bcf2-cccd-5364-94f6-5815603802f7.pdf",
+      "sha256": "e9a0d3128767db616085dc0f4e6e455e672e89af823e8ed1282793682787395a"
+    },
+    {
+      "path": "backend/tmp/official-scope-repair-2026-10-19/mechanism-confirmation/uploads/cd05de96-3b20-5178-8953-d8ee090a4f23.pdf",
+      "sha256": "c1984bb50a5b90fddb895fdc3a0f72e5bc977148c9f63ef6040cbe7a3e1f0d98"
+    },
+    {
+      "path": "backend/tmp/official-scope-repair-2026-10-19/offline/acceptance.db",
+      "sha256": "0cca52d04e2e1533c6ecc02234e34a017b975c9c528f576caabfba3423e2a59e"
+    },
+    {
+      "path": "backend/tmp/official-scope-repair-2026-10-19/offline-replay/report.json",
+      "sha256": "cd4e15fbc89ad1399a08eb6d96c6f9c76ac81079bcfd08b53de9b60aaab54513"
+    },
+    {
+      "path": "backend/tmp/official-scope-repair-2026-10-19/pdf-span.xml",
+      "sha256": "89afdf3d822ed20d4769af04dabea750e723c3cf30251e3066dbc94e47157a3f"
+    },
+    {
+      "path": "backend/tmp/official-scope-repair-2026-10-19/review/acceptance.db",
+      "sha256": "f3b748a2a1cc1b0e1a8ee3507e29f0708afd005e4907537f27aee7bbafd0c523"
+    },
+    {
+      "path": "backend/tmp/official-scope-repair-2026-10-19/review/calls.json",
+      "sha256": "cba6cd8389960d1611b25294c007c3df676883d3442d617437803fd6a0d55c26"
+    },
+    {
+      "path": "backend/tmp/official-scope-repair-2026-10-19/review/fixture.json",
+      "sha256": "4d32031eae8f7fbcfe8638d59ac0e426e953dec820c767d56674068d17073c37"
+    },
+    {
+      "path": "backend/tmp/official-scope-repair-2026-10-19/review/parsed/0188171d-87ae-5a2f-acc2-87f71bc5db58.json",
+      "sha256": "3f8ba5424477c2a804034dd7507f1d96c9bdb43212f4fad6faa7006faf7bc5db"
+    },
+    {
+      "path": "backend/tmp/official-scope-repair-2026-10-19/review/parsed/0fedc9b8-1c87-5178-87a1-3bb5a02de3b8.json",
+      "sha256": "21b96849bb3533789c4c02f82faa6ec53ecca023e2b10de4d99759adc3d275d0"
+    },
+    {
+      "path": "backend/tmp/official-scope-repair-2026-10-19/review/parsed/114bfa0d-d6cf-573d-82b2-cfaed94b58b6.json",
+      "sha256": "3d79cf8e2b8b99965e5f3e17320aae2cbb2296b031a000f86a11ed71a1e7ea26"
+    },
+    {
+      "path": "backend/tmp/official-scope-repair-2026-10-19/review/parsed/1ae43cdf-aa5d-533e-8caa-c65a403deaf2.json",
+      "sha256": "1a35482e1c3334b843d4436ab0c9d3effe75a7c3d91c9ca46665bbb8e1eaedb8"
+    },
+    {
+      "path": "backend/tmp/official-scope-repair-2026-10-19/review/parsed/1f104048-0d8e-59ac-bc55-92c6c3773d08.json",
+      "sha256": "26debba89ab51ae930bd4b4bb6628e6bb3390a9f67a2c515d51549a30f00cfdf"
+    },
+    {
+      "path": "backend/tmp/official-scope-repair-2026-10-19/review/parsed/20d9fad6-9e6f-543d-a2e1-095d8056c5ff.json",
+      "sha256": "17b79909f6ccfbef761befa41518b887e954b41bc1b74d8cfe071d519f8db5de"
+    },
+    {
+      "path": "backend/tmp/official-scope-repair-2026-10-19/review/parsed/4ac3cbf3-13b9-5022-863f-a2dbe9391e58.json",
+      "sha256": "018e83626b4fb76cbb6f3ab0564e63421def0980e7a141f950a03b6b8e291300"
+    },
+    {
+      "path": "backend/tmp/official-scope-repair-2026-10-19/review/parsed/4eb9ae9c-2278-5530-ad02-d02e38f9088c.json",
+      "sha256": "50d4d7c3778fa657fb04a90677968faaeb8ea2563591321d946c416c2c3780d9"
+    },
+    {
+      "path": "backend/tmp/official-scope-repair-2026-10-19/review/parsed/518cf49d-121d-55b9-834e-4160cf927fe9.json",
+      "sha256": "74fea9249eeb42511e8c7377eec7d30a20542725a3a1efcf6fa205b60a889a17"
+    },
+    {
+      "path": "backend/tmp/official-scope-repair-2026-10-19/review/parsed/5b4ad1aa-0c85-5a2b-a5ca-97eb8dd4d2aa.json",
+      "sha256": "42397f5218611853c9656882312597e19c365d37800e75671ddc0517311633fa"
+    },
+    {
+      "path": "backend/tmp/official-scope-repair-2026-10-19/review/parsed/788f47ff-23de-5f78-896b-7d3fe6e1bb92.json",
+      "sha256": "9983d55bb64e32504484f86909be883abfc3f9df9a5fb7bd1f0764821450b293"
+    },
+    {
+      "path": "backend/tmp/official-scope-repair-2026-10-19/review/parsed/806425fa-1015-5452-91ee-cdb6b106183f.json",
+      "sha256": "cd54a7ad67fa78babfb38b65ec9d6a49e88a1d93b11f5ceb8012c160433c7754"
+    },
+    {
+      "path": "backend/tmp/official-scope-repair-2026-10-19/review/parsed/855562a1-8309-57b2-b7b0-b9e7016207dc.json",
+      "sha256": "bc6bf19d9c8b3c14822915f77d4c7a4ba3c31822ea75bed70d36ee50fa2a0ccf"
+    },
+    {
+      "path": "backend/tmp/official-scope-repair-2026-10-19/review/parsed/86e85629-7347-5f1a-92d7-089475d96cdb.json",
+      "sha256": "5558cf8741cc5bf08c0f8c1e203a0a63d18d30d136d41a9ca8058abe275db95e"
+    },
+    {
+      "path": "backend/tmp/official-scope-repair-2026-10-19/review/parsed/9f2229cc-c150-5bbc-a615-53046bc74763.json",
+      "sha256": "1988ef13dfd02dc2a5da4841109c85a15cb4b70bd6a283b492f6e55c3748cb14"
+    },
+    {
+      "path": "backend/tmp/official-scope-repair-2026-10-19/review/parsed/bc90bcf2-cccd-5364-94f6-5815603802f7.json",
+      "sha256": "23bc7ada43098ad5aa2b2b4c58a0b1d25425db44b82e2bbfc826c2c4f4709656"
+    },
+    {
+      "path": "backend/tmp/official-scope-repair-2026-10-19/review/parsed/cd05de96-3b20-5178-8953-d8ee090a4f23.json",
+      "sha256": "a61558d6c24855d4b62c07f16de7c9f6a83ab2e87b712fc4703cf8811e829d98"
+    },
+    {
+      "path": "backend/tmp/official-scope-repair-2026-10-19/review/parsed/d9d5065d-9706-53db-b856-427c2c58bd1a.json",
+      "sha256": "ccbde08a7acfeb1eb48b2c4b9991fa3b989fed9fd0500821d6c705cd4872964a"
+    },
+    {
+      "path": "backend/tmp/official-scope-repair-2026-10-19/review/parsed/f5b4ca83-6f08-5d85-b64f-a292b7b1f7b6.json",
+      "sha256": "c6b8e49d209d46fb92135269da3ce33f6c7c33810dbd82a33341124251e62657"
+    },
+    {
+      "path": "backend/tmp/official-scope-repair-2026-10-19/review/parsed/fefabe1a-496e-5b57-83cf-c73f831b1275.json",
+      "sha256": "6cbe2080ce0d14ca0770b52ea07ba0ad3acfe7cd73cdba071f8ce2e539513da5"
+    },
+    {
+      "path": "backend/tmp/official-scope-repair-2026-10-19/review/report.json",
+      "sha256": "69af88dcf4a6cf17970352222518ac3c6b52aa3c344c8ecf5c3289cb4318c64c"
+    },
+    {
+      "path": "backend/tmp/official-scope-repair-2026-10-19/review/review.json",
+      "sha256": "f18d411277d5f75d03f30e4e11db2d2eb862597f2fc330fe90087eb15e9a9bbc"
+    },
+    {
+      "path": "backend/tmp/official-scope-repair-2026-10-19/review/uploads/0188171d-87ae-5a2f-acc2-87f71bc5db58.pdf",
+      "sha256": "c464f839fb8d59f7fde92f9b4caa67c2d1f2f196b88f93fb60502249df0aaef7"
+    },
+    {
+      "path": "backend/tmp/official-scope-repair-2026-10-19/review/uploads/0fedc9b8-1c87-5178-87a1-3bb5a02de3b8.pdf",
+      "sha256": "f340f6ace31abf7d0730ef461404279f40d3c890e9cc2daeb7068b3304afdbd6"
+    },
+    {
+      "path": "backend/tmp/official-scope-repair-2026-10-19/review/uploads/114bfa0d-d6cf-573d-82b2-cfaed94b58b6.pdf",
+      "sha256": "92cb3a2b71362acda98a789b03d88688fd33cf5fcf13f81d2b1de30ee7d3b67a"
+    },
+    {
+      "path": "backend/tmp/official-scope-repair-2026-10-19/review/uploads/1ae43cdf-aa5d-533e-8caa-c65a403deaf2.pdf",
+      "sha256": "6478b6e571a7d6fcd846d8ef77bfd60c285f1986abb8f475eedc43de403074f5"
+    },
+    {
+      "path": "backend/tmp/official-scope-repair-2026-10-19/review/uploads/1f104048-0d8e-59ac-bc55-92c6c3773d08.pdf",
+      "sha256": "e78feadadbdbb0b601b3c2bcc81404722cd431a489b307545f9b7bea1e8c4f5b"
+    },
+    {
+      "path": "backend/tmp/official-scope-repair-2026-10-19/review/uploads/20d9fad6-9e6f-543d-a2e1-095d8056c5ff.pdf",
+      "sha256": "0a9bff1be3575cf9fe26a4a3d3a9175bc791ecec90de8b9deba4cff75d2b9476"
+    },
+    {
+      "path": "backend/tmp/official-scope-repair-2026-10-19/review/uploads/4ac3cbf3-13b9-5022-863f-a2dbe9391e58.pdf",
+      "sha256": "c531734c7d9ee647fda9b4f0e1a6abd6d58ad34e862bc945451b09032be3167e"
+    },
+    {
+      "path": "backend/tmp/official-scope-repair-2026-10-19/review/uploads/4eb9ae9c-2278-5530-ad02-d02e38f9088c.pdf",
+      "sha256": "97fd272f1fdfc18677462d0292f5fbf26ca86b4d1b485c2dba03269b643a0e83"
+    },
+    {
+      "path": "backend/tmp/official-scope-repair-2026-10-19/review/uploads/518cf49d-121d-55b9-834e-4160cf927fe9.pdf",
+      "sha256": "ca7f9fda10b90fc05dd291a3accc85e9c1a4a860b99b31928dab03ed3fcb14e4"
+    },
+    {
+      "path": "backend/tmp/official-scope-repair-2026-10-19/review/uploads/5b4ad1aa-0c85-5a2b-a5ca-97eb8dd4d2aa.pdf",
+      "sha256": "7d9f878c23b460e4566aa4ec9201b1abfb3b8faefb2b1356e411cb90fef72a12"
+    },
+    {
+      "path": "backend/tmp/official-scope-repair-2026-10-19/review/uploads/788f47ff-23de-5f78-896b-7d3fe6e1bb92.pdf",
+      "sha256": "8ce7b83971a14508ca711a27c875c9b6914c4f6767cf3150fb1ca6c07aa056d6"
+    },
+    {
+      "path": "backend/tmp/official-scope-repair-2026-10-19/review/uploads/806425fa-1015-5452-91ee-cdb6b106183f.pdf",
+      "sha256": "a41bd7877fd1a6bcbba096b2619618bd2f90e02488f2365644903eb2f7c6a494"
+    },
+    {
+      "path": "backend/tmp/official-scope-repair-2026-10-19/review/uploads/855562a1-8309-57b2-b7b0-b9e7016207dc.pdf",
+      "sha256": "33a4e757c19d6ea8d3cca8958fce8fe405e290272e135c99ee66065c775d5bd1"
+    },
+    {
+      "path": "backend/tmp/official-scope-repair-2026-10-19/review/uploads/86e85629-7347-5f1a-92d7-089475d96cdb.pdf",
+      "sha256": "987545ffb087f1ece898142c403a516baeabeb70ce19089397fac6f7db12c3d4"
+    },
+    {
+      "path": "backend/tmp/official-scope-repair-2026-10-19/review/uploads/9f2229cc-c150-5bbc-a615-53046bc74763.pdf",
+      "sha256": "e1fa0519ed8e09a676d56c983e99ead5effd7ef840ae86a186729287469bf883"
+    },
+    {
+      "path": "backend/tmp/official-scope-repair-2026-10-19/review/uploads/bc90bcf2-cccd-5364-94f6-5815603802f7.pdf",
+      "sha256": "e9a0d3128767db616085dc0f4e6e455e672e89af823e8ed1282793682787395a"
+    },
+    {
+      "path": "backend/tmp/official-scope-repair-2026-10-19/review/uploads/cd05de96-3b20-5178-8953-d8ee090a4f23.pdf",
+      "sha256": "c1984bb50a5b90fddb895fdc3a0f72e5bc977148c9f63ef6040cbe7a3e1f0d98"
+    },
+    {
+      "path": "backend/tmp/official-scope-repair-2026-10-19/review/uploads/d9d5065d-9706-53db-b856-427c2c58bd1a.pdf",
+      "sha256": "ad07e47cedf437a4156419ce5d3076e08a3e59bbfd6dac7cc53df1009cdcbe7f"
+    },
+    {
+      "path": "backend/tmp/official-scope-repair-2026-10-19/review/uploads/f5b4ca83-6f08-5d85-b64f-a292b7b1f7b6.pdf",
+      "sha256": "eb81a65e0856bd38e855e1f1de6ee12e7c3eb92ae05c8270d345a475beb631d0"
+    },
+    {
+      "path": "backend/tmp/official-scope-repair-2026-10-19/review/uploads/fefabe1a-496e-5b57-83cf-c73f831b1275.pdf",
+      "sha256": "ebae72ea0e8a5eb2ecbccdb985aec6cc1254a7c4d29e6d4de7866db1e66c4855"
+    },
+    {
+      "path": "backend/tmp/official-scope-repair-2026-10-19/review-audited/acceptance.db",
+      "sha256": "55f695d2fa7a527bd17519cd874d9f4e497c036e256fd651b481aea465de78e0"
+    },
+    {
+      "path": "backend/tmp/official-scope-repair-2026-10-19/review-audited/calls.json",
+      "sha256": "8ac21c8c27188b364730ed8f0c0408f48aa93d414f467649bf00bdb4a2c1498d"
+    },
+    {
+      "path": "backend/tmp/official-scope-repair-2026-10-19/review-audited/fixture.json",
+      "sha256": "4d32031eae8f7fbcfe8638d59ac0e426e953dec820c767d56674068d17073c37"
+    },
+    {
+      "path": "backend/tmp/official-scope-repair-2026-10-19/review-audited/parsed/0188171d-87ae-5a2f-acc2-87f71bc5db58.json",
+      "sha256": "3f8ba5424477c2a804034dd7507f1d96c9bdb43212f4fad6faa7006faf7bc5db"
+    },
+    {
+      "path": "backend/tmp/official-scope-repair-2026-10-19/review-audited/parsed/0fedc9b8-1c87-5178-87a1-3bb5a02de3b8.json",
+      "sha256": "21b96849bb3533789c4c02f82faa6ec53ecca023e2b10de4d99759adc3d275d0"
+    },
+    {
+      "path": "backend/tmp/official-scope-repair-2026-10-19/review-audited/parsed/114bfa0d-d6cf-573d-82b2-cfaed94b58b6.json",
+      "sha256": "3d79cf8e2b8b99965e5f3e17320aae2cbb2296b031a000f86a11ed71a1e7ea26"
+    },
+    {
+      "path": "backend/tmp/official-scope-repair-2026-10-19/review-audited/parsed/1ae43cdf-aa5d-533e-8caa-c65a403deaf2.json",
+      "sha256": "1a35482e1c3334b843d4436ab0c9d3effe75a7c3d91c9ca46665bbb8e1eaedb8"
+    },
+    {
+      "path": "backend/tmp/official-scope-repair-2026-10-19/review-audited/parsed/1f104048-0d8e-59ac-bc55-92c6c3773d08.json",
+      "sha256": "26debba89ab51ae930bd4b4bb6628e6bb3390a9f67a2c515d51549a30f00cfdf"
+    },
+    {
+      "path": "backend/tmp/official-scope-repair-2026-10-19/review-audited/parsed/20d9fad6-9e6f-543d-a2e1-095d8056c5ff.json",
+      "sha256": "17b79909f6ccfbef761befa41518b887e954b41bc1b74d8cfe071d519f8db5de"
+    },
+    {
+      "path": "backend/tmp/official-scope-repair-2026-10-19/review-audited/parsed/4ac3cbf3-13b9-5022-863f-a2dbe9391e58.json",
+      "sha256": "018e83626b4fb76cbb6f3ab0564e63421def0980e7a141f950a03b6b8e291300"
+    },
+    {
+      "path": "backend/tmp/official-scope-repair-2026-10-19/review-audited/parsed/4eb9ae9c-2278-5530-ad02-d02e38f9088c.json",
+      "sha256": "50d4d7c3778fa657fb04a90677968faaeb8ea2563591321d946c416c2c3780d9"
+    },
+    {
+      "path": "backend/tmp/official-scope-repair-2026-10-19/review-audited/parsed/518cf49d-121d-55b9-834e-4160cf927fe9.json",
+      "sha256": "74fea9249eeb42511e8c7377eec7d30a20542725a3a1efcf6fa205b60a889a17"
+    },
+    {
+      "path": "backend/tmp/official-scope-repair-2026-10-19/review-audited/parsed/5b4ad1aa-0c85-5a2b-a5ca-97eb8dd4d2aa.json",
+      "sha256": "42397f5218611853c9656882312597e19c365d37800e75671ddc0517311633fa"
+    },
+    {
+      "path": "backend/tmp/official-scope-repair-2026-10-19/review-audited/parsed/788f47ff-23de-5f78-896b-7d3fe6e1bb92.json",
+      "sha256": "9983d55bb64e32504484f86909be883abfc3f9df9a5fb7bd1f0764821450b293"
+    },
+    {
+      "path": "backend/tmp/official-scope-repair-2026-10-19/review-audited/parsed/806425fa-1015-5452-91ee-cdb6b106183f.json",
+      "sha256": "cd54a7ad67fa78babfb38b65ec9d6a49e88a1d93b11f5ceb8012c160433c7754"
+    },
+    {
+      "path": "backend/tmp/official-scope-repair-2026-10-19/review-audited/parsed/855562a1-8309-57b2-b7b0-b9e7016207dc.json",
+      "sha256": "bc6bf19d9c8b3c14822915f77d4c7a4ba3c31822ea75bed70d36ee50fa2a0ccf"
+    },
+    {
+      "path": "backend/tmp/official-scope-repair-2026-10-19/review-audited/parsed/86e85629-7347-5f1a-92d7-089475d96cdb.json",
+      "sha256": "5558cf8741cc5bf08c0f8c1e203a0a63d18d30d136d41a9ca8058abe275db95e"
+    },
+    {
+      "path": "backend/tmp/official-scope-repair-2026-10-19/review-audited/parsed/9f2229cc-c150-5bbc-a615-53046bc74763.json",
+      "sha256": "1988ef13dfd02dc2a5da4841109c85a15cb4b70bd6a283b492f6e55c3748cb14"
+    },
+    {
+      "path": "backend/tmp/official-scope-repair-2026-10-19/review-audited/parsed/bc90bcf2-cccd-5364-94f6-5815603802f7.json",
+      "sha256": "23bc7ada43098ad5aa2b2b4c58a0b1d25425db44b82e2bbfc826c2c4f4709656"
+    },
+    {
+      "path": "backend/tmp/official-scope-repair-2026-10-19/review-audited/parsed/cd05de96-3b20-5178-8953-d8ee090a4f23.json",
+      "sha256": "a61558d6c24855d4b62c07f16de7c9f6a83ab2e87b712fc4703cf8811e829d98"
+    },
+    {
+      "path": "backend/tmp/official-scope-repair-2026-10-19/review-audited/parsed/d9d5065d-9706-53db-b856-427c2c58bd1a.json",
+      "sha256": "ccbde08a7acfeb1eb48b2c4b9991fa3b989fed9fd0500821d6c705cd4872964a"
+    },
+    {
+      "path": "backend/tmp/official-scope-repair-2026-10-19/review-audited/parsed/f5b4ca83-6f08-5d85-b64f-a292b7b1f7b6.json",
+      "sha256": "c6b8e49d209d46fb92135269da3ce33f6c7c33810dbd82a33341124251e62657"
+    },
+    {
+      "path": "backend/tmp/official-scope-repair-2026-10-19/review-audited/parsed/fefabe1a-496e-5b57-83cf-c73f831b1275.json",
+      "sha256": "6cbe2080ce0d14ca0770b52ea07ba0ad3acfe7cd73cdba071f8ce2e539513da5"
+    },
+    {
+      "path": "backend/tmp/official-scope-repair-2026-10-19/review-audited/report.json",
+      "sha256": "4ed671f37a57a06332f67a667d9d89dc0a9f0c77d3ddb5b01065e632a9460504"
+    },
+    {
+      "path": "backend/tmp/official-scope-repair-2026-10-19/review-audited/review.json",
+      "sha256": "aef84a9c64d7f07ca392a2e529ad162a418014e4f889003184d12577732e73d3"
+    },
+    {
+      "path": "backend/tmp/official-scope-repair-2026-10-19/review-audited/uploads/0188171d-87ae-5a2f-acc2-87f71bc5db58.pdf",
+      "sha256": "c464f839fb8d59f7fde92f9b4caa67c2d1f2f196b88f93fb60502249df0aaef7"
+    },
+    {
+      "path": "backend/tmp/official-scope-repair-2026-10-19/review-audited/uploads/0fedc9b8-1c87-5178-87a1-3bb5a02de3b8.pdf",
+      "sha256": "f340f6ace31abf7d0730ef461404279f40d3c890e9cc2daeb7068b3304afdbd6"
+    },
+    {
+      "path": "backend/tmp/official-scope-repair-2026-10-19/review-audited/uploads/114bfa0d-d6cf-573d-82b2-cfaed94b58b6.pdf",
+      "sha256": "92cb3a2b71362acda98a789b03d88688fd33cf5fcf13f81d2b1de30ee7d3b67a"
+    },
+    {
+      "path": "backend/tmp/official-scope-repair-2026-10-19/review-audited/uploads/1ae43cdf-aa5d-533e-8caa-c65a403deaf2.pdf",
+      "sha256": "6478b6e571a7d6fcd846d8ef77bfd60c285f1986abb8f475eedc43de403074f5"
+    },
+    {
+      "path": "backend/tmp/official-scope-repair-2026-10-19/review-audited/uploads/1f104048-0d8e-59ac-bc55-92c6c3773d08.pdf",
+      "sha256": "e78feadadbdbb0b601b3c2bcc81404722cd431a489b307545f9b7bea1e8c4f5b"
+    },
+    {
+      "path": "backend/tmp/official-scope-repair-2026-10-19/review-audited/uploads/20d9fad6-9e6f-543d-a2e1-095d8056c5ff.pdf",
+      "sha256": "0a9bff1be3575cf9fe26a4a3d3a9175bc791ecec90de8b9deba4cff75d2b9476"
+    },
+    {
+      "path": "backend/tmp/official-scope-repair-2026-10-19/review-audited/uploads/4ac3cbf3-13b9-5022-863f-a2dbe9391e58.pdf",
+      "sha256": "c531734c7d9ee647fda9b4f0e1a6abd6d58ad34e862bc945451b09032be3167e"
+    },
+    {
+      "path": "backend/tmp/official-scope-repair-2026-10-19/review-audited/uploads/4eb9ae9c-2278-5530-ad02-d02e38f9088c.pdf",
+      "sha256": "97fd272f1fdfc18677462d0292f5fbf26ca86b4d1b485c2dba03269b643a0e83"
+    },
+    {
+      "path": "backend/tmp/official-scope-repair-2026-10-19/review-audited/uploads/518cf49d-121d-55b9-834e-4160cf927fe9.pdf",
+      "sha256": "ca7f9fda10b90fc05dd291a3accc85e9c1a4a860b99b31928dab03ed3fcb14e4"
+    },
+    {
+      "path": "backend/tmp/official-scope-repair-2026-10-19/review-audited/uploads/5b4ad1aa-0c85-5a2b-a5ca-97eb8dd4d2aa.pdf",
+      "sha256": "7d9f878c23b460e4566aa4ec9201b1abfb3b8faefb2b1356e411cb90fef72a12"
+    },
+    {
+      "path": "backend/tmp/official-scope-repair-2026-10-19/review-audited/uploads/788f47ff-23de-5f78-896b-7d3fe6e1bb92.pdf",
+      "sha256": "8ce7b83971a14508ca711a27c875c9b6914c4f6767cf3150fb1ca6c07aa056d6"
+    },
+    {
+      "path": "backend/tmp/official-scope-repair-2026-10-19/review-audited/uploads/806425fa-1015-5452-91ee-cdb6b106183f.pdf",
+      "sha256": "a41bd7877fd1a6bcbba096b2619618bd2f90e02488f2365644903eb2f7c6a494"
+    },
+    {
+      "path": "backend/tmp/official-scope-repair-2026-10-19/review-audited/uploads/855562a1-8309-57b2-b7b0-b9e7016207dc.pdf",
+      "sha256": "33a4e757c19d6ea8d3cca8958fce8fe405e290272e135c99ee66065c775d5bd1"
+    },
+    {
+      "path": "backend/tmp/official-scope-repair-2026-10-19/review-audited/uploads/86e85629-7347-5f1a-92d7-089475d96cdb.pdf",
+      "sha256": "987545ffb087f1ece898142c403a516baeabeb70ce19089397fac6f7db12c3d4"
+    },
+    {
+      "path": "backend/tmp/official-scope-repair-2026-10-19/review-audited/uploads/9f2229cc-c150-5bbc-a615-53046bc74763.pdf",
+      "sha256": "e1fa0519ed8e09a676d56c983e99ead5effd7ef840ae86a186729287469bf883"
+    },
+    {
+      "path": "backend/tmp/official-scope-repair-2026-10-19/review-audited/uploads/bc90bcf2-cccd-5364-94f6-5815603802f7.pdf",
+      "sha256": "e9a0d3128767db616085dc0f4e6e455e672e89af823e8ed1282793682787395a"
+    },
+    {
+      "path": "backend/tmp/official-scope-repair-2026-10-19/review-audited/uploads/cd05de96-3b20-5178-8953-d8ee090a4f23.pdf",
+      "sha256": "c1984bb50a5b90fddb895fdc3a0f72e5bc977148c9f63ef6040cbe7a3e1f0d98"
+    },
+    {
+      "path": "backend/tmp/official-scope-repair-2026-10-19/review-audited/uploads/d9d5065d-9706-53db-b856-427c2c58bd1a.pdf",
+      "sha256": "ad07e47cedf437a4156419ce5d3076e08a3e59bbfd6dac7cc53df1009cdcbe7f"
+    },
+    {
+      "path": "backend/tmp/official-scope-repair-2026-10-19/review-audited/uploads/f5b4ca83-6f08-5d85-b64f-a292b7b1f7b6.pdf",
+      "sha256": "eb81a65e0856bd38e855e1f1de6ee12e7c3eb92ae05c8270d345a475beb631d0"
+    },
+    {
+      "path": "backend/tmp/official-scope-repair-2026-10-19/review-audited/uploads/fefabe1a-496e-5b57-83cf-c73f831b1275.pdf",
+      "sha256": "ebae72ea0e8a5eb2ecbccdb985aec6cc1254a7c4d29e6d4de7866db1e66c4855"
+    },
+    {
+      "path": "backend/tmp/official-scope-repair-2026-10-19/scoped-release.xml",
+      "sha256": "6dfdc98174d87a56f1be109122ea9a2666a4bc9f57f011441051ebeb2beb8694"
+    },
+    {
+      "path": "backend/tmp/official-scope-repair-2026-10-19/serve_browser.py",
+      "sha256": "119d223ede6903847d90f731a066ca69e9c729ffb8e2b330ed59d1f4d6e1a392"
+    },
+    {
+      "path": "backend/tmp/official-scope-repair-2026-10-19/source-pages/2106.09685v2-p5.png",
+      "sha256": "95a7141faf8675a76be26896637b5a4c2c234162d3b004e29f53c81f45ae8b47"
+    },
+    {
+      "path": "backend/tmp/official-scope-repair-2026-10-19/source-pages/2501.12948v2-p1.png",
+      "sha256": "91b9ae204aa425990f14cdd36f012993536973902412f133802aac3104862f3b"
+    }
+  ]
+}

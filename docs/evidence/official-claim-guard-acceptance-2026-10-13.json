@@ -1,0 +1,151 @@
+{
+  "date": "2026-10-13",
+  "evaluation_kind": "official_claim_guard_repair_and_bounded_confirmation",
+  "branch": "codex/stage94-official-failed-qa-retest",
+  "head": "a119f5609cda544e5d587588c5a338051da129a1",
+  "git_mutated": false,
+  "public_excerpt_cloud_authorized": true,
+  "private_documents_sent": false,
+  "whole_papers_sent": false,
+  "total_generation_calls": 52,
+  "automatic_retries": 0,
+  "diagnostic_calls": 1,
+  "nine_candidate_calls": 36,
+  "api_counterexample_calls": 12,
+  "finite_confirmation_calls": 3,
+  "current_source": {
+    "app_files": 121,
+    "app_sha256": "5b9a68304159c0d6f06d459437d5900fb75eccc54b6511b962e80b1d3aa8d1b9",
+    "host_backend_worker_match": true,
+    "requirements_sha256": "b0e75e31a3ca8f034e095fd0667e3be7e380975548c5acce90db94f96ed7283f",
+    "image_id": "sha256:03ae084a1cef237a980f4693d7d2475551337ed9643d8d1a02da4155f11a1baa",
+    "cached_build_not_clean_install": true
+  },
+  "current_results": {
+    "original_nine_machine": {
+      "executed": 9,
+      "passed": 9
+    },
+    "original_nine_core_review": {
+      "accepted": 9,
+      "whole_answers_accepted": 8,
+      "published_claims_reviewed": 26,
+      "accepted_claims": 25
+    },
+    "actual_api_counterexamples": {
+      "executed": 3,
+      "passed": 3,
+      "source_reviewed": 3
+    },
+    "finite_repeat": {
+      "executed": 3,
+      "passed": 2,
+      "strict_gate_passed": false
+    },
+    "offline_backend": {
+      "passed": 933,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    "frontend": {
+      "passed": 32,
+      "failed": 0,
+      "typecheck_passed": true,
+      "new_browser_run": false
+    }
+  },
+  "quality_holds": [
+    {
+      "case_id": "context-evolution",
+      "report": "finite-three/report.json",
+      "reason": "GPT-1 source_note mentions E5/E1 but evidence_ids omit E1; retain GPT-2/3 only, mark GPT-1 incomplete",
+      "incorrect_value_published": false,
+      "automatic_citation_repair": false
+    },
+    {
+      "case_id": "bert-inheritance",
+      "report": "source-fixed-nine/report.json",
+      "claim_index": 2,
+      "reason": "Unrequested comparator clarification ambiguously refers to original Transformer masking; requested inheritance/removal core accepted",
+      "whole_answer_accepted": false
+    }
+  ],
+  "library": {
+    "documents_uploaded_reparsed_deleted": false,
+    "new_conversations": false,
+    "public_source_sha256": "0a9bff1be3575cf9fe26a4a3d3a9175bc791ecec90de8b9deba4cff75d2b9476",
+    "public_ast_sha256": "c51ac3a2fbbb2d27359f38d5d3826d72e5e820173ff9e300e869b3a1bec247c4",
+    "sql_chunks": 106,
+    "vector_points": 106,
+    "point_ids_match": true,
+    "other_document_rows_match_previous_snapshot": true,
+    "other_document_count": 7
+  },
+  "original_reports_retained": true,
+  "artifacts": [
+    {
+      "path": "backend/tmp/official-guard-closure-2026-10-13/adam-diagnostic-before/report.json",
+      "sha256": "418cff301c7dfccae6926c2d180e3319825252f9accd4fcf63c06dfa262048d0"
+    },
+    {
+      "path": "backend/tmp/official-guard-closure-2026-10-13/original-nine/report.json",
+      "sha256": "58a562c651daebef04fb26e22f9c8a33e833a0914bdf684ec5847f751e4e0f16"
+    },
+    {
+      "path": "backend/tmp/official-guard-closure-2026-10-13/final-nine/report.json",
+      "sha256": "4aba772aac653a63209fae7d91a93867bbf334824fb48d89d8275519a2c8bebb"
+    },
+    {
+      "path": "backend/tmp/official-guard-closure-2026-10-13/frozen-nine/report.json",
+      "sha256": "3ce540a1b311e7392374d6e49a768692bf2afc50f10eaff1a286a0b5587ffa83"
+    },
+    {
+      "path": "backend/tmp/official-guard-closure-2026-10-13/source-fixed-nine/report.json",
+      "sha256": "805f8e2ddabe54782b7d57036c77ceae7ca22289b48a4ad4b5e4677ac2c7b2ed"
+    },
+    {
+      "path": "backend/tmp/official-guard-closure-2026-10-13/running-counterexamples/report.json",
+      "sha256": "6963e5cc46f9dcc8edf5d40a6e7060aed92846a32a7378a11b7bd978d3f10a9d"
+    },
+    {
+      "path": "backend/tmp/official-guard-closure-2026-10-13/final-running-counterexamples/report.json",
+      "sha256": "96300745be9cf75f9796c836c91b63fcb07a6d1c6fcb18982ce62f92ae145d3e"
+    },
+    {
+      "path": "backend/tmp/official-guard-closure-2026-10-13/frozen-running-counterexamples/report.json",
+      "sha256": "03a2791f01d5004b87eac9042c61de12212b9a7e13d92eae19d56a400f34d6d5"
+    },
+    {
+      "path": "backend/tmp/official-guard-closure-2026-10-13/source-fixed-counterexamples/report.json",
+      "sha256": "72764452db17c3c816fcf7bec06c504f0abca15198ef99768ccb9056a1871e71"
+    },
+    {
+      "path": "backend/tmp/official-guard-closure-2026-10-13/finite-three/report.json",
+      "sha256": "c064e26eac8854a48ce85301039c15ecfd359701754d5d2615d050ccf80d5681"
+    },
+    {
+      "path": "backend/tmp/official-guard-closure-2026-10-13/saved-two-replay.json",
+      "sha256": "7c00663857750bc466ca83ebd8ef6258f85ab875309548055f9d394e515e57fb"
+    },
+    {
+      "path": "backend/tmp/official-guard-closure-2026-10-13/partial-context-replay.json",
+      "sha256": "4b03e809f6a67d03e5769e5d768c61d9973fbfc175d25f4665876818d2405d6d"
+    },
+    {
+      "path": "backend/tmp/official-guard-closure-2026-10-13/ln-projection-replay.json",
+      "sha256": "a909d04c4e5a84a2506bdf4716794dfcc8dc702bae86209e4b71e9b800e1d168"
+    },
+    {
+      "path": "backend/tmp/official-guard-closure-2026-10-13/offline-backend-source-fix.xml",
+      "sha256": "5759d36b155d12924669d2893fe78af1cbe18f6f1c85cd2af489cc4bc7bedb84"
+    },
+    {
+      "path": "backend/tmp/official-guard-closure-2026-10-13/library-after.json",
+      "sha256": "dcaccbc89c2184b21f8552ff93d8b71f0fa1f40351722cc7b78a8edc31997e24"
+    }
+  ],
+  "all_39_current_answers_regenerated": false,
+  "six_modules_accepted": false,
+  "release_approved": false
+}

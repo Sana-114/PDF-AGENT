@@ -31,6 +31,12 @@ def _json_list(value: str) -> list[str]:
 
 
 def _recommendation_read(item: PaperRecommendation) -> RecommendationRead:
+    try:
+        metadata = json.loads(item.metadata_json)
+    except (TypeError, ValueError):
+        metadata = {}
+    ranking = metadata.get("ranking") if isinstance(metadata, dict) else None
+    ranking = ranking if isinstance(ranking, dict) else {}
     return RecommendationRead(
         id=item.id,
         subscription_id=item.subscription_id,
@@ -49,6 +55,10 @@ def _recommendation_read(item: PaperRecommendation) -> RecommendationRead:
         freshness_score=item.freshness_score,
         final_score=item.final_score,
         recommendation_reason=item.recommendation_reason,
+        ranking_provider=ranking.get("provider")
+        if isinstance(ranking.get("provider"), str)
+        else None,
+        ranking_warning=ranking.get("warning") if isinstance(ranking.get("warning"), str) else None,
         feedback=item.feedback,
         discovered_at=item.discovered_at,
         updated_at=item.updated_at,
@@ -89,9 +99,7 @@ def list_subscriptions(db: Annotated[Session, Depends(get_db)]) -> SubscriptionL
     items = db.scalars(
         select(ArxivSubscription).order_by(ArxivSubscription.created_at.desc())
     ).all()
-    return SubscriptionList(
-        items=[ArxivSubscriptionRead.model_validate(item) for item in items]
-    )
+    return SubscriptionList(items=[ArxivSubscriptionRead.model_validate(item) for item in items])
 
 
 @router.post(
@@ -138,9 +146,7 @@ def list_recommendations(
     filters = []
     if subscription_id:
         filters.append(PaperRecommendation.subscription_id == subscription_id)
-    total = db.scalar(
-        select(func.count()).select_from(PaperRecommendation).where(*filters)
-    ) or 0
+    total = db.scalar(select(func.count()).select_from(PaperRecommendation).where(*filters)) or 0
     items = db.scalars(
         select(PaperRecommendation)
         .where(*filters)

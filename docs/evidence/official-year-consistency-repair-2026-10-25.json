@@ -1,0 +1,78 @@
+{
+  "date": "2026-10-25",
+  "status": "repair_locally_checked_runtime_blocked",
+  "full_project_passed": false,
+  "deployed": false,
+  "cloud_calls": 0,
+  "backend_full_regression_after_change": "not_run_dependency_access_blocked",
+  "date_rule_tests": {
+    "passed": 12,
+    "framework": "unittest"
+  },
+  "frontend": {
+    "passed": 46,
+    "typescript_exit": 0,
+    "browser_run": false
+  },
+  "saved_identity_audit": {
+    "files": 20,
+    "existing_years_unchanged": 18,
+    "unknown_filled_from_footer": 1,
+    "remaining_unknown": 1
+  },
+  "app_sha256": "31d545dff7161d1d72143cd52c479767761c423c8928b830d44d3ca638690afe",
+  "evidence": [
+    {
+      "path": "backend/tmp/official-year-consistency-2026-10-25/report.json",
+      "sha256": "deedf835396a485b31b54386ec4af484099f6bf4461d8086d965f015e2584c07"
+    },
+    {
+      "path": "backend/tmp/official-year-consistency-2026-10-25/report-with-document-identities.json",
+      "sha256": "0755464de8cfba08067bcfabf1604d5c11b84252ad5b4afe41f762cd683ca38b"
+    },
+    {
+      "path": "backend/tmp/official-year-consistency-2026-10-25/audit_years.py",
+      "sha256": "94ba9bfd11b671572bf29ee5086e878e117d41e6220a543014c54b9157cb3ee0"
+    },
+    {
+      "path": "backend/app/services/publication_metadata.py",
+      "sha256": "0b6ccb6a7db800209b8ff6e38da85d20969ec4855db0f373513a6e973924ddd9"
+    },
+    {
+      "path": "backend/app/services/evidence_review.py",
+      "sha256": "11cd12a6f4e6a0236b527cffca3f1ad8d0442590f98179d53d1d92cc3a4afa3c"
+    },
+    {
+      "path": "backend/app/services/writing_outline.py",
+      "sha256": "680a74954f0436092e28fe3e5d5231ae014e259636cc01da94837a0bcc9d6848"
+    },
+    {
+      "path": "backend/app/schemas/review.py",
+      "sha256": "b570061cec55d78a931dc6f25762d7aa97a551cf4be4a5361b28c13458dc9f11"
+    },
+    {
+      "path": "backend/tests/test_publication_year_resolution.py",
+      "sha256": "66765f09a2c5ef74ef00d4db207f504561282acee0a89632f8691e03dbdf8ef4"
+    },
+    {
+      "path": "frontend/components/ResearchReview.tsx",
+      "sha256": "ad0350a630f87b6c790cc826dd1bed01d9fc71b5783395d0e3e5030f2674adb4"
+    },
+    {
+      "path": "frontend/lib/api.ts",
+      "sha256": "7497aea2f359da366276ad62934757fa43a276368815d1395624b64abdbe25a9"
+    },
+    {
+      "path": "frontend/e2e/generationReadiness.mjs",
+      "sha256": "bf10484dee186169c3ff33b2578538957071d3c16b11bf321e6f0f390009b86e"
+    },
+    {
+      "path": "scripts/resume_recording_acceptance.ps1",
+      "sha256": "26d1246b2e269e1893cdf0ff477e2bd90a74eb90ce541ef9be2efd179588c271"
+    },
+    {
+      "path": "docs/official-year-consistency-repair-2026-10-25.md",
+      "sha256": "47279b83dc558c3131e30181d9ae3bc7799f41a9d0b57be46e3ce06239c7ea9a"
+    }
+  ]
+}

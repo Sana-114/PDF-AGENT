@@ -1,0 +1,131 @@
+{
+  "date": "2026-10-13",
+  "acceptance_status": "core_scoped_passes_with_runtime_cache_quality_hold_not_competition_release",
+  "git_commit_or_push_performed": false,
+  "production_library_modified": false,
+  "production_document_count_before": 8,
+  "production_document_count_after": 8,
+  "new_cloud_calls": {"three_qa": 3, "original_nine": 9, "actual_docker_api": 1, "total": 13},
+  "automatic_cloud_retries": 0,
+  "runtime": {
+    "app_python_files": 119,
+    "app_sha256": "cf0ffab4624cb96dca83d4b395072d45a7d390741327c522e01fff9f9fc456f8",
+    "requirements_sha256": "b0e75e31a3ca8f034e095fd0667e3be7e380975548c5acce90db94f96ed7283f",
+    "backend_worker_beat_match_host_app": true,
+    "container_python": "3.11.17",
+    "offline_regression_python": "3.12.14",
+    "backend_image": "sha256:e6614789ddf8f8c495abe08ef94add7584363c2c70d28d97aa2ba4f784d2dd75",
+    "frontend_image": "sha256:111781c8c8624aa478cc21e3a41c657b55c8fd5d09290261b1f20dbad3d2acb4",
+    "bge_services_healthy": true,
+    "database_and_previous_images_preserved": true,
+    "clean_install_accepted": false
+  },
+  "three_qa": {
+    "machine_passed": 1,
+    "executed": 3,
+    "requested_core_source_reviewed": 3,
+    "original_machine_failures_preserved": true,
+    "raw_report": "backend/tmp/official-runtime-acceptance-2026-10-13/failed-three-2/report.json",
+    "raw_sha256": "9ec453271a156ca7ffa2fb323eeee1b93f1276e4e5196ab9aeb4e9b0133daefe",
+    "review_policy": "backend/evals/official_runtime_three_review.json",
+    "review_sha256": "654cb87259548847e5b5a5f522995c78c0b706eff87dd1cbc9fa64b5af225af1"
+  },
+  "nine_qa": {
+    "executed": 9,
+    "machine_passed": 9,
+    "requested_core_source_reviewed": 9,
+    "published_claims_source_reviewed": 26,
+    "all_used_hybrid_reranked": true,
+    "vector_index_modified": false,
+    "parser_calls": 0,
+    "raw_report": "backend/tmp/official-runtime-acceptance-2026-10-13/final-nine-2/report.json",
+    "raw_sha256": "497bc138d4a97f2b342943e31c132b523568f902b009d9f8c81b71df614023d6",
+    "review_policy": "backend/evals/official_runtime_nine_review.json",
+    "review_sha256": "5d7a3b4e631fed7af7f37bdfe1eb19d3b994421108d8fa66fb55cbea86d510dd",
+    "additional_stability_and_cloud_counterexamples_accepted": false
+  },
+  "actual_running_api": {
+    "http_status": 200,
+    "machine_checks_passed": 6,
+    "requested_gpu_core_source_accepted": true,
+    "whole_answer_accepted": false,
+    "published_claims": 2,
+    "source_sha256": "0a9bff1be3575cf9fe26a4a3d3a9175bc791ecec90de8b9deba4cff75d2b9476",
+    "existing_parser_version": "1.26.4",
+    "source_review": [
+      {"claim_index": 0, "evidence_id": "E1", "physical_page": 7, "core_and_additional_values_supported": true},
+      {"claim_index": 1, "evidence_id": "E3", "physical_page": 2, "value_supported": true, "asserted_section_supported": false}
+    ],
+    "quality_hold": "Old persisted AST/index prepends section 3.1 to introduction continuation. Generated added sentence repeats wrong section although numerical values and physical page are correct. Do not mark whole answer passed; current layout98 fixture and nine-question sample are separate.",
+    "raw_report": "backend/tmp/official-runtime-acceptance-2026-10-13/production-api-1/report.json",
+    "raw_sha256": "162f3c70d04e822672c2834d0225d96e7d2e9c90956b0a472ba4fef53ff8913a"
+  },
+  "docker_reader_api": {
+    "files_passed": 39,
+    "physical_pages": 1986,
+    "scope": "AST identity, outline/reference/mention anchors and PDF Range serving, not full extraction correctness",
+    "report": "backend/tmp/official-runtime-acceptance-2026-10-13/reader-api-1/report.json",
+    "sha256": "e2c346bba0fcf24a6c2fbd49fdf28a6ef73ce4c59e1f1b8ddcb7b5bad0e1bd74"
+  },
+  "docker_reader_browser": {
+    "checks_passed": 7,
+    "report": "backend/tmp/official-runtime-acceptance-2026-10-13/browser-reader-2/report.json",
+    "sha256": "9a4a0a8156bda9ad4ee4e758781fd0a281f2520362943640df362697776b71f9"
+  },
+  "cached_translation_exports": {
+    "checks_passed": 19,
+    "new_generation_calls": 0,
+    "report": "backend/tmp/official-runtime-acceptance-2026-10-13/container-fixture/translation-export-api-004.json",
+    "sha256": "08ae8a39668e96021df8401738789058997913dc5e13453c8d843939684d031c"
+  },
+  "version_browser": {
+    "checks_passed": 6,
+    "opaque_upload_names": true,
+    "duplicate_score": 0.8481,
+    "diff_content_overlap": 0.6623,
+    "parser_execution": "real production parser in isolated eager Celery fixture, not production Redis worker end-to-end",
+    "report": "backend/tmp/official-runtime-acceptance-2026-10-13/browser-versions-2/report.json",
+    "sha256": "e2ee4185efbd4cf6795118ac3eaa628fd62e2cbaf36f0aa79cec1d3c3ddcbd33"
+  },
+  "graph_browser": {
+    "nodes": 20,
+    "returned_edges": 69,
+    "checks_passed": 3,
+    "same_as_previously_source_audited_graph": true,
+    "report": "backend/tmp/official-runtime-acceptance-2026-10-13/browser-graph-1/report.json",
+    "sha256": "3fc99feaeab23ccfa46c67665840d2c95646cdf8de2e0b396093cda5ed08a0b9"
+  },
+  "charts_browser": {
+    "cases_passed": 6,
+    "report": "backend/tmp/official-runtime-acceptance-2026-10-13/browser-charts-2/report.json",
+    "sha256": "e9d27edef8e7c3a9cc3c6507c95bb095f4fe446be30b5f4c27ad378e7db464ad"
+  },
+  "regression": {
+    "backend_passed": 835,
+    "backend_failures": 0,
+    "backend_errors": 0,
+    "backend_skipped": 0,
+    "junit": "backend/tmp/official-runtime-acceptance-2026-10-13/offline-backend-terminal-report.xml",
+    "junit_sha256": "d7ec46f9b36eebf3e5d4e82b397f3bb1b2feb728558c8c0592acaec1790c7a78",
+    "frontend_passed": 32,
+    "frontend_typecheck": "passed",
+    "frontend_production_build": "passed"
+  },
+  "retained_preflight_failures": [
+    {"path": "backend/tmp/official-runtime-acceptance-2026-10-13/failed-three-1", "model_calls": 0, "reason": "wrong local Qdrant port before generation"},
+    {"path": "backend/tmp/official-runtime-acceptance-2026-10-13/browser-reader-1", "model_calls": 0, "reason": "Docker internal network did not publish loopback port"},
+    {"path": "backend/tmp/official-runtime-acceptance-2026-10-13/browser-charts-1", "model_calls": 0, "reason": "same isolated networking preflight failure"},
+    {"path": "backend/tmp/official-runtime-acceptance-2026-10-13/browser-versions-1", "model_calls": 0, "reason": "acceptance-only memory result backend unsupported"},
+    {"path": "backend/tmp/official-runtime-acceptance-2026-10-13/final-nine-1", "model_calls": 0, "reason": "3-second readonly Qdrant scroll timeout before generation"}
+  ],
+  "remaining_gates": [
+    "backed-up old public runtime record reparse/reindex and actual UI closed-loop",
+    "limited high-risk QA stability and fixed adversarial refusal checks",
+    "last-candidate whole-corpus answer audit if needed; no cross-round 39/39 claim",
+    "writing completeness and conservative continuation false holds",
+    "generated review synthesis and source-backed future-work progress classification",
+    "author-year bidirectional reading links",
+    "live paper import, subscription increment, recommendation and multi-user boundaries",
+    "final technical PDF, recorded video, clean install, secrets rotation, Git release and public deployment"
+  ]
+}

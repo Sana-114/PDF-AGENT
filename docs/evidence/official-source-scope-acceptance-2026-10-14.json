@@ -1,0 +1,892 @@
+{
+  "schema_version": 1,
+  "date": "2026-10-14",
+  "record_kind": "official_author_scope_and_review_guard_repairs_not_new_all_39_QA_accuracy",
+  "status": "author_abstract_isolation_and_scoped_guard_confirmed__synthesis_and_final_runtime_hold",
+  "git": {
+    "branch": "codex/stage94-official-failed-qa-retest",
+    "head": "a119f5609cda544e5d587588c5a338051da129a1",
+    "mutated": false
+  },
+  "runtime_source": {
+    "app_sha256": "b7dd0e6ca0208f075a898f2d4fc82bbd93dc7749c25946ebf90de42a6ac3b9ac",
+    "app_files": 126,
+    "requirements_sha256": "b0e75e31a3ca8f034e095fd0667e3be7e380975548c5acce90db94f96ed7283f",
+    "native_version": "1.26.4-layout103",
+    "ocr_base_version": "1.26.4-ocr-layout98",
+    "parser_code_changed": false,
+    "production_installed": false,
+    "final_app_generated_model_call": false
+  },
+  "repairs": {
+    "author_isolation": {
+      "saved_AST_files": 39,
+      "old_nodes": 38,
+      "first_candidate_nodes": 31,
+      "corrected_nodes": 38,
+      "lost_old_nodes": 0,
+      "source_AST_modified": false,
+      "saved_AST_hashes_checked_unchanged": 39,
+      "clip_abstract_block_removed_from_author_node": "p1-b5",
+      "independent_abstract_block_preserved": true,
+      "all_author_accuracy_claimed": false,
+      "already_unemitted_file": "2211.05100v4.pdf",
+      "production_old_chunks_migrated": false
+    },
+    "initialization_gradient": {
+      "actually_cited_source_only": true,
+      "initialization_near_output_expectation_required": true,
+      "Chinese_Post_LN_word_boundary_fixed": true,
+      "initial_expected_gradient_and_close_to_output_synonyms_fixed": true,
+      "wrong_learning_rate_and_parameter_scope_not_exempted": true,
+      "general_entailment_claimed": false
+    },
+    "review_audit": {
+      "shared_rejection_warning_entry_point": true,
+      "original_input_counts_and_rejection_indices_exposed": true,
+      "writing_private_warning_wrapper_removed": true,
+      "legacy_none_compatible": true
+    },
+    "thematic_prompt": {
+      "total_limit": 8,
+      "limit_not_relaxed": true,
+      "multi_paper_role_by_distinct_body_sources": true,
+      "shared_problem_relation_prioritized": true,
+      "opaque_P_labels_discouraged": true,
+      "quality_automatically_guaranteed": false
+    },
+    "raw_saved_review_replay": {
+      "existing_driver_extended": true,
+      "production_thematic_schema_reused": true,
+      "evidence_identity_enforced": true,
+      "original_call_SHA_recorded": true,
+      "zero_cloud_calls": true,
+      "published_text_not_rewritten": true
+    }
+  },
+  "progress": {
+    "official_files": 39,
+    "official_physical_pages": 1986,
+    "inherited_basic_content_successful_coverage": "39/39",
+    "new_parser_calls": 0,
+    "new_all_corpus_QA_calls": 0,
+    "inherited_resource_measurements": "19/39",
+    "historical_QA_first_core": "38/39",
+    "historical_QA_first_machine": "31/39",
+    "historical_timeout_confirmation_preserved": true,
+    "full_scientific_accuracy_percent": null
+  },
+  "cloud": {
+    "total_calls": 4,
+    "automatic_retries": 0,
+    "scope": "Previously declared public official paper excerpts only, no whole or private PDF",
+    "attempts": [
+      {
+        "directory": "backend/tmp/official-source-scope-2026-10-14/writing-original-1",
+        "app_sha256": "57ad535ec25a98923715bfbd55080a044d36bdbb610e24617b56523827acbc35",
+        "calls": 1,
+        "machine_status": "source_checks_passed",
+        "raw_accepted": 6,
+        "compact": 5,
+        "deferred": 1,
+        "manual_status": "bounded_core_and_independent_body_anchors_confirmed__complete_argument_hold",
+        "retrieval": "lexical_and_configured_TEI_reranker_not_dense_vector_acceptance"
+      },
+      {
+        "directory": "backend/tmp/official-source-scope-2026-10-14/generated-review-1",
+        "app_sha256": "57ad535ec25a98923715bfbd55080a044d36bdbb610e24617b56523827acbc35",
+        "calls": 1,
+        "machine_status": "failed",
+        "raw_claims": 9,
+        "limit": 8,
+        "published_provider": "extractive",
+        "failure_preserved": true
+      },
+      {
+        "directory": "backend/tmp/official-source-scope-2026-10-14/generated-review-2",
+        "app_sha256": "8e50065c2fcb20c97b12f57c712e51e2eade789746feab45e627c650c0aebdff",
+        "calls": 1,
+        "machine_status": "source_checks_passed",
+        "published": 8,
+        "multi_source_claims": 1,
+        "manual_status": "initialization_scope_improved__synthesis_and_cited_mechanism_coverage_hold"
+      },
+      {
+        "directory": "backend/tmp/official-source-scope-2026-10-14/generated-review-3",
+        "app_sha256": "1f16bd5f14ff866404e6af284569c2700e9274ab70aa04fb210248e3c0cc7c60",
+        "calls": 1,
+        "machine_status": "source_checks_passed",
+        "raw_claims": 8,
+        "published": 6,
+        "multi_source_claims": 1,
+        "false_positive_original_indices": [
+          0,
+          2
+        ],
+        "original_grade_preserved": true,
+        "manual_status": "two_raw_source_contrasts_and_mechanism_citation_improved__scope_and_redundancy_hold"
+      }
+    ]
+  },
+  "replays": [
+    {
+      "directory": "backend/tmp/official-source-scope-2026-10-14/raw-review-replay-final",
+      "mode": "review",
+      "raw_generation_used": true,
+      "input": 8,
+      "published": 8,
+      "multi_source_claims": 2,
+      "cloud_calls": 0,
+      "withheld_original_indices": [],
+      "original_call_sha256": "1d65d81eb72d99c0ca668649fb07df560477d7443f48b44021e28bcdc4ce691e",
+      "new_generation": false
+    },
+    {
+      "directory": "backend/tmp/official-source-scope-2026-10-14/review-replay-guard-final",
+      "mode": "review",
+      "input": 8,
+      "published": 7,
+      "withheld_original_indices": [
+        0
+      ],
+      "cloud_calls": 0,
+      "genuine_scope_omission_still_rejected": true,
+      "new_generation": false
+    }
+  ],
+  "regression": {
+    "backend": {
+      "passed": 1114,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    "frontend": {
+      "passed": 42,
+      "failed": 0,
+      "code_changed": false
+    },
+    "typecheck": "passed",
+    "ruff": "passed_app_driver_four_tests",
+    "first_failures_retained": true,
+    "restricted_async_replay_interrupted": "review-replay-final",
+    "local_environment_confirmation_succeeded": true
+  },
+  "previous_evidence": {
+    "manifest": "docs/evidence/official-shorthand-writing-acceptance-2026-10-14.json",
+    "entries": 49,
+    "immutable_backend_tmp_checked": 25,
+    "changed": 0,
+    "previous_grades_overwritten": false
+  },
+  "deployment": {
+    "production_installed": false,
+    "production_library_modified": false,
+    "Docker_restarted": false,
+    "volumes_deleted": false,
+    "Git_written": false,
+    "public_configuration_preserved": true
+  },
+  "remaining": [
+    "Complete research-gap argument, experimental scope and non-redundant substantial synthesis",
+    "BLOOM multi-page author names and old public production author chunks",
+    "Final same-build generation/runtime/browser, dense BGE and limited stability",
+    "All-table/formula and author-year citation boundaries",
+    "Actual online import/subscription success and final materials/deployment/key rotation"
+  ],
+  "artifact_manifest_count": 173,
+  "artifacts": [
+    {
+      "path": "backend/app/llm/openai_responses.py",
+      "sha256": "e96c17619a4f84a74eafbbc8e863018a021530d77d175016930a2926adc14be0"
+    },
+    {
+      "path": "backend/app/schemas/review.py",
+      "sha256": "9ea013a42015df4f06dbca2991c3df221ce7ca0b10e7dea42c1fa645d908160d"
+    },
+    {
+      "path": "backend/app/services/author_evidence.py",
+      "sha256": "1b7dce4bf7100e1d781716cfde79bebff0cfac3dbf8897edcd5e794e17f7fa4c"
+    },
+    {
+      "path": "backend/app/services/claim_semantics.py",
+      "sha256": "39359445e55f637f43c48bb8fff98dec15ee0653811f8d387dfca54f736df738"
+    },
+    {
+      "path": "backend/app/services/evidence_review.py",
+      "sha256": "da03b7524593d6b2de8b75ca1499fd6fb82cdbe5dd751b750c123580ae52c105"
+    },
+    {
+      "path": "backend/app/services/grounded_text.py",
+      "sha256": "0058dfc2fec13e1ee2e26b22ba6e0d976eea04d1240d9c02dbac3f147db2bbac"
+    },
+    {
+      "path": "backend/app/services/writing_outline.py",
+      "sha256": "163a9491ab54d8028552e75fc95a2d48e5b6498849edc8caf6198d90059f8ebf"
+    },
+    {
+      "path": "backend/scripts/replay_official_publication.py",
+      "sha256": "193b6f988d6944885bf9069adbdb4e974a993084a7937d554ff8ef72f69753ed"
+    },
+    {
+      "path": "backend/tests/test_author_evidence.py",
+      "sha256": "bd44714fc411f9ed7c0a28ef5bd2df1f603464d93647d9d19c1529c00b83f592"
+    },
+    {
+      "path": "backend/tests/test_evidence_review.py",
+      "sha256": "ffadbc7a7e86fd610210fda1ae2b51c50d668c96223ed4a96e08ff065d1ffdbb"
+    },
+    {
+      "path": "backend/tests/test_initialization_gradient_scope.py",
+      "sha256": "73f94adb7d5ccb1583aea1bab5eb5f875fe43ab9f8c0190c0660d8e04e4fab56"
+    },
+    {
+      "path": "backend/tests/test_thematic_review.py",
+      "sha256": "d153008e67dc3c5312bbc55fa6647e71ebf1d84ebf1854b583dc93b78c695654"
+    },
+    {
+      "path": "backend/tmp/official-source-scope-2026-10-14/author-corpus-audit-1.json",
+      "sha256": "eb5340b57395b22c241cb7017b697783f6de267f0c16b8413b4960fdb9635d94"
+    },
+    {
+      "path": "backend/tmp/official-source-scope-2026-10-14/author-corpus-audit-2.json",
+      "sha256": "4d723465aa9b427eb47bc44e673eaddbebbf622bf668f3d10bb521104e44416e"
+    },
+    {
+      "path": "backend/tmp/official-source-scope-2026-10-14/author-corpus-audit-final.json",
+      "sha256": "975e179d2a78f26219dad988418ada14836ed4f84cbee062ab1e524a99602170"
+    },
+    {
+      "path": "backend/tmp/official-source-scope-2026-10-14/author-geometry-tests.xml",
+      "sha256": "6d074e971effe8bb41c32a4b6725f73f81e8206e9925118e3593fbe55f506e36"
+    },
+    {
+      "path": "backend/tmp/official-source-scope-2026-10-14/backend-final-2.xml",
+      "sha256": "d35d52e95416eacd67f594e0d6958ffaa6728e5112abafba5ca952fc14f19ab8"
+    },
+    {
+      "path": "backend/tmp/official-source-scope-2026-10-14/backend-final-3.xml",
+      "sha256": "eb219c71a34d0ab19ba153bc31ba46cc113f3a4f92a7fe9cc4c1e261c56ecd05"
+    },
+    {
+      "path": "backend/tmp/official-source-scope-2026-10-14/backend-final.xml",
+      "sha256": "460205af8fec6e7db45a3097c78f0da265e7e12d870a0a6dbc16e6ab586188ed"
+    },
+    {
+      "path": "backend/tmp/official-source-scope-2026-10-14/before.xml",
+      "sha256": "0780fdc39e5c3baeefc015a7956f0fe61a09aa44f9b8780291213222e822fe99"
+    },
+    {
+      "path": "backend/tmp/official-source-scope-2026-10-14/generated-review-1/calls.json",
+      "sha256": "cf0fd7cdb28f6e23a0c37418350d24833c0c3e60b6b3ea715651bbe87bb37ccf"
+    },
+    {
+      "path": "backend/tmp/official-source-scope-2026-10-14/generated-review-1/generated-review.json",
+      "sha256": "f1455fb9ec2b6893783979ec49032552107b0ae7feb2589751261c4e2fc44bb0"
+    },
+    {
+      "path": "backend/tmp/official-source-scope-2026-10-14/generated-review-1/report.json",
+      "sha256": "f380afe8f25c7ae5c12f35c1f7fb866bdce8f4e4a96fefd54ea14e6abaa4d22c"
+    },
+    {
+      "path": "backend/tmp/official-source-scope-2026-10-14/generated-review-2/calls.json",
+      "sha256": "c3a68813c23622b2a310115764fcc968c20909e1bef13f7093e61e4f9cd8d069"
+    },
+    {
+      "path": "backend/tmp/official-source-scope-2026-10-14/generated-review-2/generated-review.json",
+      "sha256": "7c06453537259f1c7f6ca3bd44d0d6a8541ddda14f223006bb92f442a2cecc01"
+    },
+    {
+      "path": "backend/tmp/official-source-scope-2026-10-14/generated-review-2/report.json",
+      "sha256": "3d9c70ffaf06141d1c0fe1b0b3d1612449535bf03fa88681c7832e32aeabfa43"
+    },
+    {
+      "path": "backend/tmp/official-source-scope-2026-10-14/generated-review-3/calls.json",
+      "sha256": "1d65d81eb72d99c0ca668649fb07df560477d7443f48b44021e28bcdc4ce691e"
+    },
+    {
+      "path": "backend/tmp/official-source-scope-2026-10-14/generated-review-3/generated-review.json",
+      "sha256": "d2dd4ae09f9b96f8221efbce13baa4e59548caaef085362f0bf9bcbab47da8dc"
+    },
+    {
+      "path": "backend/tmp/official-source-scope-2026-10-14/generated-review-3/report.json",
+      "sha256": "b2821a9024a14b263451e789ac2b1ef59693e6102cb06af37658ef752be92286"
+    },
+    {
+      "path": "backend/tmp/official-source-scope-2026-10-14/manual-source-review.json",
+      "sha256": "42bd7cc0d7e45b83dc50b2df1c15b373e1038e4595a836d42c8fac889cff7e48"
+    },
+    {
+      "path": "backend/tmp/official-source-scope-2026-10-14/raw-review-replay-final/acceptance.db",
+      "sha256": "2cdffe6cde555f4615f9a62f7cec2a5e0ded5f76b84416d31933982187d56a96"
+    },
+    {
+      "path": "backend/tmp/official-source-scope-2026-10-14/raw-review-replay-final/generated-review.json",
+      "sha256": "7f88065def32c81879b12b53785b643be2a9588fe9a821c7e00c69ef72efceb6"
+    },
+    {
+      "path": "backend/tmp/official-source-scope-2026-10-14/raw-review-replay-final/parsed/0188171d-87ae-5a2f-acc2-87f71bc5db58.json",
+      "sha256": "43b61105eb3661bf73f00349d782fdc08bbe5c30a18ea7f5a8aed4911e5a7c5a"
+    },
+    {
+      "path": "backend/tmp/official-source-scope-2026-10-14/raw-review-replay-final/parsed/0fedc9b8-1c87-5178-87a1-3bb5a02de3b8.json",
+      "sha256": "52c10a4838cfb069d5cef2d90b6ce7ec334793256121e01616fb320a85a14bd0"
+    },
+    {
+      "path": "backend/tmp/official-source-scope-2026-10-14/raw-review-replay-final/parsed/114bfa0d-d6cf-573d-82b2-cfaed94b58b6.json",
+      "sha256": "6710c78824d61e72e1b0c15aaddf534ce0872570051a9b95d6f2f39c786645d7"
+    },
+    {
+      "path": "backend/tmp/official-source-scope-2026-10-14/raw-review-replay-final/parsed/1ae43cdf-aa5d-533e-8caa-c65a403deaf2.json",
+      "sha256": "f0fa466dcb3d84426bcf18d05cf552fc5ed318403396cf540d2761fa162a9ff4"
+    },
+    {
+      "path": "backend/tmp/official-source-scope-2026-10-14/raw-review-replay-final/parsed/1f104048-0d8e-59ac-bc55-92c6c3773d08.json",
+      "sha256": "be48c20df79cefce1eb5c859e489948f2a3f21c67e1dea44e1860ce1f423b895"
+    },
+    {
+      "path": "backend/tmp/official-source-scope-2026-10-14/raw-review-replay-final/parsed/20d9fad6-9e6f-543d-a2e1-095d8056c5ff.json",
+      "sha256": "4a05a089a864b8fc603470e4f28fc480526b8184b8c5a89039db83b07bdded3d"
+    },
+    {
+      "path": "backend/tmp/official-source-scope-2026-10-14/raw-review-replay-final/parsed/4ac3cbf3-13b9-5022-863f-a2dbe9391e58.json",
+      "sha256": "71aac46dc7e41ad3b5dbe43f9d7155b30eece5ab66765a58eda988921d08b978"
+    },
+    {
+      "path": "backend/tmp/official-source-scope-2026-10-14/raw-review-replay-final/parsed/4eb9ae9c-2278-5530-ad02-d02e38f9088c.json",
+      "sha256": "3fbfad3906ec0274eddc79eabf99665257660b81af66ac91b5d8842a2f7ef551"
+    },
+    {
+      "path": "backend/tmp/official-source-scope-2026-10-14/raw-review-replay-final/parsed/518cf49d-121d-55b9-834e-4160cf927fe9.json",
+      "sha256": "d4fac767dd728f544297f8c8f7706fcf6f585df6b7f25d511b0831e4efb26b61"
+    },
+    {
+      "path": "backend/tmp/official-source-scope-2026-10-14/raw-review-replay-final/parsed/5b4ad1aa-0c85-5a2b-a5ca-97eb8dd4d2aa.json",
+      "sha256": "7b19a67774af5c29d84f5e80a3e76664c46aa549591e297cd2afce7f4cde8d65"
+    },
+    {
+      "path": "backend/tmp/official-source-scope-2026-10-14/raw-review-replay-final/parsed/788f47ff-23de-5f78-896b-7d3fe6e1bb92.json",
+      "sha256": "72dfb9a676f7dc532988c1932651d52689e0e51f5a7392fc389b87d05b65cd73"
+    },
+    {
+      "path": "backend/tmp/official-source-scope-2026-10-14/raw-review-replay-final/parsed/806425fa-1015-5452-91ee-cdb6b106183f.json",
+      "sha256": "cbb66488f7e1cc905474b59d8a91d5b37b8ec2fe853954fb29d2085b149880ea"
+    },
+    {
+      "path": "backend/tmp/official-source-scope-2026-10-14/raw-review-replay-final/parsed/855562a1-8309-57b2-b7b0-b9e7016207dc.json",
+      "sha256": "0bdf9ab2be963a5e42b3560e72b14fd247e2723c299ffc3e340682b02394db97"
+    },
+    {
+      "path": "backend/tmp/official-source-scope-2026-10-14/raw-review-replay-final/parsed/86e85629-7347-5f1a-92d7-089475d96cdb.json",
+      "sha256": "4766fd60e4ebd949fbef7c8e35659013ce1214f5630667e9ecbf86b21ac6e8d5"
+    },
+    {
+      "path": "backend/tmp/official-source-scope-2026-10-14/raw-review-replay-final/parsed/9f2229cc-c150-5bbc-a615-53046bc74763.json",
+      "sha256": "f3803879171ddd2aa613aa827c4bf9c57cdc52cd8d2c1347fb051015c0257e49"
+    },
+    {
+      "path": "backend/tmp/official-source-scope-2026-10-14/raw-review-replay-final/parsed/bc90bcf2-cccd-5364-94f6-5815603802f7.json",
+      "sha256": "2f5bdb78b265127069fbaf7c9841afe6e181a0d93c3209856c420d678c7825d0"
+    },
+    {
+      "path": "backend/tmp/official-source-scope-2026-10-14/raw-review-replay-final/parsed/cd05de96-3b20-5178-8953-d8ee090a4f23.json",
+      "sha256": "0ab6909920de99d93d12d57d963fe93c684446cbcfdba40bf2df1ed080d7b414"
+    },
+    {
+      "path": "backend/tmp/official-source-scope-2026-10-14/raw-review-replay-final/parsed/d9d5065d-9706-53db-b856-427c2c58bd1a.json",
+      "sha256": "756d5961546debe771d2e5450b07063245e44c14f2572ea9988e8f768f5f1451"
+    },
+    {
+      "path": "backend/tmp/official-source-scope-2026-10-14/raw-review-replay-final/parsed/f5b4ca83-6f08-5d85-b64f-a292b7b1f7b6.json",
+      "sha256": "ffe352a9b7a799c7bc1bd9c2385fe4d93d8fd210da85f48d431b9fcb18f4b208"
+    },
+    {
+      "path": "backend/tmp/official-source-scope-2026-10-14/raw-review-replay-final/parsed/fefabe1a-496e-5b57-83cf-c73f831b1275.json",
+      "sha256": "2a89673ed7b00095944dfa940a47e97b0321bff418face2cf0e2c37f05ee42b1"
+    },
+    {
+      "path": "backend/tmp/official-source-scope-2026-10-14/raw-review-replay-final/report.json",
+      "sha256": "33b59ae400f8393bdaae9b79f32ac4941db0c11be432c2b0a71b9486606a2af5"
+    },
+    {
+      "path": "backend/tmp/official-source-scope-2026-10-14/regression-summary.json",
+      "sha256": "2a4e5793fe438bed3aa25e0d594c9ab49441bde824e6352e7ada151ae30efafc"
+    },
+    {
+      "path": "backend/tmp/official-source-scope-2026-10-14/review-replay-1/acceptance.db",
+      "sha256": "c8a3d1ea678b5eb2ec0d51e1b4e681530d80fbed90e3a8bf9c733930d060c660"
+    },
+    {
+      "path": "backend/tmp/official-source-scope-2026-10-14/review-replay-1/generated-review.json",
+      "sha256": "c39e50036d129a7b76c3904b00eec0ab8e7cf4be1bfa19991083f77915ff7566"
+    },
+    {
+      "path": "backend/tmp/official-source-scope-2026-10-14/review-replay-1/parsed/0188171d-87ae-5a2f-acc2-87f71bc5db58.json",
+      "sha256": "12403d5489b8a57667ae7a1c74affdb3c3571da1aaf3fba9234084d62cbb258c"
+    },
+    {
+      "path": "backend/tmp/official-source-scope-2026-10-14/review-replay-1/parsed/0fedc9b8-1c87-5178-87a1-3bb5a02de3b8.json",
+      "sha256": "a160eab9157fbfb1f07499eacfed5b52f12d85fd3e33ff4b1b639b8013fc6539"
+    },
+    {
+      "path": "backend/tmp/official-source-scope-2026-10-14/review-replay-1/parsed/114bfa0d-d6cf-573d-82b2-cfaed94b58b6.json",
+      "sha256": "781af7c7e57aba38a54d4dc2153750cdbeb4fdc2790b8f0c34a3446d4b4695fe"
+    },
+    {
+      "path": "backend/tmp/official-source-scope-2026-10-14/review-replay-1/parsed/1ae43cdf-aa5d-533e-8caa-c65a403deaf2.json",
+      "sha256": "8a5b87d799d7b96a7495a189ca4074b5cac384026e7c715f6946fbecae68a3b8"
+    },
+    {
+      "path": "backend/tmp/official-source-scope-2026-10-14/review-replay-1/parsed/1f104048-0d8e-59ac-bc55-92c6c3773d08.json",
+      "sha256": "2afb8cf8bd513be8d712cb974ad855270994231805ffdf4d50e7fb2f7770b725"
+    },
+    {
+      "path": "backend/tmp/official-source-scope-2026-10-14/review-replay-1/parsed/20d9fad6-9e6f-543d-a2e1-095d8056c5ff.json",
+      "sha256": "f9666fde9d9a106a2d56bc77695a31c23dd038a77696e4c6eb60d2481330b1fa"
+    },
+    {
+      "path": "backend/tmp/official-source-scope-2026-10-14/review-replay-1/parsed/4ac3cbf3-13b9-5022-863f-a2dbe9391e58.json",
+      "sha256": "71aac46dc7e41ad3b5dbe43f9d7155b30eece5ab66765a58eda988921d08b978"
+    },
+    {
+      "path": "backend/tmp/official-source-scope-2026-10-14/review-replay-1/parsed/4eb9ae9c-2278-5530-ad02-d02e38f9088c.json",
+      "sha256": "2fa06c2bbe7c1c93352e0fdf024f37b2892b9c4a414b417a0818e31bdab23286"
+    },
+    {
+      "path": "backend/tmp/official-source-scope-2026-10-14/review-replay-1/parsed/518cf49d-121d-55b9-834e-4160cf927fe9.json",
+      "sha256": "8ed0616b14b96d4cee77175e965424ee1cbb0fbdb37b8b5649177bf7dac55024"
+    },
+    {
+      "path": "backend/tmp/official-source-scope-2026-10-14/review-replay-1/parsed/5b4ad1aa-0c85-5a2b-a5ca-97eb8dd4d2aa.json",
+      "sha256": "5ea979b9fadf6bb6e8472ba5b47083ec015ea17c7582783d171d221141644bfe"
+    },
+    {
+      "path": "backend/tmp/official-source-scope-2026-10-14/review-replay-1/parsed/788f47ff-23de-5f78-896b-7d3fe6e1bb92.json",
+      "sha256": "e05230443e6bdad68eefa793d9fe56b77d79d6830e112e80cfc805948a63b35b"
+    },
+    {
+      "path": "backend/tmp/official-source-scope-2026-10-14/review-replay-1/parsed/806425fa-1015-5452-91ee-cdb6b106183f.json",
+      "sha256": "9b85dd70b3b8a6ca9de089e0f220e1bf5822748762591870cca52259f8adc4e3"
+    },
+    {
+      "path": "backend/tmp/official-source-scope-2026-10-14/review-replay-1/parsed/855562a1-8309-57b2-b7b0-b9e7016207dc.json",
+      "sha256": "0bdf9ab2be963a5e42b3560e72b14fd247e2723c299ffc3e340682b02394db97"
+    },
+    {
+      "path": "backend/tmp/official-source-scope-2026-10-14/review-replay-1/parsed/86e85629-7347-5f1a-92d7-089475d96cdb.json",
+      "sha256": "004deaff4ab97344b2a62096b754ad071463b825c09f3c01715ef00123b2fdb9"
+    },
+    {
+      "path": "backend/tmp/official-source-scope-2026-10-14/review-replay-1/parsed/9f2229cc-c150-5bbc-a615-53046bc74763.json",
+      "sha256": "046719170db5fe2a7b4d2ba89c092689ccbfb0e86101d330d6cca9387d2cd0c1"
+    },
+    {
+      "path": "backend/tmp/official-source-scope-2026-10-14/review-replay-1/parsed/bc90bcf2-cccd-5364-94f6-5815603802f7.json",
+      "sha256": "f65cc9a84e885bccc5e7803303ecb2418659e2ea54814f6ddfd7c3042ec95932"
+    },
+    {
+      "path": "backend/tmp/official-source-scope-2026-10-14/review-replay-1/parsed/cd05de96-3b20-5178-8953-d8ee090a4f23.json",
+      "sha256": "44271b643a62d7242bf679c7291e1bd888b6c4382b810b8d4a7ddca98c39dbd8"
+    },
+    {
+      "path": "backend/tmp/official-source-scope-2026-10-14/review-replay-1/parsed/d9d5065d-9706-53db-b856-427c2c58bd1a.json",
+      "sha256": "2381a490e7d2ec8fc1d53e1cd25431ce36d853cc986b61ed04defb1356d5ea5a"
+    },
+    {
+      "path": "backend/tmp/official-source-scope-2026-10-14/review-replay-1/parsed/f5b4ca83-6f08-5d85-b64f-a292b7b1f7b6.json",
+      "sha256": "d8cb3eb8d9c7f686f339216a57cb7731a103ad2d7c7a8f28cd74a7c79bfb60ca"
+    },
+    {
+      "path": "backend/tmp/official-source-scope-2026-10-14/review-replay-1/parsed/fefabe1a-496e-5b57-83cf-c73f831b1275.json",
+      "sha256": "04d4a0ee66bfa5f038d0961c0ddad484e68d634fa11bfa6a896f945238ab1ea7"
+    },
+    {
+      "path": "backend/tmp/official-source-scope-2026-10-14/review-replay-1/report.json",
+      "sha256": "7c23dd8ada4bdd1334064fee7cd8272553a3f9642bee487d0c368a663cb56c43"
+    },
+    {
+      "path": "backend/tmp/official-source-scope-2026-10-14/review-replay-2/acceptance.db",
+      "sha256": "d10be0588e0cc4a88e2889b3f5755cfc08e175a5f5a0afaf9bbe6cad5547ca5f"
+    },
+    {
+      "path": "backend/tmp/official-source-scope-2026-10-14/review-replay-2/generated-review.json",
+      "sha256": "c94453b174292c0f4526af73618223cf6ddf47ef24bd40f916bbe7c5e78c46f5"
+    },
+    {
+      "path": "backend/tmp/official-source-scope-2026-10-14/review-replay-2/parsed/0188171d-87ae-5a2f-acc2-87f71bc5db58.json",
+      "sha256": "12403d5489b8a57667ae7a1c74affdb3c3571da1aaf3fba9234084d62cbb258c"
+    },
+    {
+      "path": "backend/tmp/official-source-scope-2026-10-14/review-replay-2/parsed/0fedc9b8-1c87-5178-87a1-3bb5a02de3b8.json",
+      "sha256": "a160eab9157fbfb1f07499eacfed5b52f12d85fd3e33ff4b1b639b8013fc6539"
+    },
+    {
+      "path": "backend/tmp/official-source-scope-2026-10-14/review-replay-2/parsed/114bfa0d-d6cf-573d-82b2-cfaed94b58b6.json",
+      "sha256": "781af7c7e57aba38a54d4dc2153750cdbeb4fdc2790b8f0c34a3446d4b4695fe"
+    },
+    {
+      "path": "backend/tmp/official-source-scope-2026-10-14/review-replay-2/parsed/1ae43cdf-aa5d-533e-8caa-c65a403deaf2.json",
+      "sha256": "8a5b87d799d7b96a7495a189ca4074b5cac384026e7c715f6946fbecae68a3b8"
+    },
+    {
+      "path": "backend/tmp/official-source-scope-2026-10-14/review-replay-2/parsed/1f104048-0d8e-59ac-bc55-92c6c3773d08.json",
+      "sha256": "2afb8cf8bd513be8d712cb974ad855270994231805ffdf4d50e7fb2f7770b725"
+    },
+    {
+      "path": "backend/tmp/official-source-scope-2026-10-14/review-replay-2/parsed/20d9fad6-9e6f-543d-a2e1-095d8056c5ff.json",
+      "sha256": "f9666fde9d9a106a2d56bc77695a31c23dd038a77696e4c6eb60d2481330b1fa"
+    },
+    {
+      "path": "backend/tmp/official-source-scope-2026-10-14/review-replay-2/parsed/4ac3cbf3-13b9-5022-863f-a2dbe9391e58.json",
+      "sha256": "71aac46dc7e41ad3b5dbe43f9d7155b30eece5ab66765a58eda988921d08b978"
+    },
+    {
+      "path": "backend/tmp/official-source-scope-2026-10-14/review-replay-2/parsed/4eb9ae9c-2278-5530-ad02-d02e38f9088c.json",
+      "sha256": "2fa06c2bbe7c1c93352e0fdf024f37b2892b9c4a414b417a0818e31bdab23286"
+    },
+    {
+      "path": "backend/tmp/official-source-scope-2026-10-14/review-replay-2/parsed/518cf49d-121d-55b9-834e-4160cf927fe9.json",
+      "sha256": "8ed0616b14b96d4cee77175e965424ee1cbb0fbdb37b8b5649177bf7dac55024"
+    },
+    {
+      "path": "backend/tmp/official-source-scope-2026-10-14/review-replay-2/parsed/5b4ad1aa-0c85-5a2b-a5ca-97eb8dd4d2aa.json",
+      "sha256": "5ea979b9fadf6bb6e8472ba5b47083ec015ea17c7582783d171d221141644bfe"
+    },
+    {
+      "path": "backend/tmp/official-source-scope-2026-10-14/review-replay-2/parsed/788f47ff-23de-5f78-896b-7d3fe6e1bb92.json",
+      "sha256": "e05230443e6bdad68eefa793d9fe56b77d79d6830e112e80cfc805948a63b35b"
+    },
+    {
+      "path": "backend/tmp/official-source-scope-2026-10-14/review-replay-2/parsed/806425fa-1015-5452-91ee-cdb6b106183f.json",
+      "sha256": "9b85dd70b3b8a6ca9de089e0f220e1bf5822748762591870cca52259f8adc4e3"
+    },
+    {
+      "path": "backend/tmp/official-source-scope-2026-10-14/review-replay-2/parsed/855562a1-8309-57b2-b7b0-b9e7016207dc.json",
+      "sha256": "0bdf9ab2be963a5e42b3560e72b14fd247e2723c299ffc3e340682b02394db97"
+    },
+    {
+      "path": "backend/tmp/official-source-scope-2026-10-14/review-replay-2/parsed/86e85629-7347-5f1a-92d7-089475d96cdb.json",
+      "sha256": "004deaff4ab97344b2a62096b754ad071463b825c09f3c01715ef00123b2fdb9"
+    },
+    {
+      "path": "backend/tmp/official-source-scope-2026-10-14/review-replay-2/parsed/9f2229cc-c150-5bbc-a615-53046bc74763.json",
+      "sha256": "046719170db5fe2a7b4d2ba89c092689ccbfb0e86101d330d6cca9387d2cd0c1"
+    },
+    {
+      "path": "backend/tmp/official-source-scope-2026-10-14/review-replay-2/parsed/bc90bcf2-cccd-5364-94f6-5815603802f7.json",
+      "sha256": "f65cc9a84e885bccc5e7803303ecb2418659e2ea54814f6ddfd7c3042ec95932"
+    },
+    {
+      "path": "backend/tmp/official-source-scope-2026-10-14/review-replay-2/parsed/cd05de96-3b20-5178-8953-d8ee090a4f23.json",
+      "sha256": "44271b643a62d7242bf679c7291e1bd888b6c4382b810b8d4a7ddca98c39dbd8"
+    },
+    {
+      "path": "backend/tmp/official-source-scope-2026-10-14/review-replay-2/parsed/d9d5065d-9706-53db-b856-427c2c58bd1a.json",
+      "sha256": "2381a490e7d2ec8fc1d53e1cd25431ce36d853cc986b61ed04defb1356d5ea5a"
+    },
+    {
+      "path": "backend/tmp/official-source-scope-2026-10-14/review-replay-2/parsed/f5b4ca83-6f08-5d85-b64f-a292b7b1f7b6.json",
+      "sha256": "d8cb3eb8d9c7f686f339216a57cb7731a103ad2d7c7a8f28cd74a7c79bfb60ca"
+    },
+    {
+      "path": "backend/tmp/official-source-scope-2026-10-14/review-replay-2/parsed/fefabe1a-496e-5b57-83cf-c73f831b1275.json",
+      "sha256": "04d4a0ee66bfa5f038d0961c0ddad484e68d634fa11bfa6a896f945238ab1ea7"
+    },
+    {
+      "path": "backend/tmp/official-source-scope-2026-10-14/review-replay-2/report.json",
+      "sha256": "78db849d6d5c9a92e0a99a46d3f36671ccf9c6c23e6649471264cf2615712837"
+    },
+    {
+      "path": "backend/tmp/official-source-scope-2026-10-14/review-replay-final-2/acceptance.db",
+      "sha256": "ef3204ecd982cd10785683b54fdb4ebca42e5d83852d49a3b0f7180a21a51370"
+    },
+    {
+      "path": "backend/tmp/official-source-scope-2026-10-14/review-replay-final-2/generated-review.json",
+      "sha256": "bf92c5df2d310fe556993dfed5a44a35d6caf84149084993d46bfdbf5ecf3e96"
+    },
+    {
+      "path": "backend/tmp/official-source-scope-2026-10-14/review-replay-final-2/parsed/0188171d-87ae-5a2f-acc2-87f71bc5db58.json",
+      "sha256": "12403d5489b8a57667ae7a1c74affdb3c3571da1aaf3fba9234084d62cbb258c"
+    },
+    {
+      "path": "backend/tmp/official-source-scope-2026-10-14/review-replay-final-2/parsed/0fedc9b8-1c87-5178-87a1-3bb5a02de3b8.json",
+      "sha256": "a160eab9157fbfb1f07499eacfed5b52f12d85fd3e33ff4b1b639b8013fc6539"
+    },
+    {
+      "path": "backend/tmp/official-source-scope-2026-10-14/review-replay-final-2/parsed/114bfa0d-d6cf-573d-82b2-cfaed94b58b6.json",
+      "sha256": "781af7c7e57aba38a54d4dc2153750cdbeb4fdc2790b8f0c34a3446d4b4695fe"
+    },
+    {
+      "path": "backend/tmp/official-source-scope-2026-10-14/review-replay-final-2/parsed/1ae43cdf-aa5d-533e-8caa-c65a403deaf2.json",
+      "sha256": "8a5b87d799d7b96a7495a189ca4074b5cac384026e7c715f6946fbecae68a3b8"
+    },
+    {
+      "path": "backend/tmp/official-source-scope-2026-10-14/review-replay-final-2/parsed/1f104048-0d8e-59ac-bc55-92c6c3773d08.json",
+      "sha256": "2afb8cf8bd513be8d712cb974ad855270994231805ffdf4d50e7fb2f7770b725"
+    },
+    {
+      "path": "backend/tmp/official-source-scope-2026-10-14/review-replay-final-2/parsed/20d9fad6-9e6f-543d-a2e1-095d8056c5ff.json",
+      "sha256": "f9666fde9d9a106a2d56bc77695a31c23dd038a77696e4c6eb60d2481330b1fa"
+    },
+    {
+      "path": "backend/tmp/official-source-scope-2026-10-14/review-replay-final-2/parsed/4ac3cbf3-13b9-5022-863f-a2dbe9391e58.json",
+      "sha256": "71aac46dc7e41ad3b5dbe43f9d7155b30eece5ab66765a58eda988921d08b978"
+    },
+    {
+      "path": "backend/tmp/official-source-scope-2026-10-14/review-replay-final-2/parsed/4eb9ae9c-2278-5530-ad02-d02e38f9088c.json",
+      "sha256": "2fa06c2bbe7c1c93352e0fdf024f37b2892b9c4a414b417a0818e31bdab23286"
+    },
+    {
+      "path": "backend/tmp/official-source-scope-2026-10-14/review-replay-final-2/parsed/518cf49d-121d-55b9-834e-4160cf927fe9.json",
+      "sha256": "8ed0616b14b96d4cee77175e965424ee1cbb0fbdb37b8b5649177bf7dac55024"
+    },
+    {
+      "path": "backend/tmp/official-source-scope-2026-10-14/review-replay-final-2/parsed/5b4ad1aa-0c85-5a2b-a5ca-97eb8dd4d2aa.json",
+      "sha256": "5ea979b9fadf6bb6e8472ba5b47083ec015ea17c7582783d171d221141644bfe"
+    },
+    {
+      "path": "backend/tmp/official-source-scope-2026-10-14/review-replay-final-2/parsed/788f47ff-23de-5f78-896b-7d3fe6e1bb92.json",
+      "sha256": "e05230443e6bdad68eefa793d9fe56b77d79d6830e112e80cfc805948a63b35b"
+    },
+    {
+      "path": "backend/tmp/official-source-scope-2026-10-14/review-replay-final-2/parsed/806425fa-1015-5452-91ee-cdb6b106183f.json",
+      "sha256": "9b85dd70b3b8a6ca9de089e0f220e1bf5822748762591870cca52259f8adc4e3"
+    },
+    {
+      "path": "backend/tmp/official-source-scope-2026-10-14/review-replay-final-2/parsed/855562a1-8309-57b2-b7b0-b9e7016207dc.json",
+      "sha256": "0bdf9ab2be963a5e42b3560e72b14fd247e2723c299ffc3e340682b02394db97"
+    },
+    {
+      "path": "backend/tmp/official-source-scope-2026-10-14/review-replay-final-2/parsed/86e85629-7347-5f1a-92d7-089475d96cdb.json",
+      "sha256": "004deaff4ab97344b2a62096b754ad071463b825c09f3c01715ef00123b2fdb9"
+    },
+    {
+      "path": "backend/tmp/official-source-scope-2026-10-14/review-replay-final-2/parsed/9f2229cc-c150-5bbc-a615-53046bc74763.json",
+      "sha256": "046719170db5fe2a7b4d2ba89c092689ccbfb0e86101d330d6cca9387d2cd0c1"
+    },
+    {
+      "path": "backend/tmp/official-source-scope-2026-10-14/review-replay-final-2/parsed/bc90bcf2-cccd-5364-94f6-5815603802f7.json",
+      "sha256": "f65cc9a84e885bccc5e7803303ecb2418659e2ea54814f6ddfd7c3042ec95932"
+    },
+    {
+      "path": "backend/tmp/official-source-scope-2026-10-14/review-replay-final-2/parsed/cd05de96-3b20-5178-8953-d8ee090a4f23.json",
+      "sha256": "44271b643a62d7242bf679c7291e1bd888b6c4382b810b8d4a7ddca98c39dbd8"
+    },
+    {
+      "path": "backend/tmp/official-source-scope-2026-10-14/review-replay-final-2/parsed/d9d5065d-9706-53db-b856-427c2c58bd1a.json",
+      "sha256": "2381a490e7d2ec8fc1d53e1cd25431ce36d853cc986b61ed04defb1356d5ea5a"
+    },
+    {
+      "path": "backend/tmp/official-source-scope-2026-10-14/review-replay-final-2/parsed/f5b4ca83-6f08-5d85-b64f-a292b7b1f7b6.json",
+      "sha256": "d8cb3eb8d9c7f686f339216a57cb7731a103ad2d7c7a8f28cd74a7c79bfb60ca"
+    },
+    {
+      "path": "backend/tmp/official-source-scope-2026-10-14/review-replay-final-2/parsed/fefabe1a-496e-5b57-83cf-c73f831b1275.json",
+      "sha256": "04d4a0ee66bfa5f038d0961c0ddad484e68d634fa11bfa6a896f945238ab1ea7"
+    },
+    {
+      "path": "backend/tmp/official-source-scope-2026-10-14/review-replay-final-2/report.json",
+      "sha256": "0a7117e4a9c953c08912da7c19f7496a330357517596e6fbfcec56714b4016ba"
+    },
+    {
+      "path": "backend/tmp/official-source-scope-2026-10-14/review-replay-guard-final/acceptance.db",
+      "sha256": "fede3b603900303ef117210ecf99986fd25ae7d988a0e1de2a1dbebfa85af535"
+    },
+    {
+      "path": "backend/tmp/official-source-scope-2026-10-14/review-replay-guard-final/generated-review.json",
+      "sha256": "6129b70977528f83a0912aa21f9545648b26984cf2a6140d22192b88d18d15a9"
+    },
+    {
+      "path": "backend/tmp/official-source-scope-2026-10-14/review-replay-guard-final/parsed/0188171d-87ae-5a2f-acc2-87f71bc5db58.json",
+      "sha256": "12403d5489b8a57667ae7a1c74affdb3c3571da1aaf3fba9234084d62cbb258c"
+    },
+    {
+      "path": "backend/tmp/official-source-scope-2026-10-14/review-replay-guard-final/parsed/0fedc9b8-1c87-5178-87a1-3bb5a02de3b8.json",
+      "sha256": "a160eab9157fbfb1f07499eacfed5b52f12d85fd3e33ff4b1b639b8013fc6539"
+    },
+    {
+      "path": "backend/tmp/official-source-scope-2026-10-14/review-replay-guard-final/parsed/114bfa0d-d6cf-573d-82b2-cfaed94b58b6.json",
+      "sha256": "781af7c7e57aba38a54d4dc2153750cdbeb4fdc2790b8f0c34a3446d4b4695fe"
+    },
+    {
+      "path": "backend/tmp/official-source-scope-2026-10-14/review-replay-guard-final/parsed/1ae43cdf-aa5d-533e-8caa-c65a403deaf2.json",
+      "sha256": "8a5b87d799d7b96a7495a189ca4074b5cac384026e7c715f6946fbecae68a3b8"
+    },
+    {
+      "path": "backend/tmp/official-source-scope-2026-10-14/review-replay-guard-final/parsed/1f104048-0d8e-59ac-bc55-92c6c3773d08.json",
+      "sha256": "2afb8cf8bd513be8d712cb974ad855270994231805ffdf4d50e7fb2f7770b725"
+    },
+    {
+      "path": "backend/tmp/official-source-scope-2026-10-14/review-replay-guard-final/parsed/20d9fad6-9e6f-543d-a2e1-095d8056c5ff.json",
+      "sha256": "f9666fde9d9a106a2d56bc77695a31c23dd038a77696e4c6eb60d2481330b1fa"
+    },
+    {
+      "path": "backend/tmp/official-source-scope-2026-10-14/review-replay-guard-final/parsed/4ac3cbf3-13b9-5022-863f-a2dbe9391e58.json",
+      "sha256": "71aac46dc7e41ad3b5dbe43f9d7155b30eece5ab66765a58eda988921d08b978"
+    },
+    {
+      "path": "backend/tmp/official-source-scope-2026-10-14/review-replay-guard-final/parsed/4eb9ae9c-2278-5530-ad02-d02e38f9088c.json",
+      "sha256": "2fa06c2bbe7c1c93352e0fdf024f37b2892b9c4a414b417a0818e31bdab23286"
+    },
+    {
+      "path": "backend/tmp/official-source-scope-2026-10-14/review-replay-guard-final/parsed/518cf49d-121d-55b9-834e-4160cf927fe9.json",
+      "sha256": "8ed0616b14b96d4cee77175e965424ee1cbb0fbdb37b8b5649177bf7dac55024"
+    },
+    {
+      "path": "backend/tmp/official-source-scope-2026-10-14/review-replay-guard-final/parsed/5b4ad1aa-0c85-5a2b-a5ca-97eb8dd4d2aa.json",
+      "sha256": "5ea979b9fadf6bb6e8472ba5b47083ec015ea17c7582783d171d221141644bfe"
+    },
+    {
+      "path": "backend/tmp/official-source-scope-2026-10-14/review-replay-guard-final/parsed/788f47ff-23de-5f78-896b-7d3fe6e1bb92.json",
+      "sha256": "e05230443e6bdad68eefa793d9fe56b77d79d6830e112e80cfc805948a63b35b"
+    },
+    {
+      "path": "backend/tmp/official-source-scope-2026-10-14/review-replay-guard-final/parsed/806425fa-1015-5452-91ee-cdb6b106183f.json",
+      "sha256": "9b85dd70b3b8a6ca9de089e0f220e1bf5822748762591870cca52259f8adc4e3"
+    },
+    {
+      "path": "backend/tmp/official-source-scope-2026-10-14/review-replay-guard-final/parsed/855562a1-8309-57b2-b7b0-b9e7016207dc.json",
+      "sha256": "0bdf9ab2be963a5e42b3560e72b14fd247e2723c299ffc3e340682b02394db97"
+    },
+    {
+      "path": "backend/tmp/official-source-scope-2026-10-14/review-replay-guard-final/parsed/86e85629-7347-5f1a-92d7-089475d96cdb.json",
+      "sha256": "004deaff4ab97344b2a62096b754ad071463b825c09f3c01715ef00123b2fdb9"
+    },
+    {
+      "path": "backend/tmp/official-source-scope-2026-10-14/review-replay-guard-final/parsed/9f2229cc-c150-5bbc-a615-53046bc74763.json",
+      "sha256": "046719170db5fe2a7b4d2ba89c092689ccbfb0e86101d330d6cca9387d2cd0c1"
+    },
+    {
+      "path": "backend/tmp/official-source-scope-2026-10-14/review-replay-guard-final/parsed/bc90bcf2-cccd-5364-94f6-5815603802f7.json",
+      "sha256": "f65cc9a84e885bccc5e7803303ecb2418659e2ea54814f6ddfd7c3042ec95932"
+    },
+    {
+      "path": "backend/tmp/official-source-scope-2026-10-14/review-replay-guard-final/parsed/cd05de96-3b20-5178-8953-d8ee090a4f23.json",
+      "sha256": "44271b643a62d7242bf679c7291e1bd888b6c4382b810b8d4a7ddca98c39dbd8"
+    },
+    {
+      "path": "backend/tmp/official-source-scope-2026-10-14/review-replay-guard-final/parsed/d9d5065d-9706-53db-b856-427c2c58bd1a.json",
+      "sha256": "2381a490e7d2ec8fc1d53e1cd25431ce36d853cc986b61ed04defb1356d5ea5a"
+    },
+    {
+      "path": "backend/tmp/official-source-scope-2026-10-14/review-replay-guard-final/parsed/f5b4ca83-6f08-5d85-b64f-a292b7b1f7b6.json",
+      "sha256": "d8cb3eb8d9c7f686f339216a57cb7731a103ad2d7c7a8f28cd74a7c79bfb60ca"
+    },
+    {
+      "path": "backend/tmp/official-source-scope-2026-10-14/review-replay-guard-final/parsed/fefabe1a-496e-5b57-83cf-c73f831b1275.json",
+      "sha256": "04d4a0ee66bfa5f038d0961c0ddad484e68d634fa11bfa6a896f945238ab1ea7"
+    },
+    {
+      "path": "backend/tmp/official-source-scope-2026-10-14/review-replay-guard-final/report.json",
+      "sha256": "647011441292af0b844f9b0afdfcfd7ca049ecd918a5bb2d5d7eaa7ee28b5600"
+    },
+    {
+      "path": "backend/tmp/official-source-scope-2026-10-14/source-pages/clip-11.png",
+      "sha256": "dd70b2015b6b67d65cf4356c22d1f1085ade2b5b9a9989fa549cca910ddebe6a"
+    },
+    {
+      "path": "backend/tmp/official-source-scope-2026-10-14/source-pages/clip-5.png",
+      "sha256": "d77ff4878df2ddfea7983b8a34a6e39284e0618d8d45abeeb14ac63525205b62"
+    },
+    {
+      "path": "backend/tmp/official-source-scope-2026-10-14/source-pages/flash-1.png",
+      "sha256": "40cd58c75cfa408a264b4daaa308f9d99173a0bc54e0b01a351449e26ae84bf0"
+    },
+    {
+      "path": "backend/tmp/official-source-scope-2026-10-14/source-pages/flash-6.png",
+      "sha256": "e91ff75271c487e4a3e46d9ac5bcc9440d23422f68ddd515c5b02fe8b6062250"
+    },
+    {
+      "path": "backend/tmp/official-source-scope-2026-10-14/source-pages/layernorm-1.png",
+      "sha256": "aa95583099dffc398626ddbfcb009d8927dee7c1b902931b84892c04386d4e3e"
+    },
+    {
+      "path": "backend/tmp/official-source-scope-2026-10-14/source-pages/ln-transformer-1.png",
+      "sha256": "22cec09137006b6be6802dcc701b8dd26ab2d69c6c1779b0773188ff0751d070"
+    },
+    {
+      "path": "backend/tmp/official-source-scope-2026-10-14/source-pages/lora-5.png",
+      "sha256": "2d8aef01b234c1f72d9261dd39ae99009b5891b273398946870b9903b42c2ec0"
+    },
+    {
+      "path": "backend/tmp/official-source-scope-2026-10-14/source-pages/lora-9.png",
+      "sha256": "d4c96530555c5277ed4c3eaf0b5873414c3088620f929a3edf7dfbac75c0375e"
+    },
+    {
+      "path": "backend/tmp/official-source-scope-2026-10-14/source-pages/qlora-1.png",
+      "sha256": "018c26eff20be5c2d114030d465151b33b514c66c2d1dcc325f9c0f5ba09807c"
+    },
+    {
+      "path": "backend/tmp/official-source-scope-2026-10-14/source-pages/transformer-6.png",
+      "sha256": "af23b112fa2e056eb9cd8c297e48899d95dba5e5d29edbf667f25fa8dd77a45a"
+    },
+    {
+      "path": "backend/tmp/official-source-scope-2026-10-14/source-pages/zero-1.png",
+      "sha256": "417764874c18d0b464314b568967f4d2f5015f55e59c43e016e4a856a9cff307"
+    },
+    {
+      "path": "backend/tmp/official-source-scope-2026-10-14/targeted-1.xml",
+      "sha256": "f163f6e3a934566c53901aeb0d268b24bd5c19dbdfaeb2bf0bcdabf1067bc314"
+    },
+    {
+      "path": "backend/tmp/official-source-scope-2026-10-14/targeted-2.xml",
+      "sha256": "6b30c4b7674714badbf33912e1a3eb7d6938e7e24184ccee7d37ba9de85c99d3"
+    },
+    {
+      "path": "backend/tmp/official-source-scope-2026-10-14/writing-original-1/acceptance.db",
+      "sha256": "bdbfea3addace8a85533cda966e3be06c1390977d6f87d5162e89aa910b57557"
+    },
+    {
+      "path": "backend/tmp/official-source-scope-2026-10-14/writing-original-1/calls.json",
+      "sha256": "62653063a9f9a98d3da225824a6c61eda67bc73e93b4b21ed4cf43c44fbb0294"
+    },
+    {
+      "path": "backend/tmp/official-source-scope-2026-10-14/writing-original-1/parsed/1ae43cdf-aa5d-533e-8caa-c65a403deaf2.json",
+      "sha256": "f0fa466dcb3d84426bcf18d05cf552fc5ed318403396cf540d2761fa162a9ff4"
+    },
+    {
+      "path": "backend/tmp/official-source-scope-2026-10-14/writing-original-1/parsed/788f47ff-23de-5f78-896b-7d3fe6e1bb92.json",
+      "sha256": "72dfb9a676f7dc532988c1932651d52689e0e51f5a7392fc389b87d05b65cd73"
+    },
+    {
+      "path": "backend/tmp/official-source-scope-2026-10-14/writing-original-1/parsed/bc90bcf2-cccd-5364-94f6-5815603802f7.json",
+      "sha256": "2f5bdb78b265127069fbaf7c9841afe6e181a0d93c3209856c420d678c7825d0"
+    },
+    {
+      "path": "backend/tmp/official-source-scope-2026-10-14/writing-original-1/report.json",
+      "sha256": "f7540d38d606f95c29ca5dc6e20f5801af6044c9b0f455744ba995a9d1ab1b07"
+    },
+    {
+      "path": "backend/tmp/official-source-scope-2026-10-14/writing-original-1/uploads/1ae43cdf-aa5d-533e-8caa-c65a403deaf2.pdf",
+      "sha256": "6478b6e571a7d6fcd846d8ef77bfd60c285f1986abb8f475eedc43de403074f5"
+    },
+    {
+      "path": "backend/tmp/official-source-scope-2026-10-14/writing-original-1/uploads/788f47ff-23de-5f78-896b-7d3fe6e1bb92.pdf",
+      "sha256": "8ce7b83971a14508ca711a27c875c9b6914c4f6767cf3150fb1ca6c07aa056d6"
+    },
+    {
+      "path": "backend/tmp/official-source-scope-2026-10-14/writing-original-1/uploads/bc90bcf2-cccd-5364-94f6-5815603802f7.pdf",
+      "sha256": "e9a0d3128767db616085dc0f4e6e455e672e89af823e8ed1282793682787395a"
+    },
+    {
+      "path": "backend/tmp/official-source-scope-2026-10-14/writing-original-1/writing-outline.json",
+      "sha256": "e55bb862c4df2878fb9444ba9973caba8ce25be26389000cb4a1d433b47698d0"
+    },
+    {
+      "path": "docs/acceptance-progress.md",
+      "sha256": "46dca12b7df0c228164539f64285f34e1471decfe131ea73a04f005ec432faaa"
+    },
+    {
+      "path": "docs/competition-delivery-checklist.md",
+      "sha256": "92cda7343cd97430986aeddd939240170bfded45798c429d34871642dbf5e5b8"
+    },
+    {
+      "path": "docs/competition-verification-gates.md",
+      "sha256": "5946560be8cc96c34c2647071b28066147043bdffb21a63ee4d09062569b07b6"
+    },
+    {
+      "path": "docs/official-source-scope-acceptance-2026-10-14.md",
+      "sha256": "84fb2abb8a2ad6e234c641f050d061bd77b1349e8f86f72c94ed33d433194b90"
+    }
+  ]
+}

@@ -39,6 +39,15 @@ def test_missing_author_does_not_generate_a_shifted_or_invented_order():
     parsed = parsed_authors()
     parsed["authors"].insert(1, "Unknown Person")
     assert author_evidence_nodes(parsed) == []
+
+
+def test_native_ligature_and_missing_space_can_anchor_normalized_author():
+    parsed = {"authors": ["Jeff Rasley"], "pages": [{"page_number": 1, "blocks": [
+        {"block_id": "p1-b1", "text": "JeﬀRasley∗", "bbox": [60, 90, 130, 110]},
+    ]}]}
+    node = author_evidence_nodes(parsed)[0]
+    assert "1. Jeff Rasley" in node["text"]
+    assert "JeﬀRasley∗" in node["text"]
     parsed["authors"] = ["Alice One", "Alice One"]
     assert author_evidence_nodes(parsed) == []
 
@@ -74,3 +83,66 @@ def test_backfill_preserves_old_chunk_ids_and_is_idempotent(tmp_path, monkeypatc
         evidence = LexicalRetriever(session).search("第 2 作者及机构是谁？", [doc.id], 2)
         assert evidence[0].section == AUTHOR_SECTION
         assert "2. Bob Two" in evidence[0].quote
+
+
+def test_abstract_with_institution_link_is_not_an_author_affiliation_block():
+    parsed = parsed_authors()
+    blocks = parsed["pages"][0]["blocks"]
+    blocks.extend([
+        {"block_id": "ah", "type": "heading", "text": "Abstract",
+         "bbox": [10, 105, 100, 115]},
+        {"block_id": "ab", "type": "text",
+         "text": "We train a model on a public dataset and release code at "
+                 "https://github.com/openai/example. This is scientific abstract prose.",
+         "bbox": [10, 118, 220, 400]},
+        {"block_id": "ih", "type": "heading", "text": "1 Introduction",
+         "bbox": [10, 405, 100, 415]},
+        {"block_id": "note", "type": "footnote",
+         "text": "*Equal contribution. Institute Alpha. Correspondence: author@example.test",
+         "bbox": [10, 700, 220, 725]},
+    ])
+    node = author_evidence_nodes(parsed)[0]
+    assert "ab" not in node["block_ids"] and "public dataset" not in node["text"]
+    assert "note" in node["block_ids"] and "Correspondence" in node["text"]
+    assert "3. Carol Three" in node["text"]
+
+
+def test_full_author_names_in_body_are_not_front_matter_identity_proof():
+    parsed = {"authors": ["Alice One"], "pages": [{"page_number": 1, "blocks": [
+        {"block_id": "h", "type": "heading", "text": "1 Introduction",
+         "bbox": [0, 100, 200, 120]},
+        {"block_id": "body", "type": "text", "text": "Alice One previously studied this.",
+         "bbox": [0, 125, 200, 140]},
+    ]}]}
+    assert author_evidence_nodes(parsed) == []
+
+
+def test_body_code_footnote_is_not_author_credit_and_missing_heading_uses_literal_abstract():
+    parsed = parsed_authors()
+    abstract = "An abstract discusses a learned method and releases code through a research " \
+        "organization link at https://github.com/openai/example."
+    parsed["abstract"] = abstract
+    blocks = parsed["pages"][0]["blocks"]
+    blocks.extend([
+        {"block_id": "ab", "type": "text", "text": abstract, "bbox": [10, 118, 220, 400]},
+        {"block_id": "code", "type": "footnote", "text": "1 OpenAI model code is available.",
+         "bbox": [10, 700, 220, 725]},
+    ])
+    node = author_evidence_nodes(parsed)[0]
+    assert "ab" not in node["block_ids"] and "code" not in node["block_ids"]
+
+
+def test_heading_shaped_author_after_body_in_reading_order_uses_original_page_geometry():
+    parsed = {"authors": ["Alice One"], "pages": [{"page_number": 1, "blocks": [
+        {"block_id": "title", "type": "title", "text": "Methods for Grounded Science",
+         "bbox": [0, 20, 200, 40]},
+        {"block_id": "h", "type": "heading", "text": "Abstract",
+         "bbox": [0, 100, 200, 120]},
+        {"block_id": "body", "type": "text", "text": "A scientific paragraph about models.",
+         "bbox": [0, 125, 200, 200]},
+        {"block_id": "author", "type": "heading", "text": "Alice One",
+         "bbox": [0, 50, 200, 70]},
+    ]}]}
+    node = author_evidence_nodes(parsed)[0]
+    assert node["block_ids"] == ["p1-metadata-authors", "author"]
+    assert "scientific paragraph" not in node["text"]

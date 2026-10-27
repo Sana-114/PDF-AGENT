@@ -2,7 +2,7 @@ from typing import Literal
 
 from pydantic import BaseModel, Field, field_validator
 
-from app.schemas.agent import AnswerClaim, EvidenceAnchor
+from app.schemas.agent import AnswerClaim, EvidenceAnchor, GroundingAudit
 
 
 class WritingOutlineRequest(BaseModel):
@@ -43,6 +43,7 @@ class VerifiedReferenceRead(BaseModel):
     verified_fields: list[str]
     formatted_citation: str
     evidence_ids: list[str]
+    metadata_evidence: EvidenceAnchor | None = None
 
 
 class WritingOutlineRead(BaseModel):
@@ -51,6 +52,9 @@ class WritingOutlineRead(BaseModel):
     sections: list[WritingSectionRead]
     references: list[VerifiedReferenceRead]
     claims: list[AnswerClaim]
+    # Source-checked extras excluded only by the compact outline's budget.
+    deferred_claims: list[AnswerClaim] = Field(default_factory=list)
+    grounding_audit: GroundingAudit | None = None
     evidence: list[EvidenceAnchor]
     provider: str
     model: str | None = None

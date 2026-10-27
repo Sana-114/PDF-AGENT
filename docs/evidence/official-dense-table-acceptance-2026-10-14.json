@@ -1,0 +1,447 @@
+{
+  "schema_version": 1,
+  "date": "2026-10-14",
+  "status": "fixed_table_ownership_numeric_rows_and_targeted_abstract_citation_confirmed__whole_quality_and_delivery_hold",
+  "git": {
+    "branch": "codex/stage94-official-failed-qa-retest",
+    "head": "a119f5609cda544e5d587588c5a338051da129a1",
+    "dirty_worktree": true,
+    "branch_created": false,
+    "committed": false,
+    "pushed": false,
+    "merged": false
+  },
+  "previous_record": {
+    "path": "docs/evidence/official-parser-cleanup-acceptance-2026-10-14.json",
+    "artifacts_checked": 57,
+    "immutable_result_artifacts_checked": 40,
+    "immutable_result_artifacts_changed": 0,
+    "expected_changed_code_files": [
+      "backend/app/parsers/text_table.py",
+      "backend/app/parsers/pymupdf_parser.py",
+      "backend/app/parsers/ocr_parser.py",
+      "backend/app/services/writing_outline.py",
+      "backend/app/agent/harness.py",
+      "backend/tests/test_text_table_boundaries.py",
+      "backend/tests/test_single_column_section_order.py",
+      "backend/scripts/prepare_official_parser_candidate.py"
+    ],
+    "history_scores_overwritten": false
+  },
+  "source_snapshot": {
+    "python_version": "3.12.14",
+    "app_files": 126,
+    "app_sha256": "afa28edeb73dadc3848f0873fb5bbbbdfa7f35838090aef48cd0e99b4decef50",
+    "requirements_sha256": "b0e75e31a3ca8f034e095fd0667e3be7e380975548c5acce90db94f96ed7283f"
+  },
+  "cloud": {
+    "provider": "deepseek",
+    "model": "deepseek-flash",
+    "calls": 1,
+    "automatic_retries": 0,
+    "selected_public_papers": [
+      "2010.11929v2.pdf",
+      "2103.00020v1.pdf",
+      "2106.09685v2.pdf"
+    ],
+    "whole_document_or_private_transmission": false,
+    "request_scope": "Finite excerpts from the already declared public fixture, fixed writing idea; no new review generation."
+  },
+  "parser": {
+    "native_version": "1.26.4-layout100",
+    "ocr_base_version": "1.26.4-ocr-layout95",
+    "runs": [
+      {
+        "name": "parser-targeted-1",
+        "app_sha256": "736e2096d3513e333abfc8cba21aab67d208e13c7978d3544b282d3dfa6e3991",
+        "files": 4,
+        "physical_pages": 120,
+        "status": "basic_checks_passed"
+      },
+      {
+        "name": "parser-20-1",
+        "app_sha256": "afa28edeb73dadc3848f0873fb5bbbbdfa7f35838090aef48cd0e99b4decef50",
+        "files": 20,
+        "physical_pages": 651,
+        "status": "basic_checks_passed",
+        "original_and_ast_hash_mismatches": 0
+      }
+    ],
+    "all_39_or_scan_or_book_revalidated_this_turn": false,
+    "production_library_modified": false,
+    "caption_matching": "Page-level bounded augmenting-path assignment, one grid per caption; assigned original caption bbox survives snapshot/native-grid merge.",
+    "numeric_rule": "Trailing standalone numeric values with narrow positive gap and vertical-overlap gates; no source values filled or rewritten."
+  },
+  "tables": {
+    "expectations": "backend/evals/official_table_identity_rows.json",
+    "independence": "Original full-page manual transcription and source-SHA pinning; not parser-produced answer values.",
+    "first": {
+      "name": "table-gold-1",
+      "status": "failed",
+      "tables_passed": 5,
+      "total": 6,
+      "selected_rows_passed": 34,
+      "expectations_sha256": "07d1e66b2f6ce54e8e268eea6db052f76e93da4a43546661d34449107166a8c0",
+      "error": "Test annotation incorrectly said Transformer v1 p8 caption was below the table. Full original page confirms above; numeric values and production parser unchanged.",
+      "original_expectations": "backend/tmp/official-dense-table-2026-10-14/expectations-v1.json",
+      "original_snapshot_sha_matches_report": true
+    },
+    "confirmation": {
+      "name": "table-gold-2",
+      "status": "passed",
+      "tables_passed": 6,
+      "total": 6,
+      "selected_data_rows": 34,
+      "expectations_sha256": "b944419fd8f5bf4c8573afa0133e0542e9e0c8bf32b0a6a23cd26d7e5a37fea9",
+      "cloud_calls": 0
+    },
+    "scope": [
+      {
+        "filename": "N19-1423.pdf",
+        "physical_page": 7,
+        "tables": [
+          "Table 2:",
+          "Table 3:",
+          "Table 4:"
+        ],
+        "selected_rows": 23
+      },
+      {
+        "filename": "2010.11929v2.pdf",
+        "physical_page": 16,
+        "tables": [
+          "Table 7:"
+        ],
+        "selected_rows": 6
+      },
+      {
+        "filename": "1706.03762v1.pdf",
+        "physical_page": 8,
+        "tables": [
+          "Table 2:"
+        ],
+        "selected_rows": 2,
+        "selected_columns": [
+          1,
+          2
+        ]
+      },
+      {
+        "filename": "1910.10683v4.pdf",
+        "physical_page": 14,
+        "tables": [
+          "Table 1:"
+        ],
+        "selected_rows": 3
+      }
+    ],
+    "complete_table_accuracy_or_header_colspan_confirmed": false,
+    "independent_full_original_page_images_viewed": 12
+  },
+  "writing": {
+    "name": "writing-generation-1",
+    "app_sha256": "afa28edeb73dadc3848f0873fb5bbbbdfa7f35838090aef48cd0e99b4decef50",
+    "actual_calls": 1,
+    "raw_claims": 11,
+    "published_claims": 11,
+    "evidence": 25,
+    "claimed_papers": 3,
+    "bibliographic_front_page_identities_checked": 3,
+    "machine_status": "source_checks_passed",
+    "whole_scientific_quality_status": "hold",
+    "warnings": [],
+    "retrieval_scope": "Lexical + actual TEI BGE reranker at root URL; not dense vector-chain acceptance",
+    "retrieval_tags": [
+      {
+        "mode": "reranked",
+        "count": 24
+      },
+      {
+        "mode": "local_context",
+        "count": 1
+      }
+    ],
+    "tag_count_is_not_request_count": true,
+    "abstract_addition": {
+      "evidence_id": "E19",
+      "document_id": "788f47ff-23de-5f78-896b-7d3fe6e1bb92",
+      "page_number": 1,
+      "block_ids": [
+        "p1-b7"
+      ],
+      "bbox": [
+        143.86,
+        270.54,
+        468.14,
+        390.09
+      ],
+      "retrieval_mode": "local_context",
+      "score": 0,
+      "context_for": []
+    },
+    "abstract_is_not_an_independent_ranked_hit": true,
+    "original_retrieved_quotes_or_ids_replaced": false,
+    "context_limit": {
+      "blocks": 10,
+      "chars": 9500
+    },
+    "manual_review": "backend/tmp/official-dense-table-2026-10-14/manual-writing-review.json",
+    "targeted_citation_fix_confirmed_in_one_sample": true,
+    "cross_page_pair_confirmed_in_one_sample": true,
+    "remaining_claim_indices": [
+      1,
+      2,
+      7
+    ],
+    "quote_quality_hold_claim_indices": [
+      5
+    ],
+    "raw_and_machine_report_edited": false,
+    "new_thematic_review_generated": false
+  },
+  "regression": {
+    "backend": {
+      "tests": 1051,
+      "passed": 1051,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "junit": "backend/tmp/official-dense-table-2026-10-14/backend-1.xml"
+    },
+    "frontend": {
+      "tests": 38,
+      "passed": 38,
+      "failures": 0,
+      "typecheck_passed": true,
+      "log": "backend/tmp/official-dense-table-2026-10-14/frontend-checks.txt"
+    },
+    "ruff_scope": "Entire backend/app, parser candidate script and three changed test files",
+    "ruff_passed": true,
+    "failure_records_preserved": [
+      "before.xml",
+      "writing-tests-1.xml",
+      "table-gold-1/report.json",
+      "expectations-v1.json"
+    ]
+  },
+  "deployment": {
+    "docker_server_version_observed": "29.7.2",
+    "reranker_health_observed": 200,
+    "images_built_or_installed_this_turn": false,
+    "last_recorded_runtime_app_prefix": "0c025a51",
+    "last_recorded_runtime_app_files": 122,
+    "last_source_runtime_browser_confirmed": false,
+    "standard_dense_chain_confirmed": false,
+    "production_library_written": false,
+    "volumes_removed": false,
+    "docker_or_wsl_restarted": false,
+    "unrelated_containers_modified": false
+  },
+  "remaining": [
+    "Writing comparison subject, downstream benchmark scope, modal qualifier and concise synthesis; one successful targeted citation is not whole-quality acceptance",
+    "Double-column footnote interleaving and native chart false positives; complete header/colspan and all-table accuracy",
+    "Prior thematic review initialization scope/P-label readability; Future Work current-resolution evidence",
+    "Latest scan/book, full official same-candidate QA, dense vector path and actual runtime/browser acceptance",
+    "Live discovery/download, subscription and multiuser-boundary acceptance",
+    "Final technical PDF/video, clean installation, repository access/Git release, public deployment/account and credential rotation"
+  ],
+  "artifact_manifest_count": 49,
+  "artifacts": [
+    {
+      "path": "backend/tmp/official-dense-table-2026-10-14/before.xml",
+      "sha256": "42e07cb109ac5b552739edbbe74cb85d434964c5d49318f75e2b2b5ff627bdb5"
+    },
+    {
+      "path": "backend/tmp/official-dense-table-2026-10-14/table-tests-1.xml",
+      "sha256": "b4f47a89cc13a968d9520b9a48247d097dc2ef08c09046e1cd80a57725b6bf39"
+    },
+    {
+      "path": "backend/tmp/official-dense-table-2026-10-14/table-tests-2.xml",
+      "sha256": "76820fcd025da0999ca1a9c1da862255f55c6a5c6d31e0b9b0ddd9d15457ffc3"
+    },
+    {
+      "path": "backend/tmp/official-dense-table-2026-10-14/writing-tests-1.xml",
+      "sha256": "c544db5e72612219ab3b9f6a8bb3e5c5e8fbd7c6c8c0add0064e50b08a991592"
+    },
+    {
+      "path": "backend/tmp/official-dense-table-2026-10-14/writing-tests-2.xml",
+      "sha256": "9bd7460f32d8d3841893f0e31d9a25fe6e47c3c18aefa2b6843136df3693ed43"
+    },
+    {
+      "path": "backend/tmp/official-dense-table-2026-10-14/backend-1.xml",
+      "sha256": "64f3206c6ecb657c947e114f042a3aa67fcbb8503b49ee627a68ff8c9337633c"
+    },
+    {
+      "path": "backend/tmp/official-dense-table-2026-10-14/parser-targeted-1/report.json",
+      "sha256": "34466ffcc984d29d5a11765d156db216d7dde2799ad83cb5ccc95836980284bc"
+    },
+    {
+      "path": "backend/tmp/official-dense-table-2026-10-14/parser-targeted-1/fixture.json",
+      "sha256": "8ea22099ebe78d720be144194d6e8fa66f25fbe3dc98c61093b21e7c60116e89"
+    },
+    {
+      "path": "backend/tmp/official-dense-table-2026-10-14/parser-20-1/report.json",
+      "sha256": "818026ca43c2024a27da02c24cf5b3cff07eb55ef9f4c19662779573d6ca9882"
+    },
+    {
+      "path": "backend/tmp/official-dense-table-2026-10-14/parser-20-1/fixture.json",
+      "sha256": "4eda3d6f8098caf1137c59de2145eff6ca8d96fcb4b202362b53801e4b25d1db"
+    },
+    {
+      "path": "backend/tmp/official-dense-table-2026-10-14/table-gold-1/report.json",
+      "sha256": "dfd90de5feef83d3d26ea11c52552826f9cab64507af7ea67a176f7a1e7bfe06"
+    },
+    {
+      "path": "backend/tmp/official-dense-table-2026-10-14/table-gold-2/report.json",
+      "sha256": "f9e00327801b66b4dd64d896bd9afdfe8dd1064bfcd8631fde09b6431d5655be"
+    },
+    {
+      "path": "backend/tmp/official-dense-table-2026-10-14/expectations-v1.json",
+      "sha256": "07d1e66b2f6ce54e8e268eea6db052f76e93da4a43546661d34449107166a8c0"
+    },
+    {
+      "path": "backend/tmp/official-dense-table-2026-10-14/writing-generation-1/report.json",
+      "sha256": "d4c52c4b426a9b6ba448316fdf2572ae440cff6ad85e0e5c512b79a6c293e24e"
+    },
+    {
+      "path": "backend/tmp/official-dense-table-2026-10-14/writing-generation-1/calls.json",
+      "sha256": "71a254a4adabd1698dcd8ea6b70b6c5adfbfd0873a420971a58d08a069f93111"
+    },
+    {
+      "path": "backend/tmp/official-dense-table-2026-10-14/writing-generation-1/writing-outline.json",
+      "sha256": "716f95b526b006c3b4da483cb4ea2177e29dbbf22cb0c385b0fd15a413baa55f"
+    },
+    {
+      "path": "backend/tmp/official-dense-table-2026-10-14/manual-writing-review.json",
+      "sha256": "c16fd06df95b40698cbdda7eb19443bb2f25b7ffa20078b05b84f98d38974199"
+    },
+    {
+      "path": "backend/tmp/official-dense-table-2026-10-14/frontend-checks.txt",
+      "sha256": "5c5771e89384d9b06e7786c2bafd2d88476502cea68680c34f8cd07f160edc31"
+    },
+    {
+      "path": "backend/tmp/official-dense-table-2026-10-14/source-pages/bert-7.png",
+      "sha256": "8ef39dcaabc7274c3b49a35d181020e7ec6783a901cc89555ead01ef567cccb9"
+    },
+    {
+      "path": "backend/tmp/official-dense-table-2026-10-14/source-pages/vit-16.png",
+      "sha256": "5810b17110d097b3db7ce75c9550b25cb8763e68065ca589881c4ed6e6ef44b0"
+    },
+    {
+      "path": "backend/tmp/official-dense-table-2026-10-14/source-pages/transformer-8.png",
+      "sha256": "32f5e18b57ce477998bf39d6db03aa284274978b898f3989503a759860758776"
+    },
+    {
+      "path": "backend/tmp/official-dense-table-2026-10-14/source-pages/t5-14.png",
+      "sha256": "fa6735b8e554dc9d45c17727053f213935fdac0795c05fc2206ebb1403fa327b"
+    },
+    {
+      "path": "backend/tmp/official-dense-table-2026-10-14/source-pages/vit-1.png",
+      "sha256": "b05211607d9728380015f91e5a77d28a038e962cef2fe47b8e475195cba391aa"
+    },
+    {
+      "path": "backend/tmp/official-dense-table-2026-10-14/source-pages/vit-4.png",
+      "sha256": "b9e228a024306f47cbccf319b7d24dd63713cad640782a0aab883d3d2371249e"
+    },
+    {
+      "path": "backend/tmp/official-dense-table-2026-10-14/source-pages/vit-6.png",
+      "sha256": "d8379eb138a207cb759b663969f988c4f1f01df1b5ea6b36d61da518f235f117"
+    },
+    {
+      "path": "backend/tmp/official-dense-table-2026-10-14/source-pages/clip-4.png",
+      "sha256": "1d457dfaa0236c440252a66d9f30a5ed6a1b3ffda76365624037da58b5ac26c9"
+    },
+    {
+      "path": "backend/tmp/official-dense-table-2026-10-14/source-pages/lora-1.png",
+      "sha256": "844137639af98645a91411dbbedb0f51973b9003b4b03568b2952a7664ea693d"
+    },
+    {
+      "path": "backend/tmp/official-dense-table-2026-10-14/source-pages/lora-3.png",
+      "sha256": "313a33d4f8ce424a106fea37d0810958377d7daf7b029aecc48bfe4ace647375"
+    },
+    {
+      "path": "backend/tmp/official-dense-table-2026-10-14/source-pages/lora-9.png",
+      "sha256": "d7f59bc7f6d091bcc4f34825a5c4e2c7c624c505ee1dcdf56ea3370a79bd0e19"
+    },
+    {
+      "path": "backend/tmp/official-dense-table-2026-10-14/source-pages/lora-10.png",
+      "sha256": "6ba4354d51c36b603be1ca909e3a17d5fc166f0cb5640e4c75ed4ad26c5b6bf0"
+    },
+    {
+      "path": "backend/app/parsers/text_table.py",
+      "sha256": "3a2ac462ec80813236cb772eaeccd95698e9f7a85ef90e9f4372095adebb0fd5"
+    },
+    {
+      "path": "backend/app/parsers/layout.py",
+      "sha256": "696dd76ba32b207d81c06709e784f099db8ff4efcb9c544a4e3844fdb30b05ad"
+    },
+    {
+      "path": "backend/app/parsers/pymupdf_parser.py",
+      "sha256": "908a23d19604e0eb3367255e73aefc06e89b1325279f816dedb00b633a401a90"
+    },
+    {
+      "path": "backend/app/parsers/ocr_parser.py",
+      "sha256": "103f6e208f1f7996b67c9f2ef5c75d93224a804f92a40fe43efd2f573d9730e2"
+    },
+    {
+      "path": "backend/app/services/writing_context.py",
+      "sha256": "c03485b64a43706ae4c1bbe88c07ed3c6494ee3774a42dd01860c4aa1a51d72a"
+    },
+    {
+      "path": "backend/app/services/writing_outline.py",
+      "sha256": "c7ac2d42619d93eae77af0df53356173971a6110787484f99c12105dc7e3ae0c"
+    },
+    {
+      "path": "backend/app/schemas/agent.py",
+      "sha256": "cc0f783accf6bba70cf0120731479243e73918bd2ea6d31457228d623877155f"
+    },
+    {
+      "path": "backend/app/agent/harness.py",
+      "sha256": "5c4e38b6c98b110e1c59ce72d2cb326e7699ac0c7c4dc3208cf965047ba9fc2b"
+    },
+    {
+      "path": "backend/tests/test_text_table_boundaries.py",
+      "sha256": "d72bd1441475dd484b793ead10ae41b4397ba5e2e899093c19a9d1d3883dfcd4"
+    },
+    {
+      "path": "backend/tests/test_writing_context.py",
+      "sha256": "aa68d0414ec41661722aabe7611538695ff4c8cde485354e1ab3af140628b78c"
+    },
+    {
+      "path": "backend/tests/test_single_column_section_order.py",
+      "sha256": "919961104e4cd77fb4615450620d9fef8c0a789eccaf64cb036785ad34366516"
+    },
+    {
+      "path": "frontend/lib/api.ts",
+      "sha256": "195e96a05cc84c23fd6b12e967116f2a89c6da2e770b492fe2200d26ff57ec1e"
+    },
+    {
+      "path": "backend/scripts/prepare_official_parser_candidate.py",
+      "sha256": "5a4aa6bed286c7beb23920c825745f87f0229f0c22241bc36729ebb4580d0f9e"
+    },
+    {
+      "path": "backend/evals/official_table_identity_rows.json",
+      "sha256": "b944419fd8f5bf4c8573afa0133e0542e9e0c8bf32b0a6a23cd26d7e5a37fea9"
+    },
+    {
+      "path": "docs/official-dense-table-acceptance-2026-10-14.md",
+      "sha256": "0674305ea152aceb579b0fba4157dc34ffa55fceaff919e0c096e1b1925f9e7a"
+    },
+    {
+      "path": "docs/acceptance-progress.md",
+      "sha256": "4e6c0ac9dbdd134ce56ce41cc3556d1a1922b2367667b8fa1957319b9d596868"
+    },
+    {
+      "path": "docs/competition-verification-gates.md",
+      "sha256": "a690a51cbe40c6af4e084d2900ceea5e8133860633193518b1f45cb1ca5cebfc"
+    },
+    {
+      "path": "docs/competition-delivery-checklist.md",
+      "sha256": "01691e98df8943e5103a06dc13c4d8dea5126b9a33f42323fde0b5f8f329198e"
+    },
+    {
+      "path": "docs/evidence/official-parser-cleanup-acceptance-2026-10-14.json",
+      "sha256": "b906ce893e719e65ec205d6dca8d380cfdc4d2e33a42b0d0b0bf5140a9a57fc9"
+    }
+  ]
+}

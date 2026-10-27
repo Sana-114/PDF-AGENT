@@ -1,0 +1,497 @@
+{
+  "schema_version": 1,
+  "date": "2026-10-15",
+  "record_kind": "official_review_repairs_and_bounded_same_source_runtime_acceptance",
+  "status": "bounded_same_candidate_runtime_confirmed__cross_question_and_complete_review_quality_hold",
+  "git": {
+    "branch": "codex/stage94-official-failed-qa-retest",
+    "head": "a119f5609cda544e5d587588c5a338051da129a1",
+    "mutated": false
+  },
+  "final_candidate": {
+    "app_sha256": "0f57662dc9daf0af506f566ca7253c8b12ecb6cd33a35be1594d347a5beda567",
+    "app_files": 126,
+    "python": "3.12.14",
+    "requirements_sha256": "b0e75e31a3ca8f034e095fd0667e3be7e380975548c5acce90db94f96ed7283f",
+    "same_candidate_true_generation_calls": 4,
+    "same_candidate_calls": [
+      "final_review",
+      "lora_qlora_mechanisms",
+      "fixed_seed_counterexample",
+      "browser_hardware_question"
+    ],
+    "production_Docker_installed": false
+  },
+  "repairs": {
+    "graph_context_diversity": {
+      "budget": 4,
+      "old_distinct_targets": 1,
+      "new_distinct_targets": 4,
+      "new_distinct_endpoints": 8,
+      "exact_source_identity_and_page_anchor_guards_retained": true,
+      "new_inheritance_claims_inferred": false
+    },
+    "grouped_review": {
+      "root_fields": [
+        "answer",
+        "topics",
+        "comparisons",
+        "background"
+      ],
+      "max_comparisons": 6,
+      "max_background": 2,
+      "max_total": 8,
+      "max_claim_characters": 160,
+      "legacy_claims_kind_supported": true,
+      "new_role_explicit_from_bucket": true,
+      "same_original_multi_excerpt_comparison_rejected": true,
+      "raw_output_not_rewritten": true,
+      "API_claims_themes_unchanged": true
+    },
+    "variable_condition": {
+      "symbolic_less_than_Chinese_and_English_supported": true,
+      "unqualified_short_sequence_still_rejected": true,
+      "general_entailment_claimed": false
+    },
+    "acceptance_isolation": {
+      "saved_PDF_AST_subset_readonly_SQL_metadata": true,
+      "default_server_cloud_off": true,
+      "cloud_and_local_BGE_separate_explicit_flags": true,
+      "loopback_only": true,
+      "generated_fresh_vector_namespace": true,
+      "runtime_call_ceiling": 3,
+      "original_calls_recorded_without_keys": true,
+      "reader_default_expected_count": 39,
+      "subset_requires_explicit_count": true,
+      "frontend_cache_separated_and_ignored": true,
+      "temporary_TS_cache_paths_removed": true
+    }
+  },
+  "progress": {
+    "official_files": 39,
+    "physical_pages": 1986,
+    "inherited_fixed_basic_content_coverage": "39/39",
+    "parser_code_changed": false,
+    "new_parser_calls": 0,
+    "new_whole_corpus_QA": false,
+    "inherited_resource_measurements": "19/39",
+    "historical_first_QA_core": "38/39",
+    "historical_independent_timeout_confirmation_retained": true,
+    "new_full_scientific_accuracy_percent": null
+  },
+  "cloud": {
+    "total": 7,
+    "reviews": 4,
+    "runtime_and_browser": 3,
+    "automatic_retries": 0,
+    "public_previously_declared_excerpts_only": true,
+    "whole_or_private_PDF_sent": false,
+    "review_attempts": [
+      {
+        "directory": "generated-review-1",
+        "app_sha256": "b7dd0e6ca0208f075a898f2d4fc82bbd93dc7749c25946ebf90de42a6ac3b9ac",
+        "cloud_calls": 1,
+        "raw_claims": 8,
+        "raw_comparisons": 0,
+        "raw_background": 0,
+        "published_claims": 7,
+        "multi_source_claims": 1,
+        "machine_status": "source_checks_passed",
+        "warnings": [
+          "正文证据预算为 36，已按文献均衡选择 36 条；另有 43 条候选未发送。",
+          "综述生成仅获得 4 条有原页锚点的明确书目关联；未发送的图谱边不作为生成依据。书目匹配不证明贡献继承或科研影响。",
+          "主题条目 review_item_2 暂缓：跨文条目必须有两篇不同论文的正文，不以同篇多块或书目充数。",
+          "当前仅有 1 条包含多篇正文来源的论点，尚未达到跨文综合目标；不能把多篇摘录汇集当成完整领域综述。"
+        ]
+      },
+      {
+        "directory": "generated-review-2",
+        "app_sha256": "ffee9d467f2afdbd7a862b8b3c4f0c670e8d02c2a30093929af76956951446ff",
+        "cloud_calls": 1,
+        "raw_claims": 8,
+        "raw_comparisons": 0,
+        "raw_background": 0,
+        "published_claims": 7,
+        "multi_source_claims": 0,
+        "machine_status": "source_checks_passed",
+        "warnings": [
+          "正文证据预算为 36，已按文献均衡选择 36 条；另有 43 条候选未发送。",
+          "综述生成仅获得 4 条有原页锚点的明确书目关联；未发送的图谱边不作为生成依据。书目匹配不证明贡献继承或科研影响。",
+          "防护暂缓原第 8 条：所引摘录未支持数值 quantity:10000。其他有据陈述继续保留。",
+          "当前仅有 0 条包含多篇正文来源的论点，尚未达到跨文综合目标；不能把多篇摘录汇集当成完整领域综述。"
+        ]
+      },
+      {
+        "directory": "generated-review-3",
+        "app_sha256": "94c85dc02f297d322a815bdb16b86bdaf06810a2626ebcb399805bb39e2edb7d",
+        "cloud_calls": 1,
+        "raw_claims": 0,
+        "raw_comparisons": 4,
+        "raw_background": 2,
+        "published_claims": 4,
+        "multi_source_claims": 2,
+        "machine_status": "source_checks_passed",
+        "warnings": [
+          "正文证据预算为 36，已按文献均衡选择 36 条；另有 43 条候选未发送。",
+          "综述生成仅获得 4 条有原页锚点的明确书目关联；未发送的图谱边不作为生成依据。书目匹配不证明贡献继承或科研影响。",
+          "防护暂缓原第 1 条：未保留输出层附近参数的范围。其他有据陈述继续保留。",
+          "已暂缓 1 条遗漏长度与维度比较条件的速度陈述；请保留原文适用条件，不能仅写为短序列更快。"
+        ]
+      },
+      {
+        "directory": "generated-review-final",
+        "app_sha256": "0f57662dc9daf0af506f566ca7253c8b12ecb6cd33a35be1594d347a5beda567",
+        "cloud_calls": 1,
+        "raw_claims": 0,
+        "raw_comparisons": 4,
+        "raw_background": 2,
+        "published_claims": 4,
+        "multi_source_claims": 2,
+        "machine_status": "source_checks_passed",
+        "warnings": [
+          "正文证据预算为 36，已按文献均衡选择 36 条；另有 43 条候选未发送。",
+          "综述生成仅获得 4 条有原页锚点的明确书目关联；未发送的图谱边不作为生成依据。书目匹配不证明贡献继承或科研影响。",
+          "主题条目 review_item_1 暂缓：跨文条目必须有两篇不同论文的正文，不以同篇多块或书目充数。",
+          "主题条目 review_item_4 暂缓：跨文条目必须有两篇不同论文的正文，不以同篇多块或书目充数。"
+        ]
+      }
+    ],
+    "failed_and_withheld_outputs_preserved": true
+  },
+  "runtime": {
+    "api": "http://127.0.0.1:8018",
+    "frontend": "http://127.0.0.1:3310",
+    "health_before_tests": {
+      "embedding": 200,
+      "reranker": 200,
+      "qdrant": 200
+    },
+    "public_files": [
+      "1706.03762v1.pdf",
+      "2106.09685v2.pdf",
+      "2305.14314v1.pdf"
+    ],
+    "vector_collection": "official_runtime_49f05f44a21d437fb87f8c121f6bc2ca_semantic_d790e73745_1024",
+    "indexed_chunks": 604,
+    "actual_model_calls": 3,
+    "browser": {
+      "new_generation": true,
+      "checks": 3,
+      "passed": 3,
+      "errors": [],
+      "target_source_core_confirmed": true
+    },
+    "reader": {
+      "expected_files": 3,
+      "executed": 3,
+      "passed": 3,
+      "pages": 67,
+      "model_calls": 0
+    },
+    "seed_counterexample": {
+      "machine_target_passed": true,
+      "independent_native_absence_precheck": true,
+      "positive_seed_invented": false
+    },
+    "lora_qlora": {
+      "machine_status": "failed",
+      "published_claims": 4,
+      "core_individual_facts_source_consistent": true,
+      "cross_source_claim_gate_passed": false,
+      "requested_mechanisms_complete": false,
+      "original_raw_quantity_rejection_retained": true
+    },
+    "same_candidate_stability_or_complete_scientific_release_claimed": false
+  },
+  "regression": {
+    "backend": {
+      "passed": 1140,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    "frontend": {
+      "passed": 42,
+      "failed": 0
+    },
+    "typecheck": "passed",
+    "e2e_syntax": "passed",
+    "ruff": "passed",
+    "initial_test_fixture_failures_preserved": 3,
+    "environment_failures_preserved": true
+  },
+  "manual_review": {
+    "path": "backend/tmp/official-review-runtime-2026-10-15/manual-source-review.json",
+    "PDF_full_page_inspection_used": true,
+    "final_review_status": "four_published_two_multi_source__scope_and_citation_coverage_hold",
+    "intermediate_review_outputs_not_fully_accepted": true,
+    "original_machine_reports_not_regraded": true
+  },
+  "previous_evidence": {
+    "manifest": "docs/evidence/official-source-scope-acceptance-2026-10-14.json",
+    "total_entries": 173,
+    "immutable_backend_tmp_checked": 157,
+    "changed": 0
+  },
+  "deployment": {
+    "Docker_desktop_background_started_before_interrupted_continuation": true,
+    "existing_services_recovered": true,
+    "old_Docker_backend_app_sha256": "0c025a51ce5248e65acc73b067199a6b2e5736d11201a6d9e30e4ae5d21bbb90",
+    "old_Docker_python": "3.11.17",
+    "old_Docker_app_files": 122,
+    "production_image_rebuilt_or_installed": false,
+    "production_library_modified": false,
+    "old_vector_collections_modified": false,
+    "new_test_collection_retained": true,
+    "volumes_deleted": false,
+    "isolated_API_and_UI_stopped": true,
+    "original_3200_not_replaced": true,
+    "public_deployment_configuration_preserved": true
+  },
+  "remaining": [
+    "LoRA/QLoRA original-question mechanism completeness and comparison attribution",
+    "Review full scope, evaluated distribution and negative FLOP attribution",
+    "Limited stability and final Docker/worker release candidate",
+    "BLOOM multi-page author metadata and general table/formula/citation boundaries",
+    "Actual online discovery/subscription success and final PDF/video/public deployment/key rotation"
+  ],
+  "artifact_manifest_count": 59,
+  "artifacts": [
+    {
+      "path": ".gitignore",
+      "sha256": "16cd68dbc25d8ac3a55a5b2c7f22d58fa35d6a0c71334dc5b74fa135940f0395"
+    },
+    {
+      "path": "backend/app/llm/openai_responses.py",
+      "sha256": "098d7158de10472815aaf6d29c5e78d79bab3aaed74434f6406c33bd1da8b945"
+    },
+    {
+      "path": "backend/app/llm/review_limits.py",
+      "sha256": "436262b8820111ee9a992967658cd0738769d36c838307fe4f2aa1f27fcdf917"
+    },
+    {
+      "path": "backend/app/llm/thematic_review.py",
+      "sha256": "8d74a47ff12c3a9a27a820bde126415897382cbf5411cf0b85ccaa00653e39c9"
+    },
+    {
+      "path": "backend/app/services/review_context.py",
+      "sha256": "61580cf4e0bf5248611f8e6f35117b8e6a59068622931ef44fed272304522ea5"
+    },
+    {
+      "path": "backend/scripts/prepare_official_browser_fixture.py",
+      "sha256": "0a4472a0b2f35a8ea0574c96962c03cc4e0ab4558483e463ca4d06feb746bf52"
+    },
+    {
+      "path": "backend/scripts/serve_official_acceptance_fixture.py",
+      "sha256": "cbe27a0e9ad7064424a84c8ee2c73d85e13662c2d5eb27cacea4ca36d6f1fe83"
+    },
+    {
+      "path": "backend/scripts/verify_official_candidate_qa.py",
+      "sha256": "cf4eb28ab52fb412311deb4972fbb886ba61f436aebaf902072cc5c73f5aa016"
+    },
+    {
+      "path": "backend/scripts/verify_official_runtime_reader.py",
+      "sha256": "ede7eb540851a8f264368107cfa4c47c934d77663db095e882e3c1713cc6ba00"
+    },
+    {
+      "path": "backend/tests/test_official_candidate_runtime_safety.py",
+      "sha256": "665b3ed43fe6ae43f487f4b17e9f2f1e8af52aced3f23d51fbc52db764aa6126"
+    },
+    {
+      "path": "backend/tests/test_review_context.py",
+      "sha256": "4c5ef8782b6eabbb38b809279bd88aa4a6a3cc11b7933ae0a83c6fe758ae6890"
+    },
+    {
+      "path": "backend/tests/test_review_limits.py",
+      "sha256": "2cc961109cfec0f5abbd6f99c10899ce1aaa0923807e743a67395401d266ea0d"
+    },
+    {
+      "path": "backend/tests/test_thematic_review.py",
+      "sha256": "36496078b5ab10b7da4a8fe93ce67c1f83dcc713c0673bb6da244597444e73f9"
+    },
+    {
+      "path": "backend/tmp/official-review-runtime-2026-10-15/backend-final.xml",
+      "sha256": "65b175daeda38a96fc693b9be80a4c8e592f8f23df9863a7108a60260dc4d106"
+    },
+    {
+      "path": "backend/tmp/official-review-runtime-2026-10-15/browser-qa/01-public-answer.png",
+      "sha256": "322f65408a9d3d1fcde5a4b68cb9c720417628b2aab609121e43ad7a561d51e6"
+    },
+    {
+      "path": "backend/tmp/official-review-runtime-2026-10-15/browser-qa/02-hardware-original-page.png",
+      "sha256": "37baa5fd5f9514407f201cccf71b807879b0e8550dc0b45b454f48982ba8acb3"
+    },
+    {
+      "path": "backend/tmp/official-review-runtime-2026-10-15/browser-qa/report.json",
+      "sha256": "8b7b857b534cbabfc45cdcda283fbb3ad651d9c71673ebb39d6a196aa0122985"
+    },
+    {
+      "path": "backend/tmp/official-review-runtime-2026-10-15/browser-qa/turn.json",
+      "sha256": "b324a281debdcf42c030f73cbff00b9712cecbfb03281656a3085a18b17bb888"
+    },
+    {
+      "path": "backend/tmp/official-review-runtime-2026-10-15/generated-review-1/calls.json",
+      "sha256": "376f1dc5d97f696f47e1d440e32be3931c3309b457b58d2dd4ef178789d0bf4b"
+    },
+    {
+      "path": "backend/tmp/official-review-runtime-2026-10-15/generated-review-1/generated-review.json",
+      "sha256": "1e8b78647976efba053f2257da5b330b3e4a29b7b4a32edfb47d378ba1102728"
+    },
+    {
+      "path": "backend/tmp/official-review-runtime-2026-10-15/generated-review-1/report.json",
+      "sha256": "4f8ac569ccfc0683c8a7c5e56b8f324a6a2f1570793b7f0ba45614efd58c68b7"
+    },
+    {
+      "path": "backend/tmp/official-review-runtime-2026-10-15/generated-review-2/calls.json",
+      "sha256": "3d780c79ebf15cfafa7841806fbfd2f0659d9f1877011e799bfbee96df1f46f8"
+    },
+    {
+      "path": "backend/tmp/official-review-runtime-2026-10-15/generated-review-2/generated-review.json",
+      "sha256": "f3a0da183327fc3261b1d3350480c27350817841a4ff407fd6b4d9a2e4976b61"
+    },
+    {
+      "path": "backend/tmp/official-review-runtime-2026-10-15/generated-review-2/report.json",
+      "sha256": "55ea99c966a2b2d6795912097c4be5c5d73e3f09052ed9db0883a22b75324724"
+    },
+    {
+      "path": "backend/tmp/official-review-runtime-2026-10-15/generated-review-3/calls.json",
+      "sha256": "90e4e1f4dbfd9493d135ac2cbeb5b03f42a97ec6a3453b23c8c1525b264b7c8b"
+    },
+    {
+      "path": "backend/tmp/official-review-runtime-2026-10-15/generated-review-3/generated-review.json",
+      "sha256": "0c71007cc404221dde6719cd54a91da7d01ecfaa5cedd1e3cb2e47e4527f77f4"
+    },
+    {
+      "path": "backend/tmp/official-review-runtime-2026-10-15/generated-review-3/report.json",
+      "sha256": "556002a1ca074465bdbbee15fe5a8eaa25085b62252551dad19ab694df24dcae"
+    },
+    {
+      "path": "backend/tmp/official-review-runtime-2026-10-15/generated-review-final/calls.json",
+      "sha256": "9979efda4cc5be158214ba9ca48d9b57427a86143ec9a2967b9b23d309d9764e"
+    },
+    {
+      "path": "backend/tmp/official-review-runtime-2026-10-15/generated-review-final/generated-review.json",
+      "sha256": "bb7164d8cdb51b05203ae31714412118a1510b7a50430a554ef9152989458140"
+    },
+    {
+      "path": "backend/tmp/official-review-runtime-2026-10-15/generated-review-final/report.json",
+      "sha256": "fc6b201ee2c397ed6350900ea3b885e12084e2593edb3248cb5062530f75ab0c"
+    },
+    {
+      "path": "backend/tmp/official-review-runtime-2026-10-15/grouped-review-tests.xml",
+      "sha256": "73b65c1cf3698ef0bd452bc5828450e939bf3fb58d575cd25a06dbde65c77c3e"
+    },
+    {
+      "path": "backend/tmp/official-review-runtime-2026-10-15/manual-source-review.json",
+      "sha256": "2c3d82bcdd90e4c5e7722bce44138008ac6123a7fbc2f9fdb74e79459ac57513"
+    },
+    {
+      "path": "backend/tmp/official-review-runtime-2026-10-15/regression-summary.json",
+      "sha256": "b115627119f5a51f6199e034d100c1675d9f004c62634342418db66412a36e7c"
+    },
+    {
+      "path": "backend/tmp/official-review-runtime-2026-10-15/review-context-tests.xml",
+      "sha256": "bd590c9965a076653f6a093b00b62bd3c58984963c1a90d22cc3df5109249041"
+    },
+    {
+      "path": "backend/tmp/official-review-runtime-2026-10-15/runtime-fixture/acceptance.db",
+      "sha256": "371ff273725330d9d157271b65b72c24d6cca051112c98b150e37f4edbdc4057"
+    },
+    {
+      "path": "backend/tmp/official-review-runtime-2026-10-15/runtime-fixture/fixture.json",
+      "sha256": "3d534c89f0ec7c14a452d891cf987c03bf267e000487afe0dfa80c5e617b7ffc"
+    },
+    {
+      "path": "backend/tmp/official-review-runtime-2026-10-15/runtime-fixture/parsed/20d9fad6-9e6f-543d-a2e1-095d8056c5ff.json",
+      "sha256": "4a05a089a864b8fc603470e4f28fc480526b8184b8c5a89039db83b07bdded3d"
+    },
+    {
+      "path": "backend/tmp/official-review-runtime-2026-10-15/runtime-fixture/parsed/855562a1-8309-57b2-b7b0-b9e7016207dc.json",
+      "sha256": "0bdf9ab2be963a5e42b3560e72b14fd247e2723c299ffc3e340682b02394db97"
+    },
+    {
+      "path": "backend/tmp/official-review-runtime-2026-10-15/runtime-fixture/parsed/bc90bcf2-cccd-5364-94f6-5815603802f7.json",
+      "sha256": "2f5bdb78b265127069fbaf7c9841afe6e181a0d93c3209856c420d678c7825d0"
+    },
+    {
+      "path": "backend/tmp/official-review-runtime-2026-10-15/runtime-fixture/preparation.json",
+      "sha256": "ac6dcba1a940dd7923270044ab768894f5f9a93a335d7470676fa951fbaaa6f3"
+    },
+    {
+      "path": "backend/tmp/official-review-runtime-2026-10-15/runtime-fixture/runtime-calls.json",
+      "sha256": "be0e4eaeb016e6b85aae9de93b8a6ee06e5b968257650ac5304ace7b508519a2"
+    },
+    {
+      "path": "backend/tmp/official-review-runtime-2026-10-15/runtime-fixture/server-source.json",
+      "sha256": "7a56ab56df6402e680aed7b4bfea2e7a9868aad9ae4ccbd1198cb45dbb27c569"
+    },
+    {
+      "path": "backend/tmp/official-review-runtime-2026-10-15/runtime-fixture/uploads/20d9fad6-9e6f-543d-a2e1-095d8056c5ff.pdf",
+      "sha256": "0a9bff1be3575cf9fe26a4a3d3a9175bc791ecec90de8b9deba4cff75d2b9476"
+    },
+    {
+      "path": "backend/tmp/official-review-runtime-2026-10-15/runtime-fixture/uploads/855562a1-8309-57b2-b7b0-b9e7016207dc.pdf",
+      "sha256": "33a4e757c19d6ea8d3cca8958fce8fe405e290272e135c99ee66065c775d5bd1"
+    },
+    {
+      "path": "backend/tmp/official-review-runtime-2026-10-15/runtime-fixture/uploads/bc90bcf2-cccd-5364-94f6-5815603802f7.pdf",
+      "sha256": "e9a0d3128767db616085dc0f4e6e455e672e89af823e8ed1282793682787395a"
+    },
+    {
+      "path": "backend/tmp/official-review-runtime-2026-10-15/runtime-qa/report.json",
+      "sha256": "cfa950a55a6bdd5f31942bea6925bf06d1a6a7a0c10d9c69824b163dace91586"
+    },
+    {
+      "path": "backend/tmp/official-review-runtime-2026-10-15/runtime-reader/report.json",
+      "sha256": "c70a95f23efc4e09d89b24ce0bc4736427005094417c8402a6a7714890d67b19"
+    },
+    {
+      "path": "backend/tmp/official-review-runtime-2026-10-15/runtime-safety-confirmation.xml",
+      "sha256": "23b2b6d426093b29204ba2695fa17d0958b66a1974402a8f8a616a25ea49caa6"
+    },
+    {
+      "path": "backend/tmp/official-review-runtime-2026-10-15/runtime-safety-tests.xml",
+      "sha256": "2225c61c115e390d9076da5ac822e4a8df749a171a2094c9d0ca131a3971a650"
+    },
+    {
+      "path": "backend/tmp/official-review-runtime-2026-10-15/source-pages/instructgpt-1.png",
+      "sha256": "ebf1924c4df71a5d13a7d189a1f372e6f0b8729d6c381cf8f401ad1e9767e5d4"
+    },
+    {
+      "path": "backend/tmp/official-review-runtime-2026-10-15/source-pages/qlora-3.png",
+      "sha256": "12a5421cb879a89d42edb406043b101137f0164bfc0175886e2850e356de6707"
+    },
+    {
+      "path": "backend/tmp/official-review-runtime-2026-10-15/source-pages/qlora-7.png",
+      "sha256": "a031135ee9b21799f645dc693cfd41841d0ece2e89263d822ce1230ea892b7bb"
+    },
+    {
+      "path": "backend/tmp/official-review-runtime-2026-10-15/source-pages/qlora-8.png",
+      "sha256": "be9a373750b6d3c9dfd1326fc613d4bcedabab41f921f977c03239c10c2b30fd"
+    },
+    {
+      "path": "docs/acceptance-progress.md",
+      "sha256": "6103d7bff1036dd7d0a5c391c885dff8e8798adea13b6f6eaf73ab42bb67746f"
+    },
+    {
+      "path": "docs/competition-delivery-checklist.md",
+      "sha256": "153bc58763d8b88b6e8a9ad7696099b07f37833ce8322a666747ed70e0582683"
+    },
+    {
+      "path": "docs/competition-verification-gates.md",
+      "sha256": "36ce4bd46a3a25f2fbbd9c1e23b62c600e5f0afd756ebbe422c5630ba63c31cd"
+    },
+    {
+      "path": "docs/official-review-runtime-acceptance-2026-10-15.md",
+      "sha256": "c1b939f62355a1e6c4cea5bb1381142cf04eda729664f721b024e42a0b5752f8"
+    },
+    {
+      "path": "frontend/e2e/officialRunningQaAcceptance.mjs",
+      "sha256": "74e86bbee34c129632d340dbe3a7e8f4b5d8ea325d1a1dc7d675c32dc00aa055"
+    },
+    {
+      "path": "frontend/next.config.mjs",
+      "sha256": "44fd684b62aee45f6ba480277bec2f67bcda2f59d0d465e88f62eff33a1913b2"
+    }
+  ]
+}

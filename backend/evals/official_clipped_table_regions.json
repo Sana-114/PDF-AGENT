@@ -1,0 +1,402 @@
+{
+  "record_kind": "independent_manual_complete_page_transcription_not_parser_generated_answers",
+  "scope": "Seven fixed tables, 42 selected data rows and one chart-only page; not all-table accuracy, header colspan or complete formula recovery.",
+  "cases": [
+    {
+      "filename": "N19-1423.pdf",
+      "source_sha256": "987545ffb087f1ece898142c403a516baeabeb70ce19089397fac6f7db12c3d4",
+      "page": 7,
+      "caption_prefix": "Table 2:",
+      "caption_below": true,
+      "rows": [
+        [
+          "Human",
+          "-",
+          "-",
+          "82.3",
+          "91.2"
+        ],
+        [
+          "#1 Ensemble - nlnet",
+          "-",
+          "-",
+          "86.0",
+          "91.7"
+        ],
+        [
+          "#2 Ensemble - QANet",
+          "-",
+          "-",
+          "84.5",
+          "90.5"
+        ],
+        [
+          "BiDAF+ELMo (Single)",
+          "-",
+          "85.6",
+          "-",
+          "85.8"
+        ],
+        [
+          "R.M. Reader (Ensemble)",
+          "81.2",
+          "87.9",
+          "82.3",
+          "88.5"
+        ],
+        [
+          "BERTBASE (Single)",
+          "80.8",
+          "88.5",
+          "-",
+          "-"
+        ],
+        [
+          "BERTLARGE (Single)",
+          "84.1",
+          "90.9",
+          "-",
+          "-"
+        ],
+        [
+          "BERTLARGE (Ensemble)",
+          "85.8",
+          "91.8",
+          "-",
+          "-"
+        ],
+        [
+          "BERTLARGE (Sgl.+TriviaQA)",
+          "84.2",
+          "91.1",
+          "85.1",
+          "91.8"
+        ],
+        [
+          "BERTLARGE (Ens.+TriviaQA)",
+          "86.2",
+          "92.2",
+          "87.4",
+          "93.2"
+        ]
+      ]
+    },
+    {
+      "filename": "N19-1423.pdf",
+      "source_sha256": "987545ffb087f1ece898142c403a516baeabeb70ce19089397fac6f7db12c3d4",
+      "page": 7,
+      "caption_prefix": "Table 3:",
+      "caption_below": true,
+      "rows": [
+        [
+          "Human",
+          "86.3",
+          "89.0",
+          "86.9",
+          "89.5"
+        ],
+        [
+          "#1 Single - MIR-MRC (F-Net)",
+          "-",
+          "-",
+          "74.8",
+          "78.0"
+        ],
+        [
+          "#2 Single - nlnet",
+          "-",
+          "-",
+          "74.2",
+          "77.1"
+        ],
+        [
+          "unet (Ensemble)",
+          "-",
+          "-",
+          "71.4",
+          "74.9"
+        ],
+        [
+          "SLQA+ (Single)",
+          "-",
+          "",
+          "71.4",
+          "74.4"
+        ],
+        [
+          "BERTLARGE (Single)",
+          "78.7",
+          "81.9",
+          "80.0",
+          "83.1"
+        ]
+      ]
+    },
+    {
+      "filename": "N19-1423.pdf",
+      "source_sha256": "987545ffb087f1ece898142c403a516baeabeb70ce19089397fac6f7db12c3d4",
+      "page": 7,
+      "caption_prefix": "Table 4:",
+      "caption_below": true,
+      "rows": [
+        [
+          "ESIM+GloVe",
+          "51.9",
+          "52.7"
+        ],
+        [
+          "ESIM+ELMo",
+          "59.1",
+          "59.2"
+        ],
+        [
+          "OpenAI GPT",
+          "-",
+          "78.0"
+        ],
+        [
+          "BERTBASE",
+          "81.6",
+          "-"
+        ],
+        [
+          "BERTLARGE",
+          "86.6",
+          "86.3"
+        ],
+        [
+          "Human (expert)†",
+          "-",
+          "85.0"
+        ],
+        [
+          "Human (5 annotations)†",
+          "-",
+          "88.0"
+        ]
+      ]
+    },
+    {
+      "filename": "2010.11929v2.pdf",
+      "source_sha256": "8ce7b83971a14508ca711a27c875c9b6914c4f6767cf3150fb1ca6c07aa056d6",
+      "page": 16,
+      "caption_prefix": "Table 7:",
+      "caption_below": true,
+      "rows": [
+        [
+          "ImageNet",
+          "77.54",
+          "78.24",
+          "84.97",
+          "84.37"
+        ],
+        [
+          "CIFAR10",
+          "97.67",
+          "97.46",
+          "99.06",
+          "99.07"
+        ],
+        [
+          "CIFAR100",
+          "86.07",
+          "85.17",
+          "92.05",
+          "91.06"
+        ],
+        [
+          "Oxford-IIIT Pets",
+          "91.11",
+          "91.00",
+          "95.37",
+          "94.79"
+        ],
+        [
+          "Oxford Flowers-102",
+          "94.26",
+          "92.06",
+          "98.62",
+          "99.32"
+        ],
+        [
+          "Average",
+          "89.33",
+          "88.79",
+          "94.01",
+          "93.72"
+        ]
+      ]
+    },
+    {
+      "filename": "1706.03762v1.pdf",
+      "source_sha256": "0a9bff1be3575cf9fe26a4a3d3a9175bc791ecec90de8b9deba4cff75d2b9476",
+      "page": 8,
+      "caption_prefix": "Table 2:",
+      "caption_below": false,
+      "value_columns": [
+        1,
+        2
+      ],
+      "rows": [
+        [
+          "Transformer (base model)",
+          "27.3",
+          "38.1"
+        ],
+        [
+          "Transformer (big)",
+          "28.4",
+          "41.0"
+        ]
+      ]
+    },
+    {
+      "filename": "1910.10683v4.pdf",
+      "source_sha256": "ad07e47cedf437a4156419ce5d3076e08a3e59bbfd6dac7cc53df1009cdcbe7f",
+      "page": 14,
+      "caption_prefix": "Table 1:",
+      "caption_below": true,
+      "rows": [
+        [
+          "⋆Baseline average",
+          "83.28",
+          "19.24",
+          "80.88",
+          "71.36",
+          "26.98",
+          "39.82",
+          "27.65"
+        ],
+        [
+          "Baseline standard deviation",
+          "0.235",
+          "0.065",
+          "0.343",
+          "0.416",
+          "0.112",
+          "0.090",
+          "0.108"
+        ],
+        [
+          "No pre-training",
+          "66.22",
+          "17.60",
+          "50.31",
+          "53.04",
+          "25.86",
+          "39.77",
+          "24.04"
+        ]
+      ]
+    },
+    {
+      "filename": "2010.11929v2.pdf",
+      "source_sha256": "8ce7b83971a14508ca711a27c875c9b6914c4f6767cf3150fb1ca6c07aa056d6",
+      "page": 6,
+      "caption_prefix": "Table 2:",
+      "caption_below": true,
+      "rows": [
+        [
+          "ImageNet",
+          "88.55 ± 0.04",
+          "87.76 ± 0.03",
+          "85.30 ± 0.02",
+          "87.54 ± 0.02",
+          "88.4/88.5∗"
+        ],
+        [
+          "ImageNet ReaL",
+          "90.72 ± 0.05",
+          "90.54 ± 0.03",
+          "88.62 ± 0.05",
+          "90.54",
+          "90.55"
+        ],
+        [
+          "CIFAR-10",
+          "99.50 ± 0.06",
+          "99.42 ± 0.03",
+          "99.15 ± 0.03",
+          "99.37 ± 0.06",
+          "−"
+        ],
+        [
+          "CIFAR-100",
+          "94.55 ± 0.04",
+          "93.90 ± 0.05",
+          "93.25 ± 0.05",
+          "93.51 ± 0.08",
+          "−"
+        ],
+        [
+          "Oxford-IIIT Pets",
+          "97.56 ± 0.03",
+          "97.32 ± 0.11",
+          "94.67 ± 0.15",
+          "96.62 ± 0.23",
+          "−"
+        ],
+        [
+          "Oxford Flowers-102",
+          "99.68 ± 0.02",
+          "99.74 ± 0.00",
+          "99.61 ± 0.02",
+          "99.63 ± 0.03",
+          "−"
+        ],
+        [
+          "VTAB (19 tasks)",
+          "77.63 ± 0.23",
+          "76.28 ± 0.46",
+          "72.72 ± 0.21",
+          "76.29 ± 1.70",
+          "−"
+        ],
+        [
+          "TPUv3-core-days",
+          "2.5k",
+          "0.68k",
+          "0.23k",
+          "9.9k",
+          "12.3k"
+        ]
+      ]
+    }
+  ],
+  "baseline_expectations_sha256": "b944419fd8f5bf4c8573afa0133e0542e9e0c8bf32b0a6a23cd26d7e5a37fea9",
+  "negative_cases": [
+    {
+      "filename": "2010.11929v2.pdf",
+      "source_sha256": "8ce7b83971a14508ca711a27c875c9b6914c4f6767cf3150fb1ca6c07aa056d6",
+      "page": 6,
+      "excluded_table_region": [
+        110,
+        280,
+        505,
+        380
+      ],
+      "figure_caption_prefix": "Figure 2:",
+      "figure_region": [
+        110,
+        280,
+        505,
+        380
+      ],
+      "note": "Coarse manually selected visible plot region, backed by whole-page render and native clipping context; not derived from parser output."
+    },
+    {
+      "filename": "2201.11903v6.pdf",
+      "source_sha256": "7d9f878c23b460e4566aa4ec9201b1abfb3b8faefb2b1356e411cb90fef72a12",
+      "page": 7,
+      "no_tables_on_page": true,
+      "figure_caption_prefix": "Figure 7:",
+      "figure_region": [
+        130,
+        529,
+        505,
+        615
+      ],
+      "note": "Original page contains prose and a plotted figure, not a table. Regression negative, not a claim that all CoT tables are clean."
+    }
+  ]
+}

@@ -3,6 +3,42 @@ import re
 WORD_PATTERN = re.compile(r"[a-zA-Z]+(?:[_-]?\d+)?|\d+(?:\.\d+)?|[α-ωΑ-Ωβ₁₂]+")
 CJK_PATTERN = re.compile(r"[\u3400-\u9fff]+")
 PDF_LINE_BREAK_WORD = re.compile(r"\b([a-zA-Z]+)-\s+([a-zA-Z]+)\b")
+# A lexical phase alias, not permission to infer the phase from another clause.
+FINETUNING_PATTERN = r"(?:微调|细调|精调|\bfine[-\s]?tuning\b)"
+POLICY_SCOPE_BREAK = re.compile(
+    r"[。;；\n]|(?<!\d)\.(?!\d)|(?=而不是|而非|而是)|"
+    r"[,，]\s*(?=并非|并不是|(?:这|它|论文|因此)?并?[不未]|但|然而|"
+    r"实际上|并且|而且|却|\bbut\b)",
+    re.I,
+)
+
+
+def policy_scope_clauses(text: str) -> list[str]:
+    """Share proposition boundaries between scope rejection and completeness.
+
+    A contrastive denial neither erases an earlier positive statement nor
+    supplies a missing object or phase to a different proposition.
+    """
+    return POLICY_SCOPE_BREAK.split(text)
+
+
+def has_closed_form_policy_source(text: str) -> bool:
+    """Recognize an explicit policy statement or a directly displayed solution.
+
+    A derivation page may call its expression 'the optimal solution' instead of
+    repeating 'closed form'. Require an explicit policy assignment and its
+    exponential expression, not merely a policy mention or a loss gradient.
+    This is a bounded evidence-shape check, not a general theorem prover.
+    """
+    text = " ".join(text.split())
+    return bool(
+        re.search(r"optimal polic(?:y|ies).{0,50}\bin closed form\b", text, re.I)
+        or (
+            re.search(r"optimal solution\s*[:：]", text, re.I)
+            and re.search(r"π\s*(?:[∗*]\s*)?\(\s*y\s*\|\s*x\s*\)\s*=", text)
+            and re.search(r"\bexp\b", text)
+        )
+    )
 
 
 def tokenize(text: str) -> list[str]:

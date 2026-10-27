@@ -1,0 +1,15 @@
+{
+  "description": "Replay the preserved two original cases without changing questions, gold values or citations.",
+  "cases": {
+    "adam-settings": {
+      "insufficient_evidence": false,
+      "missing_fields": [],
+      "required_semantic_rejections": []
+    },
+    "gpt2-ln-change": {
+      "insufficient_evidence": false,
+      "missing_fields": [],
+      "required_semantic_rejections": ["normalization_position_missing_from_cited_passage"]
+    }
+  }
+}

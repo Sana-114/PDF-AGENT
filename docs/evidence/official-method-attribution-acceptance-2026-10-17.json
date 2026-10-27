@@ -1,0 +1,2156 @@
+{
+  "schema_version": 1,
+  "summary": {
+    "date": "2026-10-17",
+    "current_source": {
+      "python_version": "3.12.14",
+      "app_files": 128,
+      "app_sha256": "791480de0e3ce1d7c0fa7b9494fa075cfb32c979016bb6507c6b774e76b192e4",
+      "requirements_sha256": "b0e75e31a3ca8f034e095fd0667e3be7e380975548c5acce90db94f96ed7283f"
+    },
+    "runs": [
+      {
+        "run": "round-1-policy",
+        "source": {
+          "python_version": "3.12.14",
+          "app_files": 128,
+          "app_sha256": "a3dfdd23c5bc9ec023ab479215fa6246fd25f7ac31b7d3924c3e7012b8913028",
+          "requirements_sha256": "b0e75e31a3ca8f034e095fd0667e3be7e380975548c5acce90db94f96ed7283f"
+        },
+        "original_status": "source_checks_passed",
+        "original_case_statuses": [
+          "source_checks_passed",
+          "source_checks_passed"
+        ],
+        "generation_requests": 2
+      },
+      {
+        "run": "round-1-mechanism",
+        "source": {
+          "python_version": "3.12.14",
+          "app_files": 128,
+          "app_sha256": "a3dfdd23c5bc9ec023ab479215fa6246fd25f7ac31b7d3924c3e7012b8913028",
+          "requirements_sha256": "b0e75e31a3ca8f034e095fd0667e3be7e380975548c5acce90db94f96ed7283f"
+        },
+        "original_status": "source_checks_passed",
+        "original_case_statuses": [
+          "source_checks_passed",
+          "source_checks_passed"
+        ],
+        "generation_requests": 2
+      },
+      {
+        "run": "round-2-policy",
+        "source": {
+          "python_version": "3.12.14",
+          "app_files": 128,
+          "app_sha256": "a3dfdd23c5bc9ec023ab479215fa6246fd25f7ac31b7d3924c3e7012b8913028",
+          "requirements_sha256": "b0e75e31a3ca8f034e095fd0667e3be7e380975548c5acce90db94f96ed7283f"
+        },
+        "original_status": "source_checks_passed",
+        "original_case_statuses": [
+          "source_checks_passed",
+          "source_checks_passed"
+        ],
+        "generation_requests": 2
+      },
+      {
+        "run": "round-2-mechanism",
+        "source": {
+          "python_version": "3.12.14",
+          "app_files": 128,
+          "app_sha256": "a3dfdd23c5bc9ec023ab479215fa6246fd25f7ac31b7d3924c3e7012b8913028",
+          "requirements_sha256": "b0e75e31a3ca8f034e095fd0667e3be7e380975548c5acce90db94f96ed7283f"
+        },
+        "original_status": "failed",
+        "original_case_statuses": [
+          "failed",
+          "source_checks_passed"
+        ],
+        "generation_requests": 2
+      },
+      {
+        "run": "release-policy",
+        "source": {
+          "python_version": "3.12.14",
+          "app_files": 128,
+          "app_sha256": "439a7ca0ed5f9f6dfc58e1ffe3b768771fc504dd44b127ff6e8d212cecd45f78",
+          "requirements_sha256": "b0e75e31a3ca8f034e095fd0667e3be7e380975548c5acce90db94f96ed7283f"
+        },
+        "original_status": "source_checks_passed",
+        "original_case_statuses": [
+          "source_checks_passed",
+          "source_checks_passed"
+        ],
+        "generation_requests": 2
+      },
+      {
+        "run": "release-mechanism",
+        "source": {
+          "python_version": "3.12.14",
+          "app_files": 128,
+          "app_sha256": "439a7ca0ed5f9f6dfc58e1ffe3b768771fc504dd44b127ff6e8d212cecd45f78",
+          "requirements_sha256": "b0e75e31a3ca8f034e095fd0667e3be7e380975548c5acce90db94f96ed7283f"
+        },
+        "original_status": "failed",
+        "original_case_statuses": [
+          "source_checks_passed",
+          "failed"
+        ],
+        "generation_requests": 2
+      }
+    ],
+    "cloud_calls": 12,
+    "automatic_model_retries": 0,
+    "fresh_BGE_HTTP_qa_completed": true,
+    "all_qa_anchors_valid": true,
+    "qa_anchors": 234,
+    "anchor_checks": [
+      {
+        "run": "round-1-policy",
+        "case_id": "dpo-instructgpt-object-and-stage",
+        "evidence_id": "E3",
+        "valid": true,
+        "hybrid_reranked": true
+      },
+      {
+        "run": "round-1-policy",
+        "case_id": "dpo-instructgpt-object-and-stage",
+        "evidence_id": "E6",
+        "valid": true,
+        "hybrid_reranked": true
+      },
+      {
+        "run": "round-1-policy",
+        "case_id": "dpo-instructgpt-object-and-stage",
+        "evidence_id": "E9",
+        "valid": true,
+        "hybrid_reranked": true
+      },
+      {
+        "run": "round-1-policy",
+        "case_id": "dpo-instructgpt-object-and-stage",
+        "evidence_id": "E11",
+        "valid": true,
+        "hybrid_reranked": true
+      },
+      {
+        "run": "round-1-policy",
+        "case_id": "dpo-instructgpt-object-and-stage",
+        "evidence_id": "E15",
+        "valid": true,
+        "hybrid_reranked": true
+      },
+      {
+        "run": "round-1-policy",
+        "case_id": "dpo-instructgpt-object-and-stage",
+        "evidence_id": "E17",
+        "valid": true,
+        "hybrid_reranked": true
+      },
+      {
+        "run": "round-1-policy",
+        "case_id": "dpo-instructgpt-object-and-stage",
+        "evidence_id": "E20",
+        "valid": true,
+        "hybrid_reranked": true
+      },
+      {
+        "run": "round-1-policy",
+        "case_id": "dpo-instructgpt-object-and-stage",
+        "evidence_id": "E1",
+        "valid": true,
+        "hybrid_reranked": true
+      },
+      {
+        "run": "round-1-policy",
+        "case_id": "dpo-instructgpt-object-and-stage",
+        "evidence_id": "E2",
+        "valid": true,
+        "hybrid_reranked": true
+      },
+      {
+        "run": "round-1-policy",
+        "case_id": "dpo-instructgpt-object-and-stage",
+        "evidence_id": "E4",
+        "valid": true,
+        "hybrid_reranked": true
+      },
+      {
+        "run": "round-1-policy",
+        "case_id": "dpo-instructgpt-object-and-stage",
+        "evidence_id": "E5",
+        "valid": true,
+        "hybrid_reranked": true
+      },
+      {
+        "run": "round-1-policy",
+        "case_id": "dpo-instructgpt-object-and-stage",
+        "evidence_id": "E7",
+        "valid": true,
+        "hybrid_reranked": true
+      },
+      {
+        "run": "round-1-policy",
+        "case_id": "dpo-instructgpt-object-and-stage",
+        "evidence_id": "E8",
+        "valid": true,
+        "hybrid_reranked": true
+      },
+      {
+        "run": "round-1-policy",
+        "case_id": "dpo-instructgpt-object-and-stage",
+        "evidence_id": "E10",
+        "valid": true,
+        "hybrid_reranked": true
+      },
+      {
+        "run": "round-1-policy",
+        "case_id": "dpo-instructgpt-object-and-stage",
+        "evidence_id": "E12",
+        "valid": true,
+        "hybrid_reranked": true
+      },
+      {
+        "run": "round-1-policy",
+        "case_id": "dpo-instructgpt-object-and-stage",
+        "evidence_id": "E13",
+        "valid": true,
+        "hybrid_reranked": true
+      },
+      {
+        "run": "round-1-policy",
+        "case_id": "dpo-instructgpt-object-and-stage",
+        "evidence_id": "E14",
+        "valid": true,
+        "hybrid_reranked": true
+      },
+      {
+        "run": "round-1-policy",
+        "case_id": "dpo-instructgpt-object-and-stage",
+        "evidence_id": "E16",
+        "valid": true,
+        "hybrid_reranked": true
+      },
+      {
+        "run": "round-1-policy",
+        "case_id": "dpo-instructgpt-object-and-stage",
+        "evidence_id": "E18",
+        "valid": true,
+        "hybrid_reranked": true
+      },
+      {
+        "run": "round-1-policy",
+        "case_id": "dpo-instructgpt-object-and-stage",
+        "evidence_id": "E19",
+        "valid": true,
+        "hybrid_reranked": true
+      },
+      {
+        "run": "round-1-policy",
+        "case_id": "dpo-reject-global-analytic-and-sampling-free",
+        "evidence_id": "E1",
+        "valid": true,
+        "hybrid_reranked": true
+      },
+      {
+        "run": "round-1-policy",
+        "case_id": "dpo-reject-global-analytic-and-sampling-free",
+        "evidence_id": "E2",
+        "valid": true,
+        "hybrid_reranked": true
+      },
+      {
+        "run": "round-1-policy",
+        "case_id": "dpo-reject-global-analytic-and-sampling-free",
+        "evidence_id": "E3",
+        "valid": true,
+        "hybrid_reranked": true
+      },
+      {
+        "run": "round-1-policy",
+        "case_id": "dpo-reject-global-analytic-and-sampling-free",
+        "evidence_id": "E4",
+        "valid": true,
+        "hybrid_reranked": true
+      },
+      {
+        "run": "round-1-policy",
+        "case_id": "dpo-reject-global-analytic-and-sampling-free",
+        "evidence_id": "E5",
+        "valid": true,
+        "hybrid_reranked": true
+      },
+      {
+        "run": "round-1-policy",
+        "case_id": "dpo-reject-global-analytic-and-sampling-free",
+        "evidence_id": "E6",
+        "valid": true,
+        "hybrid_reranked": true
+      },
+      {
+        "run": "round-1-policy",
+        "case_id": "dpo-reject-global-analytic-and-sampling-free",
+        "evidence_id": "E7",
+        "valid": true,
+        "hybrid_reranked": true
+      },
+      {
+        "run": "round-1-policy",
+        "case_id": "dpo-reject-global-analytic-and-sampling-free",
+        "evidence_id": "E8",
+        "valid": true,
+        "hybrid_reranked": true
+      },
+      {
+        "run": "round-1-policy",
+        "case_id": "dpo-reject-global-analytic-and-sampling-free",
+        "evidence_id": "E9",
+        "valid": true,
+        "hybrid_reranked": true
+      },
+      {
+        "run": "round-1-policy",
+        "case_id": "dpo-reject-global-analytic-and-sampling-free",
+        "evidence_id": "E10",
+        "valid": true,
+        "hybrid_reranked": true
+      },
+      {
+        "run": "round-1-policy",
+        "case_id": "dpo-reject-global-analytic-and-sampling-free",
+        "evidence_id": "E11",
+        "valid": true,
+        "hybrid_reranked": true
+      },
+      {
+        "run": "round-1-policy",
+        "case_id": "dpo-reject-global-analytic-and-sampling-free",
+        "evidence_id": "E12",
+        "valid": true,
+        "hybrid_reranked": true
+      },
+      {
+        "run": "round-1-policy",
+        "case_id": "dpo-reject-global-analytic-and-sampling-free",
+        "evidence_id": "E13",
+        "valid": true,
+        "hybrid_reranked": true
+      },
+      {
+        "run": "round-1-policy",
+        "case_id": "dpo-reject-global-analytic-and-sampling-free",
+        "evidence_id": "E14",
+        "valid": true,
+        "hybrid_reranked": true
+      },
+      {
+        "run": "round-1-policy",
+        "case_id": "dpo-reject-global-analytic-and-sampling-free",
+        "evidence_id": "E15",
+        "valid": true,
+        "hybrid_reranked": true
+      },
+      {
+        "run": "round-1-policy",
+        "case_id": "dpo-reject-global-analytic-and-sampling-free",
+        "evidence_id": "E16",
+        "valid": true,
+        "hybrid_reranked": true
+      },
+      {
+        "run": "round-1-policy",
+        "case_id": "dpo-reject-global-analytic-and-sampling-free",
+        "evidence_id": "E17",
+        "valid": true,
+        "hybrid_reranked": true
+      },
+      {
+        "run": "round-1-policy",
+        "case_id": "dpo-reject-global-analytic-and-sampling-free",
+        "evidence_id": "E18",
+        "valid": true,
+        "hybrid_reranked": true
+      },
+      {
+        "run": "round-1-policy",
+        "case_id": "dpo-reject-global-analytic-and-sampling-free",
+        "evidence_id": "E19",
+        "valid": true,
+        "hybrid_reranked": true
+      },
+      {
+        "run": "round-1-policy",
+        "case_id": "dpo-reject-global-analytic-and-sampling-free",
+        "evidence_id": "E20",
+        "valid": true,
+        "hybrid_reranked": true
+      },
+      {
+        "run": "round-1-mechanism",
+        "case_id": "lora-qlora-mechanism",
+        "evidence_id": "E1",
+        "valid": true,
+        "hybrid_reranked": true
+      },
+      {
+        "run": "round-1-mechanism",
+        "case_id": "lora-qlora-mechanism",
+        "evidence_id": "E2",
+        "valid": true,
+        "hybrid_reranked": true
+      },
+      {
+        "run": "round-1-mechanism",
+        "case_id": "lora-qlora-mechanism",
+        "evidence_id": "E3",
+        "valid": true,
+        "hybrid_reranked": true
+      },
+      {
+        "run": "round-1-mechanism",
+        "case_id": "lora-qlora-mechanism",
+        "evidence_id": "E5",
+        "valid": true,
+        "hybrid_reranked": true
+      },
+      {
+        "run": "round-1-mechanism",
+        "case_id": "lora-qlora-mechanism",
+        "evidence_id": "E9",
+        "valid": true,
+        "hybrid_reranked": true
+      },
+      {
+        "run": "round-1-mechanism",
+        "case_id": "lora-qlora-mechanism",
+        "evidence_id": "E15",
+        "valid": true,
+        "hybrid_reranked": true
+      },
+      {
+        "run": "round-1-mechanism",
+        "case_id": "lora-qlora-mechanism",
+        "evidence_id": "E16",
+        "valid": true,
+        "hybrid_reranked": true
+      },
+      {
+        "run": "round-1-mechanism",
+        "case_id": "lora-qlora-mechanism",
+        "evidence_id": "E19",
+        "valid": true,
+        "hybrid_reranked": true
+      },
+      {
+        "run": "round-1-mechanism",
+        "case_id": "lora-qlora-mechanism",
+        "evidence_id": "E4",
+        "valid": true,
+        "hybrid_reranked": true
+      },
+      {
+        "run": "round-1-mechanism",
+        "case_id": "lora-qlora-mechanism",
+        "evidence_id": "E6",
+        "valid": true,
+        "hybrid_reranked": true
+      },
+      {
+        "run": "round-1-mechanism",
+        "case_id": "lora-qlora-mechanism",
+        "evidence_id": "E7",
+        "valid": true,
+        "hybrid_reranked": true
+      },
+      {
+        "run": "round-1-mechanism",
+        "case_id": "lora-qlora-mechanism",
+        "evidence_id": "E8",
+        "valid": true,
+        "hybrid_reranked": true
+      },
+      {
+        "run": "round-1-mechanism",
+        "case_id": "lora-qlora-mechanism",
+        "evidence_id": "E10",
+        "valid": true,
+        "hybrid_reranked": true
+      },
+      {
+        "run": "round-1-mechanism",
+        "case_id": "lora-qlora-mechanism",
+        "evidence_id": "E11",
+        "valid": true,
+        "hybrid_reranked": true
+      },
+      {
+        "run": "round-1-mechanism",
+        "case_id": "lora-qlora-mechanism",
+        "evidence_id": "E12",
+        "valid": true,
+        "hybrid_reranked": true
+      },
+      {
+        "run": "round-1-mechanism",
+        "case_id": "lora-qlora-mechanism",
+        "evidence_id": "E13",
+        "valid": true,
+        "hybrid_reranked": true
+      },
+      {
+        "run": "round-1-mechanism",
+        "case_id": "lora-qlora-mechanism",
+        "evidence_id": "E14",
+        "valid": true,
+        "hybrid_reranked": true
+      },
+      {
+        "run": "round-1-mechanism",
+        "case_id": "lora-qlora-mechanism",
+        "evidence_id": "E17",
+        "valid": true,
+        "hybrid_reranked": true
+      },
+      {
+        "run": "round-1-mechanism",
+        "case_id": "lora-qlora-mechanism",
+        "evidence_id": "E18",
+        "valid": true,
+        "hybrid_reranked": true
+      },
+      {
+        "run": "round-1-mechanism",
+        "case_id": "lora-qlora-mechanism",
+        "evidence_id": "E20",
+        "valid": true,
+        "hybrid_reranked": true
+      },
+      {
+        "run": "round-1-mechanism",
+        "case_id": "unreported-training-seed",
+        "evidence_id": "E1",
+        "valid": true,
+        "hybrid_reranked": true
+      },
+      {
+        "run": "round-1-mechanism",
+        "case_id": "unreported-training-seed",
+        "evidence_id": "E2",
+        "valid": true,
+        "hybrid_reranked": true
+      },
+      {
+        "run": "round-1-mechanism",
+        "case_id": "unreported-training-seed",
+        "evidence_id": "E3",
+        "valid": true,
+        "hybrid_reranked": true
+      },
+      {
+        "run": "round-1-mechanism",
+        "case_id": "unreported-training-seed",
+        "evidence_id": "E4",
+        "valid": true,
+        "hybrid_reranked": true
+      },
+      {
+        "run": "round-1-mechanism",
+        "case_id": "unreported-training-seed",
+        "evidence_id": "E5",
+        "valid": true,
+        "hybrid_reranked": true
+      },
+      {
+        "run": "round-1-mechanism",
+        "case_id": "unreported-training-seed",
+        "evidence_id": "E6",
+        "valid": true,
+        "hybrid_reranked": true
+      },
+      {
+        "run": "round-1-mechanism",
+        "case_id": "unreported-training-seed",
+        "evidence_id": "E7",
+        "valid": true,
+        "hybrid_reranked": true
+      },
+      {
+        "run": "round-1-mechanism",
+        "case_id": "unreported-training-seed",
+        "evidence_id": "E8",
+        "valid": true,
+        "hybrid_reranked": true
+      },
+      {
+        "run": "round-1-mechanism",
+        "case_id": "unreported-training-seed",
+        "evidence_id": "E9",
+        "valid": true,
+        "hybrid_reranked": true
+      },
+      {
+        "run": "round-1-mechanism",
+        "case_id": "unreported-training-seed",
+        "evidence_id": "E10",
+        "valid": true,
+        "hybrid_reranked": true
+      },
+      {
+        "run": "round-1-mechanism",
+        "case_id": "unreported-training-seed",
+        "evidence_id": "E11",
+        "valid": true,
+        "hybrid_reranked": true
+      },
+      {
+        "run": "round-1-mechanism",
+        "case_id": "unreported-training-seed",
+        "evidence_id": "E12",
+        "valid": true,
+        "hybrid_reranked": true
+      },
+      {
+        "run": "round-1-mechanism",
+        "case_id": "unreported-training-seed",
+        "evidence_id": "E13",
+        "valid": true,
+        "hybrid_reranked": true
+      },
+      {
+        "run": "round-1-mechanism",
+        "case_id": "unreported-training-seed",
+        "evidence_id": "E14",
+        "valid": true,
+        "hybrid_reranked": true
+      },
+      {
+        "run": "round-1-mechanism",
+        "case_id": "unreported-training-seed",
+        "evidence_id": "E15",
+        "valid": true,
+        "hybrid_reranked": true
+      },
+      {
+        "run": "round-1-mechanism",
+        "case_id": "unreported-training-seed",
+        "evidence_id": "E16",
+        "valid": true,
+        "hybrid_reranked": true
+      },
+      {
+        "run": "round-1-mechanism",
+        "case_id": "unreported-training-seed",
+        "evidence_id": "E17",
+        "valid": true,
+        "hybrid_reranked": true
+      },
+      {
+        "run": "round-1-mechanism",
+        "case_id": "unreported-training-seed",
+        "evidence_id": "E18",
+        "valid": true,
+        "hybrid_reranked": true
+      },
+      {
+        "run": "round-2-policy",
+        "case_id": "dpo-instructgpt-object-and-stage",
+        "evidence_id": "E3",
+        "valid": true,
+        "hybrid_reranked": true
+      },
+      {
+        "run": "round-2-policy",
+        "case_id": "dpo-instructgpt-object-and-stage",
+        "evidence_id": "E6",
+        "valid": true,
+        "hybrid_reranked": true
+      },
+      {
+        "run": "round-2-policy",
+        "case_id": "dpo-instructgpt-object-and-stage",
+        "evidence_id": "E9",
+        "valid": true,
+        "hybrid_reranked": true
+      },
+      {
+        "run": "round-2-policy",
+        "case_id": "dpo-instructgpt-object-and-stage",
+        "evidence_id": "E11",
+        "valid": true,
+        "hybrid_reranked": true
+      },
+      {
+        "run": "round-2-policy",
+        "case_id": "dpo-instructgpt-object-and-stage",
+        "evidence_id": "E15",
+        "valid": true,
+        "hybrid_reranked": true
+      },
+      {
+        "run": "round-2-policy",
+        "case_id": "dpo-instructgpt-object-and-stage",
+        "evidence_id": "E17",
+        "valid": true,
+        "hybrid_reranked": true
+      },
+      {
+        "run": "round-2-policy",
+        "case_id": "dpo-instructgpt-object-and-stage",
+        "evidence_id": "E20",
+        "valid": true,
+        "hybrid_reranked": true
+      },
+      {
+        "run": "round-2-policy",
+        "case_id": "dpo-instructgpt-object-and-stage",
+        "evidence_id": "E1",
+        "valid": true,
+        "hybrid_reranked": true
+      },
+      {
+        "run": "round-2-policy",
+        "case_id": "dpo-instructgpt-object-and-stage",
+        "evidence_id": "E2",
+        "valid": true,
+        "hybrid_reranked": true
+      },
+      {
+        "run": "round-2-policy",
+        "case_id": "dpo-instructgpt-object-and-stage",
+        "evidence_id": "E4",
+        "valid": true,
+        "hybrid_reranked": true
+      },
+      {
+        "run": "round-2-policy",
+        "case_id": "dpo-instructgpt-object-and-stage",
+        "evidence_id": "E5",
+        "valid": true,
+        "hybrid_reranked": true
+      },
+      {
+        "run": "round-2-policy",
+        "case_id": "dpo-instructgpt-object-and-stage",
+        "evidence_id": "E7",
+        "valid": true,
+        "hybrid_reranked": true
+      },
+      {
+        "run": "round-2-policy",
+        "case_id": "dpo-instructgpt-object-and-stage",
+        "evidence_id": "E8",
+        "valid": true,
+        "hybrid_reranked": true
+      },
+      {
+        "run": "round-2-policy",
+        "case_id": "dpo-instructgpt-object-and-stage",
+        "evidence_id": "E10",
+        "valid": true,
+        "hybrid_reranked": true
+      },
+      {
+        "run": "round-2-policy",
+        "case_id": "dpo-instructgpt-object-and-stage",
+        "evidence_id": "E12",
+        "valid": true,
+        "hybrid_reranked": true
+      },
+      {
+        "run": "round-2-policy",
+        "case_id": "dpo-instructgpt-object-and-stage",
+        "evidence_id": "E13",
+        "valid": true,
+        "hybrid_reranked": true
+      },
+      {
+        "run": "round-2-policy",
+        "case_id": "dpo-instructgpt-object-and-stage",
+        "evidence_id": "E14",
+        "valid": true,
+        "hybrid_reranked": true
+      },
+      {
+        "run": "round-2-policy",
+        "case_id": "dpo-instructgpt-object-and-stage",
+        "evidence_id": "E16",
+        "valid": true,
+        "hybrid_reranked": true
+      },
+      {
+        "run": "round-2-policy",
+        "case_id": "dpo-instructgpt-object-and-stage",
+        "evidence_id": "E18",
+        "valid": true,
+        "hybrid_reranked": true
+      },
+      {
+        "run": "round-2-policy",
+        "case_id": "dpo-instructgpt-object-and-stage",
+        "evidence_id": "E19",
+        "valid": true,
+        "hybrid_reranked": true
+      },
+      {
+        "run": "round-2-policy",
+        "case_id": "dpo-reject-global-analytic-and-sampling-free",
+        "evidence_id": "E1",
+        "valid": true,
+        "hybrid_reranked": true
+      },
+      {
+        "run": "round-2-policy",
+        "case_id": "dpo-reject-global-analytic-and-sampling-free",
+        "evidence_id": "E2",
+        "valid": true,
+        "hybrid_reranked": true
+      },
+      {
+        "run": "round-2-policy",
+        "case_id": "dpo-reject-global-analytic-and-sampling-free",
+        "evidence_id": "E3",
+        "valid": true,
+        "hybrid_reranked": true
+      },
+      {
+        "run": "round-2-policy",
+        "case_id": "dpo-reject-global-analytic-and-sampling-free",
+        "evidence_id": "E4",
+        "valid": true,
+        "hybrid_reranked": true
+      },
+      {
+        "run": "round-2-policy",
+        "case_id": "dpo-reject-global-analytic-and-sampling-free",
+        "evidence_id": "E5",
+        "valid": true,
+        "hybrid_reranked": true
+      },
+      {
+        "run": "round-2-policy",
+        "case_id": "dpo-reject-global-analytic-and-sampling-free",
+        "evidence_id": "E6",
+        "valid": true,
+        "hybrid_reranked": true
+      },
+      {
+        "run": "round-2-policy",
+        "case_id": "dpo-reject-global-analytic-and-sampling-free",
+        "evidence_id": "E7",
+        "valid": true,
+        "hybrid_reranked": true
+      },
+      {
+        "run": "round-2-policy",
+        "case_id": "dpo-reject-global-analytic-and-sampling-free",
+        "evidence_id": "E8",
+        "valid": true,
+        "hybrid_reranked": true
+      },
+      {
+        "run": "round-2-policy",
+        "case_id": "dpo-reject-global-analytic-and-sampling-free",
+        "evidence_id": "E9",
+        "valid": true,
+        "hybrid_reranked": true
+      },
+      {
+        "run": "round-2-policy",
+        "case_id": "dpo-reject-global-analytic-and-sampling-free",
+        "evidence_id": "E10",
+        "valid": true,
+        "hybrid_reranked": true
+      },
+      {
+        "run": "round-2-policy",
+        "case_id": "dpo-reject-global-analytic-and-sampling-free",
+        "evidence_id": "E11",
+        "valid": true,
+        "hybrid_reranked": true
+      },
+      {
+        "run": "round-2-policy",
+        "case_id": "dpo-reject-global-analytic-and-sampling-free",
+        "evidence_id": "E12",
+        "valid": true,
+        "hybrid_reranked": true
+      },
+      {
+        "run": "round-2-policy",
+        "case_id": "dpo-reject-global-analytic-and-sampling-free",
+        "evidence_id": "E13",
+        "valid": true,
+        "hybrid_reranked": true
+      },
+      {
+        "run": "round-2-policy",
+        "case_id": "dpo-reject-global-analytic-and-sampling-free",
+        "evidence_id": "E14",
+        "valid": true,
+        "hybrid_reranked": true
+      },
+      {
+        "run": "round-2-policy",
+        "case_id": "dpo-reject-global-analytic-and-sampling-free",
+        "evidence_id": "E15",
+        "valid": true,
+        "hybrid_reranked": true
+      },
+      {
+        "run": "round-2-policy",
+        "case_id": "dpo-reject-global-analytic-and-sampling-free",
+        "evidence_id": "E16",
+        "valid": true,
+        "hybrid_reranked": true
+      },
+      {
+        "run": "round-2-policy",
+        "case_id": "dpo-reject-global-analytic-and-sampling-free",
+        "evidence_id": "E17",
+        "valid": true,
+        "hybrid_reranked": true
+      },
+      {
+        "run": "round-2-policy",
+        "case_id": "dpo-reject-global-analytic-and-sampling-free",
+        "evidence_id": "E18",
+        "valid": true,
+        "hybrid_reranked": true
+      },
+      {
+        "run": "round-2-policy",
+        "case_id": "dpo-reject-global-analytic-and-sampling-free",
+        "evidence_id": "E19",
+        "valid": true,
+        "hybrid_reranked": true
+      },
+      {
+        "run": "round-2-policy",
+        "case_id": "dpo-reject-global-analytic-and-sampling-free",
+        "evidence_id": "E20",
+        "valid": true,
+        "hybrid_reranked": true
+      },
+      {
+        "run": "round-2-mechanism",
+        "case_id": "lora-qlora-mechanism",
+        "evidence_id": "E1",
+        "valid": true,
+        "hybrid_reranked": true
+      },
+      {
+        "run": "round-2-mechanism",
+        "case_id": "lora-qlora-mechanism",
+        "evidence_id": "E2",
+        "valid": true,
+        "hybrid_reranked": true
+      },
+      {
+        "run": "round-2-mechanism",
+        "case_id": "lora-qlora-mechanism",
+        "evidence_id": "E3",
+        "valid": true,
+        "hybrid_reranked": true
+      },
+      {
+        "run": "round-2-mechanism",
+        "case_id": "lora-qlora-mechanism",
+        "evidence_id": "E5",
+        "valid": true,
+        "hybrid_reranked": true
+      },
+      {
+        "run": "round-2-mechanism",
+        "case_id": "lora-qlora-mechanism",
+        "evidence_id": "E9",
+        "valid": true,
+        "hybrid_reranked": true
+      },
+      {
+        "run": "round-2-mechanism",
+        "case_id": "lora-qlora-mechanism",
+        "evidence_id": "E15",
+        "valid": true,
+        "hybrid_reranked": true
+      },
+      {
+        "run": "round-2-mechanism",
+        "case_id": "lora-qlora-mechanism",
+        "evidence_id": "E16",
+        "valid": true,
+        "hybrid_reranked": true
+      },
+      {
+        "run": "round-2-mechanism",
+        "case_id": "lora-qlora-mechanism",
+        "evidence_id": "E19",
+        "valid": true,
+        "hybrid_reranked": true
+      },
+      {
+        "run": "round-2-mechanism",
+        "case_id": "lora-qlora-mechanism",
+        "evidence_id": "E4",
+        "valid": true,
+        "hybrid_reranked": true
+      },
+      {
+        "run": "round-2-mechanism",
+        "case_id": "lora-qlora-mechanism",
+        "evidence_id": "E6",
+        "valid": true,
+        "hybrid_reranked": true
+      },
+      {
+        "run": "round-2-mechanism",
+        "case_id": "lora-qlora-mechanism",
+        "evidence_id": "E7",
+        "valid": true,
+        "hybrid_reranked": true
+      },
+      {
+        "run": "round-2-mechanism",
+        "case_id": "lora-qlora-mechanism",
+        "evidence_id": "E8",
+        "valid": true,
+        "hybrid_reranked": true
+      },
+      {
+        "run": "round-2-mechanism",
+        "case_id": "lora-qlora-mechanism",
+        "evidence_id": "E10",
+        "valid": true,
+        "hybrid_reranked": true
+      },
+      {
+        "run": "round-2-mechanism",
+        "case_id": "lora-qlora-mechanism",
+        "evidence_id": "E11",
+        "valid": true,
+        "hybrid_reranked": true
+      },
+      {
+        "run": "round-2-mechanism",
+        "case_id": "lora-qlora-mechanism",
+        "evidence_id": "E12",
+        "valid": true,
+        "hybrid_reranked": true
+      },
+      {
+        "run": "round-2-mechanism",
+        "case_id": "lora-qlora-mechanism",
+        "evidence_id": "E13",
+        "valid": true,
+        "hybrid_reranked": true
+      },
+      {
+        "run": "round-2-mechanism",
+        "case_id": "lora-qlora-mechanism",
+        "evidence_id": "E14",
+        "valid": true,
+        "hybrid_reranked": true
+      },
+      {
+        "run": "round-2-mechanism",
+        "case_id": "lora-qlora-mechanism",
+        "evidence_id": "E17",
+        "valid": true,
+        "hybrid_reranked": true
+      },
+      {
+        "run": "round-2-mechanism",
+        "case_id": "lora-qlora-mechanism",
+        "evidence_id": "E18",
+        "valid": true,
+        "hybrid_reranked": true
+      },
+      {
+        "run": "round-2-mechanism",
+        "case_id": "lora-qlora-mechanism",
+        "evidence_id": "E20",
+        "valid": true,
+        "hybrid_reranked": true
+      },
+      {
+        "run": "round-2-mechanism",
+        "case_id": "unreported-training-seed",
+        "evidence_id": "E1",
+        "valid": true,
+        "hybrid_reranked": true
+      },
+      {
+        "run": "round-2-mechanism",
+        "case_id": "unreported-training-seed",
+        "evidence_id": "E2",
+        "valid": true,
+        "hybrid_reranked": true
+      },
+      {
+        "run": "round-2-mechanism",
+        "case_id": "unreported-training-seed",
+        "evidence_id": "E3",
+        "valid": true,
+        "hybrid_reranked": true
+      },
+      {
+        "run": "round-2-mechanism",
+        "case_id": "unreported-training-seed",
+        "evidence_id": "E4",
+        "valid": true,
+        "hybrid_reranked": true
+      },
+      {
+        "run": "round-2-mechanism",
+        "case_id": "unreported-training-seed",
+        "evidence_id": "E5",
+        "valid": true,
+        "hybrid_reranked": true
+      },
+      {
+        "run": "round-2-mechanism",
+        "case_id": "unreported-training-seed",
+        "evidence_id": "E6",
+        "valid": true,
+        "hybrid_reranked": true
+      },
+      {
+        "run": "round-2-mechanism",
+        "case_id": "unreported-training-seed",
+        "evidence_id": "E7",
+        "valid": true,
+        "hybrid_reranked": true
+      },
+      {
+        "run": "round-2-mechanism",
+        "case_id": "unreported-training-seed",
+        "evidence_id": "E8",
+        "valid": true,
+        "hybrid_reranked": true
+      },
+      {
+        "run": "round-2-mechanism",
+        "case_id": "unreported-training-seed",
+        "evidence_id": "E9",
+        "valid": true,
+        "hybrid_reranked": true
+      },
+      {
+        "run": "round-2-mechanism",
+        "case_id": "unreported-training-seed",
+        "evidence_id": "E10",
+        "valid": true,
+        "hybrid_reranked": true
+      },
+      {
+        "run": "round-2-mechanism",
+        "case_id": "unreported-training-seed",
+        "evidence_id": "E11",
+        "valid": true,
+        "hybrid_reranked": true
+      },
+      {
+        "run": "round-2-mechanism",
+        "case_id": "unreported-training-seed",
+        "evidence_id": "E12",
+        "valid": true,
+        "hybrid_reranked": true
+      },
+      {
+        "run": "round-2-mechanism",
+        "case_id": "unreported-training-seed",
+        "evidence_id": "E13",
+        "valid": true,
+        "hybrid_reranked": true
+      },
+      {
+        "run": "round-2-mechanism",
+        "case_id": "unreported-training-seed",
+        "evidence_id": "E14",
+        "valid": true,
+        "hybrid_reranked": true
+      },
+      {
+        "run": "round-2-mechanism",
+        "case_id": "unreported-training-seed",
+        "evidence_id": "E15",
+        "valid": true,
+        "hybrid_reranked": true
+      },
+      {
+        "run": "round-2-mechanism",
+        "case_id": "unreported-training-seed",
+        "evidence_id": "E16",
+        "valid": true,
+        "hybrid_reranked": true
+      },
+      {
+        "run": "round-2-mechanism",
+        "case_id": "unreported-training-seed",
+        "evidence_id": "E17",
+        "valid": true,
+        "hybrid_reranked": true
+      },
+      {
+        "run": "round-2-mechanism",
+        "case_id": "unreported-training-seed",
+        "evidence_id": "E18",
+        "valid": true,
+        "hybrid_reranked": true
+      },
+      {
+        "run": "release-policy",
+        "case_id": "dpo-instructgpt-object-and-stage",
+        "evidence_id": "E3",
+        "valid": true,
+        "hybrid_reranked": true
+      },
+      {
+        "run": "release-policy",
+        "case_id": "dpo-instructgpt-object-and-stage",
+        "evidence_id": "E6",
+        "valid": true,
+        "hybrid_reranked": true
+      },
+      {
+        "run": "release-policy",
+        "case_id": "dpo-instructgpt-object-and-stage",
+        "evidence_id": "E9",
+        "valid": true,
+        "hybrid_reranked": true
+      },
+      {
+        "run": "release-policy",
+        "case_id": "dpo-instructgpt-object-and-stage",
+        "evidence_id": "E11",
+        "valid": true,
+        "hybrid_reranked": true
+      },
+      {
+        "run": "release-policy",
+        "case_id": "dpo-instructgpt-object-and-stage",
+        "evidence_id": "E15",
+        "valid": true,
+        "hybrid_reranked": true
+      },
+      {
+        "run": "release-policy",
+        "case_id": "dpo-instructgpt-object-and-stage",
+        "evidence_id": "E17",
+        "valid": true,
+        "hybrid_reranked": true
+      },
+      {
+        "run": "release-policy",
+        "case_id": "dpo-instructgpt-object-and-stage",
+        "evidence_id": "E20",
+        "valid": true,
+        "hybrid_reranked": true
+      },
+      {
+        "run": "release-policy",
+        "case_id": "dpo-instructgpt-object-and-stage",
+        "evidence_id": "E1",
+        "valid": true,
+        "hybrid_reranked": true
+      },
+      {
+        "run": "release-policy",
+        "case_id": "dpo-instructgpt-object-and-stage",
+        "evidence_id": "E2",
+        "valid": true,
+        "hybrid_reranked": true
+      },
+      {
+        "run": "release-policy",
+        "case_id": "dpo-instructgpt-object-and-stage",
+        "evidence_id": "E4",
+        "valid": true,
+        "hybrid_reranked": true
+      },
+      {
+        "run": "release-policy",
+        "case_id": "dpo-instructgpt-object-and-stage",
+        "evidence_id": "E5",
+        "valid": true,
+        "hybrid_reranked": true
+      },
+      {
+        "run": "release-policy",
+        "case_id": "dpo-instructgpt-object-and-stage",
+        "evidence_id": "E7",
+        "valid": true,
+        "hybrid_reranked": true
+      },
+      {
+        "run": "release-policy",
+        "case_id": "dpo-instructgpt-object-and-stage",
+        "evidence_id": "E8",
+        "valid": true,
+        "hybrid_reranked": true
+      },
+      {
+        "run": "release-policy",
+        "case_id": "dpo-instructgpt-object-and-stage",
+        "evidence_id": "E10",
+        "valid": true,
+        "hybrid_reranked": true
+      },
+      {
+        "run": "release-policy",
+        "case_id": "dpo-instructgpt-object-and-stage",
+        "evidence_id": "E12",
+        "valid": true,
+        "hybrid_reranked": true
+      },
+      {
+        "run": "release-policy",
+        "case_id": "dpo-instructgpt-object-and-stage",
+        "evidence_id": "E13",
+        "valid": true,
+        "hybrid_reranked": true
+      },
+      {
+        "run": "release-policy",
+        "case_id": "dpo-instructgpt-object-and-stage",
+        "evidence_id": "E14",
+        "valid": true,
+        "hybrid_reranked": true
+      },
+      {
+        "run": "release-policy",
+        "case_id": "dpo-instructgpt-object-and-stage",
+        "evidence_id": "E16",
+        "valid": true,
+        "hybrid_reranked": true
+      },
+      {
+        "run": "release-policy",
+        "case_id": "dpo-instructgpt-object-and-stage",
+        "evidence_id": "E18",
+        "valid": true,
+        "hybrid_reranked": true
+      },
+      {
+        "run": "release-policy",
+        "case_id": "dpo-instructgpt-object-and-stage",
+        "evidence_id": "E19",
+        "valid": true,
+        "hybrid_reranked": true
+      },
+      {
+        "run": "release-policy",
+        "case_id": "dpo-reject-global-analytic-and-sampling-free",
+        "evidence_id": "E1",
+        "valid": true,
+        "hybrid_reranked": true
+      },
+      {
+        "run": "release-policy",
+        "case_id": "dpo-reject-global-analytic-and-sampling-free",
+        "evidence_id": "E2",
+        "valid": true,
+        "hybrid_reranked": true
+      },
+      {
+        "run": "release-policy",
+        "case_id": "dpo-reject-global-analytic-and-sampling-free",
+        "evidence_id": "E3",
+        "valid": true,
+        "hybrid_reranked": true
+      },
+      {
+        "run": "release-policy",
+        "case_id": "dpo-reject-global-analytic-and-sampling-free",
+        "evidence_id": "E4",
+        "valid": true,
+        "hybrid_reranked": true
+      },
+      {
+        "run": "release-policy",
+        "case_id": "dpo-reject-global-analytic-and-sampling-free",
+        "evidence_id": "E5",
+        "valid": true,
+        "hybrid_reranked": true
+      },
+      {
+        "run": "release-policy",
+        "case_id": "dpo-reject-global-analytic-and-sampling-free",
+        "evidence_id": "E6",
+        "valid": true,
+        "hybrid_reranked": true
+      },
+      {
+        "run": "release-policy",
+        "case_id": "dpo-reject-global-analytic-and-sampling-free",
+        "evidence_id": "E7",
+        "valid": true,
+        "hybrid_reranked": true
+      },
+      {
+        "run": "release-policy",
+        "case_id": "dpo-reject-global-analytic-and-sampling-free",
+        "evidence_id": "E8",
+        "valid": true,
+        "hybrid_reranked": true
+      },
+      {
+        "run": "release-policy",
+        "case_id": "dpo-reject-global-analytic-and-sampling-free",
+        "evidence_id": "E9",
+        "valid": true,
+        "hybrid_reranked": true
+      },
+      {
+        "run": "release-policy",
+        "case_id": "dpo-reject-global-analytic-and-sampling-free",
+        "evidence_id": "E10",
+        "valid": true,
+        "hybrid_reranked": true
+      },
+      {
+        "run": "release-policy",
+        "case_id": "dpo-reject-global-analytic-and-sampling-free",
+        "evidence_id": "E11",
+        "valid": true,
+        "hybrid_reranked": true
+      },
+      {
+        "run": "release-policy",
+        "case_id": "dpo-reject-global-analytic-and-sampling-free",
+        "evidence_id": "E12",
+        "valid": true,
+        "hybrid_reranked": true
+      },
+      {
+        "run": "release-policy",
+        "case_id": "dpo-reject-global-analytic-and-sampling-free",
+        "evidence_id": "E13",
+        "valid": true,
+        "hybrid_reranked": true
+      },
+      {
+        "run": "release-policy",
+        "case_id": "dpo-reject-global-analytic-and-sampling-free",
+        "evidence_id": "E14",
+        "valid": true,
+        "hybrid_reranked": true
+      },
+      {
+        "run": "release-policy",
+        "case_id": "dpo-reject-global-analytic-and-sampling-free",
+        "evidence_id": "E15",
+        "valid": true,
+        "hybrid_reranked": true
+      },
+      {
+        "run": "release-policy",
+        "case_id": "dpo-reject-global-analytic-and-sampling-free",
+        "evidence_id": "E16",
+        "valid": true,
+        "hybrid_reranked": true
+      },
+      {
+        "run": "release-policy",
+        "case_id": "dpo-reject-global-analytic-and-sampling-free",
+        "evidence_id": "E17",
+        "valid": true,
+        "hybrid_reranked": true
+      },
+      {
+        "run": "release-policy",
+        "case_id": "dpo-reject-global-analytic-and-sampling-free",
+        "evidence_id": "E18",
+        "valid": true,
+        "hybrid_reranked": true
+      },
+      {
+        "run": "release-policy",
+        "case_id": "dpo-reject-global-analytic-and-sampling-free",
+        "evidence_id": "E19",
+        "valid": true,
+        "hybrid_reranked": true
+      },
+      {
+        "run": "release-policy",
+        "case_id": "dpo-reject-global-analytic-and-sampling-free",
+        "evidence_id": "E20",
+        "valid": true,
+        "hybrid_reranked": true
+      },
+      {
+        "run": "release-mechanism",
+        "case_id": "lora-qlora-mechanism",
+        "evidence_id": "E1",
+        "valid": true,
+        "hybrid_reranked": true
+      },
+      {
+        "run": "release-mechanism",
+        "case_id": "lora-qlora-mechanism",
+        "evidence_id": "E2",
+        "valid": true,
+        "hybrid_reranked": true
+      },
+      {
+        "run": "release-mechanism",
+        "case_id": "lora-qlora-mechanism",
+        "evidence_id": "E3",
+        "valid": true,
+        "hybrid_reranked": true
+      },
+      {
+        "run": "release-mechanism",
+        "case_id": "lora-qlora-mechanism",
+        "evidence_id": "E5",
+        "valid": true,
+        "hybrid_reranked": true
+      },
+      {
+        "run": "release-mechanism",
+        "case_id": "lora-qlora-mechanism",
+        "evidence_id": "E9",
+        "valid": true,
+        "hybrid_reranked": true
+      },
+      {
+        "run": "release-mechanism",
+        "case_id": "lora-qlora-mechanism",
+        "evidence_id": "E15",
+        "valid": true,
+        "hybrid_reranked": true
+      },
+      {
+        "run": "release-mechanism",
+        "case_id": "lora-qlora-mechanism",
+        "evidence_id": "E16",
+        "valid": true,
+        "hybrid_reranked": true
+      },
+      {
+        "run": "release-mechanism",
+        "case_id": "lora-qlora-mechanism",
+        "evidence_id": "E19",
+        "valid": true,
+        "hybrid_reranked": true
+      },
+      {
+        "run": "release-mechanism",
+        "case_id": "lora-qlora-mechanism",
+        "evidence_id": "E4",
+        "valid": true,
+        "hybrid_reranked": true
+      },
+      {
+        "run": "release-mechanism",
+        "case_id": "lora-qlora-mechanism",
+        "evidence_id": "E6",
+        "valid": true,
+        "hybrid_reranked": true
+      },
+      {
+        "run": "release-mechanism",
+        "case_id": "lora-qlora-mechanism",
+        "evidence_id": "E7",
+        "valid": true,
+        "hybrid_reranked": true
+      },
+      {
+        "run": "release-mechanism",
+        "case_id": "lora-qlora-mechanism",
+        "evidence_id": "E8",
+        "valid": true,
+        "hybrid_reranked": true
+      },
+      {
+        "run": "release-mechanism",
+        "case_id": "lora-qlora-mechanism",
+        "evidence_id": "E10",
+        "valid": true,
+        "hybrid_reranked": true
+      },
+      {
+        "run": "release-mechanism",
+        "case_id": "lora-qlora-mechanism",
+        "evidence_id": "E11",
+        "valid": true,
+        "hybrid_reranked": true
+      },
+      {
+        "run": "release-mechanism",
+        "case_id": "lora-qlora-mechanism",
+        "evidence_id": "E12",
+        "valid": true,
+        "hybrid_reranked": true
+      },
+      {
+        "run": "release-mechanism",
+        "case_id": "lora-qlora-mechanism",
+        "evidence_id": "E13",
+        "valid": true,
+        "hybrid_reranked": true
+      },
+      {
+        "run": "release-mechanism",
+        "case_id": "lora-qlora-mechanism",
+        "evidence_id": "E14",
+        "valid": true,
+        "hybrid_reranked": true
+      },
+      {
+        "run": "release-mechanism",
+        "case_id": "lora-qlora-mechanism",
+        "evidence_id": "E17",
+        "valid": true,
+        "hybrid_reranked": true
+      },
+      {
+        "run": "release-mechanism",
+        "case_id": "lora-qlora-mechanism",
+        "evidence_id": "E18",
+        "valid": true,
+        "hybrid_reranked": true
+      },
+      {
+        "run": "release-mechanism",
+        "case_id": "lora-qlora-mechanism",
+        "evidence_id": "E20",
+        "valid": true,
+        "hybrid_reranked": true
+      },
+      {
+        "run": "release-mechanism",
+        "case_id": "unreported-training-seed",
+        "evidence_id": "E1",
+        "valid": true,
+        "hybrid_reranked": true
+      },
+      {
+        "run": "release-mechanism",
+        "case_id": "unreported-training-seed",
+        "evidence_id": "E2",
+        "valid": true,
+        "hybrid_reranked": true
+      },
+      {
+        "run": "release-mechanism",
+        "case_id": "unreported-training-seed",
+        "evidence_id": "E3",
+        "valid": true,
+        "hybrid_reranked": true
+      },
+      {
+        "run": "release-mechanism",
+        "case_id": "unreported-training-seed",
+        "evidence_id": "E4",
+        "valid": true,
+        "hybrid_reranked": true
+      },
+      {
+        "run": "release-mechanism",
+        "case_id": "unreported-training-seed",
+        "evidence_id": "E5",
+        "valid": true,
+        "hybrid_reranked": true
+      },
+      {
+        "run": "release-mechanism",
+        "case_id": "unreported-training-seed",
+        "evidence_id": "E6",
+        "valid": true,
+        "hybrid_reranked": true
+      },
+      {
+        "run": "release-mechanism",
+        "case_id": "unreported-training-seed",
+        "evidence_id": "E7",
+        "valid": true,
+        "hybrid_reranked": true
+      },
+      {
+        "run": "release-mechanism",
+        "case_id": "unreported-training-seed",
+        "evidence_id": "E8",
+        "valid": true,
+        "hybrid_reranked": true
+      },
+      {
+        "run": "release-mechanism",
+        "case_id": "unreported-training-seed",
+        "evidence_id": "E9",
+        "valid": true,
+        "hybrid_reranked": true
+      },
+      {
+        "run": "release-mechanism",
+        "case_id": "unreported-training-seed",
+        "evidence_id": "E10",
+        "valid": true,
+        "hybrid_reranked": true
+      },
+      {
+        "run": "release-mechanism",
+        "case_id": "unreported-training-seed",
+        "evidence_id": "E11",
+        "valid": true,
+        "hybrid_reranked": true
+      },
+      {
+        "run": "release-mechanism",
+        "case_id": "unreported-training-seed",
+        "evidence_id": "E12",
+        "valid": true,
+        "hybrid_reranked": true
+      },
+      {
+        "run": "release-mechanism",
+        "case_id": "unreported-training-seed",
+        "evidence_id": "E13",
+        "valid": true,
+        "hybrid_reranked": true
+      },
+      {
+        "run": "release-mechanism",
+        "case_id": "unreported-training-seed",
+        "evidence_id": "E14",
+        "valid": true,
+        "hybrid_reranked": true
+      },
+      {
+        "run": "release-mechanism",
+        "case_id": "unreported-training-seed",
+        "evidence_id": "E15",
+        "valid": true,
+        "hybrid_reranked": true
+      },
+      {
+        "run": "release-mechanism",
+        "case_id": "unreported-training-seed",
+        "evidence_id": "E16",
+        "valid": true,
+        "hybrid_reranked": true
+      },
+      {
+        "run": "release-mechanism",
+        "case_id": "unreported-training-seed",
+        "evidence_id": "E17",
+        "valid": true,
+        "hybrid_reranked": true
+      },
+      {
+        "run": "release-mechanism",
+        "case_id": "unreported-training-seed",
+        "evidence_id": "E18",
+        "valid": true,
+        "hybrid_reranked": true
+      }
+    ],
+    "read_only_verified_index_points": 1237,
+    "original_four_case_round_machine_results": [
+      4,
+      3,
+      3
+    ],
+    "same_build_strict_stability_released": false,
+    "last_source_new_generation": false,
+    "old_immutable_count": 37,
+    "old_changed": [],
+    "tests": {
+      "backend-final-postrepair.xml": {
+        "tests": 1298,
+        "failures": 0,
+        "errors": 0
+      },
+      "frontend-tests.xml": {
+        "tests": 42,
+        "failures": 0,
+        "errors": 0
+      }
+    },
+    "typecheck": "observed_exit_0",
+    "official_basic_coverage_inherited": {
+      "files": 39,
+      "pages": 1986
+    },
+    "production_library_modified": false,
+    "git_mutated": false,
+    "acceptance_8018_stopped": true,
+    "whole_project_released": false
+  },
+  "secret_scan_findings": [],
+  "manual_review": {
+    "date": "2026-10-17",
+    "kind": "bounded_manual_source_review_not_machine_keyword_grade",
+    "source_basis": "Complete native InstructGPT physical page 6 and full-page Poppler render; original cited chunks and their block/geometry identities for all twelve outputs.",
+    "whole_quality_released": false,
+    "findings": [
+      {
+        "run": "round-1-policy",
+        "case_id": "dpo-instructgpt-object-and-stage",
+        "result": "requested_core_and_original_method_attribution_confirmed",
+        "detail": "Comparison cites InstructGPT E2 and E4, covering demonstration/reward-model and PPO steps from its own physical page 6. DPO object, classification objective and fine-tuning LM sampling restriction have cited support."
+      },
+      {
+        "run": "round-1-policy",
+        "case_id": "dpo-reject-global-analytic-and-sampling-free",
+        "result": "requested_core_confirmed_extra_wording_held",
+        "detail": "The policy/parameter distinction and data-preparation/evaluation counterexamples have direct sources. Extra generic temperature-sensitive wording lacks the relative robustness qualification; it is not treated as a new scientific result."
+      },
+      {
+        "run": "round-1-mechanism",
+        "case_id": "lora-qlora-mechanism",
+        "result": "requested_five_parts_confirmed",
+        "detail": "Frozen weights, storage/computation distinction and three named memory mechanisms are supported by their cited originals."
+      },
+      {
+        "run": "round-2-policy",
+        "case_id": "dpo-instructgpt-object-and-stage",
+        "result": "whole_comparison_held",
+        "detail": "The claimed shared KL constraint lacks a corresponding InstructGPT quotation in that comparison. RL sampling is asserted without the object/stage restriction and without citing the excerpt that states the exemption. Final offline guards now reject this comparison; original machine pass is unchanged."
+      },
+      {
+        "run": "round-2-policy",
+        "case_id": "dpo-reject-global-analytic-and-sampling-free",
+        "result": "requested_core_confirmed",
+        "detail": "All four published clauses keep the policy object and distinguish fine-tuning from offline preparation and evaluated sampled completions."
+      },
+      {
+        "run": "round-2-mechanism",
+        "case_id": "lora-qlora-mechanism",
+        "result": "requested_five_parts_confirmed_original_runtime_incomplete",
+        "detail": "The NF4 assignment action is present as 分到相同数量. The original incomplete flag is a coverage-detector miss, fixed locally without changing the original report."
+      },
+      {
+        "run": "release-policy",
+        "case_id": "dpo-instructgpt-object-and-stage",
+        "result": "whole_comparison_held",
+        "detail": "Both method chunks were retrieved, but the comparison cites E2 (demonstration/reward-model steps) and omits E4 (PPO step). The PPO clause is scientifically correct on page 6 yet not fully supported by its declared citations. Retrieval repair is confirmed; final clause-to-source mapping is not closed."
+      },
+      {
+        "run": "release-policy",
+        "case_id": "dpo-reject-global-analytic-and-sampling-free",
+        "result": "requested_core_confirmed_extra_scope_note_held",
+        "detail": "The first three clauses support the intended boundary. The last extra note abbreviates the condition to no sampling during fine-tuning and asserts unreported iteration details beyond the supplied excerpts. Do not certify the entire answer."
+      },
+      {
+        "run": "release-mechanism",
+        "case_id": "lora-qlora-mechanism",
+        "result": "requested_five_parts_confirmed_extra_precision_held",
+        "detail": "All five requested mechanisms have direct support. The comparison adds full precision for LoRA, absent from its two cited own-paper chunks; full rank does not establish full precision. The answer is not released as wholly grounded."
+      },
+      {
+        "runs": [
+          "round-1-mechanism",
+          "round-2-mechanism",
+          "release-mechanism"
+        ],
+        "case_id": "unreported-training-seed",
+        "result": "no_seed_invented_last_runtime_flag_failed",
+        "detail": "All three avoid inventing a random seed. The last says 未出现 and supplements actual hardware/schedule values; the request remained unanswered but the runtime insufficient flag was false. This state miss is fixed only in the final offline replay, not a new generation pass."
+      }
+    ],
+    "next_action": "Before another generation batch, strengthen atomic clause-to-original citation mapping and unsupported precision/scope checks. Do not repeat GPT or all 39 PDFs."
+  },
+  "artifacts": [
+    {
+      "path": "backend/app/llm/openai_responses.py",
+      "sha256": "580c88e59602246b0719f52b90abebf69b22ca83e3f3a0f19c8518015d82e8a8"
+    },
+    {
+      "path": "backend/app/services/answer_completeness.py",
+      "sha256": "1fd4a7f010104e84fe04b97550987806c8e971190f88eb87f76798f91f4f25d4"
+    },
+    {
+      "path": "backend/app/services/claim_semantics.py",
+      "sha256": "4f54b3d3738f5b051652f9fefa907cc8bf0502dfb61695436b3da8d1f2d6d126"
+    },
+    {
+      "path": "backend/app/services/grounded_text.py",
+      "sha256": "56b39d42aaef5d8ebcc9cfc0014bbf509a85b08a8e29e7cd6a9e102b0530ab22"
+    },
+    {
+      "path": "backend/app/services/mechanism_evidence.py",
+      "sha256": "fa6b8ed83769bdf7c73c806a1a93ea97600a6ac69e30175a4b0af8253ae60aa6"
+    },
+    {
+      "path": "backend/app/services/retrieval.py",
+      "sha256": "3e444928001a52d137b3dd2b990bc19a5462d006957545a7b8908edc0761285b"
+    },
+    {
+      "path": "backend/app/services/retrieval_policy.py",
+      "sha256": "0b6580bdeacd512674c2f2a105393ce368d0530bde9888a4404b7890b2e849e2"
+    },
+    {
+      "path": "backend/scripts/official_index_reuse.py",
+      "sha256": "692e5bb5cf8616ee783c643efa82116a6cba30ab16f29c03acfb86390470d744"
+    },
+    {
+      "path": "backend/scripts/serve_official_acceptance_fixture.py",
+      "sha256": "44b496e2c205d8418610e6db3005211f44abde8bd9e00f5fa936d95824b997c4"
+    },
+    {
+      "path": "backend/tests/test_explicit_source_focus.py",
+      "sha256": "eccb86c61dc519c103b80446fae74f0f39d949476008707889d63dd35ca45155"
+    },
+    {
+      "path": "backend/tests/test_mechanism_parts.py",
+      "sha256": "e7aeafc222a4a0a216da49d8eaff5caab2576911134bce2beed5f71e56ae51b6"
+    },
+    {
+      "path": "backend/tests/test_official_index_reuse.py",
+      "sha256": "3dc809f3809881b3a64acc071500c570be19731312981709b4c82a3f65b97c52"
+    },
+    {
+      "path": "backend/tests/test_policy_optimization_scope.py",
+      "sha256": "a78023c7665fdb5b04b2a2cb21ef2f7e27ff47f4f860568b3df76f426819ed2e"
+    },
+    {
+      "path": "backend/tests/test_procedure_retrieval.py",
+      "sha256": "6b0c1dab5f08934fb53b0310be6f6e2f44c5edea681c71650fa9722debda1dfb"
+    },
+    {
+      "path": "backend/tests/test_unreported_seed_field.py",
+      "sha256": "0c0d076320e005b5fea255064c25b6e027c009b1d074f420c83fa0560b9e57bc"
+    },
+    {
+      "path": "backend/tmp/official-method-attribution-2026-10-17/audit_methods.py",
+      "sha256": "b0c812501900a4ed34458df9b40756b41ff111dd8ad25d5f1613fcb91ca9dafa"
+    },
+    {
+      "path": "backend/tmp/official-method-attribution-2026-10-17/backend-final-postrepair.xml",
+      "sha256": "82262aa835479a27cc31f2b8c3fa485782ec9bfdc620d3b094559a3dfdea85a0"
+    },
+    {
+      "path": "backend/tmp/official-method-attribution-2026-10-17/backend-final.xml",
+      "sha256": "652d1cdb35d24e00b00ee95b58f1a7eaaa3d82ae4d9970a4186015843242aa3b"
+    },
+    {
+      "path": "backend/tmp/official-method-attribution-2026-10-17/backend-release.xml",
+      "sha256": "1f588c8fea55595ea655defd2abe25f3f35297dde165d963defe21d128fda69b"
+    },
+    {
+      "path": "backend/tmp/official-method-attribution-2026-10-17/final-audit.json",
+      "sha256": "10ca087e02f7f9839b0e875e791b98cb2e6df4fbe1c50a68f3b28ef41ae3c3d9"
+    },
+    {
+      "path": "backend/tmp/official-method-attribution-2026-10-17/frontend-tests.xml",
+      "sha256": "da384f71be4ad5299b2d06fd1cacbe4982787fa5ec505840345ae332b35b3115"
+    },
+    {
+      "path": "backend/tmp/official-method-attribution-2026-10-17/instructgpt-6.png",
+      "sha256": "ca5b698f830aba5c1ad6d63401dc707e3b70cd9717012112e755a5ebb99afc02"
+    },
+    {
+      "path": "backend/tmp/official-method-attribution-2026-10-17/manual-source-review.json",
+      "sha256": "f6838a4622937847bdaf186f0d2dfcd741da127c29d9ea89623bdb0d03bbbb57"
+    },
+    {
+      "path": "backend/tmp/official-method-attribution-2026-10-17/post-repair-replay.json",
+      "sha256": "b767a8257d7479a727e7138b15acd1e70fb506f3e36b795098f9e8011c0f34bc"
+    },
+    {
+      "path": "backend/tmp/official-method-attribution-2026-10-17/post-repair-targeted.xml",
+      "sha256": "0ee4273986ce9f5d9deaffc5b462702d6e980d5eb51afc7f7aa01996c983b2a8"
+    },
+    {
+      "path": "backend/tmp/official-method-attribution-2026-10-17/procedure-score-probe.json",
+      "sha256": "b80e688d5f7d37e50a85bb7061d39cb8d421c842b151e55e92d078fa6118f110"
+    },
+    {
+      "path": "backend/tmp/official-method-attribution-2026-10-17/release-mechanism/report.json",
+      "sha256": "ca951c86fea76cd080aed5ee45794b23ff2d340f99539a71adc3f1dbda778c10"
+    },
+    {
+      "path": "backend/tmp/official-method-attribution-2026-10-17/release-policy/report.json",
+      "sha256": "19a3f8f11c7174e479b4988abead76a0c9e935afe546d3f26de28645c275de29"
+    },
+    {
+      "path": "backend/tmp/official-method-attribution-2026-10-17/round-1-mechanism/report.json",
+      "sha256": "8f6cae35b5a4e463b53b943751058936c445c925f6261afdf5c8738dcf8c6ed7"
+    },
+    {
+      "path": "backend/tmp/official-method-attribution-2026-10-17/round-1-policy/report.json",
+      "sha256": "3fccbd9ef9f16f98f422a170b273437a9df47b329e2f078bffa91f25f51d5405"
+    },
+    {
+      "path": "backend/tmp/official-method-attribution-2026-10-17/round-2-mechanism/report.json",
+      "sha256": "a282e5a28591895d770a711d40d8c547798309bc3635161b5faf5a5a6885b680"
+    },
+    {
+      "path": "backend/tmp/official-method-attribution-2026-10-17/round-2-policy/report.json",
+      "sha256": "3538b5fdc0f988b21373c14f2bef18f4c6a2ed792a096f3cf5362ec4c06daca3"
+    },
+    {
+      "path": "backend/tmp/official-method-attribution-2026-10-17/runtime-fixture/fixture.json",
+      "sha256": "d7730edb860bcb4b6ba77311de22d749684d6fc726ea5d38b5762afc308c117f"
+    },
+    {
+      "path": "backend/tmp/official-method-attribution-2026-10-17/runtime-fixture/parsed/114bfa0d-d6cf-573d-82b2-cfaed94b58b6.json",
+      "sha256": "6710c78824d61e72e1b0c15aaddf534ce0872570051a9b95d6f2f39c786645d7"
+    },
+    {
+      "path": "backend/tmp/official-method-attribution-2026-10-17/runtime-fixture/parsed/20d9fad6-9e6f-543d-a2e1-095d8056c5ff.json",
+      "sha256": "4a05a089a864b8fc603470e4f28fc480526b8184b8c5a89039db83b07bdded3d"
+    },
+    {
+      "path": "backend/tmp/official-method-attribution-2026-10-17/runtime-fixture/parsed/855562a1-8309-57b2-b7b0-b9e7016207dc.json",
+      "sha256": "0bdf9ab2be963a5e42b3560e72b14fd247e2723c299ffc3e340682b02394db97"
+    },
+    {
+      "path": "backend/tmp/official-method-attribution-2026-10-17/runtime-fixture/parsed/bc90bcf2-cccd-5364-94f6-5815603802f7.json",
+      "sha256": "2f5bdb78b265127069fbaf7c9841afe6e181a0d93c3209856c420d678c7825d0"
+    },
+    {
+      "path": "backend/tmp/official-method-attribution-2026-10-17/runtime-fixture/parsed/cd05de96-3b20-5178-8953-d8ee090a4f23.json",
+      "sha256": "0ab6909920de99d93d12d57d963fe93c684446cbcfdba40bf2df1ed080d7b414"
+    },
+    {
+      "path": "backend/tmp/official-method-attribution-2026-10-17/runtime-fixture/preparation.json",
+      "sha256": "856dd9d79313822509ba1f12ecea214328ad0ae9d681e2d3c261fabde68c2e02"
+    },
+    {
+      "path": "backend/tmp/official-method-attribution-2026-10-17/runtime-fixture/retrieval-preflight.json",
+      "sha256": "8f701f4ef530276b41ab414f45e95ad0577b02e8a0e39f3497579372045391ab"
+    },
+    {
+      "path": "backend/tmp/official-method-attribution-2026-10-17/runtime-fixture/server-source.json",
+      "sha256": "a3012eac160076d3c0e17757ce77626c86d40fb8b285b9e24f14e77f44f74c6c"
+    },
+    {
+      "path": "backend/tmp/official-method-attribution-2026-10-17/runtime-fixture-confirm/fixture.json",
+      "sha256": "d7730edb860bcb4b6ba77311de22d749684d6fc726ea5d38b5762afc308c117f"
+    },
+    {
+      "path": "backend/tmp/official-method-attribution-2026-10-17/runtime-fixture-confirm/parsed/114bfa0d-d6cf-573d-82b2-cfaed94b58b6.json",
+      "sha256": "6710c78824d61e72e1b0c15aaddf534ce0872570051a9b95d6f2f39c786645d7"
+    },
+    {
+      "path": "backend/tmp/official-method-attribution-2026-10-17/runtime-fixture-confirm/parsed/20d9fad6-9e6f-543d-a2e1-095d8056c5ff.json",
+      "sha256": "4a05a089a864b8fc603470e4f28fc480526b8184b8c5a89039db83b07bdded3d"
+    },
+    {
+      "path": "backend/tmp/official-method-attribution-2026-10-17/runtime-fixture-confirm/parsed/855562a1-8309-57b2-b7b0-b9e7016207dc.json",
+      "sha256": "0bdf9ab2be963a5e42b3560e72b14fd247e2723c299ffc3e340682b02394db97"
+    },
+    {
+      "path": "backend/tmp/official-method-attribution-2026-10-17/runtime-fixture-confirm/parsed/bc90bcf2-cccd-5364-94f6-5815603802f7.json",
+      "sha256": "2f5bdb78b265127069fbaf7c9841afe6e181a0d93c3209856c420d678c7825d0"
+    },
+    {
+      "path": "backend/tmp/official-method-attribution-2026-10-17/runtime-fixture-confirm/parsed/cd05de96-3b20-5178-8953-d8ee090a4f23.json",
+      "sha256": "0ab6909920de99d93d12d57d963fe93c684446cbcfdba40bf2df1ed080d7b414"
+    },
+    {
+      "path": "backend/tmp/official-method-attribution-2026-10-17/runtime-fixture-confirm/preparation.json",
+      "sha256": "856dd9d79313822509ba1f12ecea214328ad0ae9d681e2d3c261fabde68c2e02"
+    },
+    {
+      "path": "backend/tmp/official-method-attribution-2026-10-17/runtime-fixture-confirm/retrieval-preflight.json",
+      "sha256": "051dcf62971901d530e5161527ae46e5ba2af809a58e8d54acc337882a9c4bd0"
+    },
+    {
+      "path": "backend/tmp/official-method-attribution-2026-10-17/runtime-fixture-confirm/server-source.json",
+      "sha256": "78920140600449a90008ca26dd97d312b0d0a72b8b5fe0711e78641e4500f785"
+    },
+    {
+      "path": "backend/tmp/official-method-attribution-2026-10-17/runtime-fixture-final/fixture.json",
+      "sha256": "d7730edb860bcb4b6ba77311de22d749684d6fc726ea5d38b5762afc308c117f"
+    },
+    {
+      "path": "backend/tmp/official-method-attribution-2026-10-17/runtime-fixture-final/parsed/114bfa0d-d6cf-573d-82b2-cfaed94b58b6.json",
+      "sha256": "6710c78824d61e72e1b0c15aaddf534ce0872570051a9b95d6f2f39c786645d7"
+    },
+    {
+      "path": "backend/tmp/official-method-attribution-2026-10-17/runtime-fixture-final/parsed/20d9fad6-9e6f-543d-a2e1-095d8056c5ff.json",
+      "sha256": "4a05a089a864b8fc603470e4f28fc480526b8184b8c5a89039db83b07bdded3d"
+    },
+    {
+      "path": "backend/tmp/official-method-attribution-2026-10-17/runtime-fixture-final/parsed/855562a1-8309-57b2-b7b0-b9e7016207dc.json",
+      "sha256": "0bdf9ab2be963a5e42b3560e72b14fd247e2723c299ffc3e340682b02394db97"
+    },
+    {
+      "path": "backend/tmp/official-method-attribution-2026-10-17/runtime-fixture-final/parsed/bc90bcf2-cccd-5364-94f6-5815603802f7.json",
+      "sha256": "2f5bdb78b265127069fbaf7c9841afe6e181a0d93c3209856c420d678c7825d0"
+    },
+    {
+      "path": "backend/tmp/official-method-attribution-2026-10-17/runtime-fixture-final/parsed/cd05de96-3b20-5178-8953-d8ee090a4f23.json",
+      "sha256": "0ab6909920de99d93d12d57d963fe93c684446cbcfdba40bf2df1ed080d7b414"
+    },
+    {
+      "path": "backend/tmp/official-method-attribution-2026-10-17/runtime-fixture-final/preparation.json",
+      "sha256": "856dd9d79313822509ba1f12ecea214328ad0ae9d681e2d3c261fabde68c2e02"
+    },
+    {
+      "path": "backend/tmp/official-method-attribution-2026-10-17/runtime-fixture-final/retrieval-preflight.json",
+      "sha256": "cfe0e919f6feb37acb35751a74a7295ab7fcb8e391a2c6d4e3cd252aeba366ad"
+    },
+    {
+      "path": "backend/tmp/official-method-attribution-2026-10-17/runtime-fixture-final/runtime-calls.json",
+      "sha256": "ad4bd71c05dc69760b3eba3655d16ec4b1d6e4eff4ff1c73d2c1d8d99dee4798"
+    },
+    {
+      "path": "backend/tmp/official-method-attribution-2026-10-17/runtime-fixture-final/server-source.json",
+      "sha256": "ff43874bc5d3ec1d0cc7393a82e5e326b23e7d73f812b0a3115e9e6a90300923"
+    },
+    {
+      "path": "backend/tmp/official-method-attribution-2026-10-17/runtime-fixture-release/fixture.json",
+      "sha256": "d7730edb860bcb4b6ba77311de22d749684d6fc726ea5d38b5762afc308c117f"
+    },
+    {
+      "path": "backend/tmp/official-method-attribution-2026-10-17/runtime-fixture-release/parsed/114bfa0d-d6cf-573d-82b2-cfaed94b58b6.json",
+      "sha256": "6710c78824d61e72e1b0c15aaddf534ce0872570051a9b95d6f2f39c786645d7"
+    },
+    {
+      "path": "backend/tmp/official-method-attribution-2026-10-17/runtime-fixture-release/parsed/20d9fad6-9e6f-543d-a2e1-095d8056c5ff.json",
+      "sha256": "4a05a089a864b8fc603470e4f28fc480526b8184b8c5a89039db83b07bdded3d"
+    },
+    {
+      "path": "backend/tmp/official-method-attribution-2026-10-17/runtime-fixture-release/parsed/855562a1-8309-57b2-b7b0-b9e7016207dc.json",
+      "sha256": "0bdf9ab2be963a5e42b3560e72b14fd247e2723c299ffc3e340682b02394db97"
+    },
+    {
+      "path": "backend/tmp/official-method-attribution-2026-10-17/runtime-fixture-release/parsed/bc90bcf2-cccd-5364-94f6-5815603802f7.json",
+      "sha256": "2f5bdb78b265127069fbaf7c9841afe6e181a0d93c3209856c420d678c7825d0"
+    },
+    {
+      "path": "backend/tmp/official-method-attribution-2026-10-17/runtime-fixture-release/parsed/cd05de96-3b20-5178-8953-d8ee090a4f23.json",
+      "sha256": "0ab6909920de99d93d12d57d963fe93c684446cbcfdba40bf2df1ed080d7b414"
+    },
+    {
+      "path": "backend/tmp/official-method-attribution-2026-10-17/runtime-fixture-release/preparation.json",
+      "sha256": "856dd9d79313822509ba1f12ecea214328ad0ae9d681e2d3c261fabde68c2e02"
+    },
+    {
+      "path": "backend/tmp/official-method-attribution-2026-10-17/runtime-fixture-release/retrieval-preflight.json",
+      "sha256": "c23ae149f0f789b0239db70914ea170f302aa19ba35f3d27663730b11e71a25f"
+    },
+    {
+      "path": "backend/tmp/official-method-attribution-2026-10-17/runtime-fixture-release/runtime-calls.json",
+      "sha256": "121ec523fbd27490d274ba1079db755a1ab3a9084a5efee17638f1f974a63531"
+    },
+    {
+      "path": "backend/tmp/official-method-attribution-2026-10-17/runtime-fixture-release/server-source.json",
+      "sha256": "6ee2803a986687dd2a79ab98acc19404da579597621a6353fd99bcfcbecd7ec5"
+    },
+    {
+      "path": "backend/tmp/official-method-attribution-2026-10-17/targeted-tests.xml",
+      "sha256": "20253e5fab7eab4a5c515f04bf5bdc5efc1f3d4edc7c92d5d13445324868e3e7"
+    },
+    {
+      "path": "docs/acceptance-progress.md",
+      "sha256": "9d9322bbe0de7e223e5a4cabad731d2940c4a32bf49140a5a8833c37ab37f406"
+    },
+    {
+      "path": "docs/competition-delivery-checklist.md",
+      "sha256": "f39f2606e1bbb74b26f4666bcfeb5d2906c2b7fe8e68d513850a6de6a190902f"
+    },
+    {
+      "path": "docs/competition-verification-gates.md",
+      "sha256": "cb6f85a5545c443ee4dbe100bcc5cdb1c928a838e342bd56954e399bf00e9209"
+    },
+    {
+      "path": "docs/official-method-attribution-acceptance-2026-10-17.md",
+      "sha256": "443fe54791bee728cab8948b4cfa1564467722ca966d529d76f52c42205b641e"
+    }
+  ]
+}

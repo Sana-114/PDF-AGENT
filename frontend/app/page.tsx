@@ -176,6 +176,7 @@ export default function Home() {
   const [comparingVersion, setComparingVersion] = useState<string | null>(null);
   const [versionDifferences, setVersionDifferences] = useState<Record<string, DocumentVersionDifference>>({});
   const [citationGraph, setCitationGraph] = useState<CitationGraphResponse | null>(null);
+  const [graphDocumentIds, setGraphDocumentIds] = useState<string[]>([]);
   const [buildingCitationGraph, setBuildingCitationGraph] = useState(false);
   const [researchReview, setResearchReview] = useState<ResearchReviewResponse | null>(null);
   const [reviewDocumentIds, setReviewDocumentIds] = useState<string[]>([]);
@@ -484,6 +485,7 @@ export default function Home() {
     recommendation: PaperRecommendation,
     feedback: PaperRecommendation["feedback"],
   ) {
+    setError(null);
     try {
       const updated = await setRecommendationFeedback(
         recommendation.id,
@@ -498,9 +500,7 @@ export default function Home() {
   }
 
   async function generateCitationGraph() {
-    const readyDocumentIds = documents
-      .filter((document) => document.status === "ready")
-      .map((document) => document.id);
+    const readyDocumentIds = selectedReadyDocumentIds(documents, graphDocumentIds);
     if (readyDocumentIds.length < 2) {
       setError("至少需要两篇已解析文献才能构建局域引用图谱。");
       return;
@@ -1009,7 +1009,7 @@ export default function Home() {
             <div><p className="eyebrow">引用关系</p><h2>局域引用图谱</h2></div>
             <button
               className="ghost"
-              disabled={buildingCitationGraph || documents.filter((item) => item.status === "ready").length < 2}
+              disabled={buildingCitationGraph || selectedReadyDocumentIds(documents, graphDocumentIds).length < 2}
               onClick={() => void generateCitationGraph()}
               type="button"
             >
@@ -1019,9 +1019,11 @@ export default function Home() {
           {!citationGraph && (
             <div className="citation-graph-placeholder">
               <strong>查看已解析文献之间的引用关系</strong>
-              <span>按题名与 arXiv ID 匹配，不推测缺失关系；至少需要两篇论文。</span>
+              <span>按题名与 arXiv ID 匹配，不推测缺失关系；请至少选择两篇论文。</span>
             </div>
           )}
+          <DocumentScopePicker documents={documents} selectedIds={graphDocumentIds}
+            onChange={setGraphDocumentIds} label="图谱文献范围" />
           {citationGraph && (
             <>
               <div className="citation-summary">

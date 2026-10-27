@@ -1,0 +1,2036 @@
+{
+  "date": "2026-10-12",
+  "acceptance_status": "partial_not_competition_release",
+  "scope": "Official corpus reading APIs, 20-paper graph, whole Transformer v1 translation and real browser; not a frozen all-module production candidate",
+  "cloud_calls": {
+    "pending_qa_before_repair": 1,
+    "pending_qa_after_repair": 2,
+    "whole_translation_all_attempts": 22,
+    "twenty_paper_review": 1
+  },
+  "cloud_calls_total_this_work": 26,
+  "automatic_cloud_retries": 0,
+  "production_library_modified": false,
+  "git_commit_or_push_performed": false,
+  "reader": {
+    "reader_passed": 39,
+    "pages": 1986,
+    "mentions": 1423,
+    "outline_anchors": 1945,
+    "reference_anchors": 4229,
+    "mention_anchors": 1423,
+    "cross_page_reference_entries": 40,
+    "author_year_references": 3286,
+    "documents_with_bracket_backlinks": 14,
+    "all_citation_styles_accepted": false,
+    "files": [
+      {
+        "filename": "1607.06450v1.pdf",
+        "status": "passed",
+        "source_sha256": "c464f839fb8d59f7fde92f9b4caa67c2d1f2f196b88f93fb60502249df0aaef7",
+        "ast_sha256": "6611f04506807ec34453f5e5d85fb1e089c509a10b95a2e7557984094a6bd4d5",
+        "pages": 14,
+        "outline_anchors": 23,
+        "reference_anchors": 32,
+        "mention_anchors": 0,
+        "backlink_labels": 0,
+        "cross_page_reference_entries": 0,
+        "author_year_references": 32,
+        "failures": []
+      },
+      {
+        "filename": "1706.03762v1.pdf",
+        "status": "passed",
+        "source_sha256": "0a9bff1be3575cf9fe26a4a3d3a9175bc791ecec90de8b9deba4cff75d2b9476",
+        "ast_sha256": "17b79909f6ccfbef761befa41518b887e954b41bc1b74d8cfe071d519f8db5de",
+        "pages": 15,
+        "outline_anchors": 25,
+        "reference_anchors": 36,
+        "mention_anchors": 71,
+        "backlink_labels": 36,
+        "cross_page_reference_entries": 0,
+        "author_year_references": 0,
+        "failures": []
+      },
+      {
+        "filename": "1706.03762v1_img.pdf",
+        "status": "passed",
+        "source_sha256": "64094fe169dd4ff454f579e9f197298df1c118c24b71b1f1ca8bb218c9e4801d",
+        "ast_sha256": "daffb5878761dcce6e738c9f4417af0dfc625606ba971db4b28f6721fa9c4558",
+        "pages": 15,
+        "outline_anchors": 24,
+        "reference_anchors": 39,
+        "mention_anchors": 54,
+        "backlink_labels": 27,
+        "cross_page_reference_entries": 0,
+        "author_year_references": 0,
+        "failures": []
+      },
+      {
+        "filename": "1706.03762v7.pdf",
+        "status": "passed",
+        "source_sha256": "bdfaa68d8984f0dc02beaca527b76f207d99b666d31d1da728ee0728182df697",
+        "ast_sha256": "d5faf7e73740723c1ecd80905df79a65a58f51cf54cc878a133ae25344ce0608",
+        "pages": 15,
+        "outline_anchors": 26,
+        "reference_anchors": 40,
+        "mention_anchors": 76,
+        "backlink_labels": 40,
+        "cross_page_reference_entries": 0,
+        "author_year_references": 0,
+        "failures": []
+      },
+      {
+        "filename": "1707.06347v2.pdf",
+        "status": "passed",
+        "source_sha256": "e78feadadbdbb0b601b3c2bcc81404722cd431a489b307545f9b7bea1e8c4f5b",
+        "ast_sha256": "50933f82813e5a26bab6d10afa8b97100e588f032a3e5d3ecdca3795c8ddb60c",
+        "pages": 12,
+        "outline_anchors": 28,
+        "reference_anchors": 14,
+        "mention_anchors": 24,
+        "backlink_labels": 13,
+        "cross_page_reference_entries": 0,
+        "author_year_references": 0,
+        "failures": []
+      },
+      {
+        "filename": "1910.02054v3.pdf",
+        "status": "passed",
+        "source_sha256": "c531734c7d9ee647fda9b4f0e1a6abd6d58ad34e862bc945451b09032be3167e",
+        "ast_sha256": "af48027ab1f69128c86caf8792c1a46966cdc57896e82ca054e4b9f6c393cd20",
+        "pages": 24,
+        "outline_anchors": 45,
+        "reference_anchors": 26,
+        "mention_anchors": 46,
+        "backlink_labels": 26,
+        "cross_page_reference_entries": 0,
+        "author_year_references": 0,
+        "failures": []
+      },
+      {
+        "filename": "1910.10683v4.pdf",
+        "status": "passed",
+        "source_sha256": "ad07e47cedf437a4156419ce5d3076e08a3e59bbfd6dac7cc53df1009cdcbe7f",
+        "ast_sha256": "ef4608da1839b472920b80fc912542b891e896d8303c43b205fe65488ddc8f8d",
+        "pages": 67,
+        "outline_anchors": 49,
+        "reference_anchors": 133,
+        "mention_anchors": 0,
+        "backlink_labels": 0,
+        "cross_page_reference_entries": 0,
+        "author_year_references": 133,
+        "failures": []
+      },
+      {
+        "filename": "2001.08361v1.pdf",
+        "status": "passed",
+        "source_sha256": "a41bd7877fd1a6bcbba096b2619618bd2f90e02488f2365644903eb2f7c6a494",
+        "ast_sha256": "7645101da07b1c37d21bd8a20054fdd456ec8ac4f20ac3c2dccf59b87bbe375c",
+        "pages": 30,
+        "outline_anchors": 52,
+        "reference_anchors": 51,
+        "mention_anchors": 47,
+        "backlink_labels": 27,
+        "cross_page_reference_entries": 0,
+        "author_year_references": 0,
+        "failures": []
+      },
+      {
+        "filename": "2002.04745v2.pdf",
+        "status": "passed",
+        "source_sha256": "e1fa0519ed8e09a676d56c983e99ead5effd7ef840ae86a186729287469bf883",
+        "ast_sha256": "8b31ed1bfe15be06f613724a67ab274f214171381c6ae43a3df1e8647b8ea37b",
+        "pages": 17,
+        "outline_anchors": 22,
+        "reference_anchors": 49,
+        "mention_anchors": 0,
+        "backlink_labels": 0,
+        "cross_page_reference_entries": 0,
+        "author_year_references": 49,
+        "failures": []
+      },
+      {
+        "filename": "2005.14165v4.pdf",
+        "status": "passed",
+        "source_sha256": "97fd272f1fdfc18677462d0292f5fbf26ca86b4d1b485c2dba03269b643a0e83",
+        "ast_sha256": "1c3d0de91e2ba7cd815e11227057c543c1342cb073150db7f698f56d4d523485",
+        "pages": 75,
+        "outline_anchors": 55,
+        "reference_anchors": 145,
+        "mention_anchors": 181,
+        "backlink_labels": 118,
+        "cross_page_reference_entries": 0,
+        "author_year_references": 0,
+        "failures": []
+      },
+      {
+        "filename": "2010.11929v2.pdf",
+        "status": "passed",
+        "source_sha256": "8ce7b83971a14508ca711a27c875c9b6914c4f6767cf3150fb1ca6c07aa056d6",
+        "ast_sha256": "de022dddb27d7defb935525ad5671da0c14c73b228926d08cd8fe78f5a5cd471",
+        "pages": 22,
+        "outline_anchors": 17,
+        "reference_anchors": 58,
+        "mention_anchors": 0,
+        "backlink_labels": 0,
+        "cross_page_reference_entries": 0,
+        "author_year_references": 58,
+        "failures": []
+      },
+      {
+        "filename": "209_Emergent_Abilities_of_Larg.pdf",
+        "status": "passed",
+        "source_sha256": "2d5d4690b43be8965a6b17ae28b370ab4b8774b2213c41111c1f584cc3c447a3",
+        "ast_sha256": "a67baf579badca13374ec734b001720a370e4ba1d35560b4a03a03701e04f3d7",
+        "pages": 30,
+        "outline_anchors": 21,
+        "reference_anchors": 97,
+        "mention_anchors": 0,
+        "backlink_labels": 0,
+        "cross_page_reference_entries": 0,
+        "author_year_references": 97,
+        "failures": []
+      },
+      {
+        "filename": "2101.03961v3.pdf",
+        "status": "passed",
+        "source_sha256": "f340f6ace31abf7d0730ef461404279f40d3c890e9cc2daeb7068b3304afdbd6",
+        "ast_sha256": "49ea976655d88d88e7096fe8486c848cba75fc48f041fa8d019acb411b33131b",
+        "pages": 40,
+        "outline_anchors": 36,
+        "reference_anchors": 60,
+        "mention_anchors": 0,
+        "backlink_labels": 0,
+        "cross_page_reference_entries": 0,
+        "author_year_references": 60,
+        "failures": []
+      },
+      {
+        "filename": "2103.00020v1.pdf",
+        "status": "passed",
+        "source_sha256": "6478b6e571a7d6fcd846d8ef77bfd60c285f1986abb8f475eedc43de403074f5",
+        "ast_sha256": "3acf3beac5486f12e34fd2cbae2b0b4e96c80cb1e6e164de74fb11f6f152c7e7",
+        "pages": 48,
+        "outline_anchors": 47,
+        "reference_anchors": 203,
+        "mention_anchors": 0,
+        "backlink_labels": 0,
+        "cross_page_reference_entries": 1,
+        "author_year_references": 203,
+        "failures": []
+      },
+      {
+        "filename": "2106.09685v2.pdf",
+        "status": "passed",
+        "source_sha256": "e9a0d3128767db616085dc0f4e6e455e672e89af823e8ed1282793682787395a",
+        "ast_sha256": "f4c849bd4de7d5a9d75c678178548613f51c038929a18c2b6f30a74affec4fb6",
+        "pages": 26,
+        "outline_anchors": 20,
+        "reference_anchors": 60,
+        "mention_anchors": 0,
+        "backlink_labels": 0,
+        "cross_page_reference_entries": 0,
+        "author_year_references": 60,
+        "failures": []
+      },
+      {
+        "filename": "2107.03374v2.pdf",
+        "status": "passed",
+        "source_sha256": "ebae72ea0e8a5eb2ecbccdb985aec6cc1254a7c4d29e6d4de7866db1e66c4855",
+        "ast_sha256": "7e24c24f1c3cb1d94f25172826f6f1d897be75bd1322304630e7944ea8fe9067",
+        "pages": 35,
+        "outline_anchors": 53,
+        "reference_anchors": 122,
+        "mention_anchors": 0,
+        "backlink_labels": 0,
+        "cross_page_reference_entries": 1,
+        "author_year_references": 122,
+        "failures": []
+      },
+      {
+        "filename": "2201.11903v6.pdf",
+        "status": "passed",
+        "source_sha256": "7d9f878c23b460e4566aa4ec9201b1abfb3b8faefb2b1356e411cb90fef72a12",
+        "ast_sha256": "b223f6a82fcd5aa9a7d700517d0a2ab067fa30ddaf75ae05bdd359359c3a8a18",
+        "pages": 43,
+        "outline_anchors": 31,
+        "reference_anchors": 85,
+        "mention_anchors": 0,
+        "backlink_labels": 0,
+        "cross_page_reference_entries": 0,
+        "author_year_references": 85,
+        "failures": []
+      },
+      {
+        "filename": "2203.02155v1.pdf",
+        "status": "passed",
+        "source_sha256": "c1984bb50a5b90fddb895fdc3a0f72e5bc977148c9f63ef6040cbe7a3e1f0d98",
+        "ast_sha256": "19742a09056a4771803ce938bf6b08dbfb372f81d419fc84bcff855cf34cc1d4",
+        "pages": 68,
+        "outline_anchors": 41,
+        "reference_anchors": 36,
+        "mention_anchors": 0,
+        "backlink_labels": 0,
+        "cross_page_reference_entries": 0,
+        "author_year_references": 36,
+        "failures": []
+      },
+      {
+        "filename": "2205.14135v2.pdf",
+        "status": "passed",
+        "source_sha256": "ca7f9fda10b90fc05dd291a3accc85e9c1a4a860b99b31928dab03ed3fcb14e4",
+        "ast_sha256": "b6051dfb0f0e21d3d9ccdf3c5acda45b85fb75af2cf721c3b5c175457bf09a49",
+        "pages": 34,
+        "outline_anchors": 38,
+        "reference_anchors": 94,
+        "mention_anchors": 183,
+        "backlink_labels": 94,
+        "cross_page_reference_entries": 0,
+        "author_year_references": 0,
+        "failures": []
+      },
+      {
+        "filename": "2206.07682v2.pdf",
+        "status": "passed",
+        "source_sha256": "f457f08102eb381f2300e1653bf4c82a9aa5dce0eb8dba8fe744ccc2500c3755",
+        "ast_sha256": "c4253372c4901cd2fc2f545cdd3afadd4ada2b1c0b3b8d76970832eb4827c047",
+        "pages": 30,
+        "outline_anchors": 21,
+        "reference_anchors": 103,
+        "mention_anchors": 0,
+        "backlink_labels": 0,
+        "cross_page_reference_entries": 0,
+        "author_year_references": 103,
+        "failures": []
+      },
+      {
+        "filename": "2210.02414v2.pdf",
+        "status": "passed",
+        "source_sha256": "82d5b9634b3d2601b3eb494dcc9e2189132f5d6e479233b91c7ce411dbdfcfa4",
+        "ast_sha256": "7029d02f6adf423ca7df26a7a7520e59a3c61da18cf7d94911ea8fa56d517042",
+        "pages": 56,
+        "outline_anchors": 25,
+        "reference_anchors": 134,
+        "mention_anchors": 0,
+        "backlink_labels": 0,
+        "cross_page_reference_entries": 0,
+        "author_year_references": 134,
+        "failures": []
+      },
+      {
+        "filename": "2211.05100v4.pdf",
+        "status": "passed",
+        "source_sha256": "8033c3e611aaa120cb7294085ebd6ee297ffae9ec02393b1c4f1593d7e6ee065",
+        "ast_sha256": "3f88e72b67f1715a9dc3fa4d3bdff50e3fc5b8c9dadd4a60e6e7884b10a60dad",
+        "pages": 73,
+        "outline_anchors": 59,
+        "reference_anchors": 75,
+        "mention_anchors": 0,
+        "backlink_labels": 0,
+        "cross_page_reference_entries": 2,
+        "author_year_references": 73,
+        "failures": []
+      },
+      {
+        "filename": "2212.04356v1.pdf",
+        "status": "passed",
+        "source_sha256": "6337bde031b2f237547a977b022f831169a7e05b4d9047f29501166d83594566",
+        "ast_sha256": "d096ca1bafdb0bc2ab05f4765fed4b35173a13b5399d28e64d5219fe2c8f7419",
+        "pages": 28,
+        "outline_anchors": 40,
+        "reference_anchors": 82,
+        "mention_anchors": 0,
+        "backlink_labels": 0,
+        "cross_page_reference_entries": 1,
+        "author_year_references": 82,
+        "failures": []
+      },
+      {
+        "filename": "2303.08774v6.pdf",
+        "status": "passed",
+        "source_sha256": "c33a66dadca2388d7b172d6293b00dc32b71110c6f38fafe0d41112e61be7774",
+        "ast_sha256": "ce45b52e2ef8261976f3cca2aa404bb953d4028d6b0c635ce4b9351f0171ff66",
+        "pages": 100,
+        "outline_anchors": 127,
+        "reference_anchors": 194,
+        "mention_anchors": 255,
+        "backlink_labels": 105,
+        "cross_page_reference_entries": 0,
+        "author_year_references": 0,
+        "failures": []
+      },
+      {
+        "filename": "2304.08485v2.pdf",
+        "status": "passed",
+        "source_sha256": "dc8bace378a282ea78caa9b5959306202fbfa3b8cedaf8a66541a9af18f4d3bf",
+        "ast_sha256": "be836ba4d69a02e79030fbf2df1956bd10c56a5a548a90a453959a2e1710bf31",
+        "pages": 25,
+        "outline_anchors": 24,
+        "reference_anchors": 68,
+        "mention_anchors": 101,
+        "backlink_labels": 63,
+        "cross_page_reference_entries": 0,
+        "author_year_references": 0,
+        "failures": []
+      },
+      {
+        "filename": "2305.13048v2.pdf",
+        "status": "passed",
+        "source_sha256": "57d18c40bdbb4bc1ab69c078a304f97e31657b4f543c408d8a5520e672a3fab0",
+        "ast_sha256": "fca48e3fdc5ef39dfece23e2a7974e4c290130f548fef4eff41b8dee47956d6f",
+        "pages": 30,
+        "outline_anchors": 28,
+        "reference_anchors": 14,
+        "mention_anchors": 0,
+        "backlink_labels": 0,
+        "cross_page_reference_entries": 1,
+        "author_year_references": 11,
+        "failures": []
+      },
+      {
+        "filename": "2305.14314v1.pdf",
+        "status": "passed",
+        "source_sha256": "33a4e757c19d6ea8d3cca8958fce8fe405e290272e135c99ee66065c775d5bd1",
+        "ast_sha256": "53deba177eac63b4a690dc3f4353b602c4267a3a77940a0327d8a1e469d307dc",
+        "pages": 26,
+        "outline_anchors": 21,
+        "reference_anchors": 73,
+        "mention_anchors": 147,
+        "backlink_labels": 73,
+        "cross_page_reference_entries": 0,
+        "author_year_references": 0,
+        "failures": []
+      },
+      {
+        "filename": "2305.18290v3.pdf",
+        "status": "passed",
+        "source_sha256": "92cb3a2b71362acda98a789b03d88688fd33cf5fcf13f81d2b1de30ee7d3b67a",
+        "ast_sha256": "43cdfdd569318044ed9d604aa1d5398d6974edd6b1ecdee44175ba99e8624966",
+        "pages": 27,
+        "outline_anchors": 30,
+        "reference_anchors": 54,
+        "mention_anchors": 92,
+        "backlink_labels": 51,
+        "cross_page_reference_entries": 0,
+        "author_year_references": 0,
+        "failures": []
+      },
+      {
+        "filename": "2307.09288v2.pdf",
+        "status": "passed",
+        "source_sha256": "1df284ce95f783002074bfe8f21d47c646b396ceb1736ea3ec0ea212fc070d91",
+        "ast_sha256": "87ee001c9306c8014bc7ec15a54687359e132d7526db34a6b24f4d0842175be0",
+        "pages": 77,
+        "outline_anchors": 58,
+        "reference_anchors": 30,
+        "mention_anchors": 0,
+        "backlink_labels": 0,
+        "cross_page_reference_entries": 0,
+        "author_year_references": 28,
+        "failures": []
+      },
+      {
+        "filename": "2310.06825v1.pdf",
+        "status": "passed",
+        "source_sha256": "dfbac4e7035344b305c947481f2e7e8a02f7a24a563917eb6e47f6591d14c5ae",
+        "ast_sha256": "67c734cb1d9569612f20676d7b5fc9263dd07ea392a0f1d3b1ff9835bf419245",
+        "pages": 9,
+        "outline_anchors": 13,
+        "reference_anchors": 29,
+        "mention_anchors": 29,
+        "backlink_labels": 29,
+        "cross_page_reference_entries": 0,
+        "author_year_references": 0,
+        "failures": []
+      },
+      {
+        "filename": "2406.14491v2.pdf",
+        "status": "passed",
+        "source_sha256": "8bc106e62eeb6f6f15328e8af107df8eb66ce7ddc3ba694a2ef8ea743f829f0f",
+        "ast_sha256": "13eb0d70597b43d93c1da81014645a3d846df557b493e99f49bec696c2b39378",
+        "pages": 22,
+        "outline_anchors": 27,
+        "reference_anchors": 44,
+        "mention_anchors": 0,
+        "backlink_labels": 0,
+        "cross_page_reference_entries": 2,
+        "author_year_references": 42,
+        "failures": []
+      },
+      {
+        "filename": "2407.21783v3.pdf",
+        "status": "passed",
+        "source_sha256": "481f1599468f95a07d05e97fafe55bbe786dc1624c6f881bcb4c7d14c933d083",
+        "ast_sha256": "41c1113e826bb3edb7ae5d93f63f329b194a73530d48a4b6b266b7fd33e73ae3",
+        "pages": 92,
+        "outline_anchors": 105,
+        "reference_anchors": 276,
+        "mention_anchors": 0,
+        "backlink_labels": 0,
+        "cross_page_reference_entries": 1,
+        "author_year_references": 276,
+        "failures": []
+      },
+      {
+        "filename": "2412.15115v2.pdf",
+        "status": "passed",
+        "source_sha256": "73b3292bead3ac8896679d3ac8be87439756faf356566cbda3ccc8a3dc7d79d3",
+        "ast_sha256": "78f943a558cf8b94dbd97ca3def3ca8da8c385b23687bdd40ce9a45b6dbac51b",
+        "pages": 26,
+        "outline_anchors": 23,
+        "reference_anchors": 101,
+        "mention_anchors": 0,
+        "backlink_labels": 0,
+        "cross_page_reference_entries": 0,
+        "author_year_references": 101,
+        "failures": []
+      },
+      {
+        "filename": "2412.19437v1.pdf",
+        "status": "passed",
+        "source_sha256": "a67e18a4ca6e2c81abc030239a3ee53705f656b79efab8ce1d6b5ac25630c2a5",
+        "ast_sha256": "377aabc359e878ec1555e2ec329c244088e725f7b0928fe963d8f932c1bc0e3a",
+        "pages": 53,
+        "outline_anchors": 60,
+        "reference_anchors": 83,
+        "mention_anchors": 0,
+        "backlink_labels": 0,
+        "cross_page_reference_entries": 0,
+        "author_year_references": 83,
+        "failures": []
+      },
+      {
+        "filename": "2501.12948v2.pdf",
+        "status": "passed",
+        "source_sha256": "b191b0a365a64b4ab2791d117069ed17a2933d03554a662ced58b37df52018f4",
+        "ast_sha256": "aab6bd41c7c8e14d7dbccb99763aec4fbde0ab151c2186b9a4f3dc80b68d2d1d",
+        "pages": 86,
+        "outline_anchors": 40,
+        "reference_anchors": 93,
+        "mention_anchors": 0,
+        "backlink_labels": 0,
+        "cross_page_reference_entries": 0,
+        "author_year_references": 93,
+        "failures": []
+      },
+      {
+        "filename": "333078981_693988129081760_4712707815225756708_n.pdf",
+        "status": "passed",
+        "source_sha256": "775ff8d09b6e5b06314135d87c194ce3535a821eeaee4be9051b331162c5fefd",
+        "ast_sha256": "3cf0729fc539117171d2982e4210b29b50a8b886d02cbc16f3698932a69638ce",
+        "pages": 27,
+        "outline_anchors": 25,
+        "reference_anchors": 82,
+        "mention_anchors": 0,
+        "backlink_labels": 0,
+        "cross_page_reference_entries": 0,
+        "author_year_references": 82,
+        "failures": []
+      },
+      {
+        "filename": "N19-1423.pdf",
+        "status": "passed",
+        "source_sha256": "987545ffb087f1ece898142c403a516baeabeb70ce19089397fac6f7db12c3d4",
+        "ast_sha256": "08b02b0b8e3224d8b93dd6fa84bb5c0966f99162cd0c0bc2d4fe7be3eaed0b13",
+        "pages": 16,
+        "outline_anchors": 20,
+        "reference_anchors": 56,
+        "mention_anchors": 0,
+        "backlink_labels": 0,
+        "cross_page_reference_entries": 1,
+        "author_year_references": 56,
+        "failures": []
+      },
+      {
+        "filename": "UnderstandingDeepLearning_02_09_26_C.pdf",
+        "status": "passed",
+        "source_sha256": "f8237d393163900fa8e43210e680a3f987b45ccac7750b372e156fae3df0bf32",
+        "ast_sha256": "a7422703a5ac5335504073391728d8860f0a41a4e8d4b946b277fb4883c0f435",
+        "pages": 541,
+        "outline_anchors": 533,
+        "reference_anchors": 1187,
+        "mention_anchors": 0,
+        "backlink_labels": 0,
+        "cross_page_reference_entries": 30,
+        "author_year_references": 1187,
+        "failures": []
+      },
+      {
+        "filename": "language_understanding_paper.pdf",
+        "status": "passed",
+        "source_sha256": "eb81a65e0856bd38e855e1f1de6ee12e7c3eb92ae05c8270d345a475beb631d0",
+        "ast_sha256": "3a1864cf4a08f50578b55c3d81c0da69379da0a6eebc59fb44dc173364ca0842",
+        "pages": 12,
+        "outline_anchors": 13,
+        "reference_anchors": 71,
+        "mention_anchors": 117,
+        "backlink_labels": 71,
+        "cross_page_reference_entries": 0,
+        "author_year_references": 0,
+        "failures": []
+      }
+    ]
+  },
+  "graph": {
+    "status": "passed",
+    "stats": {
+      "document_count": 20,
+      "relation_count": 69,
+      "total_references": 1458,
+      "matched_references": 71,
+      "unmatched_references": 1387,
+      "cornerstone_count": 4,
+      "derivative_count": 5,
+      "density": 0.181579
+    },
+    "edge_audit": [
+      {
+        "source": "2101.03961v3.pdf",
+        "target": "1706.03762v1.pdf",
+        "status": "source_verified",
+        "proofs": [
+          {
+            "reference_id": "ref-author-year-54",
+            "page_number": 40,
+            "exact_title_or_id": true,
+            "native_page_contains_reference": true
+          }
+        ]
+      },
+      {
+        "source": "2101.03961v3.pdf",
+        "target": "1910.02054v3.pdf",
+        "status": "source_verified",
+        "proofs": [
+          {
+            "reference_id": "ref-author-year-36",
+            "page_number": 38,
+            "exact_title_or_id": true,
+            "native_page_contains_reference": true
+          }
+        ]
+      },
+      {
+        "source": "2101.03961v3.pdf",
+        "target": "2005.14165v4.pdf",
+        "status": "source_verified",
+        "proofs": [
+          {
+            "reference_id": "ref-author-year-4",
+            "page_number": 36,
+            "exact_title_or_id": true,
+            "native_page_contains_reference": true
+          }
+        ]
+      },
+      {
+        "source": "2101.03961v3.pdf",
+        "target": "2001.08361v1.pdf",
+        "status": "source_verified",
+        "proofs": [
+          {
+            "reference_id": "ref-author-year-24",
+            "page_number": 37,
+            "exact_title_or_id": true,
+            "native_page_contains_reference": true
+          }
+        ]
+      },
+      {
+        "source": "2101.03961v3.pdf",
+        "target": "N19-1423.pdf",
+        "status": "source_verified",
+        "proofs": [
+          {
+            "reference_id": "ref-author-year-8",
+            "page_number": 36,
+            "exact_title_or_id": true,
+            "native_page_contains_reference": true
+          }
+        ]
+      },
+      {
+        "source": "2101.03961v3.pdf",
+        "target": "1910.10683v4.pdf",
+        "status": "source_verified",
+        "proofs": [
+          {
+            "reference_id": "ref-author-year-35",
+            "page_number": 38,
+            "exact_title_or_id": true,
+            "native_page_contains_reference": true
+          }
+        ]
+      },
+      {
+        "source": "2101.03961v3.pdf",
+        "target": "language_understanding_paper.pdf",
+        "status": "source_verified",
+        "proofs": [
+          {
+            "reference_id": "ref-author-year-34",
+            "page_number": 38,
+            "exact_title_or_id": true,
+            "native_page_contains_reference": true
+          }
+        ]
+      },
+      {
+        "source": "2305.18290v3.pdf",
+        "target": "1707.06347v2.pdf",
+        "status": "source_verified",
+        "proofs": [
+          {
+            "reference_id": "ref-39",
+            "page_number": 14,
+            "exact_title_or_id": true,
+            "native_page_contains_reference": true
+          }
+        ]
+      },
+      {
+        "source": "2305.18290v3.pdf",
+        "target": "2005.14165v4.pdf",
+        "status": "source_verified",
+        "proofs": [
+          {
+            "reference_id": "ref-6",
+            "page_number": 11,
+            "exact_title_or_id": true,
+            "native_page_contains_reference": true
+          },
+          {
+            "reference_id": "ref-7",
+            "page_number": 11,
+            "exact_title_or_id": true,
+            "native_page_contains_reference": true
+          }
+        ]
+      },
+      {
+        "source": "2305.18290v3.pdf",
+        "target": "2203.02155v1.pdf",
+        "status": "source_verified",
+        "proofs": [
+          {
+            "reference_id": "ref-28",
+            "page_number": 13,
+            "exact_title_or_id": true,
+            "native_page_contains_reference": true
+          }
+        ]
+      },
+      {
+        "source": "2103.00020v1.pdf",
+        "target": "1706.03762v1.pdf",
+        "status": "source_verified",
+        "proofs": [
+          {
+            "reference_id": "ref-author-year-181",
+            "page_number": 35,
+            "exact_title_or_id": true,
+            "native_page_contains_reference": true
+          }
+        ]
+      },
+      {
+        "source": "2103.00020v1.pdf",
+        "target": "2005.14165v4.pdf",
+        "status": "source_verified",
+        "proofs": [
+          {
+            "reference_id": "ref-author-year-15",
+            "page_number": 28,
+            "exact_title_or_id": true,
+            "native_page_contains_reference": true
+          }
+        ]
+      },
+      {
+        "source": "2103.00020v1.pdf",
+        "target": "2010.11929v2.pdf",
+        "status": "source_verified",
+        "proofs": [
+          {
+            "reference_id": "ref-author-year-40",
+            "page_number": 29,
+            "exact_title_or_id": true,
+            "native_page_contains_reference": true
+          }
+        ]
+      },
+      {
+        "source": "2103.00020v1.pdf",
+        "target": "2001.08361v1.pdf",
+        "status": "source_verified",
+        "proofs": [
+          {
+            "reference_id": "ref-author-year-85",
+            "page_number": 31,
+            "exact_title_or_id": true,
+            "native_page_contains_reference": true
+          }
+        ]
+      },
+      {
+        "source": "2103.00020v1.pdf",
+        "target": "N19-1423.pdf",
+        "status": "source_verified",
+        "proofs": [
+          {
+            "reference_id": "ref-author-year-36",
+            "page_number": 28,
+            "exact_title_or_id": true,
+            "native_page_contains_reference": true
+          }
+        ]
+      },
+      {
+        "source": "2103.00020v1.pdf",
+        "target": "1910.10683v4.pdf",
+        "status": "source_verified",
+        "proofs": [
+          {
+            "reference_id": "ref-author-year-148",
+            "page_number": 33,
+            "exact_title_or_id": true,
+            "native_page_contains_reference": true
+          }
+        ]
+      },
+      {
+        "source": "2103.00020v1.pdf",
+        "target": "language_understanding_paper.pdf",
+        "status": "source_verified",
+        "proofs": [
+          {
+            "reference_id": "ref-author-year-146",
+            "page_number": 33,
+            "exact_title_or_id": true,
+            "native_page_contains_reference": true
+          }
+        ]
+      },
+      {
+        "source": "1706.03762v1.pdf",
+        "target": "1607.06450v1.pdf",
+        "status": "source_verified",
+        "proofs": [
+          {
+            "reference_id": "ref-1",
+            "page_number": 10,
+            "exact_title_or_id": true,
+            "native_page_contains_reference": true
+          }
+        ]
+      },
+      {
+        "source": "1910.02054v3.pdf",
+        "target": "N19-1423.pdf",
+        "status": "source_verified",
+        "proofs": [
+          {
+            "reference_id": "ref-1",
+            "page_number": 20,
+            "exact_title_or_id": true,
+            "native_page_contains_reference": true
+          }
+        ]
+      },
+      {
+        "source": "1910.02054v3.pdf",
+        "target": "1910.10683v4.pdf",
+        "status": "source_verified",
+        "proofs": [
+          {
+            "reference_id": "ref-4",
+            "page_number": 20,
+            "exact_title_or_id": true,
+            "native_page_contains_reference": true
+          }
+        ]
+      },
+      {
+        "source": "2005.14165v4.pdf",
+        "target": "1706.03762v1.pdf",
+        "status": "source_verified",
+        "proofs": [
+          {
+            "reference_id": "ref-VSP+17",
+            "page_number": 74,
+            "exact_title_or_id": true,
+            "native_page_contains_reference": true
+          }
+        ]
+      },
+      {
+        "source": "2005.14165v4.pdf",
+        "target": "2001.08361v1.pdf",
+        "status": "source_verified",
+        "proofs": [
+          {
+            "reference_id": "ref-KMH+20",
+            "page_number": 70,
+            "exact_title_or_id": true,
+            "native_page_contains_reference": true
+          }
+        ]
+      },
+      {
+        "source": "2005.14165v4.pdf",
+        "target": "N19-1423.pdf",
+        "status": "source_verified",
+        "proofs": [
+          {
+            "reference_id": "ref-DCLT18",
+            "page_number": 68,
+            "exact_title_or_id": true,
+            "native_page_contains_reference": true
+          }
+        ]
+      },
+      {
+        "source": "2005.14165v4.pdf",
+        "target": "1910.10683v4.pdf",
+        "status": "source_verified",
+        "proofs": [
+          {
+            "reference_id": "ref-RSR+19",
+            "page_number": 73,
+            "exact_title_or_id": true,
+            "native_page_contains_reference": true
+          }
+        ]
+      },
+      {
+        "source": "2005.14165v4.pdf",
+        "target": "language_understanding_paper.pdf",
+        "status": "source_verified",
+        "proofs": [
+          {
+            "reference_id": "ref-RNSS18",
+            "page_number": 73,
+            "exact_title_or_id": true,
+            "native_page_contains_reference": true
+          }
+        ]
+      },
+      {
+        "source": "2205.14135v2.pdf",
+        "target": "1706.03762v1.pdf",
+        "status": "source_verified",
+        "proofs": [
+          {
+            "reference_id": "ref-82",
+            "page_number": 15,
+            "exact_title_or_id": true,
+            "native_page_contains_reference": true
+          }
+        ]
+      },
+      {
+        "source": "2205.14135v2.pdf",
+        "target": "2005.14165v4.pdf",
+        "status": "source_verified",
+        "proofs": [
+          {
+            "reference_id": "ref-5",
+            "page_number": 11,
+            "exact_title_or_id": true,
+            "native_page_contains_reference": true
+          }
+        ]
+      },
+      {
+        "source": "2205.14135v2.pdf",
+        "target": "2010.11929v2.pdf",
+        "status": "source_verified",
+        "proofs": [
+          {
+            "reference_id": "ref-24",
+            "page_number": 12,
+            "exact_title_or_id": true,
+            "native_page_contains_reference": true
+          }
+        ]
+      },
+      {
+        "source": "2205.14135v2.pdf",
+        "target": "N19-1423.pdf",
+        "status": "source_verified",
+        "proofs": [
+          {
+            "reference_id": "ref-22",
+            "page_number": 12,
+            "exact_title_or_id": true,
+            "native_page_contains_reference": true
+          }
+        ]
+      },
+      {
+        "source": "2201.11903v6.pdf",
+        "target": "2005.14165v4.pdf",
+        "status": "source_verified",
+        "proofs": [
+          {
+            "reference_id": "ref-author-year-7",
+            "page_number": 10,
+            "exact_title_or_id": true,
+            "native_page_contains_reference": true
+          }
+        ]
+      },
+      {
+        "source": "2201.11903v6.pdf",
+        "target": "2001.08361v1.pdf",
+        "status": "source_verified",
+        "proofs": [
+          {
+            "reference_id": "ref-author-year-26",
+            "page_number": 11,
+            "exact_title_or_id": true,
+            "native_page_contains_reference": true
+          }
+        ]
+      },
+      {
+        "source": "2201.11903v6.pdf",
+        "target": "N19-1423.pdf",
+        "status": "source_verified",
+        "proofs": [
+          {
+            "reference_id": "ref-author-year-16",
+            "page_number": 11,
+            "exact_title_or_id": true,
+            "native_page_contains_reference": true
+          }
+        ]
+      },
+      {
+        "source": "2201.11903v6.pdf",
+        "target": "2203.02155v1.pdf",
+        "status": "source_verified",
+        "proofs": [
+          {
+            "reference_id": "ref-author-year-44",
+            "page_number": 12,
+            "exact_title_or_id": true,
+            "native_page_contains_reference": true
+          }
+        ]
+      },
+      {
+        "source": "2201.11903v6.pdf",
+        "target": "1910.10683v4.pdf",
+        "status": "source_verified",
+        "proofs": [
+          {
+            "reference_id": "ref-author-year-50",
+            "page_number": 12,
+            "exact_title_or_id": true,
+            "native_page_contains_reference": true
+          }
+        ]
+      },
+      {
+        "source": "2201.11903v6.pdf",
+        "target": "2107.03374v2.pdf",
+        "status": "source_verified",
+        "proofs": [
+          {
+            "reference_id": "ref-author-year-11",
+            "page_number": 10,
+            "exact_title_or_id": true,
+            "native_page_contains_reference": true
+          }
+        ]
+      },
+      {
+        "source": "2010.11929v2.pdf",
+        "target": "1706.03762v1.pdf",
+        "status": "source_verified",
+        "proofs": [
+          {
+            "reference_id": "ref-author-year-47",
+            "page_number": 12,
+            "exact_title_or_id": true,
+            "native_page_contains_reference": true
+          }
+        ]
+      },
+      {
+        "source": "2010.11929v2.pdf",
+        "target": "2005.14165v4.pdf",
+        "status": "source_verified",
+        "proofs": [
+          {
+            "reference_id": "ref-author-year-6",
+            "page_number": 10,
+            "exact_title_or_id": true,
+            "native_page_contains_reference": true
+          }
+        ]
+      },
+      {
+        "source": "2010.11929v2.pdf",
+        "target": "N19-1423.pdf",
+        "status": "source_verified",
+        "proofs": [
+          {
+            "reference_id": "ref-author-year-14",
+            "page_number": 10,
+            "exact_title_or_id": true,
+            "native_page_contains_reference": true
+          }
+        ]
+      },
+      {
+        "source": "2001.08361v1.pdf",
+        "target": "1706.03762v1.pdf",
+        "status": "source_verified",
+        "proofs": [
+          {
+            "reference_id": "ref-VSP+17",
+            "page_number": 30,
+            "exact_title_or_id": true,
+            "native_page_contains_reference": true
+          }
+        ]
+      },
+      {
+        "source": "2001.08361v1.pdf",
+        "target": "N19-1423.pdf",
+        "status": "source_verified",
+        "proofs": [
+          {
+            "reference_id": "ref-DCLT18",
+            "page_number": 28,
+            "exact_title_or_id": true,
+            "native_page_contains_reference": true
+          }
+        ]
+      },
+      {
+        "source": "2001.08361v1.pdf",
+        "target": "1910.10683v4.pdf",
+        "status": "source_verified",
+        "proofs": [
+          {
+            "reference_id": "ref-RSR+19",
+            "page_number": 29,
+            "exact_title_or_id": true,
+            "native_page_contains_reference": true
+          }
+        ]
+      },
+      {
+        "source": "2001.08361v1.pdf",
+        "target": "language_understanding_paper.pdf",
+        "status": "source_verified",
+        "proofs": [
+          {
+            "reference_id": "ref-RNSS18",
+            "page_number": 29,
+            "exact_title_or_id": true,
+            "native_page_contains_reference": true
+          }
+        ]
+      },
+      {
+        "source": "2305.14314v1.pdf",
+        "target": "2201.11903v6.pdf",
+        "status": "source_verified",
+        "proofs": [
+          {
+            "reference_id": "ref-63",
+            "page_number": 20,
+            "exact_title_or_id": true,
+            "native_page_contains_reference": true
+          }
+        ]
+      },
+      {
+        "source": "2305.14314v1.pdf",
+        "target": "2106.09685v2.pdf",
+        "status": "source_verified",
+        "proofs": [
+          {
+            "reference_id": "ref-28",
+            "page_number": 18,
+            "exact_title_or_id": true,
+            "native_page_contains_reference": true
+          }
+        ]
+      },
+      {
+        "source": "2305.14314v1.pdf",
+        "target": "2203.02155v1.pdf",
+        "status": "source_verified",
+        "proofs": [
+          {
+            "reference_id": "ref-43",
+            "page_number": 19,
+            "exact_title_or_id": true,
+            "native_page_contains_reference": true
+          }
+        ]
+      },
+      {
+        "source": "2305.14314v1.pdf",
+        "target": "1910.10683v4.pdf",
+        "status": "source_verified",
+        "proofs": [
+          {
+            "reference_id": "ref-49",
+            "page_number": 19,
+            "exact_title_or_id": true,
+            "native_page_contains_reference": true
+          }
+        ]
+      },
+      {
+        "source": "N19-1423.pdf",
+        "target": "1706.03762v1.pdf",
+        "status": "source_verified",
+        "proofs": [
+          {
+            "reference_id": "ref-author-year-46",
+            "page_number": 11,
+            "exact_title_or_id": true,
+            "native_page_contains_reference": true
+          }
+        ]
+      },
+      {
+        "source": "2002.04745v2.pdf",
+        "target": "1607.06450v1.pdf",
+        "status": "source_verified",
+        "proofs": [
+          {
+            "reference_id": "ref-author-year-24",
+            "page_number": 9,
+            "exact_title_or_id": true,
+            "native_page_contains_reference": true
+          }
+        ]
+      },
+      {
+        "source": "2002.04745v2.pdf",
+        "target": "1706.03762v1.pdf",
+        "status": "source_verified",
+        "proofs": [
+          {
+            "reference_id": "ref-author-year-38",
+            "page_number": 10,
+            "exact_title_or_id": true,
+            "native_page_contains_reference": true
+          }
+        ]
+      },
+      {
+        "source": "2002.04745v2.pdf",
+        "target": "N19-1423.pdf",
+        "status": "source_verified",
+        "proofs": [
+          {
+            "reference_id": "ref-author-year-9",
+            "page_number": 9,
+            "exact_title_or_id": true,
+            "native_page_contains_reference": true
+          }
+        ]
+      },
+      {
+        "source": "2106.09685v2.pdf",
+        "target": "1706.03762v1.pdf",
+        "status": "source_verified",
+        "proofs": [
+          {
+            "reference_id": "ref-author-year-50",
+            "page_number": 16,
+            "exact_title_or_id": true,
+            "native_page_contains_reference": true
+          }
+        ]
+      },
+      {
+        "source": "2106.09685v2.pdf",
+        "target": "2005.14165v4.pdf",
+        "status": "source_verified",
+        "proofs": [
+          {
+            "reference_id": "ref-author-year-7",
+            "page_number": 13,
+            "exact_title_or_id": true,
+            "native_page_contains_reference": true
+          }
+        ]
+      },
+      {
+        "source": "2106.09685v2.pdf",
+        "target": "N19-1423.pdf",
+        "status": "source_verified",
+        "proofs": [
+          {
+            "reference_id": "ref-author-year-12",
+            "page_number": 13,
+            "exact_title_or_id": true,
+            "native_page_contains_reference": true
+          },
+          {
+            "reference_id": "ref-author-year-13",
+            "page_number": 13,
+            "exact_title_or_id": true,
+            "native_page_contains_reference": true
+          }
+        ]
+      },
+      {
+        "source": "2106.09685v2.pdf",
+        "target": "language_understanding_paper.pdf",
+        "status": "source_verified",
+        "proofs": [
+          {
+            "reference_id": "ref-author-year-43",
+            "page_number": 15,
+            "exact_title_or_id": true,
+            "native_page_contains_reference": true
+          }
+        ]
+      },
+      {
+        "source": "2203.02155v1.pdf",
+        "target": "1707.06347v2.pdf",
+        "status": "source_verified",
+        "proofs": [
+          {
+            "reference_id": "ref-author-year-27",
+            "page_number": 24,
+            "exact_title_or_id": true,
+            "native_page_contains_reference": true
+          }
+        ]
+      },
+      {
+        "source": "2203.02155v1.pdf",
+        "target": "2005.14165v4.pdf",
+        "status": "source_verified",
+        "proofs": [
+          {
+            "reference_id": "ref-author-year-10",
+            "page_number": 22,
+            "exact_title_or_id": true,
+            "native_page_contains_reference": true
+          }
+        ]
+      },
+      {
+        "source": "1910.10683v4.pdf",
+        "target": "1607.06450v1.pdf",
+        "status": "source_verified",
+        "proofs": [
+          {
+            "reference_id": "ref-author-year-4",
+            "page_number": 58,
+            "exact_title_or_id": true,
+            "native_page_contains_reference": true
+          }
+        ]
+      },
+      {
+        "source": "1910.10683v4.pdf",
+        "target": "1706.03762v1.pdf",
+        "status": "source_verified",
+        "proofs": [
+          {
+            "reference_id": "ref-author-year-117",
+            "page_number": 66,
+            "exact_title_or_id": true,
+            "native_page_contains_reference": true
+          }
+        ]
+      },
+      {
+        "source": "1910.10683v4.pdf",
+        "target": "N19-1423.pdf",
+        "status": "source_verified",
+        "proofs": [
+          {
+            "reference_id": "ref-author-year-25",
+            "page_number": 59,
+            "exact_title_or_id": true,
+            "native_page_contains_reference": true
+          }
+        ]
+      },
+      {
+        "source": "1910.10683v4.pdf",
+        "target": "language_understanding_paper.pdf",
+        "status": "source_verified",
+        "proofs": [
+          {
+            "reference_id": "ref-author-year-88",
+            "page_number": 64,
+            "exact_title_or_id": true,
+            "native_page_contains_reference": true
+          }
+        ]
+      },
+      {
+        "source": "language_understanding_paper.pdf",
+        "target": "1607.06450v1.pdf",
+        "status": "source_verified",
+        "proofs": [
+          {
+            "reference_id": "ref-2",
+            "page_number": 9,
+            "exact_title_or_id": true,
+            "native_page_contains_reference": true
+          }
+        ]
+      },
+      {
+        "source": "language_understanding_paper.pdf",
+        "target": "1706.03762v1.pdf",
+        "status": "source_verified",
+        "proofs": [
+          {
+            "reference_id": "ref-62",
+            "page_number": 11,
+            "exact_title_or_id": true,
+            "native_page_contains_reference": true
+          }
+        ]
+      },
+      {
+        "source": "2107.03374v2.pdf",
+        "target": "2103.00020v1.pdf",
+        "status": "source_verified",
+        "proofs": [
+          {
+            "reference_id": "ref-author-year-94",
+            "page_number": 18,
+            "exact_title_or_id": true,
+            "native_page_contains_reference": true
+          }
+        ]
+      },
+      {
+        "source": "2107.03374v2.pdf",
+        "target": "1706.03762v1.pdf",
+        "status": "source_verified",
+        "proofs": [
+          {
+            "reference_id": "ref-author-year-113",
+            "page_number": 18,
+            "exact_title_or_id": true,
+            "native_page_contains_reference": true
+          }
+        ]
+      },
+      {
+        "source": "2107.03374v2.pdf",
+        "target": "2005.14165v4.pdf",
+        "status": "source_verified",
+        "proofs": [
+          {
+            "reference_id": "ref-author-year-20",
+            "page_number": 15,
+            "exact_title_or_id": true,
+            "native_page_contains_reference": true
+          }
+        ]
+      },
+      {
+        "source": "2107.03374v2.pdf",
+        "target": "2001.08361v1.pdf",
+        "status": "source_verified",
+        "proofs": [
+          {
+            "reference_id": "ref-author-year-59",
+            "page_number": 17,
+            "exact_title_or_id": true,
+            "native_page_contains_reference": true
+          }
+        ]
+      },
+      {
+        "source": "2107.03374v2.pdf",
+        "target": "N19-1423.pdf",
+        "status": "source_verified",
+        "proofs": [
+          {
+            "reference_id": "ref-author-year-36",
+            "page_number": 16,
+            "exact_title_or_id": true,
+            "native_page_contains_reference": true
+          }
+        ]
+      },
+      {
+        "source": "2107.03374v2.pdf",
+        "target": "1910.10683v4.pdf",
+        "status": "source_verified",
+        "proofs": [
+          {
+            "reference_id": "ref-author-year-95",
+            "page_number": 18,
+            "exact_title_or_id": true,
+            "native_page_contains_reference": true
+          }
+        ]
+      },
+      {
+        "source": "2107.03374v2.pdf",
+        "target": "language_understanding_paper.pdf",
+        "status": "source_verified",
+        "proofs": [
+          {
+            "reference_id": "ref-author-year-92",
+            "page_number": 18,
+            "exact_title_or_id": true,
+            "native_page_contains_reference": true
+          }
+        ]
+      }
+    ],
+    "unresolved_edges": 0,
+    "failures": [],
+    "scope": "Native-page exact-title/ID edge support and local graph arithmetic; roles are local heuristics"
+  },
+  "extractive_review_and_future_decisions": {
+    "status": "passed",
+    "selected_papers": 20,
+    "covered_papers": 20,
+    "evidence_count": 60,
+    "missing_papers": [],
+    "future_directions": 33,
+    "decision_checks": [
+      {
+        "direction_id": "future-31d544918448afeb0bd82ded",
+        "unproven_confirmation_status": 422,
+        "needs_review_save_status": 200
+      },
+      {
+        "direction_id": "future-3e9c061fdaf8c4af38e84771",
+        "unproven_confirmation_status": 422,
+        "needs_review_save_status": 200
+      },
+      {
+        "direction_id": "future-098204a32a4c8d11c3984787",
+        "unproven_confirmation_status": 422,
+        "needs_review_save_status": 200
+      },
+      {
+        "direction_id": "future-d66e050589cefe0707808fc5",
+        "unproven_confirmation_status": 422,
+        "needs_review_save_status": 200
+      },
+      {
+        "direction_id": "future-41c84afe55e04b8f2bd60f27",
+        "unproven_confirmation_status": 422,
+        "needs_review_save_status": 200
+      },
+      {
+        "direction_id": "future-36e862ac462fff4833fbd274",
+        "unproven_confirmation_status": 422,
+        "needs_review_save_status": 200
+      },
+      {
+        "direction_id": "future-86c6620895c5862c1929a9e5",
+        "unproven_confirmation_status": 422,
+        "needs_review_save_status": 200
+      },
+      {
+        "direction_id": "future-fbbddc630cdbed5a05eff5c7",
+        "unproven_confirmation_status": 422,
+        "needs_review_save_status": 200
+      },
+      {
+        "direction_id": "future-34bf622f9e4bb7708bde63e2",
+        "unproven_confirmation_status": 422,
+        "needs_review_save_status": 200
+      },
+      {
+        "direction_id": "future-359ab073d907d7f32177bdf7",
+        "unproven_confirmation_status": 422,
+        "needs_review_save_status": 200
+      },
+      {
+        "direction_id": "future-643a469b34a1de60a81a0429",
+        "unproven_confirmation_status": 422,
+        "needs_review_save_status": 200
+      },
+      {
+        "direction_id": "future-3575d5142f39806effb0e42b",
+        "unproven_confirmation_status": 422,
+        "needs_review_save_status": 200
+      },
+      {
+        "direction_id": "future-79991f1aa526d968664b5410",
+        "unproven_confirmation_status": 422,
+        "needs_review_save_status": 200
+      },
+      {
+        "direction_id": "future-ffed58b318869e2f79ee000a",
+        "unproven_confirmation_status": 422,
+        "needs_review_save_status": 200
+      },
+      {
+        "direction_id": "future-6aeef6bbc652755a60f1587f",
+        "unproven_confirmation_status": 422,
+        "needs_review_save_status": 200
+      },
+      {
+        "direction_id": "future-af7d54a1ceabb4d67e3056ad",
+        "unproven_confirmation_status": 422,
+        "needs_review_save_status": 200
+      },
+      {
+        "direction_id": "future-dba9d6ddfe1d43911f3b372a",
+        "unproven_confirmation_status": 422,
+        "needs_review_save_status": 200
+      },
+      {
+        "direction_id": "future-82917d2b76f62c03c54bc79d",
+        "unproven_confirmation_status": 422,
+        "needs_review_save_status": 200
+      },
+      {
+        "direction_id": "future-46c64fc5c2c1c477dc73a2dd",
+        "unproven_confirmation_status": 422,
+        "needs_review_save_status": 200
+      },
+      {
+        "direction_id": "future-7ed2222138d2ab472591f109",
+        "unproven_confirmation_status": 422,
+        "needs_review_save_status": 200
+      },
+      {
+        "direction_id": "future-cfeea9006454b8455a1e177b",
+        "unproven_confirmation_status": 422,
+        "needs_review_save_status": 200
+      },
+      {
+        "direction_id": "future-dfda0085f8a28889db4f3068",
+        "unproven_confirmation_status": 422,
+        "needs_review_save_status": 200
+      },
+      {
+        "direction_id": "future-b72cf1abf250bc09274a9f4b",
+        "unproven_confirmation_status": 422,
+        "needs_review_save_status": 200
+      },
+      {
+        "direction_id": "future-421faa9db104fbcfd73900c5",
+        "unproven_confirmation_status": 422,
+        "needs_review_save_status": 200
+      },
+      {
+        "direction_id": "future-fca656c5bdca33afafed3fde",
+        "unproven_confirmation_status": 422,
+        "needs_review_save_status": 200
+      },
+      {
+        "direction_id": "future-a0e52f0b18044d570919ddb3",
+        "unproven_confirmation_status": 422,
+        "needs_review_save_status": 200
+      },
+      {
+        "direction_id": "future-1e01c311d3e9404d59809c98",
+        "unproven_confirmation_status": 422,
+        "needs_review_save_status": 200
+      },
+      {
+        "direction_id": "future-9740f5f45dbaf4e30c58f9ea",
+        "unproven_confirmation_status": 422,
+        "needs_review_save_status": 200
+      },
+      {
+        "direction_id": "future-7a9444b6e0531aa75f9bdbb3",
+        "unproven_confirmation_status": 422,
+        "needs_review_save_status": 200
+      },
+      {
+        "direction_id": "future-7856e86222691b95c215c925",
+        "unproven_confirmation_status": 422,
+        "needs_review_save_status": 200
+      },
+      {
+        "direction_id": "future-ce0a87a830f51aeb54095316",
+        "unproven_confirmation_status": 422,
+        "needs_review_save_status": 200
+      },
+      {
+        "direction_id": "future-272a8c240adc591810b53698",
+        "unproven_confirmation_status": 422,
+        "needs_review_save_status": 200
+      },
+      {
+        "direction_id": "future-700af485d0e436b473aeb018",
+        "unproven_confirmation_status": 422,
+        "needs_review_save_status": 200
+      }
+    ],
+    "failures": [],
+    "scope": "Extractive source-bound review and guarded human decisions; not generated review or solved-idea proof"
+  },
+  "generated_review": {
+    "status": "source_checks_passed",
+    "evidence_papers": 20,
+    "evidence_count": 40,
+    "published_claims": 24,
+    "provider": "deepseek",
+    "model": "deepseek-flash",
+    "warnings": [
+      "证据预算为 40，已按文献均衡选择 40 条；另有 43 条候选未发送。"
+    ]
+  },
+  "generated_review_quality_status": "needs_concise_synthesis_and_graph_relation_audit",
+  "translation": {
+    "status": "passed",
+    "source": {
+      "filename": "1706.03762v1.pdf",
+      "source_sha256": "0a9bff1be3575cf9fe26a4a3d3a9175bc791ecec90de8b9deba4cff75d2b9476",
+      "ast_sha256": "17b79909f6ccfbef761befa41518b887e954b41bc1b74d8cfe071d519f8db5de",
+      "provider": "deepseek",
+      "model": "deepseek-flash",
+      "page_count": 15
+    },
+    "pages": [
+      {
+        "page_number": 1,
+        "expected_blocks": 16,
+        "actual_blocks": 16,
+        "failures": []
+      },
+      {
+        "page_number": 2,
+        "expected_blocks": 14,
+        "actual_blocks": 14,
+        "failures": []
+      },
+      {
+        "page_number": 3,
+        "expected_blocks": 10,
+        "actual_blocks": 10,
+        "failures": []
+      },
+      {
+        "page_number": 4,
+        "expected_blocks": 16,
+        "actual_blocks": 16,
+        "failures": []
+      },
+      {
+        "page_number": 5,
+        "expected_blocks": 16,
+        "actual_blocks": 16,
+        "failures": []
+      },
+      {
+        "page_number": 6,
+        "expected_blocks": 13,
+        "actual_blocks": 13,
+        "failures": []
+      },
+      {
+        "page_number": 7,
+        "expected_blocks": 20,
+        "actual_blocks": 20,
+        "failures": []
+      },
+      {
+        "page_number": 8,
+        "expected_blocks": 23,
+        "actual_blocks": 23,
+        "failures": []
+      },
+      {
+        "page_number": 9,
+        "expected_blocks": 17,
+        "actual_blocks": 17,
+        "failures": []
+      },
+      {
+        "page_number": 10,
+        "expected_blocks": 21,
+        "actual_blocks": 21,
+        "failures": []
+      },
+      {
+        "page_number": 11,
+        "expected_blocks": 22,
+        "actual_blocks": 22,
+        "failures": []
+      },
+      {
+        "page_number": 12,
+        "expected_blocks": 4,
+        "actual_blocks": 4,
+        "failures": []
+      },
+      {
+        "page_number": 13,
+        "expected_blocks": 69,
+        "actual_blocks": 69,
+        "failures": []
+      },
+      {
+        "page_number": 14,
+        "expected_blocks": 110,
+        "actual_blocks": 110,
+        "failures": []
+      },
+      {
+        "page_number": 15,
+        "expected_blocks": 110,
+        "actual_blocks": 110,
+        "failures": []
+      }
+    ],
+    "total_aligned_blocks": 481,
+    "all_attempts": [
+      {
+        "status": "failed",
+        "calls": 14,
+        "error": "翻译结果未完整保留公式、代码、引用、数字或术语占位符。"
+      },
+      {
+        "status": "passed",
+        "calls": 8,
+        "error": null
+      },
+      {
+        "status": "passed",
+        "calls": 0,
+        "error": null
+      }
+    ],
+    "manual_sample_pages": [
+      1,
+      2,
+      6,
+      8,
+      12
+    ],
+    "manual_samples_exhaustive": false,
+    "exports": [
+      {
+        "format": "markdown",
+        "mode": "bilingual",
+        "sha256": "7a31d925bb641ca30e8f1b2670c15d95fe07963a420c6c18ba83ef22319e3e5a"
+      },
+      {
+        "format": "markdown",
+        "mode": "translation",
+        "sha256": "1447de9f99cdfbc285204dcca2a7f9c00aa7353a3bf71da13383e5e6e949dba5"
+      },
+      {
+        "format": "html",
+        "mode": "bilingual",
+        "sha256": "a8342e72b8a711253a74106b5b4cc3162544445768baa3f42d1a02bfc469cb19"
+      },
+      {
+        "format": "html",
+        "mode": "translation",
+        "sha256": "5f0afcde33453381852fe27e232d1f05acaa5d5e8f0da0f38a199fa6d299205a"
+      }
+    ],
+    "export_api": {
+      "status": "passed",
+      "cloud_calls": 0,
+      "checks": [
+        {
+          "type": "page",
+          "page": 1,
+          "passed": true
+        },
+        {
+          "type": "page",
+          "page": 2,
+          "passed": true
+        },
+        {
+          "type": "page",
+          "page": 3,
+          "passed": true
+        },
+        {
+          "type": "page",
+          "page": 4,
+          "passed": true
+        },
+        {
+          "type": "page",
+          "page": 5,
+          "passed": true
+        },
+        {
+          "type": "page",
+          "page": 6,
+          "passed": true
+        },
+        {
+          "type": "page",
+          "page": 7,
+          "passed": true
+        },
+        {
+          "type": "page",
+          "page": 8,
+          "passed": true
+        },
+        {
+          "type": "page",
+          "page": 9,
+          "passed": true
+        },
+        {
+          "type": "page",
+          "page": 10,
+          "passed": true
+        },
+        {
+          "type": "page",
+          "page": 11,
+          "passed": true
+        },
+        {
+          "type": "page",
+          "page": 12,
+          "passed": true
+        },
+        {
+          "type": "page",
+          "page": 13,
+          "passed": true
+        },
+        {
+          "type": "page",
+          "page": 14,
+          "passed": true
+        },
+        {
+          "type": "page",
+          "page": 15,
+          "passed": true
+        },
+        {
+          "type": "export",
+          "format": "markdown",
+          "mode": "bilingual",
+          "passed": true
+        },
+        {
+          "type": "export",
+          "format": "markdown",
+          "mode": "translation",
+          "passed": true
+        },
+        {
+          "type": "export",
+          "format": "html",
+          "mode": "bilingual",
+          "passed": true
+        },
+        {
+          "type": "export",
+          "format": "html",
+          "mode": "translation",
+          "passed": true
+        }
+      ],
+      "document_id": "20d9fad6-9e6f-543d-a2e1-095d8056c5ff"
+    }
+  },
+  "browser": {
+    "status": "passed",
+    "cloud_calls": 0,
+    "scope": "existing frontend image + current isolated backend",
+    "checks": [
+      {
+        "name": "original page rendered",
+        "passed": true
+      },
+      {
+        "name": "outline jump to physical page 2",
+        "passed": true
+      },
+      {
+        "name": "citation/reference exact-origin round trip",
+        "passed": true,
+        "label": "9",
+        "source_page": 2,
+        "reference_page": 10
+      },
+      {
+        "name": "completed full translation visible",
+        "passed": true,
+        "pages": 15
+      },
+      {
+        "name": "bidirectional ratio scroll: .pdf-reader-viewport",
+        "passed": true,
+        "ratios": [
+          0.5505882352941176,
+          0.5503875968992248
+        ]
+      },
+      {
+        "name": "bidirectional ratio scroll: .pdf-bilingual-pane",
+        "passed": true,
+        "ratios": [
+          0.24941176470588236,
+          0.24978466838931956
+        ]
+      },
+      {
+        "name": "HTML/Markdown export actions visible",
+        "passed": true
+      }
+    ],
+    "errors": []
+  },
+  "regression": {
+    "backend_tests": 799,
+    "backend_failures": 0,
+    "backend_errors": 0,
+    "frontend_tests": 29,
+    "frontend_typecheck": "passed",
+    "ruff": "passed"
+  },
+  "report_sha256": {
+    "local-features-final/report.json": "1c4edda47d7b1b7b9db2704fea232849346d11672f03a88b044c69f382144059",
+    "full-translation-1/report.json": "2c60d29d3f0f69b8f9d266dc5436e38969b5de1213451f21cb1c1cddd1727824",
+    "local-features-final/translation-export-api-003.json": "08ae8a39668e96021df8401738789058997913dc5e13453c8d843939684d031c",
+    "browser-reader-final-direct/report.json": "c6d98cbec0555d27484751f2934e2503e058c06e0d1e250ffe048ed1c2fb1370",
+    "generated-review-20-1/report.json": "84c9292a1484f72d6eb06dba2185700883d678108d7a18691944c2210ff35a21",
+    "pending-two-1/report.json": "2195bd7b21cdf9aaca4dd67704f0315d06919e4f99674b48f23e790a2f327317",
+    "pending-final-1/report.json": "48b55468ebbc191ecb692c4fa5e965c45077c8853ae96bc35b3d2701c69a201d",
+    "full-translation-1/attempts/attempt-001.json": "0f345c5ff269869df7bdf37d261ba95701806bc98571a39c0485092e14e7ffc7",
+    "full-translation-1/attempts/attempt-002.json": "690c58db572a8042be455adaf7e270d94861ac29c00a82905caa18dfa6199465",
+    "full-translation-1/attempts/attempt-003.json": "2c60d29d3f0f69b8f9d266dc5436e38969b5de1213451f21cb1c1cddd1727824",
+    "full-unit-functional-final.xml": "2580d93447b251a2a3767b45b83cae4236dbc3f98bb38a39230d8a3c457d7f9b"
+  },
+  "final_worktree_code_sha256": {
+    "backend/app/services/academic_translation.py": "8f2cb61fd504adb9be7a9fbec4fe7bab4686ae6467d0242ad23c2edcea38f648",
+    "backend/app/services/document_translation.py": "29e26f4a491f8c11a84cceb305cac6eeb18419432a4a69ba64438e0a93fec876",
+    "backend/app/services/document_content.py": "2ea7847401ebaa19b54fb987f844340b82b513e2ccffa8ef6b5a4bea655da872",
+    "backend/app/services/translation_store.py": "0ceeae1d138113c3a0188ca1b783f98a8d4c6023327e027e24695d3696341851",
+    "backend/app/services/evidence_review.py": "579dec39e7eea472e3ceea181192e97fff9a7883e0dfb6ae1e929cfe6a00bbb0",
+    "backend/app/api/routes/documents.py": "f06d4dfe47394924240d6e85f0de9eecc842897938bb021b78c6a9e201a6eccb",
+    "backend/app/llm/model_fields.py": "8661365dab6f05e651c5315182ce5fdcdac2ade160824de649537bf95dcb52f6",
+    "frontend/e2e/officialReaderAcceptance.mjs": "a89db972e225fc2fd0191f9997223dc3de9b6e59efe9fc94ae5ab99fab1bd2a8"
+  },
+  "remaining": [
+    "Generated 20-paper review is lengthy and not yet a verified concise graph-based synthesis",
+    "Author-year citation automatic bidirectional linking is not implemented",
+    "Live scholarly search/download, subscription updates and recommendation interactions need current acceptance",
+    "Writing bibliographies, CSV/chart/caption acceptance need a current broader test",
+    "Scan Adam guard, Pre-LN answer evaluator and GPT-1 response completeness retain failed QA records",
+    "Cross-paper QA is not a stable frozen-candidate pass; paused targeted GPT repetitions",
+    "Final Docker/worker runtime acceptance, production frontend, public deployment and submission artifacts remain"
+  ]
+}

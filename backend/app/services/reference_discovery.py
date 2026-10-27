@@ -18,6 +18,35 @@ from app.services.paper_discovery import (
 TOKEN_PATTERN = re.compile(r"[a-z0-9]+|[\u3400-\u9fff]", re.IGNORECASE)
 YEAR_PATTERN = re.compile(r"\b(?:19|20)\d{2}\b")
 LEADING_LABEL_PATTERN = re.compile(r"^\s*(?:\[\d+\]|\d+[.)])\s*")
+VENUE_START = re.compile(r"^(?:in\b|proceedings\b|journal\b|arxiv\b|https?://|vol\.|pp\.)", re.I)
+
+
+def _reference_title(clean: str) -> str | None:
+    """Extract only a confident quoted or author-period-title bibliography title.
+
+    This is query cleanup, not an identity assertion. Unfamiliar layouts retain
+    their original text; all returned candidates still need independent scoring.
+    """
+    quoted = re.search(r'["“]([^"”]{12,})["”]', clean)
+    if quoted and len(_tokens(quoted[1])) >= 4:
+        return quoted[1].strip(" .,;")
+    parts = re.split(r"(?<=[.!?])\s+", clean)
+    joiners = {"and", "et", "al", "van", "von", "de", "der", "del", "da", "jr"}
+    for index, part in enumerate(parts):
+        if index == 0:
+            continue
+        prefix = " ".join(parts[:index])
+        # Initials, surnames and an optional publication year are plausible
+        # author prefixes. Do not guess when prose already precedes the title.
+        words = re.findall(r"[^\W\d_]+", YEAR_PATTERN.sub("", prefix), re.UNICODE)
+        if not words or any(
+            not word[0].isupper() and word.lower() not in joiners for word in words
+        ):
+            continue
+        title = re.sub(r"^\(?(?:19|20)\d{2}\)?[.,:]?\s+", "", part).rstrip(".").strip()
+        if len(_tokens(title)) >= 4 and not VENUE_START.search(title):
+            return title
+    return None
 
 
 def reference_search_query(reference_text: str) -> str:
@@ -26,7 +55,8 @@ def reference_search_query(reference_text: str) -> str:
     query_kind, normalized = detect_query_kind(clean)
     if query_kind in {"doi", "arxiv"}:
         return normalized
-    return LEADING_LABEL_PATTERN.sub("", clean)[:500]
+    clean = LEADING_LABEL_PATTERN.sub("", clean)
+    return (_reference_title(clean) or clean)[:500]
 
 
 def _tokens(value: str) -> set[str]:
@@ -37,37 +67,41 @@ def _tokens(value: str) -> set[str]:
     }
 
 
-def score_reference_candidate(
-    reference_text: str, candidate: PaperCandidate
-) -> tuple[float, str]:
+def score_reference_candidate(reference_text: str, candidate: PaperCandidate) -> tuple[float, str]:
     reference_lower = " ".join(reference_text.lower().split())
-    title_lower = " ".join(candidate.title.lower().split())
     if candidate.doi and candidate.doi.lower() in reference_lower:
         return 1.0, "DOI 完全一致"
     if candidate.arxiv_id and candidate.arxiv_id.lower() in reference_lower:
         return 1.0, "arXiv ID 完全一致"
 
-    reference_tokens = _tokens(reference_text)
+    cleaned = LEADING_LABEL_PATTERN.sub("", " ".join(reference_text.split()))
+    extracted = _reference_title(cleaned)
+    reference_tokens = _tokens(extracted or cleaned)
     title_tokens = _tokens(candidate.title)
-    title_coverage = (
-        len(reference_tokens & title_tokens) / len(title_tokens) if title_tokens else 0.0
+    overlap = len(reference_tokens & title_tokens)
+    title_coverage = overlap / len(title_tokens) if title_tokens else 0.0
+    reference_coverage = overlap / len(reference_tokens) if reference_tokens else 0.0
+    # A short generic candidate can cover its own few words while omitting most
+    # of the actual title. Require both directions when a title was isolated;
+    # otherwise use Dice overlap to tolerate author/venue text without that bias.
+    title_similarity = (
+        min(title_coverage, reference_coverage)
+        if extracted
+        else 2 * overlap / max(1, len(reference_tokens) + len(title_tokens))
     )
-    if title_lower and title_lower in reference_lower:
-        title_coverage = 1.0
 
     surnames = {
         parts[-1].lower()
         for author in candidate.authors
         if (parts := TOKEN_PATTERN.findall(author))
     }
-    author_coverage = (
-        len(reference_tokens & surnames) / len(surnames) if surnames else 0.0
-    )
+    author_coverage = len(_tokens(reference_text) & surnames) / len(surnames) if surnames else 0.0
     reference_years = set(YEAR_PATTERN.findall(reference_text))
     year_match = 1.0 if candidate.year and str(candidate.year) in reference_years else 0.0
-    score = min(1.0, 0.78 * title_coverage + 0.14 * author_coverage + 0.08 * year_match)
+    score = min(1.0, 0.78 * title_similarity + 0.14 * author_coverage + 0.08 * year_match)
     reason = (
-        f"题名词覆盖 {title_coverage:.0%}，作者匹配 {author_coverage:.0%}，"
+        f"题名词覆盖 {title_coverage:.0%}，条目覆盖 {reference_coverage:.0%}，"
+        f"作者匹配 {author_coverage:.0%}，"
         f"年份{'一致' if year_match else '未确认'}"
     )
     return round(score, 4), reason

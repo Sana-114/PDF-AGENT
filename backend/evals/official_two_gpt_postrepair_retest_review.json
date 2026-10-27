@@ -1,0 +1,30 @@
+{
+  "policy_id": "two-original-gpt-postrepair-source-review-2026-10-11",
+  "notes": "Review run-2 only. Original questions, count/window facts, PDF identities and original live outputs are unchanged. The live parameter answer remains failed because its runtime completeness flag is true; later offline replay is not a new generation pass.",
+  "fact_overrides": {
+    "gpt-parameter-evolution": {
+      "gpt1-from-gpt2-baseline-table": {"claim_contains_any_groups": [["GPT-1", "GPT1", "原始 GPT", "原始GPT"]]},
+      "gpt2-largest": {"claim_contains_any_groups": [["GPT-2", "GPT2"]]},
+      "gpt3-largest": {"claim_contains_any_groups": [["GPT-3", "GPT3"]]}
+    },
+    "context-evolution": {
+      "gpt1-context-from-gpt2-report": {"claim_contains_any_groups": [["GPT-1", "GPT1", "原始 GPT", "原始GPT"]]},
+      "gpt2-context": {"claim_contains_any_groups": [["GPT-2", "GPT2"]]},
+      "gpt3-context": {"claim_contains_any_groups": [["GPT-3", "GPT3"]]}
+    }
+  },
+  "source_inspection": {
+    "reviewer": "code_assistant_complete_native_pdf_page_and_preserved_claim_inspection",
+    "scope": "Only run-2's two original questions, one live DeepSeek attempt per question from the host source and read-only public index. Visually inspected complete Poppler renders of GPT-2 physical page 4 and GPT-3 physical pages 8 and 43, with all material headings, table headers and configuration limitations. Read GPT-1's full 12-page native text, rereading pages 3-7 separately to cover an initially truncated printout. This is not independent expert review, fresh parsing, frontend acceptance, all-nine-question acceptance, or a verification of every refusal/entailment phrasing.",
+    "cases": {
+      "gpt-parameter-evolution": {
+        "passed": true,
+        "reason": "All five published factual claims are supported by the cited complete original pages: GPT-2's 117M/345M/762M/1542M parameter column, its smallest-model equivalence to original GPT, its largest-model order-of-magnitude statement, GPT-3's explicit eight-size 125M-to-175B paragraph, and its eight table rows including the 175.0B main variant. GPT-1's count is correctly labelled a later-paper inference rather than an original-paper reported total; GPT-1's original model-specification text reports architecture dimensions but no explicit total parameter count. No second-largest/second-smallest error is published this time. However, the preserved live runtime incorrectly marks GPT-1 missing and appends a partial-answer warning. This source verdict validates claims, not live answer completeness; retain the live failure in the overall acceptance rate."
+      },
+      "context-evolution": {
+        "passed": true,
+        "reason": "All three published claims give the requested per-model configuration and appropriate provenance. GPT-1's 512-token configuration is explicitly labelled as an inference from GPT-2's architectural comparison on physical page 4, not inferred from GPT-1's training-sequence sentence or misattributed to its paper. GPT-2's 1024-token configuration follows that comparison. GPT-3's full nctx=2048-token window is explicitly cited from physical page 43 and independently confirmed by physical page 8. The answer reports these supported configurations without an unreported universal upper bound or a blanket no-window-evidence denial. Physical page/block/bbox anchors remain present and all sent evidence uses hybrid recall plus real BGE reranking."
+      }
+    }
+  }
+}

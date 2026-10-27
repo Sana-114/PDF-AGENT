@@ -1,0 +1,874 @@
+{
+  "schema_version": 1,
+  "date": "2026-10-14",
+  "record_kind": "official_pdf_test_progress_not_project_completion",
+  "status": "fixed_visible_clipping_and_explicit_protocol_omission__content_39_passed__writing_and_runtime_hold",
+  "git": {
+    "branch": "codex/stage94-official-failed-qa-retest",
+    "head": "a119f5609cda544e5d587588c5a338051da129a1",
+    "mutated": false
+  },
+  "runtime_source": {
+    "app_sha256": "8914e470748df85adf9005be6b9de7dc07fea28c73d726bc33630897b30d8ce7",
+    "app_files": 126,
+    "native_version": "1.26.4-layout103",
+    "ocr_base_version": "1.26.4-ocr-layout98",
+    "requirements_sha256": "b0e75e31a3ca8f034e095fd0667e3be7e380975548c5acce90db94f96ed7283f",
+    "production_installed": false
+  },
+  "progress": {
+    "latest_same_parser_fresh_file_coverage": {
+      "files": 39,
+      "total": 39,
+      "percent": 100,
+      "physical_pages": 1986,
+      "disjoint_batches": [
+        20,
+        3,
+        16
+      ]
+    },
+    "latest_fixed_content_checks": {
+      "passed": 39,
+      "total": 39,
+      "percent": 100,
+      "saved_current_ast_content_rechecks": 20,
+      "at_parse_time_manifest_checks": 19,
+      "uniform_resource_round": false,
+      "not_whole_answer_or_all_structure_accuracy": true
+    },
+    "latest_resource_gates": {
+      "measured": 19,
+      "total": 39,
+      "not_measured": 20,
+      "percent": 48.7179
+    },
+    "historical_first_basic": {
+      "passed": 38,
+      "total": 39,
+      "percent": 97.4359,
+      "old_failed_scan_and_separate_confirmation_preserved": true
+    },
+    "historical_first_core_qa": {
+      "passed": 38,
+      "total": 39,
+      "percent": 97.4359,
+      "timeout_independent_confirmation_preserved": true,
+      "regenerated_this_turn": false
+    },
+    "whole_scientific_quality_percent": null,
+    "video_technical_materials_public_deployment_excluded": true
+  },
+  "corpus": {
+    "provenance": "backend/tmp/official-clip-protocol-2026-10-14/combined-content-39.json",
+    "manifest": "backend/tmp/official-all-39-2026-10-11/sources-1/manifest.json",
+    "manifest_sha256": "8e1fca75960d9af84298f3ee608f763c4a0297e40c74472e95c16b256600c183",
+    "content_recheck_20": {
+      "file": "backend/tmp/official-clip-protocol-2026-10-14/native-20-content-recheck.json",
+      "parser_calls": 0,
+      "model_calls": 0,
+      "resource_metrics_not_invented": true
+    },
+    "scan": {
+      "physical_pages": 15,
+      "authors": 8,
+      "main_languages": "chi_sim+eng",
+      "front_matter_languages": "eng+pol",
+      "dpi": 300,
+      "passed": true,
+      "elapsed_seconds": 61.262,
+      "python_peak_memory_mib": 49.14
+    },
+    "book": {
+      "pages": 541,
+      "checkpoint_batches": 22,
+      "elapsed_seconds": 47.375,
+      "python_peak_memory_mib": 41.84,
+      "not_total_RAM_or_VRAM": true,
+      "passed": true
+    },
+    "all_39_metadata_table_formula_pixel_or_scientific_accuracy": false
+  },
+  "tables": {
+    "expectations": "backend/evals/official_clipped_table_regions.json",
+    "positive_cases_before": 6,
+    "positive_cases_after": 7,
+    "total_positive_cases": 7,
+    "selected_data_rows_passed": 42,
+    "negative_controls_before": 1,
+    "negative_controls_after": 2,
+    "total_negative_controls": 2,
+    "original_six_table_gold_sha256": "b944419fd8f5bf4c8573afa0133e0542e9e0c8bf32b0a6a23cd26d7e5a37fea9",
+    "original_gold_unchanged": true,
+    "vit_target": {
+      "physical_page": 6,
+      "caption": "Table 2:",
+      "columns": 6,
+      "rows_including_headers": 10,
+      "data_rows": 8,
+      "figure_visible_bbox": [
+        111.96,
+        283.74,
+        500.05,
+        372.81
+      ],
+      "old_total_tables": 10,
+      "new_total_tables": 10
+    },
+    "cot_chart_only_page_was_already_passing": true,
+    "not_all_table_precision_recall_or_header_colspan": true,
+    "scissor_rect_not_arbitrary_mask_recovery": true
+  },
+  "cloud": {
+    "calls": 2,
+    "automatic_retries": 0,
+    "provider": "deepseek",
+    "model": "deepseek-flash",
+    "public_finite_excerpts_only": true,
+    "whole_document_sent": false,
+    "private_papers_sent": false,
+    "retrieval": "lexical candidates plus real TEI BGE reranker",
+    "reranker_base_url": "http://localhost:8002",
+    "not_dense_vector_acceptance": true,
+    "samples": [
+      {
+        "directory": "backend/tmp/official-clip-protocol-2026-10-14/writing-original-1",
+        "same_previous_idea": true,
+        "raw_model_claims": 6,
+        "published_claims": 6,
+        "core_manual_source_consistent": 6,
+        "quality": "hold_per_paper_budget_and_scaffolding_and_section_metadata",
+        "visible_budget_warning": "ViT three claims beyond two"
+      },
+      {
+        "directory": "backend/tmp/official-clip-protocol-2026-10-14/writing-conditions-1",
+        "same_previous_failed_idea": true,
+        "raw_model_claims": 4,
+        "published_claims": 3,
+        "requested_targets_confirmed": 3,
+        "protocol_omission_in_new_raw_output": false,
+        "quality": "hold_numeric_false_positive_and_missing_removal_warning",
+        "dropped_original_index": 2,
+        "diagnosis": "CIFAR-10/100 trailing 100 is rejected although CIFAR-100 is in cited source",
+        "warnings": []
+      }
+    ],
+    "manual_review": "backend/tmp/official-clip-protocol-2026-10-14/manual-source-review.json",
+    "machine_reports_unchanged": true
+  },
+  "replay": {
+    "directory": "backend/tmp/official-clip-protocol-2026-10-14/replay-writing-conditions-1",
+    "calls": 0,
+    "original_claims": 5,
+    "published_claims": 4,
+    "withheld_original_indices": [
+      3
+    ],
+    "app_sha256": "172f3ac75f3129e847c80414e3300b51e43157e73d29c07ee544c3ea77d9faa1",
+    "not_final_new_generation": true
+  },
+  "intermediate_parser": {
+    "directory": "backend/tmp/official-clip-protocol-2026-10-14/parser-20-1",
+    "app_sha256": "f62eebc08197173bcd9d88c32b7774d961db7b83b08aba0efb855e3746face75",
+    "not_final_candidate": true
+  },
+  "regression": {
+    "backend_tests": 1074,
+    "backend_failed": 0,
+    "backend_errors": 0,
+    "backend_skipped": 0,
+    "frontend_tests": 38,
+    "frontend_failed": 0,
+    "typecheck_passed": true,
+    "whole_production_app_and_updated_driver_and_changed_tests_ruff_passed": true,
+    "summary": "backend/tmp/official-clip-protocol-2026-10-14/regression-summary.json"
+  },
+  "previous_evidence": {
+    "path": "docs/evidence/official-writing-layout-acceptance-2026-10-14.json",
+    "manifest_items": 124,
+    "immutable_backend_tmp_items": 105,
+    "immutable_items_all_unchanged": true,
+    "expected_manifest_code_changes": [
+      "backend/app/parsers/layout.py",
+      "backend/app/parsers/pymupdf_parser.py",
+      "backend/app/parsers/ocr_parser.py",
+      "backend/app/services/writing_outline.py",
+      "backend/tests/test_single_column_section_order.py",
+      "backend/tests/test_writing_outline.py",
+      "backend/scripts/prepare_official_parser_candidate.py"
+    ],
+    "mutable_progress_docs_updated_after_audit": true,
+    "not_all_124_hashes_unchanged": true
+  },
+  "deployment": {
+    "production_library_modified": false,
+    "docker_restarted_or_volumes_removed": false,
+    "new_backend_or_worker_image_installed": false,
+    "web_latest_candidate": false,
+    "browser_rechecked": false,
+    "BGE_dense_chain_rechecked": false,
+    "public_server_or_domain_purchased": false
+  },
+  "remaining": [
+    "dataset-shorthand numeric false positives without allowing unsupported measurements",
+    "writing removal reason and original budget visibility",
+    "per-paper concise budget and actual research synthesis",
+    "section label ownership",
+    "earlier review initialization scope",
+    "unmeasured general table precision/recall, header colspan and complete formula recovery",
+    "final same-version runtime API/browser/BGE dense chain and finite stability",
+    "actual online download/subscription and author-year reader links",
+    "release Git/materials/public deployment/key rotation"
+  ],
+  "artifact_manifest_count": 162,
+  "artifacts": [
+    {
+      "path": "backend/app/parsers/layout.py",
+      "sha256": "0d72387197a5c44b4132d8df1e595d9288f40895374b0399fa43a8aacd4db587"
+    },
+    {
+      "path": "backend/app/parsers/ocr_parser.py",
+      "sha256": "72c7f79c427971d4da387ed3fc1dccfcba68a31208226b42bffc592c93ec6fa8"
+    },
+    {
+      "path": "backend/app/parsers/pymupdf_parser.py",
+      "sha256": "b4ed2793b7bd70e3f5651ede67431887b3088201700814a12b8a1adae195b324"
+    },
+    {
+      "path": "backend/app/services/writing_context.py",
+      "sha256": "4d5e1cd42252ca3f275394b2156c48f5139718e430dff02a9bb5277f064e5b9e"
+    },
+    {
+      "path": "backend/app/services/writing_outline.py",
+      "sha256": "2e112bc2fb3793f78288bd51c3bfcd71f9f1238bb4a20bb1ab3444fd65a3f959"
+    },
+    {
+      "path": "backend/evals/official_clipped_table_regions.json",
+      "sha256": "09a467930272184405e1ab847e1a31611c3b5e51c0ed1d574b2e5f5475aecd0d"
+    },
+    {
+      "path": "backend/evals/official_table_identity_rows.json",
+      "sha256": "b944419fd8f5bf4c8573afa0133e0542e9e0c8bf32b0a6a23cd26d7e5a37fea9"
+    },
+    {
+      "path": "backend/requirements.txt",
+      "sha256": "b0e75e31a3ca8f034e095fd0667e3be7e380975548c5acce90db94f96ed7283f"
+    },
+    {
+      "path": "backend/scripts/evaluate_official_batch.py",
+      "sha256": "eb86c5296bc8bb6c54f8cfc5a17733091f74164a9da135cf21670d67956b25f1"
+    },
+    {
+      "path": "backend/scripts/evaluate_pdf_corpus.py",
+      "sha256": "776535d52176a1bcdd39993b5c6b7cc73b49cb08eb1f9ec0480cf629b3785e02"
+    },
+    {
+      "path": "backend/scripts/inspect_runtime_source.py",
+      "sha256": "7cc980ad85952e6516e4ef3127130fdee186303cb49a8a8635c509c6f9aa3267"
+    },
+    {
+      "path": "backend/scripts/prepare_official_parser_candidate.py",
+      "sha256": "ab3ba8ebfb30e87883622d55df89cbc4d28cdd91a56bb56b82d163f6e7cc8e56"
+    },
+    {
+      "path": "backend/scripts/review_official_batch.py",
+      "sha256": "188419c93b783773db881599ae2086e45354bef60f4dfc5e6ce63da940086488"
+    },
+    {
+      "path": "backend/tests/test_official_parser_repairs.py",
+      "sha256": "f9f78c8054bc32b6688291b4d9ba00ed0cc4cf895f9a4b0ee1079a95d36f6f36"
+    },
+    {
+      "path": "backend/tests/test_single_column_section_order.py",
+      "sha256": "4220d62282ec9bb7fa6250f7df739673cbd1d80a86ba39296245d7b3a6aaa406"
+    },
+    {
+      "path": "backend/tests/test_writing_outline.py",
+      "sha256": "358090c5d0a4c5c854003d8870375e08e3727c72f70f415b07cac5efd74a4a7d"
+    },
+    {
+      "path": "backend/tmp/official-all-39-2026-10-11/sources-1/manifest.json",
+      "sha256": "8e1fca75960d9af84298f3ee608f763c4a0297e40c74472e95c16b256600c183"
+    },
+    {
+      "path": "backend/tmp/official-clip-protocol-2026-10-14/backend-final.xml",
+      "sha256": "f2ba0d6cafcf6c166228c23c53a2ea3ef768d9c50fb1dbb17406bb570cfdc262"
+    },
+    {
+      "path": "backend/tmp/official-clip-protocol-2026-10-14/before-complete-fixture.xml",
+      "sha256": "f19938cdb3b6792e6a70c965fc641354f475679668e9fcc70c9ed4d543f7d007"
+    },
+    {
+      "path": "backend/tmp/official-clip-protocol-2026-10-14/before.xml",
+      "sha256": "60292e21afb55b8668e38792badb1dd8c05e0d42095e0de6fa2b40bb6f0427fb"
+    },
+    {
+      "path": "backend/tmp/official-clip-protocol-2026-10-14/clip-protocol-tests-2.xml",
+      "sha256": "108a722376f57b16402a842044d1ed9e007a44eff1c01a5a69674f7ea9d875cf"
+    },
+    {
+      "path": "backend/tmp/official-clip-protocol-2026-10-14/clip-tests-1.xml",
+      "sha256": "075b8ce594f1ea2eac0de6af0d6b6438ae9aabadeacc404b1be8a0dd687387c6"
+    },
+    {
+      "path": "backend/tmp/official-clip-protocol-2026-10-14/combined-content-39.json",
+      "sha256": "cf8e132d732e2ef19155e6831d409e4579d399bab4be63ad4eaf9395e4f9968a"
+    },
+    {
+      "path": "backend/tmp/official-clip-protocol-2026-10-14/gold-before/report.json",
+      "sha256": "efa185baf17f18c586b7adf1f36154b082411f444f348e2bee2ac7b514f55e9d"
+    },
+    {
+      "path": "backend/tmp/official-clip-protocol-2026-10-14/gold-final/report.json",
+      "sha256": "c8d39f3e06f3bcecc10456e1c1e8e35fce053fe3aedd5870004e2c738b14d68c"
+    },
+    {
+      "path": "backend/tmp/official-clip-protocol-2026-10-14/key-parser-final/document-01/artifacts/checkpoints/manifest.json",
+      "sha256": "81d1fe04c4ee02380922f986ed6194f0c2a52d29619706fa07365620e850a5d7"
+    },
+    {
+      "path": "backend/tmp/official-clip-protocol-2026-10-14/key-parser-final/document-01/artifacts/parsed.json",
+      "sha256": "3a6a247de1521cdf83bbd9cd425fa0464626a95c62c7d773517039bff489a2fe"
+    },
+    {
+      "path": "backend/tmp/official-clip-protocol-2026-10-14/key-parser-final/document-01/result.json",
+      "sha256": "8d9142b183f28a8ada5278b687e77e7b8bb033e9beab15c214b7675ebc19d9f7"
+    },
+    {
+      "path": "backend/tmp/official-clip-protocol-2026-10-14/key-parser-final/document-01/stderr.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "backend/tmp/official-clip-protocol-2026-10-14/key-parser-final/document-01/stdout.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "backend/tmp/official-clip-protocol-2026-10-14/key-parser-final/document-02/artifacts/checkpoints/manifest.json",
+      "sha256": "a8f8e94bc4c6cf6fbb06b2ce16ec3582a5e98686bf9d6be63188d9f915dac6da"
+    },
+    {
+      "path": "backend/tmp/official-clip-protocol-2026-10-14/key-parser-final/document-02/artifacts/parsed.json",
+      "sha256": "ec55ab9b8c2c57942549e13bac5c6386e04d493c8c709cd707e15f280ea37623"
+    },
+    {
+      "path": "backend/tmp/official-clip-protocol-2026-10-14/key-parser-final/document-02/result.json",
+      "sha256": "407d7c43b7b3e90e2f88c74f86f1343009c16d1fefd2d8f720d6e3aef4bbf960"
+    },
+    {
+      "path": "backend/tmp/official-clip-protocol-2026-10-14/key-parser-final/document-02/stderr.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "backend/tmp/official-clip-protocol-2026-10-14/key-parser-final/document-02/stdout.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "backend/tmp/official-clip-protocol-2026-10-14/key-parser-final/document-03/artifacts/checkpoints/manifest.json",
+      "sha256": "5d8cc360c5732fa051ddcd30c8c2eca29bd273838a115308c0ec8c40ac3fe02a"
+    },
+    {
+      "path": "backend/tmp/official-clip-protocol-2026-10-14/key-parser-final/document-03/artifacts/parsed.json",
+      "sha256": "df16297ea8f21360659ffa849e9d951e438918f29156eaeff043feda56823ebb"
+    },
+    {
+      "path": "backend/tmp/official-clip-protocol-2026-10-14/key-parser-final/document-03/result.json",
+      "sha256": "1d8b34d63f36b9b16793c69ceaa3da00aa842552e988e6cad0bd53c8e1b266a7"
+    },
+    {
+      "path": "backend/tmp/official-clip-protocol-2026-10-14/key-parser-final/document-03/stderr.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "backend/tmp/official-clip-protocol-2026-10-14/key-parser-final/document-03/stdout.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "backend/tmp/official-clip-protocol-2026-10-14/key-parser-final/report.json",
+      "sha256": "1de8414b71a134ffb041fb538a1dd0b3d360c42ecdb800748a4cad7d8ff759c3"
+    },
+    {
+      "path": "backend/tmp/official-clip-protocol-2026-10-14/manual-source-review.json",
+      "sha256": "266b112d447dd983d6edae0c43700be7ea2384975648e863bd68506126f886ec"
+    },
+    {
+      "path": "backend/tmp/official-clip-protocol-2026-10-14/native-20-content-recheck.json",
+      "sha256": "b122ed1efce6d3577f3e8c2251774c1a455335e602e68f306dacba30fd839e6d"
+    },
+    {
+      "path": "backend/tmp/official-clip-protocol-2026-10-14/parser-20-1/report.json",
+      "sha256": "e26c6428da831969bbc7efffe1581ee8f937688b6d09f2ee5ba9970707ebedb7"
+    },
+    {
+      "path": "backend/tmp/official-clip-protocol-2026-10-14/parser-20-final/fixture.json",
+      "sha256": "3e6dbfca5c224539a759913f5fd1d04feb84024acb2c93a71819783a84d98728"
+    },
+    {
+      "path": "backend/tmp/official-clip-protocol-2026-10-14/parser-20-final/parsed/0188171d-87ae-5a2f-acc2-87f71bc5db58.json",
+      "sha256": "43b61105eb3661bf73f00349d782fdc08bbe5c30a18ea7f5a8aed4911e5a7c5a"
+    },
+    {
+      "path": "backend/tmp/official-clip-protocol-2026-10-14/parser-20-final/parsed/0fedc9b8-1c87-5178-87a1-3bb5a02de3b8.json",
+      "sha256": "52c10a4838cfb069d5cef2d90b6ce7ec334793256121e01616fb320a85a14bd0"
+    },
+    {
+      "path": "backend/tmp/official-clip-protocol-2026-10-14/parser-20-final/parsed/114bfa0d-d6cf-573d-82b2-cfaed94b58b6.json",
+      "sha256": "6710c78824d61e72e1b0c15aaddf534ce0872570051a9b95d6f2f39c786645d7"
+    },
+    {
+      "path": "backend/tmp/official-clip-protocol-2026-10-14/parser-20-final/parsed/1ae43cdf-aa5d-533e-8caa-c65a403deaf2.json",
+      "sha256": "f0fa466dcb3d84426bcf18d05cf552fc5ed318403396cf540d2761fa162a9ff4"
+    },
+    {
+      "path": "backend/tmp/official-clip-protocol-2026-10-14/parser-20-final/parsed/1f104048-0d8e-59ac-bc55-92c6c3773d08.json",
+      "sha256": "be48c20df79cefce1eb5c859e489948f2a3f21c67e1dea44e1860ce1f423b895"
+    },
+    {
+      "path": "backend/tmp/official-clip-protocol-2026-10-14/parser-20-final/parsed/20d9fad6-9e6f-543d-a2e1-095d8056c5ff.json",
+      "sha256": "4a05a089a864b8fc603470e4f28fc480526b8184b8c5a89039db83b07bdded3d"
+    },
+    {
+      "path": "backend/tmp/official-clip-protocol-2026-10-14/parser-20-final/parsed/4ac3cbf3-13b9-5022-863f-a2dbe9391e58.json",
+      "sha256": "71aac46dc7e41ad3b5dbe43f9d7155b30eece5ab66765a58eda988921d08b978"
+    },
+    {
+      "path": "backend/tmp/official-clip-protocol-2026-10-14/parser-20-final/parsed/4eb9ae9c-2278-5530-ad02-d02e38f9088c.json",
+      "sha256": "3fbfad3906ec0274eddc79eabf99665257660b81af66ac91b5d8842a2f7ef551"
+    },
+    {
+      "path": "backend/tmp/official-clip-protocol-2026-10-14/parser-20-final/parsed/518cf49d-121d-55b9-834e-4160cf927fe9.json",
+      "sha256": "d4fac767dd728f544297f8c8f7706fcf6f585df6b7f25d511b0831e4efb26b61"
+    },
+    {
+      "path": "backend/tmp/official-clip-protocol-2026-10-14/parser-20-final/parsed/5b4ad1aa-0c85-5a2b-a5ca-97eb8dd4d2aa.json",
+      "sha256": "7b19a67774af5c29d84f5e80a3e76664c46aa549591e297cd2afce7f4cde8d65"
+    },
+    {
+      "path": "backend/tmp/official-clip-protocol-2026-10-14/parser-20-final/parsed/788f47ff-23de-5f78-896b-7d3fe6e1bb92.json",
+      "sha256": "72dfb9a676f7dc532988c1932651d52689e0e51f5a7392fc389b87d05b65cd73"
+    },
+    {
+      "path": "backend/tmp/official-clip-protocol-2026-10-14/parser-20-final/parsed/806425fa-1015-5452-91ee-cdb6b106183f.json",
+      "sha256": "cbb66488f7e1cc905474b59d8a91d5b37b8ec2fe853954fb29d2085b149880ea"
+    },
+    {
+      "path": "backend/tmp/official-clip-protocol-2026-10-14/parser-20-final/parsed/855562a1-8309-57b2-b7b0-b9e7016207dc.json",
+      "sha256": "0bdf9ab2be963a5e42b3560e72b14fd247e2723c299ffc3e340682b02394db97"
+    },
+    {
+      "path": "backend/tmp/official-clip-protocol-2026-10-14/parser-20-final/parsed/86e85629-7347-5f1a-92d7-089475d96cdb.json",
+      "sha256": "4766fd60e4ebd949fbef7c8e35659013ce1214f5630667e9ecbf86b21ac6e8d5"
+    },
+    {
+      "path": "backend/tmp/official-clip-protocol-2026-10-14/parser-20-final/parsed/9f2229cc-c150-5bbc-a615-53046bc74763.json",
+      "sha256": "f3803879171ddd2aa613aa827c4bf9c57cdc52cd8d2c1347fb051015c0257e49"
+    },
+    {
+      "path": "backend/tmp/official-clip-protocol-2026-10-14/parser-20-final/parsed/bc90bcf2-cccd-5364-94f6-5815603802f7.json",
+      "sha256": "2f5bdb78b265127069fbaf7c9841afe6e181a0d93c3209856c420d678c7825d0"
+    },
+    {
+      "path": "backend/tmp/official-clip-protocol-2026-10-14/parser-20-final/parsed/cd05de96-3b20-5178-8953-d8ee090a4f23.json",
+      "sha256": "0ab6909920de99d93d12d57d963fe93c684446cbcfdba40bf2df1ed080d7b414"
+    },
+    {
+      "path": "backend/tmp/official-clip-protocol-2026-10-14/parser-20-final/parsed/d9d5065d-9706-53db-b856-427c2c58bd1a.json",
+      "sha256": "756d5961546debe771d2e5450b07063245e44c14f2572ea9988e8f768f5f1451"
+    },
+    {
+      "path": "backend/tmp/official-clip-protocol-2026-10-14/parser-20-final/parsed/f5b4ca83-6f08-5d85-b64f-a292b7b1f7b6.json",
+      "sha256": "ffe352a9b7a799c7bc1bd9c2385fe4d93d8fd210da85f48d431b9fcb18f4b208"
+    },
+    {
+      "path": "backend/tmp/official-clip-protocol-2026-10-14/parser-20-final/parsed/fefabe1a-496e-5b57-83cf-c73f831b1275.json",
+      "sha256": "2a89673ed7b00095944dfa940a47e97b0321bff418face2cf0e2c37f05ee42b1"
+    },
+    {
+      "path": "backend/tmp/official-clip-protocol-2026-10-14/parser-20-final/report.json",
+      "sha256": "8d2b779c12fc699d77f59ddf340690733ba6f45645de485f4cfba357b79a0bb9"
+    },
+    {
+      "path": "backend/tmp/official-clip-protocol-2026-10-14/protocol-tests-1.xml",
+      "sha256": "d60e0002745ad3f80084a1e57fb93aff199dc115ffe7cd28b00f7c05031a6c9a"
+    },
+    {
+      "path": "backend/tmp/official-clip-protocol-2026-10-14/regression-summary.json",
+      "sha256": "302d47853c3205378256cdc4faeb1c1a37971895495b5c3f673ea5e65c319e3f"
+    },
+    {
+      "path": "backend/tmp/official-clip-protocol-2026-10-14/remaining-parser-final/document-01/artifacts/checkpoints/manifest.json",
+      "sha256": "513c39319ff2dcb9397daa23589714c3aad8f4762b62f54fdbf2350d1ca66b76"
+    },
+    {
+      "path": "backend/tmp/official-clip-protocol-2026-10-14/remaining-parser-final/document-01/artifacts/parsed.json",
+      "sha256": "d05fd580377216e54a9dfed6311aebe891c9c381d1c2467c79484c86d9920bed"
+    },
+    {
+      "path": "backend/tmp/official-clip-protocol-2026-10-14/remaining-parser-final/document-01/result.json",
+      "sha256": "9a020fc6d140ab2ce83997bb397bc6a6095c2a147af1ce6bbbc88e40e36d7cf6"
+    },
+    {
+      "path": "backend/tmp/official-clip-protocol-2026-10-14/remaining-parser-final/document-01/stderr.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "backend/tmp/official-clip-protocol-2026-10-14/remaining-parser-final/document-01/stdout.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "backend/tmp/official-clip-protocol-2026-10-14/remaining-parser-final/document-02/artifacts/checkpoints/manifest.json",
+      "sha256": "88bf255022099ef1be62643e566e344cad4dfcd98c5d183c134eddeeb10e1207"
+    },
+    {
+      "path": "backend/tmp/official-clip-protocol-2026-10-14/remaining-parser-final/document-02/artifacts/parsed.json",
+      "sha256": "741444787ac72102a99abd1fa84be47999b8d0bc9d433a00e984c50d2af19c1d"
+    },
+    {
+      "path": "backend/tmp/official-clip-protocol-2026-10-14/remaining-parser-final/document-02/result.json",
+      "sha256": "5206f8e96c759760f7700ea1cb316f10e32c4a82572498ec500b5fd3b8dfd47b"
+    },
+    {
+      "path": "backend/tmp/official-clip-protocol-2026-10-14/remaining-parser-final/document-02/stderr.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "backend/tmp/official-clip-protocol-2026-10-14/remaining-parser-final/document-02/stdout.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "backend/tmp/official-clip-protocol-2026-10-14/remaining-parser-final/document-03/artifacts/checkpoints/manifest.json",
+      "sha256": "3b2c01f5514998bb8f2a47f1feef239368042e6bb06e2e32f367c7e79fa3dd05"
+    },
+    {
+      "path": "backend/tmp/official-clip-protocol-2026-10-14/remaining-parser-final/document-03/artifacts/parsed.json",
+      "sha256": "2e503894120276e7e453c9474f64d794f4ee1c45db352e8c4655b8c53d5a91b4"
+    },
+    {
+      "path": "backend/tmp/official-clip-protocol-2026-10-14/remaining-parser-final/document-03/result.json",
+      "sha256": "7cfc6d5c0a723ec6791dcbee1cc1bd0859be65bd7327da07190b8627d3481878"
+    },
+    {
+      "path": "backend/tmp/official-clip-protocol-2026-10-14/remaining-parser-final/document-03/stderr.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "backend/tmp/official-clip-protocol-2026-10-14/remaining-parser-final/document-03/stdout.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "backend/tmp/official-clip-protocol-2026-10-14/remaining-parser-final/document-04/artifacts/checkpoints/manifest.json",
+      "sha256": "926d989219336db2433896cfec57cbb4682884f6afc3a4a1e85a2ec0f92db169"
+    },
+    {
+      "path": "backend/tmp/official-clip-protocol-2026-10-14/remaining-parser-final/document-04/artifacts/parsed.json",
+      "sha256": "846d092eba45e8e09f27a4728fa3e2281c6fa0fc4342e0acc105737db8108cad"
+    },
+    {
+      "path": "backend/tmp/official-clip-protocol-2026-10-14/remaining-parser-final/document-04/result.json",
+      "sha256": "46765ec2ea4d6ef4d9ddbccccff146925eb1421b1b7f3f0efd2605296347b2ef"
+    },
+    {
+      "path": "backend/tmp/official-clip-protocol-2026-10-14/remaining-parser-final/document-04/stderr.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "backend/tmp/official-clip-protocol-2026-10-14/remaining-parser-final/document-04/stdout.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "backend/tmp/official-clip-protocol-2026-10-14/remaining-parser-final/document-05/artifacts/checkpoints/manifest.json",
+      "sha256": "82943a0b98de62d1df1329bf9a82b33897bb2c0a37b93a665aeb3ca8dce023e3"
+    },
+    {
+      "path": "backend/tmp/official-clip-protocol-2026-10-14/remaining-parser-final/document-05/artifacts/parsed.json",
+      "sha256": "7ffa5eef5ed9d3d54fcfece06cd75d02ae55560d4ec16058de7878605266ac0e"
+    },
+    {
+      "path": "backend/tmp/official-clip-protocol-2026-10-14/remaining-parser-final/document-05/result.json",
+      "sha256": "cc4c268a6baa9df0bd91e9ebe0b18119763af87aded04974f6c4b1226e4e9419"
+    },
+    {
+      "path": "backend/tmp/official-clip-protocol-2026-10-14/remaining-parser-final/document-05/stderr.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "backend/tmp/official-clip-protocol-2026-10-14/remaining-parser-final/document-05/stdout.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "backend/tmp/official-clip-protocol-2026-10-14/remaining-parser-final/document-06/artifacts/checkpoints/manifest.json",
+      "sha256": "67368f65c1490b1d1169916a03bedcb211e5d3ef64e1b77ddd52d62d39d2b7e6"
+    },
+    {
+      "path": "backend/tmp/official-clip-protocol-2026-10-14/remaining-parser-final/document-06/artifacts/parsed.json",
+      "sha256": "e341167c3bbf4e5a720ea361b3bb96b7ec218b9e234c634965edce38ae077326"
+    },
+    {
+      "path": "backend/tmp/official-clip-protocol-2026-10-14/remaining-parser-final/document-06/result.json",
+      "sha256": "c00d1761f0e7c828690ddbceb09eac2d315278b49d0035931eafddc239f22ec4"
+    },
+    {
+      "path": "backend/tmp/official-clip-protocol-2026-10-14/remaining-parser-final/document-06/stderr.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "backend/tmp/official-clip-protocol-2026-10-14/remaining-parser-final/document-06/stdout.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "backend/tmp/official-clip-protocol-2026-10-14/remaining-parser-final/document-07/artifacts/checkpoints/manifest.json",
+      "sha256": "63b592fcccf72db5d7c6027a8e73d1f981c407844d22bc129b58d6f07cfec21a"
+    },
+    {
+      "path": "backend/tmp/official-clip-protocol-2026-10-14/remaining-parser-final/document-07/artifacts/parsed.json",
+      "sha256": "901b10189acc2fa74d23122ddb00f77794d194cc3e7e3ecee1db9f12fbc8d243"
+    },
+    {
+      "path": "backend/tmp/official-clip-protocol-2026-10-14/remaining-parser-final/document-07/result.json",
+      "sha256": "fe020aa38a47d5f4793221bfa34af03ec67d3b910fbd554ccc5be6a60632c690"
+    },
+    {
+      "path": "backend/tmp/official-clip-protocol-2026-10-14/remaining-parser-final/document-07/stderr.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "backend/tmp/official-clip-protocol-2026-10-14/remaining-parser-final/document-07/stdout.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "backend/tmp/official-clip-protocol-2026-10-14/remaining-parser-final/document-08/artifacts/checkpoints/manifest.json",
+      "sha256": "942d0370657617a92b4b2c6f8a2159819ee8fcd74828819ea30fb266fef3e513"
+    },
+    {
+      "path": "backend/tmp/official-clip-protocol-2026-10-14/remaining-parser-final/document-08/artifacts/parsed.json",
+      "sha256": "61ffba5fe75274ee802efd6dad4025ee051a2c78444ce0f6ae298b23de98977d"
+    },
+    {
+      "path": "backend/tmp/official-clip-protocol-2026-10-14/remaining-parser-final/document-08/result.json",
+      "sha256": "68869e6c4dfe6661285e36e2072fb44c93d1c90d04fef68a09acd1b1277f8f11"
+    },
+    {
+      "path": "backend/tmp/official-clip-protocol-2026-10-14/remaining-parser-final/document-08/stderr.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "backend/tmp/official-clip-protocol-2026-10-14/remaining-parser-final/document-08/stdout.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "backend/tmp/official-clip-protocol-2026-10-14/remaining-parser-final/document-09/artifacts/checkpoints/manifest.json",
+      "sha256": "ed34edb02f438bc4c59a0b1f095eca2fcf5478f681ed37eb3a5e35c32536ecb0"
+    },
+    {
+      "path": "backend/tmp/official-clip-protocol-2026-10-14/remaining-parser-final/document-09/artifacts/parsed.json",
+      "sha256": "b214421d3cbd23bf5aa4117459358f89073402070dd3d245fc7b43786a71639e"
+    },
+    {
+      "path": "backend/tmp/official-clip-protocol-2026-10-14/remaining-parser-final/document-09/result.json",
+      "sha256": "75f6c134e9cf8003a83a605ffe0ab13b20a2bb9f2db17e65adcfa9c0430759a9"
+    },
+    {
+      "path": "backend/tmp/official-clip-protocol-2026-10-14/remaining-parser-final/document-09/stderr.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "backend/tmp/official-clip-protocol-2026-10-14/remaining-parser-final/document-09/stdout.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "backend/tmp/official-clip-protocol-2026-10-14/remaining-parser-final/document-10/artifacts/checkpoints/manifest.json",
+      "sha256": "baaa73b30b34ca4a5e5fc06f257c978149daaf05fefca7d6664bfb3556967742"
+    },
+    {
+      "path": "backend/tmp/official-clip-protocol-2026-10-14/remaining-parser-final/document-10/artifacts/parsed.json",
+      "sha256": "9f0eb7abdddf47925867dec05c4eae4eca03d0c394a73f9571d81dcca3525455"
+    },
+    {
+      "path": "backend/tmp/official-clip-protocol-2026-10-14/remaining-parser-final/document-10/result.json",
+      "sha256": "59f37a55692f9cc9cb186f5635bb6b7eb65f5c7f453f1a5b1383aef99f45efff"
+    },
+    {
+      "path": "backend/tmp/official-clip-protocol-2026-10-14/remaining-parser-final/document-10/stderr.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "backend/tmp/official-clip-protocol-2026-10-14/remaining-parser-final/document-10/stdout.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "backend/tmp/official-clip-protocol-2026-10-14/remaining-parser-final/document-11/artifacts/checkpoints/manifest.json",
+      "sha256": "e6124b243c5b6e0c3a69d0fe328fd07dfc6a6ccbc5efd5601a435165cc1142a2"
+    },
+    {
+      "path": "backend/tmp/official-clip-protocol-2026-10-14/remaining-parser-final/document-11/artifacts/parsed.json",
+      "sha256": "b230d249edc976f384027e260385e706594c04a0a69f70f8bdcb9f89293bc153"
+    },
+    {
+      "path": "backend/tmp/official-clip-protocol-2026-10-14/remaining-parser-final/document-11/result.json",
+      "sha256": "c2d382916edeade08a9022ab609d5aa0f058d5ad432d4f88f0cad20f904351a1"
+    },
+    {
+      "path": "backend/tmp/official-clip-protocol-2026-10-14/remaining-parser-final/document-11/stderr.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "backend/tmp/official-clip-protocol-2026-10-14/remaining-parser-final/document-11/stdout.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "backend/tmp/official-clip-protocol-2026-10-14/remaining-parser-final/document-12/artifacts/checkpoints/manifest.json",
+      "sha256": "a7b2ee5cd496bc9dd329c52b2647393e4835b8c0346eeb758157e8906917f82f"
+    },
+    {
+      "path": "backend/tmp/official-clip-protocol-2026-10-14/remaining-parser-final/document-12/artifacts/parsed.json",
+      "sha256": "e420515e3788f198d12e5589ce8dc5c8b5af7aed0e8afb0446116f305ea35a96"
+    },
+    {
+      "path": "backend/tmp/official-clip-protocol-2026-10-14/remaining-parser-final/document-12/result.json",
+      "sha256": "46e47e5bce727461055c833886db0b3af1d5b29ea6359d634ff95c163d75a428"
+    },
+    {
+      "path": "backend/tmp/official-clip-protocol-2026-10-14/remaining-parser-final/document-12/stderr.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "backend/tmp/official-clip-protocol-2026-10-14/remaining-parser-final/document-12/stdout.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "backend/tmp/official-clip-protocol-2026-10-14/remaining-parser-final/document-13/artifacts/checkpoints/manifest.json",
+      "sha256": "73d950fbe3bfbc854d090d9afd0e02b2f47ef8108df44af9d12d475b34a0dbf5"
+    },
+    {
+      "path": "backend/tmp/official-clip-protocol-2026-10-14/remaining-parser-final/document-13/artifacts/parsed.json",
+      "sha256": "f4f2b40abb798bc0fd75c08bcf07e9300ff89bf8815718dd05ce0f636b46f7a1"
+    },
+    {
+      "path": "backend/tmp/official-clip-protocol-2026-10-14/remaining-parser-final/document-13/result.json",
+      "sha256": "4227bbecefd273827f4a2d0043f1c565be8a4fdc18d9ed975d335716fe1475e9"
+    },
+    {
+      "path": "backend/tmp/official-clip-protocol-2026-10-14/remaining-parser-final/document-13/stderr.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "backend/tmp/official-clip-protocol-2026-10-14/remaining-parser-final/document-13/stdout.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "backend/tmp/official-clip-protocol-2026-10-14/remaining-parser-final/document-14/artifacts/checkpoints/manifest.json",
+      "sha256": "7f9d4e04f8187b43e239ea4e26ea2f9cc279b16d3310a55de36a34e6b52a405c"
+    },
+    {
+      "path": "backend/tmp/official-clip-protocol-2026-10-14/remaining-parser-final/document-14/artifacts/parsed.json",
+      "sha256": "d4df4e728e085c28e9e62e41562dc42af0638bbe6f29167fd95f05d9ef12fe56"
+    },
+    {
+      "path": "backend/tmp/official-clip-protocol-2026-10-14/remaining-parser-final/document-14/result.json",
+      "sha256": "59b9234fe04170b5125adcc63e6b6da3b977073e537c975ab610725227724fe6"
+    },
+    {
+      "path": "backend/tmp/official-clip-protocol-2026-10-14/remaining-parser-final/document-14/stderr.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "backend/tmp/official-clip-protocol-2026-10-14/remaining-parser-final/document-14/stdout.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "backend/tmp/official-clip-protocol-2026-10-14/remaining-parser-final/document-15/artifacts/checkpoints/manifest.json",
+      "sha256": "0db181b2f724b5d48d8b1786dcc8ada895e52abbc12228a6fdf59b321b2598d2"
+    },
+    {
+      "path": "backend/tmp/official-clip-protocol-2026-10-14/remaining-parser-final/document-15/artifacts/parsed.json",
+      "sha256": "b8cd2ca889d5ffd18b07440ad9d11b2402db1f4adf586ec60b062da1100f9d89"
+    },
+    {
+      "path": "backend/tmp/official-clip-protocol-2026-10-14/remaining-parser-final/document-15/result.json",
+      "sha256": "1da00a43e75706f686a164a829075e1d803ba3f15d483bc07797e62d566edc65"
+    },
+    {
+      "path": "backend/tmp/official-clip-protocol-2026-10-14/remaining-parser-final/document-15/stderr.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "backend/tmp/official-clip-protocol-2026-10-14/remaining-parser-final/document-15/stdout.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "backend/tmp/official-clip-protocol-2026-10-14/remaining-parser-final/document-16/artifacts/checkpoints/manifest.json",
+      "sha256": "5207fc7a36b6a20719796391ef0e3a3535932e9db2cdd3347cd48db20a9fe598"
+    },
+    {
+      "path": "backend/tmp/official-clip-protocol-2026-10-14/remaining-parser-final/document-16/artifacts/parsed.json",
+      "sha256": "773fb4f64293dfd59436ebbba6975b0f46efd5e254b632a2cba1be83873e41bd"
+    },
+    {
+      "path": "backend/tmp/official-clip-protocol-2026-10-14/remaining-parser-final/document-16/result.json",
+      "sha256": "a6452f5e97b9a12385576ca35fc522fecef0eecf673d9f4b1a8e34023535df7e"
+    },
+    {
+      "path": "backend/tmp/official-clip-protocol-2026-10-14/remaining-parser-final/document-16/stderr.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "backend/tmp/official-clip-protocol-2026-10-14/remaining-parser-final/document-16/stdout.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "backend/tmp/official-clip-protocol-2026-10-14/remaining-parser-final/report.json",
+      "sha256": "5f9c3ffa48ef3d20b063aaac804f76037d9c5da97a57c1acbc873c59c07c6116"
+    },
+    {
+      "path": "backend/tmp/official-clip-protocol-2026-10-14/replay-writing-conditions-1/report.json",
+      "sha256": "71e197eb33ac94d954c2a7ae4f9baadc501e19504004b8a6abe9184c2a9135c1"
+    },
+    {
+      "path": "backend/tmp/official-clip-protocol-2026-10-14/replay-writing-conditions-1/writing-outline.json",
+      "sha256": "7aea7d9d1653c67286b27293a72f52231b4fb3c8aed224c35558622ee83c334e"
+    },
+    {
+      "path": "backend/tmp/official-clip-protocol-2026-10-14/writing-conditions-1/calls.json",
+      "sha256": "5bc536a6ded4453e4bf38d4124bf90c90d5b4aad7e185d2544ba609fd037e67d"
+    },
+    {
+      "path": "backend/tmp/official-clip-protocol-2026-10-14/writing-conditions-1/report.json",
+      "sha256": "5a1ff2ba99a0109918ec7ed7bfabe6b7742557fc8bdfb96eff547ec5691e7374"
+    },
+    {
+      "path": "backend/tmp/official-clip-protocol-2026-10-14/writing-conditions-1/writing-outline.json",
+      "sha256": "c19507736b14a149861c9c13b2725e6c3dc09ccb7137e7fa582102bfe15683ef"
+    },
+    {
+      "path": "backend/tmp/official-clip-protocol-2026-10-14/writing-original-1/calls.json",
+      "sha256": "7d99e42f9e04b1d0de19b00b0e43a36251ac6746ab74b75bdd8990bc295ff604"
+    },
+    {
+      "path": "backend/tmp/official-clip-protocol-2026-10-14/writing-original-1/report.json",
+      "sha256": "d496d73ded73cbc4439d0efc33d624f585169db44d51ee0ffc8ebae37739e505"
+    },
+    {
+      "path": "backend/tmp/official-clip-protocol-2026-10-14/writing-original-1/writing-outline.json",
+      "sha256": "a99397f383e5f7aa0997aeb226d3ee72289c607ae33f0fc36b6db8d123e5161d"
+    },
+    {
+      "path": "docs/acceptance-progress.md",
+      "sha256": "8f42015778038d8d50f55897e454f00e7627db49ab04ad8f451ed3e01e6ac2a2"
+    },
+    {
+      "path": "docs/competition-delivery-checklist.md",
+      "sha256": "fc254a0077f2da7444e96088063d0c8815d3fdd6e25a7c0005a8cead04f2b991"
+    },
+    {
+      "path": "docs/competition-verification-gates.md",
+      "sha256": "87fb74663b3119bdd7b653dd80f5184d215cf32e5fb9d94e158b02d41e1a3c18"
+    },
+    {
+      "path": "docs/evidence/official-writing-layout-acceptance-2026-10-14.json",
+      "sha256": "335869bf83b8c28227316c961e75a9f59161c47e3ac87da41139e1560b8d9fa3"
+    },
+    {
+      "path": "docs/official-clip-protocol-acceptance-2026-10-14.md",
+      "sha256": "67b1876e0e0ffc2f30629b042497fa7f81934b5405f0ae7ec30e6ccde5882734"
+    }
+  ]
+}

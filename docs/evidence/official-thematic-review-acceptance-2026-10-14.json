@@ -1,0 +1,474 @@
+{
+  "schema_version": 1,
+  "date": "2026-10-14",
+  "status": "thematic_pipeline_and_targeted_publication_guards_local_pass__scientific_quality_and_runtime_hold",
+  "git": {
+    "branch": "codex/stage94-official-failed-qa-retest",
+    "head": "a119f5609cda544e5d587588c5a338051da129a1",
+    "dirty_worktree": true,
+    "branch_created": false,
+    "commit_created": false,
+    "merged": false,
+    "pushed": false
+  },
+  "scope": "Declared official/public PDF excerpts only; no private PDFs, no full-document cloud transmission, no production library mutation.",
+  "previous_record": {
+    "path": "docs/evidence/official-future-budget-acceptance-2026-10-14.json",
+    "artifacts_verified": 54,
+    "mismatches": 1,
+    "unchanged_artifacts": 53,
+    "changed_source_artifacts": [
+      {
+        "path": "frontend/components/ResearchReview.tsx",
+        "expected_code_change": true
+      }
+    ],
+    "immutable_result_artifacts_changed": 0
+  },
+  "cloud": {
+    "provider": "deepseek",
+    "model": "deepseek-flash",
+    "calls": 4,
+    "review_calls": 3,
+    "writing_calls": 1,
+    "automatic_retries": 0,
+    "newest_candidate_generation": false,
+    "review_evidence_per_call": 40,
+    "review_selected_papers": 20,
+    "writing_selected_papers": 3,
+    "writing_retrieval": "lexical + live BGE reranker + bounded neighbor context; not dense/vector acceptance",
+    "writing_evidence_retrieval_tags": {
+      "reranked": 25
+    },
+    "retrieval_tag_caveat": "Neighbor context inherits the retrieval tag; 25 evidence tags do not mean 25 separate rerank requests."
+  },
+  "generation_runs": [
+    {
+      "name": "generation-1",
+      "status": "source_checks_passed",
+      "actual_saved_calls": 1,
+      "automatic_retries": 0,
+      "app_sha256": "6b16b11b92d3cf7de199fc76c99c1cf29fbed0ab3790414ec8044082eb1b2b29",
+      "raw_claims": 8,
+      "raw_topic_registry_size": null,
+      "published_claims": 6,
+      "published_theme_groups": 6,
+      "multi_source_body_claims": 4,
+      "rendered_chars": 475,
+      "warnings": [
+        "正文证据预算为 36，已按文献均衡选择 36 条；另有 44 条候选未发送。",
+        "综述生成仅获得 4 条有原页锚点的明确书目关联；未发送的图谱边不作为生成依据。书目匹配不证明贡献继承或科研影响。",
+        "主题条目 review_item_2 暂缓：跨文条目必须有两篇不同论文的正文，不以同篇多块或书目充数。",
+        "主题条目 review_item_8 暂缓：单篇条目与多篇正文引用不一致，请明确比较类型。"
+      ],
+      "source_checks_are_not_semantic_acceptance": true
+    },
+    {
+      "name": "generation-2",
+      "status": "source_checks_passed",
+      "actual_saved_calls": 1,
+      "automatic_retries": 0,
+      "app_sha256": "dbe18a574362b081e6778e7d6bd762e79aff040dc441ae62a8a376365eec05c4",
+      "raw_claims": 8,
+      "raw_topic_registry_size": 4,
+      "published_claims": 7,
+      "published_theme_groups": 4,
+      "multi_source_body_claims": 2,
+      "rendered_chars": 729,
+      "warnings": [
+        "正文证据预算为 36，已按文献均衡选择 36 条；另有 44 条候选未发送。",
+        "综述生成仅获得 4 条有原页锚点的明确书目关联；未发送的图谱边不作为生成依据。书目匹配不证明贡献继承或科研影响。",
+        "主题条目 review_item_2 暂缓：主题条目为空或超长；整条暂缓，不改写或截断。"
+      ],
+      "source_checks_are_not_semantic_acceptance": true
+    },
+    {
+      "name": "generation-3",
+      "status": "source_checks_passed",
+      "actual_saved_calls": 1,
+      "automatic_retries": 0,
+      "app_sha256": "9d9321e06fe456c47b2059bf62fbc8a1033915433ce47baab2d6f950f1603852",
+      "raw_claims": 8,
+      "raw_topic_registry_size": 4,
+      "published_claims": 4,
+      "published_theme_groups": 3,
+      "multi_source_body_claims": 1,
+      "rendered_chars": 334,
+      "warnings": [
+        "正文证据预算为 36，已按文献均衡选择 36 条；另有 44 条候选未发送。",
+        "综述生成仅获得 4 条有原页锚点的明确书目关联；未发送的图谱边不作为生成依据。书目匹配不证明贡献继承或科研影响。",
+        "主题条目 review_item_1 暂缓：跨文条目必须有两篇不同论文的正文，不以同篇多块或书目充数。",
+        "主题条目 review_item_3 暂缓：跨文条目必须有两篇不同论文的正文，不以同篇多块或书目充数。",
+        "主题条目 review_item_7 暂缓：跨文条目必须有两篇不同论文的正文，不以同篇多块或书目充数。",
+        "已暂缓 1 条将预热动机扩大为无条件必要的陈述；请保留学习率条件或文中设置，不能由局部稳定性分析推断所有配置都必须预热。",
+        "当前仅有 1 条包含多篇正文来源的论点，尚未达到跨文综合目标；不能把多篇摘录汇集当成完整领域综述。"
+      ],
+      "source_checks_are_not_semantic_acceptance": true
+    },
+    {
+      "name": "writing-1",
+      "status": "source_checks_passed",
+      "actual_saved_calls": 1,
+      "automatic_retries": 0,
+      "app_sha256": "9d9321e06fe456c47b2059bf62fbc8a1033915433ce47baab2d6f950f1603852",
+      "raw_claims": 20,
+      "raw_topic_registry_size": null,
+      "published_claims": 17,
+      "published_theme_groups": null,
+      "multi_source_body_claims": null,
+      "rendered_chars": null,
+      "warnings": [
+        "已暂缓发布 1 条只引用跨页未完结段落的陈述；请核对相邻页实验条件。"
+      ],
+      "source_checks_are_not_semantic_acceptance": true
+    }
+  ],
+  "final_app": {
+    "python_version": "3.12.14",
+    "app_files": 126,
+    "app_sha256": "d04a2886987cfbf7ea7bd24bd573419dbf43ad1291c20983486a165d43eb806c",
+    "requirements_sha256": "b0e75e31a3ca8f034e095fd0667e3be7e380975548c5acce90db94f96ed7283f",
+    "deployed": false,
+    "cloud_generation_on_this_fingerprint": false
+  },
+  "thematic_pipeline": {
+    "topic_registry_max": 4,
+    "claims_max": 8,
+    "claim_char_max": 160,
+    "topic_title_char_max": 40,
+    "stable_paper_labels_added_after_last_generation": true,
+    "cross_paper_requires_distinct_original_body_documents": true,
+    "bibliography_only_citations_do_not_count": true,
+    "unknown_or_mismatched_rows_withheld": true,
+    "unavailable_cannot_invent_absence": true,
+    "groups_derived_only_from_published_claims": true,
+    "old_responses_compatible": true,
+    "not_a_general_semantic_entailment_checker": true
+  },
+  "semantic_findings": [
+    {
+      "run": "generation-1",
+      "result": "hold",
+      "notes": "Six headings instead of the target three/four; many concatenated statements; a numeric comparison omits exact model and comparator."
+    },
+    {
+      "run": "generation-2",
+      "result": "hold",
+      "published_indices_zero_based": [
+        1,
+        4,
+        6
+      ],
+      "notes": "Unqualified warmup necessity; FLOP increase not supported by the cited page; sourced facts mixed with unsupported source-shortage/absence assertions."
+    },
+    {
+      "run": "generation-3",
+      "result": "hold",
+      "published_indices_zero_based": [
+        0,
+        2
+      ],
+      "notes": "Only one genuine cross-paper claim. Manual scope holds: IO/memory problem phrased as causal explanation of compute complexity; study-specific attention adaptation scope generalized to LoRA itself. Last paper-label change not freshly generated."
+    },
+    {
+      "run": "writing-1",
+      "result": "hold",
+      "published_indices_zero_based": [
+        5,
+        9
+      ],
+      "notes": "Optimizer comparison attributed to the wrong experimental model; a bounded statement about cited prior methods generalized to all prior work. Bibliography identity checks pass for all three papers; remaining fifteen claims are not all semantically certified. Twenty raw claims are not all intended published source facts."
+    }
+  ],
+  "publication_replays": [
+    {
+      "name": "writing-publication-replay",
+      "cloud_calls": 0,
+      "app_sha256": "75349d36037fda15e68d4e80bbecdb53929ff96fc2af9d054affb582ac519190",
+      "original_published_claims": 17,
+      "published_claims": 15,
+      "withheld_original_indices_zero_based": [
+        5,
+        9
+      ],
+      "not_new_generation": true,
+      "remaining_semantic_quality": "pending"
+    },
+    {
+      "name": "review-publication-replay",
+      "cloud_calls": 0,
+      "app_sha256": "78bef27dc18cad563dba2f694e7c3882c201a5e50dc82e6917f6b5db6f42c077",
+      "original_published_claims": 7,
+      "published_claims": 4,
+      "withheld_original_indices_zero_based": [
+        1,
+        4,
+        6
+      ],
+      "published_theme_groups": 3,
+      "multi_source_body_claims": 1,
+      "held_claims_not_resurrected": true,
+      "not_new_generation": true,
+      "remaining_semantic_quality": "pending"
+    }
+  ],
+  "original_page_inspection": {
+    "fresh_rendered_and_viewed": [
+      "source-pages/vit-p16.png",
+      "source-pages/vit-p17.png",
+      "source-pages/lora-p9.png",
+      "source-pages/lora-p5.png",
+      "source-pages/qlora-p1.png"
+    ],
+    "root": "backend/tmp/official-thematic-review-2026-10-14",
+    "source_pdf_bytes_modified": false,
+    "all_model_claims_manually_certified": false,
+    "remaining_parser_issue": "ViT Table 7 AST boundaries include nearby body/figure text. Confirmed by native page rendering; not repaired in this turn.",
+    "render_warnings_retained": [
+      "ViT xref reconstruction warning",
+      "QLoRA missing display fonts warning; viewed pages remain readable"
+    ]
+  },
+  "regression": {
+    "backend": {
+      "tests": 1031,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "junit": "backend/tmp/official-thematic-review-2026-10-14/backend-candidate.xml"
+    },
+    "frontend": {
+      "tests": 38,
+      "failures": 0,
+      "typecheck_passed": true,
+      "commands": [
+        "npm test",
+        "npm run typecheck"
+      ],
+      "record_kind": "tool_observation_not_browser_e2e"
+    },
+    "scoped_ruff_passed": true,
+    "git_diff_check_passed": true,
+    "test_counts_are_not_business_accuracy": true,
+    "new_thematic_browser_e2e": false
+  },
+  "deployment": {
+    "initial_docker_server": "29.7.2",
+    "initial_pdfagent_services_healthy": [
+      "backend",
+      "worker",
+      "frontend",
+      "embeddings",
+      "reranker"
+    ],
+    "initial_backend_app_sha256_prefix": "0c025a51",
+    "initial_backend_app_files": 122,
+    "initial_worker_active_tasks": 0,
+    "rollback_tags": [
+      "pdfagent-backend:before-thematic-review-20261014",
+      "pdfagent-worker:before-thematic-review-20261014",
+      "pdfagent-beat:before-thematic-review-20261014",
+      "pdfagent-frontend:before-thematic-review-20261014"
+    ],
+    "attempted_command": "docker compose build backend worker beat frontend --progress plain",
+    "overall_build_success": false,
+    "failure": "Docker HTTP 500, RPC Unavailable/EOF during build; last confirmed frontend phase was Next production compilation.",
+    "compose_up_executed": false,
+    "runtime_new_source_confirmed": false,
+    "production_database_written": false,
+    "volumes_removed": false,
+    "docker_or_wsl_restarted": false,
+    "unrelated_containers_intentionally_modified": false,
+    "owned_build_and_diagnostic_processes_ended": true,
+    "last_observed_engine_state": "unavailable",
+    "host_free_memory_samples_kib": [
+      11006404,
+      509364
+    ],
+    "memory_pressure_observed": true,
+    "oom_or_root_cause_proven": false
+  },
+  "remaining": [
+    "Fresh thematic synthesis with multiple source-supported comparisons and full experimental scope",
+    "Fresh writing on last source fingerprint and semantic review of all intended published claims",
+    "ViT table/body boundary repair without changing native source bytes",
+    "Safe Docker/resource diagnosis and last-candidate runtime installation",
+    "True BGE dense + reranker + DeepSeek and actual browser closure",
+    "Latest progress evidence and time-cutoff review for Future Work",
+    "Live import/subscriptions, author-year linkage, final materials, clean install, public demo and exposed-key rotation"
+  ],
+  "artifacts": [
+    {
+      "path": "backend/tmp/official-thematic-review-2026-10-14/backend-candidate.xml",
+      "sha256": "fd9ad1996bd1a2ae2ea19d368c3c2e8629f11a608c4b443f69b5e5987fcebc21"
+    },
+    {
+      "path": "backend/tmp/official-thematic-review-2026-10-14/backend-complete.xml",
+      "sha256": "fcae9338695db12fe18e9c52238608acff3a28ca3fa47799fda27f1cdbb8a7ed"
+    },
+    {
+      "path": "backend/tmp/official-thematic-review-2026-10-14/backend-final.xml",
+      "sha256": "2233261bfaadc0e8b80cc3ca50c15a733faa4487ea16d9282ddc0fbf278992b3"
+    },
+    {
+      "path": "backend/tmp/official-thematic-review-2026-10-14/backend-preflight.xml",
+      "sha256": "80dbef4d6c88b801ce413e4ab08d27da2ad791f8cb09cb6755fbb44b8477af89"
+    },
+    {
+      "path": "backend/tmp/official-thematic-review-2026-10-14/backend-release.xml",
+      "sha256": "da196f2e73fd9c7766cdc831d39e997bf96eb761db22286a7d8353a8370d327f"
+    },
+    {
+      "path": "backend/tmp/official-thematic-review-2026-10-14/generation-1/calls.json",
+      "sha256": "60184b4cb49e8b483be3b61b007c43fb2208e6ed2db93e432adba7db2c208762"
+    },
+    {
+      "path": "backend/tmp/official-thematic-review-2026-10-14/generation-1/generated-review.json",
+      "sha256": "833b0b11bb0d9b32a6aab9e3a1b59db08132ec8407ff277b3276ed6f479a3cda"
+    },
+    {
+      "path": "backend/tmp/official-thematic-review-2026-10-14/generation-1/report.json",
+      "sha256": "774281e550cababbe119febdd2fc8d3f1637392a52f22e4e2b8183a15c041f99"
+    },
+    {
+      "path": "backend/tmp/official-thematic-review-2026-10-14/generation-2/calls.json",
+      "sha256": "32ff2ae9342d1e51d7568de375d9649d71dbc04426e779b58d40d59f7504d5b1"
+    },
+    {
+      "path": "backend/tmp/official-thematic-review-2026-10-14/generation-2/generated-review.json",
+      "sha256": "8eea1fa3751c0b52ce2e7a71eb658b8f6c2cf066006d8555ea83ab5c06d51b9c"
+    },
+    {
+      "path": "backend/tmp/official-thematic-review-2026-10-14/generation-2/report.json",
+      "sha256": "53f1d1fde98ff8971abb1693c4a7e59d11047969617a097b9f5250f61ed91f09"
+    },
+    {
+      "path": "backend/tmp/official-thematic-review-2026-10-14/generation-3/calls.json",
+      "sha256": "04261f621f5db07ed40b25a22e39399cf06411f6f29e0d18aafda8fd3639bcbb"
+    },
+    {
+      "path": "backend/tmp/official-thematic-review-2026-10-14/generation-3/generated-review.json",
+      "sha256": "78b32b719f9cc73e913361b887d2af69f4e7d8ec2ff202334b40d10ae8115058"
+    },
+    {
+      "path": "backend/tmp/official-thematic-review-2026-10-14/generation-3/report.json",
+      "sha256": "156430d52c341bb7ddfd8fc1e434107f9241b76e2d10a85880d2309c09a4d60d"
+    },
+    {
+      "path": "backend/tmp/official-thematic-review-2026-10-14/review-publication-replay/generated-review.json",
+      "sha256": "50f22ced354a7bb6a15d7b3e4989f8a8088768958aeb7181a28e02107bd25d48"
+    },
+    {
+      "path": "backend/tmp/official-thematic-review-2026-10-14/review-publication-replay/report.json",
+      "sha256": "7f72ee6b5264cc958df691dc0db937e7c7c683f79e6a0badbe27aade9cfd1285"
+    },
+    {
+      "path": "backend/tmp/official-thematic-review-2026-10-14/source-pages/lora-p5.png",
+      "sha256": "705f34feeab27655bb56fa1a3fcb00667ff84e5d94c2cc1de1246b55a443d531"
+    },
+    {
+      "path": "backend/tmp/official-thematic-review-2026-10-14/source-pages/lora-p9.png",
+      "sha256": "6ad3abdcd339ccdca175602937c32772ac4ba02f3c1e2e739662d6600e369c0f"
+    },
+    {
+      "path": "backend/tmp/official-thematic-review-2026-10-14/source-pages/qlora-p1.png",
+      "sha256": "cb5067b8d9fba387cc307b552efb096769db2dab457d704d7ffbbd21209ea616"
+    },
+    {
+      "path": "backend/tmp/official-thematic-review-2026-10-14/source-pages/vit-p16.png",
+      "sha256": "589467ce4bdda32ac83fa3c8bcb89c55a9ba64def1c847afad6cf3207c3262f1"
+    },
+    {
+      "path": "backend/tmp/official-thematic-review-2026-10-14/source-pages/vit-p17.png",
+      "sha256": "05dc8dc0f5a0e0ef3c30e80260a73d8f666a6459289bad8f4626a08de775fc32"
+    },
+    {
+      "path": "backend/tmp/official-thematic-review-2026-10-14/writing-1/calls.json",
+      "sha256": "5403f072ce043cf7d75472581f5e09d378bfd1b9b7f928f9225617f35730fc8d"
+    },
+    {
+      "path": "backend/tmp/official-thematic-review-2026-10-14/writing-1/report.json",
+      "sha256": "c21f69b1084d406f571a8d76f2b4f7ff3fc4c46663dc89b18f1ad37ffb4864ff"
+    },
+    {
+      "path": "backend/tmp/official-thematic-review-2026-10-14/writing-1/writing-outline.json",
+      "sha256": "a29e42139fa1cd51275edd93590e9520d9b3c0a21fca5befac4ec67f3730d8ac"
+    },
+    {
+      "path": "backend/tmp/official-thematic-review-2026-10-14/writing-publication-replay/report.json",
+      "sha256": "8169e1f96417e5c0389486a5fa7990b3b9de1ebd8ab170362694c745e58930e7"
+    },
+    {
+      "path": "backend/tmp/official-thematic-review-2026-10-14/writing-publication-replay/writing-outline.json",
+      "sha256": "dad2183d9fa5661530bc5ce629e6190d6394e455d9bab72512eb503d48a4e4d5"
+    },
+    {
+      "path": "backend/app/llm/base.py",
+      "sha256": "f74c113aa8a6b5addc2f8be0410f9699d52e4b530570b6d70c0fc767f13689b5"
+    },
+    {
+      "path": "backend/app/llm/review_limits.py",
+      "sha256": "03a415cad1f00675e27cf54b6e4158eebb50e401b14477566a6b30ee68a8203e"
+    },
+    {
+      "path": "backend/app/llm/thematic_review.py",
+      "sha256": "e1e7babde75b902bed32f9e821ce0a23c575d2d5dec25ef67c97592e81d2deee"
+    },
+    {
+      "path": "backend/app/llm/openai_responses.py",
+      "sha256": "98c52cfb493c3de387476b6eb356c4c049ccd41fce2fbfd3e2a8157755cc0534"
+    },
+    {
+      "path": "backend/app/services/review_themes.py",
+      "sha256": "61f58ae001f0a65aedc6f59bb3a3f11e5c31b8d3cc18da2285a4a30fd3745878"
+    },
+    {
+      "path": "backend/app/services/evidence_review.py",
+      "sha256": "ac217b7daf7ae63084fd45202aa0ec482f501b3eccf815b2b908d474356f9471"
+    },
+    {
+      "path": "backend/app/services/writing_outline.py",
+      "sha256": "b7854d4fe99d1bf702906273a9074a986dc2e4fa242ddba5c123e608cadb4ed2"
+    },
+    {
+      "path": "backend/app/schemas/review.py",
+      "sha256": "2c221669bc000c0145e55fc95b2e5dd25f75d0e4ffd88a312df16422c973a3ae"
+    },
+    {
+      "path": "backend/scripts/replay_official_publication.py",
+      "sha256": "4bcf9c1507e20ada7b94efb74fc5c7ae676a81ecb34e20da526af7f106a1f9ad"
+    },
+    {
+      "path": "backend/scripts/verify_official_generated_review.py",
+      "sha256": "cf03c5a3c9d87e79910115623a2acf885a7f7832a59caf059f3238bc19e58e9b"
+    },
+    {
+      "path": "backend/tests/test_thematic_review.py",
+      "sha256": "512cb6a31f861659875a1d3206ee80ec1d52ca93b9ce19a0c11101ec51cc1054"
+    },
+    {
+      "path": "backend/tests/test_review_limits.py",
+      "sha256": "946ffdb66e6c1427fc55080fabf2a35f38905378ab3de1e1994b0c259373cd3b"
+    },
+    {
+      "path": "backend/tests/test_writing_outline.py",
+      "sha256": "4536cd776786490488c39fd3ccbc088348dbdee20fd01edee029eb8e2ef5922b"
+    },
+    {
+      "path": "frontend/lib/api.ts",
+      "sha256": "2549c30e619aae2cac7af547e4d7055d830c93de930134ae700228bd898f455e"
+    },
+    {
+      "path": "frontend/lib/reviewThemes.ts",
+      "sha256": "99c8a43f1b8531ad0adfc6bc19bcc61b652e584d72fdafd6e51bbc3c2699b84d"
+    },
+    {
+      "path": "frontend/lib/reviewThemes.test.mjs",
+      "sha256": "0acc566d529b4ae06f7e8b967e058848b23662d4f42c12a2dd445f668f2551e4"
+    },
+    {
+      "path": "frontend/components/ResearchReview.tsx",
+      "sha256": "a571918fe3e0e0820495b9ad56bf6c68ab6724edb7103202b6329740e02ac9f7"
+    }
+  ]
+}

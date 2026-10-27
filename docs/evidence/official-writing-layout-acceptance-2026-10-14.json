@@ -1,0 +1,723 @@
+{
+  "schema_version": 1,
+  "date": "2026-10-14",
+  "record_kind": "official_pdf_verification_progress_not_project_delivery_percentage",
+  "status": "all_39_basic_records_and_reader_anchors_confirmed__scientific_quality_and_final_runtime_hold",
+  "git": {
+    "branch": "codex/stage94-official-failed-qa-retest",
+    "head": "a119f5609cda544e5d587588c5a338051da129a1",
+    "mutated": false
+  },
+  "progress": {
+    "full_corpus_execution": {
+      "completed": 39,
+      "total": 39,
+      "percent": 100,
+      "physical_pages": 1986
+    },
+    "basic_first_attempt": {
+      "passed": 38,
+      "total": 39,
+      "percent": 97.4359,
+      "original_failure_preserved": true
+    },
+    "basic_success_record_coverage": {
+      "files": 39,
+      "total": 39,
+      "percent": 100,
+      "local_file_executions": 40,
+      "separate_scan_confirmation": 1,
+      "not_single_zero_failure_round": true
+    },
+    "reader_api_saved_ast": {
+      "passed": 39,
+      "total": 39,
+      "percent": 100,
+      "latest_all_39_reparse": false,
+      "production_runtime_or_browser": false
+    },
+    "historical_core_qa": {
+      "first_attempt_accepted": 38,
+      "total": 39,
+      "percent": 97.4359,
+      "separate_timeout_confirmation": 1,
+      "each_file_has_prior_core_record": true,
+      "regenerated_this_turn": false,
+      "not_full_answer_accuracy": true
+    },
+    "whole_scientific_quality_or_final_all_function_accuracy_percent": null,
+    "percentages_exclude_video_technical_materials_and_public_deployment": true
+  },
+  "source_snapshots": {
+    "all_39_parser_and_two_writing_runs": {
+      "app_sha256": "0f5e4825f35b39ef68f1746386d0ac08f3b470cfca3e2a04dab2884b991c44d7",
+      "native_version": "1.26.4-layout101",
+      "ocr_base_version": "1.26.4-ocr-layout96",
+      "app_files": 126
+    },
+    "last_axis_guard_and_api_and_regression": {
+      "app_sha256": "36f3797f6d2fae7dad4926f31d63f8baabfff12c8df82464e3a2ec966aca0ab2",
+      "native_version": "1.26.4-layout102",
+      "ocr_base_version": "1.26.4-ocr-layout97",
+      "app_files": 126,
+      "requirements_sha256": "b0e75e31a3ca8f034e095fd0667e3be7e380975548c5acce90db94f96ed7283f"
+    },
+    "last_guard_native_reparse_files": 4,
+    "three_writing_source_ast_byte_identities_unchanged": true,
+    "last_app_cloud_regenerated": false,
+    "last_native_guard_all_39_reparsed": false
+  },
+  "parser": {
+    "fixed_manifest": "backend/tmp/official-all-39-2026-10-11/sources-1/manifest.json",
+    "first_report": "backend/tmp/official-writing-layout-2026-10-14/parse-39-1/report.json",
+    "scan_confirmation": "backend/tmp/official-writing-layout-2026-10-14/scan-standard-confirmation-1/report.json",
+    "first_main_ocr_languages": "eng",
+    "standard_main_ocr_languages": "chi_sim+eng",
+    "author_crop_languages": "eng+pol",
+    "dpi": 300,
+    "first_ocr_signature": "e508ef00ce",
+    "standard_ocr_signature": "28a4dba9ae",
+    "standard_signature_matches_prior_passing_checkpoint": true,
+    "scan_first_authors": 7,
+    "scan_standard_authors": 8,
+    "scan_failure_was_test_environment_parameter_difference": true,
+    "basic_gate_scope": "Source SHA, complete page sequence, metadata, text volume, bounded structure minima, native-source-derived reference probes, coordinates and Python allocation/time bounds; not all-cell/formula/affiliation accuracy.",
+    "book": {
+      "physical_pages": 541,
+      "parsed_pages": 541,
+      "checkpoint_batches": 22,
+      "elapsed_seconds": 76.586,
+      "python_peak_memory_mib": 41.85,
+      "total_ram_or_vram_measured": false,
+      "status": "passed"
+    },
+    "consolidated_input_manifest": "backend/tmp/official-writing-layout-2026-10-14/combined-parser-sources.json",
+    "original_first_attempt_score_overwritten": false,
+    "last_axis_counterexample": "backend/tmp/official-writing-layout-2026-10-14/axis-counterexample-review.json",
+    "whole_source_pdfs_modified": false
+  },
+  "local_api": {
+    "record": "backend/tmp/official-writing-layout-2026-10-14/api-fixture-39-1/report.json",
+    "reader_passed": 39,
+    "physical_pages": 1986,
+    "mention_anchors": 1423,
+    "input_source_and_ast_hash_mismatches": 0,
+    "graph": {
+      "nodes": 20,
+      "edges": 69,
+      "independent_native_reference_edges_confirmed": 69,
+      "complete_reference_recall_proved": false
+    },
+    "future_pool": {
+      "covered_papers": 20,
+      "candidates": 52,
+      "decision_save_and_guard_checks": 52,
+      "cloud_generated_review": false,
+      "current_resolution_status_proved": false
+    },
+    "no_production_library_or_message_writes": true
+  },
+  "tables": {
+    "saved_source_asts": "all-39 layout101 cohort with separate standard scan confirmation",
+    "record": "backend/tmp/official-writing-layout-2026-10-14/table-gold-1/report.json",
+    "fixed_tables": 6,
+    "selected_data_rows": 34,
+    "status": "passed",
+    "all_table_or_header_colspan_accuracy": false
+  },
+  "cloud": {
+    "provider": "deepseek",
+    "model": "deepseek-flash",
+    "calls": 2,
+    "automatic_retries": 0,
+    "public_source_files": [
+      "2010.11929v2.pdf",
+      "2103.00020v1.pdf",
+      "2106.09685v2.pdf"
+    ],
+    "private_or_whole_document_transmission": false,
+    "actual_tei_reranker_health": 200,
+    "retrieval_scope": "Lexical candidates plus actual TEI BGE reranker, not dense vector-chain acceptance.",
+    "runs": [
+      {
+        "name": "writing-generation-1",
+        "same_prior_idea": true,
+        "calls": 1,
+        "raw_claims": 6,
+        "published_claims": 6,
+        "evidence": 25,
+        "machine_status": "source_checks_passed",
+        "manual_status": "six_core_claims_source_consistent_in_one_sample__per_paper_budget_and_full_writing_quality_not_released",
+        "warnings": []
+      },
+      {
+        "name": "writing-conditions-1",
+        "separate_recorded_targeted_idea": true,
+        "calls": 1,
+        "raw_claims": 5,
+        "published_claims": 5,
+        "evidence": 25,
+        "machine_status": "source_checks_passed",
+        "manual_status": "three_targeted_subject_scope_modal_checks_confirmed__additional_evaluation_protocol_omission_and_budget_hold",
+        "requested_fact_budget": 4,
+        "budget_warning_visible": true
+      }
+    ],
+    "manual_record": "backend/tmp/official-writing-layout-2026-10-14/manual-source-review.json",
+    "all_original_outputs_and_failed_scores_preserved": true
+  },
+  "regression": {
+    "first_backend": {
+      "tests": 1060,
+      "failures": 0
+    },
+    "final_backend": {
+      "tests": 1061,
+      "passed": 1061,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    "frontend": {
+      "tests": 38,
+      "passed": 38,
+      "typecheck": true,
+      "frontend_code_changed_this_turn": false
+    },
+    "ruff": {
+      "scope": "Entire backend/app and two changed test files",
+      "passed": true
+    },
+    "git_diff_check_passed": true
+  },
+  "previous_record": {
+    "path": "docs/evidence/official-dense-table-acceptance-2026-10-14.json",
+    "total_manifest_entries": 49,
+    "immutable_result_entries": 30,
+    "immutable_result_entries_changed": 0,
+    "expected_changed_files": [
+      "backend/app/parsers/layout.py",
+      "backend/app/parsers/pymupdf_parser.py",
+      "backend/app/parsers/ocr_parser.py",
+      "backend/app/services/writing_outline.py",
+      "backend/tests/test_single_column_section_order.py",
+      "docs/acceptance-progress.md",
+      "docs/competition-verification-gates.md",
+      "docs/competition-delivery-checklist.md"
+    ]
+  },
+  "deployment": {
+    "production_library_modified": false,
+    "new_images_built_or_installed": false,
+    "docker_or_wsl_restarted": false,
+    "volumes_removed": false,
+    "last_known_runtime_prefix": "0c025a51",
+    "latest_browser_or_runtime_dense_chain_accepted": false
+  },
+  "remaining": [
+    "Additional performance statements must retain evaluation protocol; enforce concise per-paper/global relevance without hiding raw failures",
+    "Native chart/table false positives, complex colspan/formula/affiliation precision; no all-layout footnote detection guarantee",
+    "Prior thematic-review initialization scope and prose quality; authoritative current future-work resolution evidence",
+    "Limited final same-candidate QA stability, actual running API/browser and BGE dense chain; last native guard has only four targeted reparse checks",
+    "Previously recorded live discovery/subscription and multi-user gaps; these are not a PDF-file pass-rate denominator"
+  ],
+  "artifact_manifest_count": 124,
+  "artifacts": [
+    {
+      "path": "backend/tmp/official-writing-layout-2026-10-14/before.xml",
+      "sha256": "e32f17331d78d91b0dc4d120721724439919f302bc3262b95ce20757194c1502"
+    },
+    {
+      "path": "backend/tmp/official-writing-layout-2026-10-14/targeted-1.xml",
+      "sha256": "e6d3def7010db9d7e3f6e2d08c859fefe440b5a74f84926eb8361ad64b98977e"
+    },
+    {
+      "path": "backend/tmp/official-writing-layout-2026-10-14/backend-1.xml",
+      "sha256": "c3e05c95ab98235c882ee97cea25b15b83229336c35d4bf37088b2907c4d46d3"
+    },
+    {
+      "path": "backend/tmp/official-writing-layout-2026-10-14/backend-final.xml",
+      "sha256": "903a433d78edbd401b406bea0085f64273cb85625dcd23da1c9ddbcbf2f45d46"
+    },
+    {
+      "path": "backend/tmp/official-writing-layout-2026-10-14/manual-source-review.json",
+      "sha256": "c4acb89708b726f000d061199a95c8d645f593e9678ae1256cd331949ef681b6"
+    },
+    {
+      "path": "backend/tmp/official-writing-layout-2026-10-14/axis-counterexample-review.json",
+      "sha256": "c42b46bf81a380a5d81fcc2951430ff3d52a44077ec5b3f49d1bc7c53a176ddb"
+    },
+    {
+      "path": "backend/tmp/official-writing-layout-2026-10-14/combined-parser-sources.json",
+      "sha256": "c489acf2c9e648a7875d18d495a346d57772460a9f25d8ad47d54220e0492fb0"
+    },
+    {
+      "path": "backend/tmp/official-writing-layout-2026-10-14/parse-39-1/report.json",
+      "sha256": "3ffa4606217c8a8b23ecbf218c816fb6d011446127f27ffaefd038fbd6fb3d00"
+    },
+    {
+      "path": "backend/tmp/official-writing-layout-2026-10-14/scan-standard-confirmation-1/report.json",
+      "sha256": "7544827f7808d11f6808a1cf0450914cba38a8e40fb7a2eab7614b6443d8df27"
+    },
+    {
+      "path": "backend/tmp/official-writing-layout-2026-10-14/scan-standard-confirmation-1/document-01/result.json",
+      "sha256": "34b130259c990f0283026103d0cd84c3f166be79e02fe8d315306d2b5feb2a5e"
+    },
+    {
+      "path": "backend/tmp/official-writing-layout-2026-10-14/scan-standard-confirmation-1/document-01/artifacts/parsed.json",
+      "sha256": "ec55ab9b8c2c57942549e13bac5c6386e04d493c8c709cd707e15f280ea37623"
+    },
+    {
+      "path": "backend/tmp/official-writing-layout-2026-10-14/parse-39-1/document-01/result.json",
+      "sha256": "0675f08e313669ca1135a7a648094b1505ec648f8f0450abdbd4ebefce09d6c0"
+    },
+    {
+      "path": "backend/tmp/official-writing-layout-2026-10-14/parse-39-1/document-02/result.json",
+      "sha256": "84b94a4ed8d47da1901f4840f69f7c12014da1b11236e67074acbad40a5d9e32"
+    },
+    {
+      "path": "backend/tmp/official-writing-layout-2026-10-14/parse-39-1/document-03/result.json",
+      "sha256": "08d2144a7f9e124134db4f6bd6ea3a63c689dc4de2ac5832d4738902bb47744f"
+    },
+    {
+      "path": "backend/tmp/official-writing-layout-2026-10-14/parse-39-1/document-04/result.json",
+      "sha256": "24dd04220b583bb7b45106a79eded64cbdfa5266931c71de9fd52fc0d4a61c62"
+    },
+    {
+      "path": "backend/tmp/official-writing-layout-2026-10-14/parse-39-1/document-05/result.json",
+      "sha256": "6312dbfb3f774ff3444b60ac8ce255a273b36fc1c9f7233dbe356044f6fe80c9"
+    },
+    {
+      "path": "backend/tmp/official-writing-layout-2026-10-14/parse-39-1/document-06/result.json",
+      "sha256": "aa1aeb8db647d2367168e8371560abc0a181adf6685d4e8cca7402bbfcbb6cb9"
+    },
+    {
+      "path": "backend/tmp/official-writing-layout-2026-10-14/parse-39-1/document-07/result.json",
+      "sha256": "7acb1b718cb85cc66a215ba14affa42e9758fe0e3287b6d481f4a0ed94155698"
+    },
+    {
+      "path": "backend/tmp/official-writing-layout-2026-10-14/parse-39-1/document-08/result.json",
+      "sha256": "6d7465cc4a01b1625ccd2de966cb630b2ccca8f7d5738cbae8aa72ead4393132"
+    },
+    {
+      "path": "backend/tmp/official-writing-layout-2026-10-14/parse-39-1/document-09/result.json",
+      "sha256": "813e8f26530842140b2b22b5b2992b5368e2df4b4ff78084357311ebe2d312a8"
+    },
+    {
+      "path": "backend/tmp/official-writing-layout-2026-10-14/parse-39-1/document-10/result.json",
+      "sha256": "5c21af0a9ea7d44083904efdf845f35fa6626fd7be6f26e13277621752665274"
+    },
+    {
+      "path": "backend/tmp/official-writing-layout-2026-10-14/parse-39-1/document-11/result.json",
+      "sha256": "f6572b8a852aa58e287c5f1c153b0a771508e5d4feef2e5c27688c3669d61e7b"
+    },
+    {
+      "path": "backend/tmp/official-writing-layout-2026-10-14/parse-39-1/document-12/result.json",
+      "sha256": "8eb460e0fbe9aae1f7052ab0a2282b65902c8c5969c3dc549aa21baa74cedf82"
+    },
+    {
+      "path": "backend/tmp/official-writing-layout-2026-10-14/parse-39-1/document-13/result.json",
+      "sha256": "5866516b6f8a3370159b20c3b5226f0aa9c125030848fb092db699269a46b8a3"
+    },
+    {
+      "path": "backend/tmp/official-writing-layout-2026-10-14/parse-39-1/document-14/result.json",
+      "sha256": "dc1a0aab0f66862d5fc98c72c6139b0f3a7858d08219c74c0e521989bb79df94"
+    },
+    {
+      "path": "backend/tmp/official-writing-layout-2026-10-14/parse-39-1/document-15/result.json",
+      "sha256": "7f8a78a241d50b7a05275f08d1f8420bd1d6c72c1a432693ee5287436b4287c5"
+    },
+    {
+      "path": "backend/tmp/official-writing-layout-2026-10-14/parse-39-1/document-16/result.json",
+      "sha256": "e143ba374edd163dcbdfcd60f10a34f1ee97a1ba5d98acbfe4ad34c82f1d530d"
+    },
+    {
+      "path": "backend/tmp/official-writing-layout-2026-10-14/parse-39-1/document-17/result.json",
+      "sha256": "a725d043603f4c37f77cbee23f0df2193b947534f6af089ef2d8188ecb69046d"
+    },
+    {
+      "path": "backend/tmp/official-writing-layout-2026-10-14/parse-39-1/document-18/result.json",
+      "sha256": "48d03d097f5a9f5b603cdbe81e234f46a7588947352df9f1caf2a444c61bb83a"
+    },
+    {
+      "path": "backend/tmp/official-writing-layout-2026-10-14/parse-39-1/document-19/result.json",
+      "sha256": "a6f34bfe985efbb3b7841d4b719bcd460bbf41236c92879c8fed3b2ed09ed597"
+    },
+    {
+      "path": "backend/tmp/official-writing-layout-2026-10-14/parse-39-1/document-20/result.json",
+      "sha256": "db781fcc7f8c83b5a260c00f664527f35fc10ff7ae586c188be9b510869b8c1d"
+    },
+    {
+      "path": "backend/tmp/official-writing-layout-2026-10-14/parse-39-1/document-21/result.json",
+      "sha256": "20b768900ebbed75032952f593e9c0be57120400f7a10697189d39c263cc6348"
+    },
+    {
+      "path": "backend/tmp/official-writing-layout-2026-10-14/parse-39-1/document-22/result.json",
+      "sha256": "dfff4bf468fc76ae37fbec8117c57ac923e4d7267ce9ddea2b574bf876be24ee"
+    },
+    {
+      "path": "backend/tmp/official-writing-layout-2026-10-14/parse-39-1/document-23/result.json",
+      "sha256": "3ae67fa2d42d371b9ef1d5a0df044b1b626a7b26fe218e8e92fc2e0266f4792c"
+    },
+    {
+      "path": "backend/tmp/official-writing-layout-2026-10-14/parse-39-1/document-24/result.json",
+      "sha256": "1592366cf4c33ad0070a169ea2119ebc7cbf9fc13fe813bd1c8530478acdc9b7"
+    },
+    {
+      "path": "backend/tmp/official-writing-layout-2026-10-14/parse-39-1/document-25/result.json",
+      "sha256": "305cb985b061084b4d0fbe57356d4cebef3d445c68db4fded4afccc944255f75"
+    },
+    {
+      "path": "backend/tmp/official-writing-layout-2026-10-14/parse-39-1/document-26/result.json",
+      "sha256": "ae38cef96b127d4d7282983f7ba15dcf188624e90eb25ab1ac909b04a2200dfd"
+    },
+    {
+      "path": "backend/tmp/official-writing-layout-2026-10-14/parse-39-1/document-27/result.json",
+      "sha256": "0aff4003044bbd9b8989b147ecd7af5e42e893cd9c14119db90dc3c01c1cfe10"
+    },
+    {
+      "path": "backend/tmp/official-writing-layout-2026-10-14/parse-39-1/document-28/result.json",
+      "sha256": "de8fd1888a937b3bd97e4aacb7ea15902fd478b2b290a9376d819313aa24abc9"
+    },
+    {
+      "path": "backend/tmp/official-writing-layout-2026-10-14/parse-39-1/document-29/result.json",
+      "sha256": "2a20cbb86c5beca45bd69030dc90f78f9292094607df192348d295b0411b4064"
+    },
+    {
+      "path": "backend/tmp/official-writing-layout-2026-10-14/parse-39-1/document-30/result.json",
+      "sha256": "d4ffe9f61adcb6420af0cda32293753fb292f14e9647edc1feeda19c478b41ea"
+    },
+    {
+      "path": "backend/tmp/official-writing-layout-2026-10-14/parse-39-1/document-31/result.json",
+      "sha256": "dd21b476b08d79865f797ba435f573d3f6aa62516fe674911c9958cefb141578"
+    },
+    {
+      "path": "backend/tmp/official-writing-layout-2026-10-14/parse-39-1/document-32/result.json",
+      "sha256": "b084b14d9fb0dce67a71f73544024f317f9ffe16b465da2a26274eab546a91d9"
+    },
+    {
+      "path": "backend/tmp/official-writing-layout-2026-10-14/parse-39-1/document-33/result.json",
+      "sha256": "bb16e6e066e07a79635ac382a7b6d93e528f86f5f2bd040e9d0ec55b68c7813e"
+    },
+    {
+      "path": "backend/tmp/official-writing-layout-2026-10-14/parse-39-1/document-34/result.json",
+      "sha256": "75e537379406b7c4079d55f6e4e57bb406fda73c92988431eae93c333b89904f"
+    },
+    {
+      "path": "backend/tmp/official-writing-layout-2026-10-14/parse-39-1/document-35/result.json",
+      "sha256": "1977febc6bffa052cc876d06301d421d63ac4a9b8f941827da31dafec45bf886"
+    },
+    {
+      "path": "backend/tmp/official-writing-layout-2026-10-14/parse-39-1/document-36/result.json",
+      "sha256": "cf55f7c818b20b6f11618afb71e57bf58e9cfb901884bb6be2aea919e7d4fe44"
+    },
+    {
+      "path": "backend/tmp/official-writing-layout-2026-10-14/parse-39-1/document-37/result.json",
+      "sha256": "517a332c30a4adbe606226b67eb527a774af6439ecd1a35879bd552a45551f68"
+    },
+    {
+      "path": "backend/tmp/official-writing-layout-2026-10-14/parse-39-1/document-38/result.json",
+      "sha256": "43314d41ce68b1909f020c46a38341cc75625f315a1f9012719c13c38ff77502"
+    },
+    {
+      "path": "backend/tmp/official-writing-layout-2026-10-14/parse-39-1/document-39/result.json",
+      "sha256": "1cf9c0c7fc7f379673587a5979bc482f56796b1416784251f8c972652e50b1e7"
+    },
+    {
+      "path": "backend/tmp/official-writing-layout-2026-10-14/parse-39-1/document-01/artifacts/parsed.json",
+      "sha256": "3f8ba5424477c2a804034dd7507f1d96c9bdb43212f4fad6faa7006faf7bc5db"
+    },
+    {
+      "path": "backend/tmp/official-writing-layout-2026-10-14/parse-39-1/document-02/artifacts/parsed.json",
+      "sha256": "17b79909f6ccfbef761befa41518b887e954b41bc1b74d8cfe071d519f8db5de"
+    },
+    {
+      "path": "backend/tmp/official-writing-layout-2026-10-14/parse-39-1/document-03/artifacts/parsed.json",
+      "sha256": "dd5ccaa62329a105547cac805f82da22ccd7b85692cb091f3d6fb0246426c6d8"
+    },
+    {
+      "path": "backend/tmp/official-writing-layout-2026-10-14/parse-39-1/document-04/artifacts/parsed.json",
+      "sha256": "d5faf7e73740723c1ecd80905df79a65a58f51cf54cc878a133ae25344ce0608"
+    },
+    {
+      "path": "backend/tmp/official-writing-layout-2026-10-14/parse-39-1/document-05/artifacts/parsed.json",
+      "sha256": "26debba89ab51ae930bd4b4bb6628e6bb3390a9f67a2c515d51549a30f00cfdf"
+    },
+    {
+      "path": "backend/tmp/official-writing-layout-2026-10-14/parse-39-1/document-06/artifacts/parsed.json",
+      "sha256": "018e83626b4fb76cbb6f3ab0564e63421def0980e7a141f950a03b6b8e291300"
+    },
+    {
+      "path": "backend/tmp/official-writing-layout-2026-10-14/parse-39-1/document-07/artifacts/parsed.json",
+      "sha256": "ccbde08a7acfeb1eb48b2c4b9991fa3b989fed9fd0500821d6c705cd4872964a"
+    },
+    {
+      "path": "backend/tmp/official-writing-layout-2026-10-14/parse-39-1/document-08/artifacts/parsed.json",
+      "sha256": "cd54a7ad67fa78babfb38b65ec9d6a49e88a1d93b11f5ceb8012c160433c7754"
+    },
+    {
+      "path": "backend/tmp/official-writing-layout-2026-10-14/parse-39-1/document-09/artifacts/parsed.json",
+      "sha256": "1988ef13dfd02dc2a5da4841109c85a15cb4b70bd6a283b492f6e55c3748cb14"
+    },
+    {
+      "path": "backend/tmp/official-writing-layout-2026-10-14/parse-39-1/document-10/artifacts/parsed.json",
+      "sha256": "50d4d7c3778fa657fb04a90677968faaeb8ea2563591321d946c416c2c3780d9"
+    },
+    {
+      "path": "backend/tmp/official-writing-layout-2026-10-14/parse-39-1/document-11/artifacts/parsed.json",
+      "sha256": "9983d55bb64e32504484f86909be883abfc3f9df9a5fb7bd1f0764821450b293"
+    },
+    {
+      "path": "backend/tmp/official-writing-layout-2026-10-14/parse-39-1/document-12/artifacts/parsed.json",
+      "sha256": "a67baf579badca13374ec734b001720a370e4ba1d35560b4a03a03701e04f3d7"
+    },
+    {
+      "path": "backend/tmp/official-writing-layout-2026-10-14/parse-39-1/document-13/artifacts/parsed.json",
+      "sha256": "21b96849bb3533789c4c02f82faa6ec53ecca023e2b10de4d99759adc3d275d0"
+    },
+    {
+      "path": "backend/tmp/official-writing-layout-2026-10-14/parse-39-1/document-14/artifacts/parsed.json",
+      "sha256": "1a35482e1c3334b843d4436ab0c9d3effe75a7c3d91c9ca46665bbb8e1eaedb8"
+    },
+    {
+      "path": "backend/tmp/official-writing-layout-2026-10-14/parse-39-1/document-15/artifacts/parsed.json",
+      "sha256": "23bc7ada43098ad5aa2b2b4c58a0b1d25425db44b82e2bbfc826c2c4f4709656"
+    },
+    {
+      "path": "backend/tmp/official-writing-layout-2026-10-14/parse-39-1/document-16/artifacts/parsed.json",
+      "sha256": "6cbe2080ce0d14ca0770b52ea07ba0ad3acfe7cd73cdba071f8ce2e539513da5"
+    },
+    {
+      "path": "backend/tmp/official-writing-layout-2026-10-14/parse-39-1/document-17/artifacts/parsed.json",
+      "sha256": "42397f5218611853c9656882312597e19c365d37800e75671ddc0517311633fa"
+    },
+    {
+      "path": "backend/tmp/official-writing-layout-2026-10-14/parse-39-1/document-18/artifacts/parsed.json",
+      "sha256": "a61558d6c24855d4b62c07f16de7c9f6a83ab2e87b712fc4703cf8811e829d98"
+    },
+    {
+      "path": "backend/tmp/official-writing-layout-2026-10-14/parse-39-1/document-19/artifacts/parsed.json",
+      "sha256": "74fea9249eeb42511e8c7377eec7d30a20542725a3a1efcf6fa205b60a889a17"
+    },
+    {
+      "path": "backend/tmp/official-writing-layout-2026-10-14/parse-39-1/document-20/artifacts/parsed.json",
+      "sha256": "c4253372c4901cd2fc2f545cdd3afadd4ada2b1c0b3b8d76970832eb4827c047"
+    },
+    {
+      "path": "backend/tmp/official-writing-layout-2026-10-14/parse-39-1/document-21/artifacts/parsed.json",
+      "sha256": "875281f2618840d6acec97f94105cb6ac3f2d5c0940a9111f307084b72834e5f"
+    },
+    {
+      "path": "backend/tmp/official-writing-layout-2026-10-14/parse-39-1/document-22/artifacts/parsed.json",
+      "sha256": "f322e821130fe13b113aa53b923131fbfd184b160bf1fcc90ac0cc939b718447"
+    },
+    {
+      "path": "backend/tmp/official-writing-layout-2026-10-14/parse-39-1/document-23/artifacts/parsed.json",
+      "sha256": "eae0781ae09d67c3d7dc13f94496ff771d59560e23a8e1769d16995b3fd700f0"
+    },
+    {
+      "path": "backend/tmp/official-writing-layout-2026-10-14/parse-39-1/document-24/artifacts/parsed.json",
+      "sha256": "5a9be24dc0dcca13afb34b6273ea43b530a656ef1769c0382fbadab2ccf0b503"
+    },
+    {
+      "path": "backend/tmp/official-writing-layout-2026-10-14/parse-39-1/document-25/artifacts/parsed.json",
+      "sha256": "e608f2bfb3d9e780d988a3a92b414d530ec93ae2182de38d2433c34e50925bd3"
+    },
+    {
+      "path": "backend/tmp/official-writing-layout-2026-10-14/parse-39-1/document-26/artifacts/parsed.json",
+      "sha256": "ef2b7bef7a16618f06d10e3ac5ada963c1d2d93dec5dd843166216a4bc6bccb5"
+    },
+    {
+      "path": "backend/tmp/official-writing-layout-2026-10-14/parse-39-1/document-27/artifacts/parsed.json",
+      "sha256": "bc6bf19d9c8b3c14822915f77d4c7a4ba3c31822ea75bed70d36ee50fa2a0ccf"
+    },
+    {
+      "path": "backend/tmp/official-writing-layout-2026-10-14/parse-39-1/document-28/artifacts/parsed.json",
+      "sha256": "3d79cf8e2b8b99965e5f3e17320aae2cbb2296b031a000f86a11ed71a1e7ea26"
+    },
+    {
+      "path": "backend/tmp/official-writing-layout-2026-10-14/parse-39-1/document-29/artifacts/parsed.json",
+      "sha256": "6a79b83d2dd57a779c217180876dd738885da19f4007405398137ac72ad57cf8"
+    },
+    {
+      "path": "backend/tmp/official-writing-layout-2026-10-14/parse-39-1/document-30/artifacts/parsed.json",
+      "sha256": "ec61e5a20aabbd4c65d33e9377d87c457b558860444cbdce47371f4f2118c11c"
+    },
+    {
+      "path": "backend/tmp/official-writing-layout-2026-10-14/parse-39-1/document-31/artifacts/parsed.json",
+      "sha256": "53bf407e3e2135c4d31d58fa036e72a53f47f979a63092483452c6d5f680a0ff"
+    },
+    {
+      "path": "backend/tmp/official-writing-layout-2026-10-14/parse-39-1/document-32/artifacts/parsed.json",
+      "sha256": "aab082689cc81a1247a40f1013411720c18bda4aa21a7cbe1dfdca40ceca39d9"
+    },
+    {
+      "path": "backend/tmp/official-writing-layout-2026-10-14/parse-39-1/document-33/artifacts/parsed.json",
+      "sha256": "78f943a558cf8b94dbd97ca3def3ca8da8c385b23687bdd40ce9a45b6dbac51b"
+    },
+    {
+      "path": "backend/tmp/official-writing-layout-2026-10-14/parse-39-1/document-34/artifacts/parsed.json",
+      "sha256": "fe898876bac9bfa7abe2ffa4da938a950d32b59827e7a6fcc4bd23ed485da484"
+    },
+    {
+      "path": "backend/tmp/official-writing-layout-2026-10-14/parse-39-1/document-35/artifacts/parsed.json",
+      "sha256": "43df9075cfb8c7ac92ddd3f4f05722d89b7ea4e0567869f02a6f2debcd3e1bc8"
+    },
+    {
+      "path": "backend/tmp/official-writing-layout-2026-10-14/parse-39-1/document-36/artifacts/parsed.json",
+      "sha256": "1d82501ae68a7f7b7a87b4055dd831846ce8f8884e913cc67aa986a2a0773500"
+    },
+    {
+      "path": "backend/tmp/official-writing-layout-2026-10-14/parse-39-1/document-37/artifacts/parsed.json",
+      "sha256": "5558cf8741cc5bf08c0f8c1e203a0a63d18d30d136d41a9ca8058abe275db95e"
+    },
+    {
+      "path": "backend/tmp/official-writing-layout-2026-10-14/parse-39-1/document-38/artifacts/parsed.json",
+      "sha256": "a7422703a5ac5335504073391728d8860f0a41a4e8d4b946b277fb4883c0f435"
+    },
+    {
+      "path": "backend/tmp/official-writing-layout-2026-10-14/parse-39-1/document-39/artifacts/parsed.json",
+      "sha256": "c6b8e49d209d46fb92135269da3ce33f6c7c33810dbd82a33341124251e62657"
+    },
+    {
+      "path": "backend/tmp/official-writing-layout-2026-10-14/parser-writing-3/report.json",
+      "sha256": "2e42f7a2fdb2b49e72f8c48c9dc7e3bb470a973b6628cf3073c57f96c11411ff"
+    },
+    {
+      "path": "backend/tmp/official-writing-layout-2026-10-14/parser-writing-3/fixture.json",
+      "sha256": "f409cf97ff256ac9585f5eca9d6031a2d65aa71cb5b2532cbc76e5a3c7e08f53"
+    },
+    {
+      "path": "backend/tmp/official-writing-layout-2026-10-14/parser-final-4/report.json",
+      "sha256": "aa7f97dd67a46d0633b58648a9ca79398f644235c16fb6d092e245c93771824c"
+    },
+    {
+      "path": "backend/tmp/official-writing-layout-2026-10-14/parser-final-4/fixture.json",
+      "sha256": "8f5def451c9b8d9632a4f6f53baf1ca6b0c1a608d6d3135b5e7b80b8fd3e73b0"
+    },
+    {
+      "path": "backend/tmp/official-writing-layout-2026-10-14/api-fixture-39-1/report.json",
+      "sha256": "9b6eb6e3c81a6e95666881014dd05e1cea29b89b1b3e6df2e63187b0df56b2fc"
+    },
+    {
+      "path": "backend/tmp/official-writing-layout-2026-10-14/api-fixture-39-1/fixture.json",
+      "sha256": "ae1057a0f994f644e01b3385ab8b6cfdbc53f5d4113a995bf2d57be274c20fdd"
+    },
+    {
+      "path": "backend/tmp/official-writing-layout-2026-10-14/writing-generation-1/report.json",
+      "sha256": "fffcfea5d4bfe37a83ae8cc67dc1546ccf7fcd3970f762ae961bc07c3f0347d6"
+    },
+    {
+      "path": "backend/tmp/official-writing-layout-2026-10-14/writing-generation-1/calls.json",
+      "sha256": "72b1d0c712733494cbb51660e14024cab1eb47c33a502477ef2a7bae768b7aa7"
+    },
+    {
+      "path": "backend/tmp/official-writing-layout-2026-10-14/writing-generation-1/writing-outline.json",
+      "sha256": "bd1553e2d717e217db61e4a344781f8251845a483a52f8ac9af5812d31029593"
+    },
+    {
+      "path": "backend/tmp/official-writing-layout-2026-10-14/writing-conditions-1/report.json",
+      "sha256": "85a08d62166106114f31685867a24bdf55db6282949d1434576a43af27def3bf"
+    },
+    {
+      "path": "backend/tmp/official-writing-layout-2026-10-14/writing-conditions-1/calls.json",
+      "sha256": "0ed58740d231739368c5b5870727d19f5b3ab37844051e8e259444f7dd3e68af"
+    },
+    {
+      "path": "backend/tmp/official-writing-layout-2026-10-14/writing-conditions-1/writing-outline.json",
+      "sha256": "bc420a2d74b2fb3ddf3f76d88d9806f37d022a06295b89bae9516afcea5ef68f"
+    },
+    {
+      "path": "backend/tmp/official-writing-layout-2026-10-14/table-gold-1/report.json",
+      "sha256": "14f0db05c1ffc71d9651ade5b108e1dd53e24404b3867df327fe42d3081d77e4"
+    },
+    {
+      "path": "backend/tmp/official-writing-layout-2026-10-14/source-pages/vit-7.png",
+      "sha256": "97ee27d7d81bbb42d93c7bcf1990b1623b134240ecf7d016a26cf60457e08301"
+    },
+    {
+      "path": "backend/tmp/official-writing-layout-2026-10-14/source-pages/cot-7.png",
+      "sha256": "9e36ed3dc4cf042853789ed324ea8db9ce5a0083ba323c8ab6df55e152a1fcc1"
+    },
+    {
+      "path": "backend/app/parsers/layout.py",
+      "sha256": "856d041bf77dba0b921945ecfdb5a593828f06f30b7e8fac4579be0d47e1a8e0"
+    },
+    {
+      "path": "backend/app/parsers/pymupdf_parser.py",
+      "sha256": "539f05b05265c0f65104eae102a4a69f5327e94615ebf83ddea30eec568c6f63"
+    },
+    {
+      "path": "backend/app/parsers/ocr_parser.py",
+      "sha256": "f0c84d44955eddb8445ea291f68823dd147c1161f4a27e8260e67f4acb45db8f"
+    },
+    {
+      "path": "backend/app/services/chunking.py",
+      "sha256": "05804e160698628c608725414b6e69f13839056446e0c9a072c78daa07e51a1d"
+    },
+    {
+      "path": "backend/app/services/writing_outline.py",
+      "sha256": "e15d16c8e173fb283ba562e7a244e8c753ca4e924fb5bbe8a3502627a0f72458"
+    },
+    {
+      "path": "backend/tests/test_single_column_section_order.py",
+      "sha256": "69d60831b9f6cf699422fd4eb738b001262d453654e2c21dd665e89e7ac1d05a"
+    },
+    {
+      "path": "backend/tests/test_writing_outline.py",
+      "sha256": "b756788ba0224c535b34df84b7d6ced489fb6114c2692ccdda13091ea6b448c3"
+    },
+    {
+      "path": "backend/scripts/evaluate_official_batch.py",
+      "sha256": "eb86c5296bc8bb6c54f8cfc5a17733091f74164a9da135cf21670d67956b25f1"
+    },
+    {
+      "path": "backend/scripts/evaluate_pdf_corpus.py",
+      "sha256": "776535d52176a1bcdd39993b5c6b7cc73b49cb08eb1f9ec0480cf629b3785e02"
+    },
+    {
+      "path": "backend/scripts/prepare_official_parser_candidate.py",
+      "sha256": "5a4aa6bed286c7beb23920c825745f87f0229f0c22241bc36729ebb4580d0f9e"
+    },
+    {
+      "path": "backend/scripts/verify_official_local_features.py",
+      "sha256": "5ab93fb20edc4286a9ae0eeda37df6585bb18389860b24f048baded8e3caa756"
+    },
+    {
+      "path": "backend/scripts/verify_official_output_features.py",
+      "sha256": "98c86291b127cf350fbc85cdedb16291314e6569a11cb3de8fe3c64dea20c72a"
+    },
+    {
+      "path": "backend/scripts/official_functional_inputs.py",
+      "sha256": "d2b1de7ceeeebb372f007755d58e1d42323b68f130fbc5e580d4b6915a8a14d6"
+    },
+    {
+      "path": "backend/evals/official_table_identity_rows.json",
+      "sha256": "b944419fd8f5bf4c8573afa0133e0542e9e0c8bf32b0a6a23cd26d7e5a37fea9"
+    },
+    {
+      "path": "docs/official-writing-layout-acceptance-2026-10-14.md",
+      "sha256": "c01563393f7ec186a8d7fce63c8667941ce7bc847ee760bd10b66c6929a37be9"
+    },
+    {
+      "path": "docs/acceptance-progress.md",
+      "sha256": "0c034c5e3d35cd108785c3e15eaef393cc9c3be2b9eb2d4db0613ca162928eb8"
+    },
+    {
+      "path": "docs/competition-verification-gates.md",
+      "sha256": "9219015521e3f1d36e71c1a41028852c6b9152d31c9591f7af2c0e7dcaf9f4fa"
+    },
+    {
+      "path": "docs/competition-delivery-checklist.md",
+      "sha256": "f00b0e9b9235fe1782d2315164b0fe644475303c5428a9481a29bc95ebb44feb"
+    },
+    {
+      "path": "docs/evidence/official-dense-table-acceptance-2026-10-14.json",
+      "sha256": "497e5ce842d1f91e4658b30028ffebf89d8650156e241fe5bfc91cb7f386b4de"
+    },
+    {
+      "path": "backend/tmp/official-all-39-2026-10-11/sources-1/manifest.json",
+      "sha256": "8e1fca75960d9af84298f3ee608f763c4a0297e40c74472e95c16b256600c183"
+    }
+  ]
+}

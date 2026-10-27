@@ -98,6 +98,22 @@ class Page:
 
 
 @dataclass(slots=True)
+class ContributorSource:
+    page_number: int
+    block_id: str
+    bbox: list[float]
+    text: str
+
+
+@dataclass(slots=True)
+class ContributorGroup:
+    role: str
+    members: list[str]
+    sources: list[ContributorSource]
+    name_transcription: str = "line-wrapping-only; source diacritics preserved"
+
+
+@dataclass(slots=True)
 class ParsedDocument:
     schema_version: str
     title: str | None
@@ -113,6 +129,7 @@ class ParsedDocument:
     formulas: list[FormulaNode] = field(default_factory=list)
     references: list[ReferenceNode] = field(default_factory=list)
     appendices: list[OutlineNode] = field(default_factory=list)
+    contributor_groups: list[ContributorGroup] = field(default_factory=list)
 
     def to_dict(self) -> dict:
         result = asdict(self)

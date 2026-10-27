@@ -11,13 +11,16 @@ from sqlalchemy.orm import Session
 from app.core.database import get_db
 from app.llm import get_llm_provider
 from app.llm.base import LLMConfigurationError, LLMResponseError
+from app.models.chunk import DocumentChunk
 from app.models.document import Document, DocumentStatus
+from app.models.future_work import FutureWorkAssessment, FutureWorkDecision
 from app.models.paper_source import PaperSource
 from app.parsers.checkpoint import checkpoint_progress
 from app.schemas.document import (
     DocumentList,
     DocumentOutlineRead,
     DocumentPageTranslationRead,
+    DocumentPeopleRead,
     DocumentProgressRead,
     DocumentRead,
     DocumentReferencesRead,
@@ -29,15 +32,19 @@ from app.schemas.document import (
     TranslationJobRequest,
     UploadResult,
 )
-from app.services.academic_translation import translate_protected_segments
 from app.services.document_content import (
     outline_items,
-    page_text_segments,
     read_parsed_document,
     reference_links,
 )
 from app.services.document_ingestion import dispatch_document_parse, persist_staged_document
-from app.services.document_translation import page_translation_payload
+from app.services.document_people import people_metadata
+from app.services.document_translation import (
+    complete_page_segments,
+    page_translation_matches_source,
+    page_translation_payload,
+    translate_page_segments,
+)
 from app.services.document_translation_export import build_document_translation_export
 from app.services.document_version_diff import compare_document_versions
 from app.services.storage import storage
@@ -108,6 +115,10 @@ def _delete_document_record(db: Session, document: Document) -> None:
     delete_document_index_safely(document.id)
     storage.delete(document.storage_key, document.id)
     db.execute(sql_delete(PaperSource).where(PaperSource.document_id == document.id))
+    # SQLite installations may not enforce FK cascades; remove owned records too.
+    db.execute(sql_delete(DocumentChunk).where(DocumentChunk.document_id == document.id))
+    for model in (FutureWorkAssessment, FutureWorkDecision):
+        db.execute(sql_delete(model).where(model.source_document_id == document.id))
     db.delete(document)
 
 
@@ -118,9 +129,7 @@ def _clear_duplicate_warning(document: Document) -> None:
 
 
 @router.get("/{document_id}", response_model=DocumentRead)
-def get_document(
-    document_id: str, db: Annotated[Session, Depends(get_db)]
-) -> DocumentRead:
+def get_document(document_id: str, db: Annotated[Session, Depends(get_db)]) -> DocumentRead:
     return DocumentRead.model_validate(_get_document(document_id, db))
 
 
@@ -233,9 +242,7 @@ def get_document_progress(
 
 
 @router.get("/{document_id}/file")
-def get_document_file(
-    document_id: str, db: Annotated[Session, Depends(get_db)]
-) -> FileResponse:
+def get_document_file(document_id: str, db: Annotated[Session, Depends(get_db)]) -> FileResponse:
     document = _get_document(document_id, db)
     path = storage.document_path(document.storage_key)
     if not path.exists():
@@ -244,9 +251,7 @@ def get_document_file(
 
 
 @router.get("/{document_id}/content")
-def get_parsed_content(
-    document_id: str, db: Annotated[Session, Depends(get_db)]
-) -> dict:
+def get_parsed_content(document_id: str, db: Annotated[Session, Depends(get_db)]) -> dict:
     document = _get_document(document_id, db)
     if document.status != DocumentStatus.READY:
         raise HTTPException(status_code=409, detail="文献尚未解析完成。")
@@ -267,6 +272,19 @@ def get_document_outline(
     if parsed is None:
         raise HTTPException(status_code=404, detail="结构化解析结果不存在。")
     return DocumentOutlineRead(document_id=document_id, items=outline_items(parsed))
+
+
+@router.get("/{document_id}/people", response_model=DocumentPeopleRead)
+def get_document_people(
+    document_id: str, db: Annotated[Session, Depends(get_db)]
+) -> DocumentPeopleRead:
+    document = _get_document(document_id, db)
+    if document.status != DocumentStatus.READY:
+        raise HTTPException(status_code=409, detail="文献尚未解析完成。")
+    parsed = read_parsed_document(document_id)
+    if parsed is None:
+        raise HTTPException(status_code=404, detail="结构化解析结果不存在。")
+    return DocumentPeopleRead(document_id=document_id, **people_metadata(parsed))
 
 
 @router.get("/{document_id}/references", response_model=DocumentReferencesRead)
@@ -311,13 +329,13 @@ async def translate_document_page(
         page_number,
         source_fingerprint=document.sha256,
     )
-    if cached is not None:
+    if page_translation_matches_source(parsed, page_number, cached):
         return DocumentPageTranslationRead.model_validate(cached)
     existing_manifest = translation_store.read_manifest(document_id, request.target_language)
     if existing_manifest and existing_manifest.get("source_fingerprint") == document.sha256:
         if existing_manifest.get("status") in {"queued", "processing"}:
             raise HTTPException(status_code=409, detail="整篇翻译正在处理，当前页尚未完成。")
-    segments, truncated = page_text_segments(parsed, page_number)
+    segments, truncated = complete_page_segments(parsed, page_number)
     if not segments:
         raise HTTPException(status_code=404, detail="目标页面没有可翻译的文本块。")
     try:
@@ -326,11 +344,11 @@ async def translate_document_page(
             raise LLMConfigurationError(
                 "双语阅读需要生成式 LLM；请在 .env 中配置 LLM_PROVIDER、LLM_MODEL 和 LLM_API_KEY。"
             )
-        translated = await translate_protected_segments(
-            provider,
-            [(item["block_id"], item["source_text"]) for item in segments],
-            "auto",
-            request.target_language,
+        segments, translated, truncated = await translate_page_segments(
+            parsed=parsed,
+            page_number=page_number,
+            provider=provider,
+            target_language=request.target_language,
         )
     except LLMConfigurationError as exc:
         raise HTTPException(status_code=503, detail=str(exc)) from exc
@@ -352,7 +370,7 @@ async def translate_document_page(
         provider=provider.name,
         model=provider.model,
         segments=segments,
-        translated=translated.items,
+        translated=translated,
         truncated=truncated,
     )
     translation_store.write_page(document_id, request.target_language, page_number, payload)
@@ -366,6 +384,38 @@ def _translation_manifest_for_document(
     manifest = translation_store.read_manifest(document.id, target_language)
     if manifest is None or manifest.get("source_fingerprint") != document.sha256:
         return None
+    if manifest.get("status") == "completed":
+        parsed = read_parsed_document(document.id) or {}
+        expected_count = getattr(document, "page_count", None) or len(parsed.get("pages", []))
+        page_count = manifest.get("page_count")
+        if type(page_count) is not int or page_count < 1 or page_count != expected_count:
+            # Treat the manifest as cache metadata, not authority over document
+            # length. GET stays read-only and cannot certify an empty/short export.
+            return {**manifest, "status": "failed", "page_count": expected_count,
+                    "completed_pages": [],
+                    "error": "翻译缓存页数与原文不一致，请重新发起翻译任务。"}
+        invalid = [
+            number
+            for number in range(1, page_count + 1)
+            if not page_translation_matches_source(
+                parsed,
+                number,
+                translation_store.read_page(
+                    document.id, target_language, number, source_fingerprint=document.sha256
+                ),
+            )
+        ]
+        if invalid:
+            # Read-only status inspection must not modify saved caches. Return a
+            # truthful failed view so the UI offers continuation instead of export.
+            manifest = {
+                **manifest,
+                "status": "failed",
+                "completed_pages": [n for n in range(1, page_count + 1) if n not in invalid],
+                "error": "翻译缓存覆盖不完整，第 "
+                + ", ".join(map(str, invalid[:8]))
+                + " 页需要继续翻译。",
+            }
     return manifest
 
 
@@ -386,11 +436,16 @@ def start_document_translation(
     if parsed is None:
         raise HTTPException(status_code=404, detail="结构化解析结果不存在。")
     existing = _translation_manifest_for_document(document, request.target_language)
-    if existing and not request.force and existing.get("status") in {
-        "queued",
-        "processing",
-        "completed",
-    }:
+    if (
+        existing
+        and not request.force
+        and existing.get("status")
+        in {
+            "queued",
+            "processing",
+            "completed",
+        }
+    ):
         return TranslationJobRead.model_validate(translation_store.public_status(existing))
     try:
         provider = get_llm_provider()
@@ -410,6 +465,11 @@ def start_document_translation(
         activate=True,
         force=request.force,
     )
+    if manifest.get("status") == "completed" and existing and existing.get("status") == "failed":
+        translation_store.reconcile_completed_pages(
+            document_id, request.target_language, set(existing.get("completed_pages", []))
+        )
+        manifest = translation_store.set_status(document_id, request.target_language, "queued")
     try:
         translate_document.delay(document_id, request.target_language, False)
     except Exception as exc:
@@ -461,6 +521,11 @@ def get_cached_document_page_translation(
     )
     if cached is None:
         raise HTTPException(status_code=404, detail="该页译文尚未生成。")
+    parsed = read_parsed_document(document_id)
+    if parsed is None or not page_translation_matches_source(parsed, page_number, cached):
+        raise HTTPException(
+            status_code=409, detail="该页译文覆盖不完整或原文块已变化，请重新翻译。"
+        )
     return DocumentPageTranslationRead.model_validate(cached)
 
 
@@ -477,9 +542,12 @@ def export_document_translation(
     if manifest is None:
         raise HTTPException(status_code=404, detail="尚未创建该语言的整篇翻译任务。")
     if manifest.get("status") != "completed":
-        raise HTTPException(status_code=409, detail="整篇翻译完成后才能导出。")
+        raise HTTPException(
+            status_code=409, detail=manifest.get("error") or "整篇翻译完成后才能导出。"
+        )
 
     page_count = int(manifest.get("page_count", 0))
+    parsed = read_parsed_document(document_id) or {}
     pages: list[dict] = []
     missing_pages: list[int] = []
     for page_number in range(1, page_count + 1):
@@ -489,7 +557,7 @@ def export_document_translation(
             page_number,
             source_fingerprint=document.sha256,
         )
-        if payload is None:
+        if payload is None or not page_translation_matches_source(parsed, page_number, payload):
             missing_pages.append(page_number)
         else:
             pages.append(payload)
@@ -511,8 +579,7 @@ def export_document_translation(
     )
     ascii_filename = f"translation-{document.id[:12]}.{artifact.filename.rsplit('.', 1)[-1]}"
     disposition = (
-        f'attachment; filename="{ascii_filename}"; '
-        f"filename*=UTF-8''{quote(artifact.filename)}"
+        f"attachment; filename=\"{ascii_filename}\"; filename*=UTF-8''{quote(artifact.filename)}"
     )
     return Response(
         content=artifact.content.encode("utf-8"),
@@ -522,9 +589,7 @@ def export_document_translation(
 
 
 @router.post("/{document_id}/reparse", response_model=DocumentRead, status_code=202)
-def reparse_document(
-    document_id: str, db: Annotated[Session, Depends(get_db)]
-) -> DocumentRead:
+def reparse_document(document_id: str, db: Annotated[Session, Depends(get_db)]) -> DocumentRead:
     document = _get_document(document_id, db)
     document.status = DocumentStatus.QUEUED
     document.error_message = None
@@ -535,9 +600,7 @@ def reparse_document(
 
 
 @router.delete("/{document_id}", status_code=status.HTTP_204_NO_CONTENT)
-def delete_document(
-    document_id: str, db: Annotated[Session, Depends(get_db)]
-) -> None:
+def delete_document(document_id: str, db: Annotated[Session, Depends(get_db)]) -> None:
     document = _get_document(document_id, db)
     _delete_document_record(db, document)
     db.commit()

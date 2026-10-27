@@ -1,6 +1,10 @@
 # PaperPilot
 
-PaperPilot 是一个以原文证据为核心的科研助手 Agent 系统。本仓库当前处于 `0.2.0` 开发阶段，已实现六大模块的基础流程，并开展真实 PDF、BGE 检索与 DeepSeek 问答验收。各模块已验证范围、剩余功能缺口与交付状态见 [2026-10-09 项目进度核对](docs/competition-progress-audit-2026-10-09.md)。
+预提交材料更新（2026-10-27）：[作品介绍](docs/pre-submission-introduction-2026-10-27.md)与[填写及打包说明](docs/pre-submission-guide-2026-10-27.md)记录当前范围。10 月 26 日后端离线回归 1,746 项通过；数学关系校审 4 个样本、保存证据问答 2 个样本及 1 道新的 BGE + DeepSeek 浏览器问答分别留有记录。这些分母不能相加为论文准确率，也不代表官方 39 份 PDF 的所有功能已通过。预提交源码包含尚未提交的本地修复，公网服务与最终发布冻结待完成。
+
+历史记录（2026-10-22）：新增删除清理 34 项、真实译文缓存故障与恢复 28 项、三组架构脚本实际出图及六组 CSV 字体回归，修复孤立切块、缓存错配／空篇导出、中文缺字及循环箭头问题。后端 1,689／前端 46、类型与规范通过；39 份引用样式审计观察到 25 份作者—年份结构化双向链接缺口，仍待修复。此次 LLM／BGE 0 次，不继承旧轮问答成绩为新候选通过，见[当轮验收与范围](docs/official-uncovered-acceptance-2026-10-22.md)。
+
+PaperPilot 是一个以原文证据为核心的科研助手 Agent 系统。本仓库当前处于 `0.2.0` 开发阶段，已实现六大模块的基础流程，并开展真实 PDF、BGE 检索与 DeepSeek 问答验收。各模块已验证范围、剩余功能缺口与交付状态见 [当前验收进度](docs/acceptance-progress.md)；[2026-10-09 项目进度核对](docs/competition-progress-audit-2026-10-09.md) 保留为历史快照。
 
 ## 当前能力
 
@@ -8,6 +12,7 @@ PaperPilot 是一个以原文证据为核心的科研助手 Agent 系统。本�
 - 按“文献问答、文献库、查找论文、研究脉络、研究产出”五个工作区组织功能，区内二级标签按需展开；
 - 保留原有 URL Hash 深链，引用图谱、综述、写作、翻译、数据可视化等链接可直接定位到对应工作台；
 - 单篇或批量 PDF 上传，校验真实 PDF 内容和大小限制；
+- 对明确团体署名和贡献分组的前置信息，将署名与跨页贡献名单分开存储；阅读器“署名与贡献”按角色折叠显示，可跳转各段原页并高亮，贡献分组不作为全局作者排名；旧解析缺项或来源不全会明确提示，不自动迁移正式库。专项范围见[阅读器验收](docs/official-grouped-reader-acceptance-2026-10-18.md)；
 - 按完整题名、DOI 或 arXiv ID 检索 Semantic Scholar、arXiv 和 Crossref，并一键导入开放 PDF；
 - 远程导入仅接受“来源 + 论文 ID”，由服务端重新解析可信 HTTPS 地址、校验跳转、大小和 PDF 文件头；
 - 保存外部索引、DOI、arXiv ID、落地页、许可证和检索元数据，导入仍复用 SHA-256 去重；
@@ -93,6 +98,8 @@ PaperPilot 是一个以原文证据为核心的科研助手 Agent 系统。本�
 - Docker Compose 编排 PostgreSQL、Redis、Qdrant、MinIO、API、Worker 和 Web。
 
 > 当前版本的语义指纹用于候选预警，不等于最终语义去重模型。当前 OCR 使用 Tesseract 中英文基线，并提供图注引导的有框表格和图区域恢复；复杂合并单元格、旋转表格，以及既无续表标记也无重复表头的跨页表格仍待专用适配器。默认 Embedding 仍是零密钥的确定性 Hash-Ngram 工程基线；真实语义向量和 Cross-Encoder 已提供兼容接口及可选本地编排，但普通启动不会下载模型权重。公式节点是带位置锚点的文本候选，并非可靠的 LaTeX 反演；Docling/GROBID 尚未接入。
+
+导出的 Matplotlib 脚本在本地执行时需 Python ≥3.10，并安装 `backend/requirements-plotting.txt`；中文需可用的系统字体，例如 Microsoft YaHei 或 Noto Sans CJK SC。该可选依赖不加入后端镜像。DOT、TikZ、Mermaid 的实际渲染分别需要 Graphviz、带 ctex 的 XeLaTeX 和 Mermaid 工具；生成脚本不等于这些编译器均已验收。
 
 ## 目录结构
 
@@ -320,13 +327,15 @@ docker compose up -d --force-recreate backend worker
 
 ## 在线论文检索、追踪与导入
 
-首页可直接输入论文完整题名、DOI 或 arXiv ID。题名检索优先使用 Semantic Scholar，DOI 在需要时回退到 Crossref，arXiv ID 使用官方 API 精确查询。三个元数据接口在基础模式下均无需密钥；如配置 `SEMANTIC_SCHOLAR_API_KEY` 可获得更稳定的调用额度，`SCHOLARLY_CONTACT_EMAIL` 用于标识 Crossref polite 请求。
+首页可直接输入论文完整题名、DOI 或 arXiv ID。题名检索优先使用 Semantic Scholar，无结果或请求失败时再使用 arXiv 题名检索，最后由 Crossref 提供元数据兜底；DOI 在需要时回退到 Crossref，arXiv ID 使用官方 API 精确查询。三个元数据接口在基础模式下均无需密钥；如配置 `SEMANTIC_SCHOLAR_API_KEY` 可获得更稳定的调用额度，`SCHOLARLY_CONTACT_EMAIL` 用于标识 Crossref polite 请求。外部限流与失败会保留为告警，不会把其他版本或不相关论文当作精确匹配。
 
 一键导入不会接受浏览器传来的任意下载 URL。API 根据 `source` 和 `source_id` 重新查询来源，并仅允许 `SCHOLARLY_PDF_HOSTS` 中的 HTTPS 域名；下载时再次校验重定向链、文件大小和 `%PDF-` 文件头。默认白名单只包含 arXiv 与 Semantic Scholar PDF 域名，部署者可通过环境变量谨慎扩展。只有开放 PDF 可安全解析时按钮才可用，Crossref 兜底结果可能仅展示元数据。
 
 文献解析完成后，可在文献卡片点击“下钻引用”。系统默认分析前 12 条 References，每次最多支持 20 条，并把公共 API 并发限制为 2。DOI 和 arXiv ID 使用精确匹配；普通条目按候选题名词覆盖率、作者姓氏和年份给出可解释分数，默认阈值为 `0.55`。只有达到阈值且具有可信开放 PDF 的首选项会自动勾选，用户仍可检查候选后再批量入库。可通过 `REFERENCE_DISCOVERY_CONCURRENCY` 与 `REFERENCE_MATCH_THRESHOLD` 调整并发和阈值。
 
 “研究动态追踪”支持 arXiv 关键词、分类或两者组合订阅。查询按 `submittedDate` 降序获取最新条目，Celery Beat 默认每 360 分钟触发一次后台刷新；多个订阅之间默认等待 3 秒，遵守 arXiv 对连续 API 请求的友好调用建议。相关参数为 `ARXIV_REFRESH_INTERVAL_MINUTES` 和 `ARXIV_REQUEST_DELAY_SECONDS`。
+
+推荐排序会记录实际向量来源。如果语义向量服务请求失败，系统仍可使用词项哈希给出降级排序，但会在推荐理由、API 的 `ranking_provider`／`ranking_warning` 和任务结果中明确标注，不将这次结果称为 BGE 语义推荐。旧记录没有来源审计字段时返回空值，不补造历史运行方式。
 
 推荐分由本地文献兴趣相关度、发布时间新鲜度和 GitHub 代码加分组成。相关度复用当前 Embedding Provider：配置 BGE-M3 时使用真实语义向量，服务失败时安全降级到 Hash-Ngram。点赞论文加入正向画像，点踩论文形成负向惩罚，因此反馈会影响下一次刷新。
 

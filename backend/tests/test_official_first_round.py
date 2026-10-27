@@ -3,10 +3,28 @@ import json
 from types import SimpleNamespace
 
 import pytest
+from sqlalchemy import create_engine
+from sqlalchemy.orm import Session
 
+from app.core.database import Base
 from app.llm.base import GeneratedAnswer, LLMResponseError
-from scripts.evaluate_official_first_round import OneAttemptProvider, select_cases
+from scripts.evaluate_official_first_round import (
+    OneAttemptProvider,
+    ReadOnlyOfficialIndex,
+    restore_saved_documents,
+    select_cases,
+    validate_saved_index,
+)
 from scripts.review_official_first_round import check_reviewed_fact, review
+
+
+@pytest.fixture
+def db_session():
+    engine = create_engine("sqlite://")
+    Base.metadata.create_all(engine)
+    with Session(engine) as session:
+        yield session
+    engine.dispose()
 
 
 @pytest.mark.asyncio
@@ -127,6 +145,22 @@ def test_offline_review_rejects_changed_original_gold(tmp_path):
     assert not output.exists()
 
 
+@pytest.mark.parametrize("matching", [True, False])
+def test_offline_source_inspection_is_bound_to_its_generation_report(tmp_path, matching):
+    report, dataset, policy = offline_inputs(tmp_path)
+    inspection = json.loads(policy.read_text(encoding="utf-8"))
+    inspection["original_report_sha256"] = (
+        hashlib.sha256(report.read_bytes()).hexdigest() if matching else "0" * 64)
+    policy.write_text(json.dumps(inspection), encoding="utf-8")
+    output = tmp_path / "bound-review.json"
+    if matching:
+        assert review(report, dataset, policy, output)["model_calls"] == 0
+    else:
+        with pytest.raises(ValueError, match="bound to a different report"):
+            review(report, dataset, policy, output)
+        assert not output.exists()
+
+
 def test_selected_retest_preserves_original_cases_and_budget():
     dataset = {"cases": [{"case_id": "a", "question": "original A"},
                          {"case_id": "b", "question": "original B"}]}
@@ -162,3 +196,77 @@ def test_offline_review_does_not_inflate_subset_into_whole_dataset(tmp_path):
     assert outcome["summary"]["total"] == 1
     assert outcome["summary"]["accepted"] == 0
     assert outcome["selected_case_ids"] == ["b"]
+
+
+def test_saved_generation_index_scope_and_identity_are_validated_before_cloud_calls():
+    entry = {"filename": "public.pdf", "sha256": "public-hash", "origin": "official"}
+    dataset = {"files": [entry]}
+    previous = {
+        "evaluation_kind": "official_original_questions_production_ask_harness",
+        "production_library_modified": False, "dataset_sha256": "dataset-hash",
+        "temporary_vector_collection": "official_first_round_" + "a" * 32,
+        "documents": [{**entry, "id": "document", "chunks": 1, "pages": 1}],
+    }
+    assert validate_saved_index(previous, dataset, "dataset-hash").startswith("official_first")
+    for change in ({"dataset_sha256": "changed"}, {"production_library_modified": True},
+                   {"temporary_vector_collection": "production"}, {"documents": []},
+                   {"documents": previous["documents"] * 2},
+                   {"documents": [{**previous["documents"][0], "sha256": "changed"}]}):
+        with pytest.raises(ValueError):
+            validate_saved_index(previous | change, dataset, "dataset-hash")
+
+
+@pytest.mark.asyncio
+async def test_full_chain_gate_blocks_cloud_calls_on_retrieval_fallback():
+    class Delegate:
+        name = "deepseek"
+        model = "test"
+        supports_translation = True
+
+        async def generate_grounded_answer(self, question, evidence):
+            pytest.fail("Degraded evidence may not trigger a paid cloud call")
+
+    provider = OneAttemptProvider(Delegate(), require_full_retrieval=True)
+    with pytest.raises(LLMResponseError, match="requires real hybrid"):
+        await provider.generate_grounded_answer("question", [])
+    with pytest.raises(LLMResponseError, match="requires real hybrid"):
+        await provider.generate_grounded_answer("question", [SimpleNamespace(
+            recall_mode="lexical", retrieval_mode="reranked")])
+    assert provider.calls == 0 and provider.request is None
+
+
+def test_saved_payload_restoration_rejects_wrong_source_page_id_and_count(db_session):
+    record = {"id": "doc", "filename": "public.pdf", "sha256": "sha",
+              "title": "Public", "chunks": 1, "pages": 1}
+    payload = {"document_id": "doc", "chunk_id": "chunk", "page_number": 1,
+               "block_ids": ["p1-b1"], "bbox": [1, 2, 3, 4], "text": "Public quote"}
+    class Client:
+        def scroll(self, **kwargs):
+            assert kwargs["with_vectors"] is False
+            return [SimpleNamespace(id="chunk", payload=self.payload)], None
+
+    client = Client()
+    index = SimpleNamespace(client=client, collection_name="isolated")
+    for change in ({"document_id": "private"}, {"page_number": 2}, {"chunk_id": "changed"}):
+        client.payload = payload | change
+        with pytest.raises(ValueError, match="Invalid or out-of-scope"):
+            restore_saved_documents(db_session, index, [record])
+        db_session.rollback()
+    client.payload = payload
+    with pytest.raises(ValueError, match="count mismatch"):
+        restore_saved_documents(db_session, index, [{**record, "chunks": 2}])
+    db_session.rollback()
+    assert restore_saved_documents(db_session, index, [record]) == {"public.pdf": "doc"}
+
+
+def test_saved_index_forbids_writes_recreation_and_automatic_backfill(db_session):
+    index = ReadOnlyOfficialIndex.__new__(ReadOnlyOfficialIndex)
+    with pytest.raises(ValueError, match="forbids indexing"):
+        index.index_document(db_session, "doc")
+    with pytest.raises(ValueError, match="forbids deletion"):
+        index.delete_document("doc")
+    index._collection_ready = False
+    index.collection_name = "isolated"
+    index.client = SimpleNamespace(collection_exists=lambda name: False)
+    with pytest.raises(ValueError, match="never recreate"):
+        index.ensure_collection()

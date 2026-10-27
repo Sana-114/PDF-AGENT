@@ -1,0 +1,10 @@
+{
+  "description": "Preserved explicit positive E1 identity reference can be normalized; no guessed ID, rewritten note or changed gold. Requires source/field audit after normalization.",
+  "cases": {
+    "context-evolution": {
+      "insufficient_evidence": false,
+      "missing_fields": [],
+      "required_semantic_rejections": []
+    }
+  }
+}

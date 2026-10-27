@@ -1,0 +1,1154 @@
+{
+  "schema_version": 1,
+  "date": "2026-10-18",
+  "status": "partial_project_acceptance",
+  "whole_project_released": false,
+  "current_backend_source": {
+    "python_version": "3.12.14",
+    "app_files": 133,
+    "app_sha256": "563912114119b8c670289c3ac12643c65f2588c83af690d1c4fea1699eb9d2f7",
+    "requirements_sha256": "b0e75e31a3ca8f034e095fd0667e3be7e380975548c5acce90db94f96ed7283f"
+  },
+  "git": {
+    "head": "a119f5609cda544e5d587588c5a338051da129a1",
+    "branch": "codex/stage94-official-failed-qa-retest",
+    "refs_mutated": false,
+    "commit_created": false,
+    "pushed": false
+  },
+  "live_full": {
+    "status": "passed_scoped_checks",
+    "source": {
+      "python_version": "3.12.14",
+      "app_files": 132,
+      "app_sha256": "149eeed0bf60d13547fd81c6504a6181b4f63d0aa894043b3c2fb53c74f665d1",
+      "requirements_sha256": "b0e75e31a3ca8f034e095fd0667e3be7e380975548c5acce90db94f96ed7283f"
+    },
+    "cases": [
+      {
+        "case": "live-title-search",
+        "status": "passed",
+        "checks": {
+          "api_200": true,
+          "correct_identity": true,
+          "title_and_importable": true
+        }
+      },
+      {
+        "case": "live-exact-import-and-duplicate",
+        "status": "passed",
+        "checks": {
+          "api_202": true,
+          "parsed_ready": true,
+          "exact_official_bytes": true,
+          "version_two": true,
+          "persisted_source_and_file": true,
+          "native_title_and_pages": true,
+          "actual_parser_complete_pages": true,
+          "repeat_same_document": true,
+          "no_extra_library_row": true
+        }
+      },
+      {
+        "case": "live-reference-drilldown",
+        "status": "passed",
+        "checks": {
+          "api_200": true,
+          "one_attempt": true,
+          "matched_correct_paper": true,
+          "citation_context_preserved": true
+        }
+      },
+      {
+        "case": "live-feed-feedback-and-task",
+        "status": "passed",
+        "checks": {
+          "create_201": true,
+          "live_records_added": true,
+          "like_saved": true,
+          "dislike_saved": true,
+          "feedback_retained": true,
+          "refresh_without_duplicate": true,
+          "scores_and_reasons": true,
+          "ranking_provenance_visible": true,
+          "task_active_filter": true,
+          "beat_configuration": true,
+          "actual_bge_no_fallback": true,
+          "summary_reports_actual_bge": true
+        }
+      }
+    ]
+  },
+  "external_worker": {
+    "status": "passed_scoped_checks",
+    "source": {
+      "python_version": "3.12.14",
+      "app_files": 132,
+      "app_sha256": "149eeed0bf60d13547fd81c6504a6181b4f63d0aa894043b3c2fb53c74f665d1",
+      "requirements_sha256": "b0e75e31a3ca8f034e095fd0667e3be7e380975548c5acce90db94f96ed7283f"
+    },
+    "worker_source": {
+      "python_version": "3.11.17",
+      "app_files": 132,
+      "app_sha256": "149eeed0bf60d13547fd81c6504a6181b4f63d0aa894043b3c2fb53c74f665d1",
+      "requirements_sha256": "b0e75e31a3ca8f034e095fd0667e3be7e380975548c5acce90db94f96ed7283f"
+    },
+    "checks": {
+      "external_worker_current_app_source": true,
+      "external_queue_not_eager_live_feed_and_bge": true,
+      "real_beat_dispatch_active_only_live_bge": true,
+      "feedback_dedup_and_subscription_record_isolation": true,
+      "invalid_name_filter_limit_feedback_rejected": true,
+      "delete_cascade_does_not_touch_other_subscription": true,
+      "one_real_scheduled_dispatch_no_task_retry": true
+    },
+    "beat_interval_seconds": 15,
+    "cleanup": {
+      "beat": "own isolated container removed; logs retained",
+      "worker": "own isolated container removed; logs retained",
+      "own_namespaced_redis_keys_removed": 3
+    },
+    "not_default_interval_or_long_run_or_multi_user": true
+  },
+  "browser": {
+    "status": "passed_scoped_checks",
+    "checks": {
+      "live_saved_papers_and_reasons_visible": true,
+      "like_persists_after_reload": true,
+      "toggle_like_neutral_dislike": true,
+      "manual_live_refresh_keeps_feedback_without_hash_fallback": true,
+      "create_subscription_runs_first_real_refresh": true,
+      "delete_via_ui_cascades_only_its_own_papers": true,
+      "feedback_failure_visible_without_false_state_change_manual_recovery": true,
+      "mobile_no_horizontal_page_overflow": true,
+      "no_page_errors_generation_or_import_requests": true
+    },
+    "page_errors": [],
+    "forbidden_requests": [],
+    "scope": "Real public recommendation UI/API, eager/in-memory task mode; external Worker/Beat checked separately",
+    "injected_errors": 1,
+    "cloud_calls": 0,
+    "production_library_modified": false,
+    "created_public_papers": 10
+  },
+  "github_code": {
+    "status": "passed",
+    "requests": [
+      {
+        "path": "/search/repositories",
+        "status": 200
+      }
+    ],
+    "match": {
+      "url": "https://github.com/microsoft/LoRA",
+      "score": 1.0,
+      "stars": 13859
+    },
+    "reproducibility_claimed": false
+  },
+  "grouped_qa_rounds": [
+    {
+      "run": "grouped-qa-second",
+      "source": {
+        "python_version": "3.12.14",
+        "app_files": 132,
+        "app_sha256": "149eeed0bf60d13547fd81c6504a6181b4f63d0aa894043b3c2fb53c74f665d1",
+        "requirements_sha256": "b0e75e31a3ca8f034e095fd0667e3be7e380975548c5acce90db94f96ed7283f"
+      },
+      "original_machine_passed": 5,
+      "cloud_calls": 8,
+      "verified_readonly_payloads": null
+    },
+    {
+      "run": "grouped-qa-after-fix-2",
+      "source": {
+        "python_version": "3.12.14",
+        "app_files": 133,
+        "app_sha256": "760ad4d7b99dea32365bb6b638aeebf12bd8d0687ccc6b6e1b7873854bbc9569",
+        "requirements_sha256": "b0e75e31a3ca8f034e095fd0667e3be7e380975548c5acce90db94f96ed7283f"
+      },
+      "original_machine_passed": 8,
+      "cloud_calls": 8,
+      "verified_readonly_payloads": 424
+    },
+    {
+      "run": "grouped-qa-scoped",
+      "source": {
+        "python_version": "3.12.14",
+        "app_files": 133,
+        "app_sha256": "889dc98247f543d5e246d5f06bd29122a96b8c19988f427b06642958abfce0f6",
+        "requirements_sha256": "b0e75e31a3ca8f034e095fd0667e3be7e380975548c5acce90db94f96ed7283f"
+      },
+      "original_machine_passed": 8,
+      "cloud_calls": 8,
+      "verified_readonly_payloads": 424
+    }
+  ],
+  "comparison_rounds": [
+    {
+      "run": "comparison-batch",
+      "source": {
+        "python_version": "3.12.14",
+        "app_files": 133,
+        "app_sha256": "889dc98247f543d5e246d5f06bd29122a96b8c19988f427b06642958abfce0f6",
+        "requirements_sha256": "b0e75e31a3ca8f034e095fd0667e3be7e380975548c5acce90db94f96ed7283f"
+      },
+      "cases": [
+        {
+          "case_id": "dpo-instructgpt-object-and-stage",
+          "checks": {
+            "real_deepseek_not_fallback": true,
+            "not_insufficient": true,
+            "published_sources_scoped_and_hybrid_reranked": true,
+            "policy_object_and_learning_objective_present": true,
+            "sampling_object_and_stage_in_same_published_claim": true,
+            "one_comparison_cites_both_originals": true,
+            "all_raw_source_anchors_valid": true
+          },
+          "status": "machine_passed_pending_source_review"
+        },
+        {
+          "case_id": "dpo-reject-global-analytic-and-sampling-free",
+          "checks": {
+            "real_deepseek_not_fallback": true,
+            "not_insufficient": true,
+            "published_sources_scoped_and_hybrid_reranked": true,
+            "policy_object_and_learning_objective_present": false,
+            "sampling_object_and_stage_in_same_published_claim": false,
+            "explicitly_rejects_overgeneralization": true,
+            "all_raw_source_anchors_valid": true
+          },
+          "status": "failed"
+        },
+        {
+          "case_id": "lora-qlora-mechanism",
+          "checks": {
+            "real_deepseek_not_fallback": true,
+            "not_insufficient": false,
+            "one_claim_has_both_originals": true,
+            "all_published_sources_in_scope": true,
+            "all_used_anchors_hybrid_reranked": true,
+            "quantization_and_memory_methods": true,
+            "all_raw_source_anchors_valid": true
+          },
+          "status": "failed"
+        },
+        {
+          "case_id": "unreported-training-seed",
+          "checks": {
+            "configured_deepseek": true,
+            "no_out_of_scope_published_source": true,
+            "refuses_without_published_seed_claim": true,
+            "no_positive_seed_number": true,
+            "all_raw_source_anchors_valid": true
+          },
+          "status": "machine_passed_pending_source_review"
+        }
+      ],
+      "cloud_calls": 6
+    },
+    {
+      "run": "comparison-batch-after-fix",
+      "source": {
+        "python_version": "3.12.14",
+        "app_files": 133,
+        "app_sha256": "563912114119b8c670289c3ac12643c65f2588c83af690d1c4fea1699eb9d2f7",
+        "requirements_sha256": "b0e75e31a3ca8f034e095fd0667e3be7e380975548c5acce90db94f96ed7283f"
+      },
+      "cases": [
+        {
+          "case_id": "dpo-instructgpt-object-and-stage",
+          "checks": {
+            "real_deepseek_not_fallback": true,
+            "not_insufficient": true,
+            "published_sources_scoped_and_hybrid_reranked": true,
+            "policy_object_and_learning_objective_present": true,
+            "sampling_object_and_stage_in_same_published_claim": true,
+            "one_comparison_cites_both_originals": true,
+            "all_raw_source_anchors_valid": true
+          },
+          "status": "machine_passed_pending_source_review"
+        },
+        {
+          "case_id": "dpo-reject-global-analytic-and-sampling-free",
+          "checks": {
+            "real_deepseek_not_fallback": true,
+            "not_insufficient": true,
+            "published_sources_scoped_and_hybrid_reranked": true,
+            "policy_object_and_learning_objective_present": true,
+            "sampling_object_and_stage_in_same_published_claim": false,
+            "explicitly_rejects_overgeneralization": true,
+            "all_raw_source_anchors_valid": true
+          },
+          "status": "failed"
+        },
+        {
+          "case_id": "lora-qlora-mechanism",
+          "checks": {
+            "real_deepseek_not_fallback": true,
+            "not_insufficient": true,
+            "one_claim_has_both_originals": true,
+            "all_published_sources_in_scope": true,
+            "all_used_anchors_hybrid_reranked": true,
+            "quantization_and_memory_methods": true,
+            "all_raw_source_anchors_valid": true
+          },
+          "status": "machine_passed_pending_source_review"
+        },
+        {
+          "case_id": "unreported-training-seed",
+          "checks": {
+            "configured_deepseek": true,
+            "no_out_of_scope_published_source": true,
+            "refuses_without_published_seed_claim": true,
+            "no_positive_seed_number": true,
+            "all_raw_source_anchors_valid": true
+          },
+          "status": "machine_passed_pending_source_review"
+        }
+      ],
+      "cloud_calls": 6
+    }
+  ],
+  "independent_source_review": {
+    "date": "2026-10-18",
+    "method": "Independent full-page Poppler visual review plus exact persisted source anchors; no model used as the final judge",
+    "grouped_qa": {
+      "original_run": "grouped-qa-second",
+      "original_machine_passed": 5,
+      "original_core_source_review_passed": 4,
+      "original_machine_false_positive": "wrapped-author-name mentioned Alexander M. Rush but assigned the next person's full name Stella Biderman",
+      "intermediate_run": "grouped-qa-after-fix-2",
+      "intermediate_machine_passed": 8,
+      "intermediate_full_answer_hold": "organization-member unnecessarily called Organization the sole alphabetical-order exception, omitting the Major Contributors exception",
+      "last_run": "grouped-qa-scoped",
+      "last_machine_passed": 8,
+      "last_core_source_review_passed": 8,
+      "limitations": [
+        "Only eight fixed questions for one public paper; not blind whole-corpus accuracy",
+        "The wrapped-name question itself mentions Rush; this is a relation/scope regression, not blind name discovery",
+        "Extra source-backed author-order and acknowledgments text remains despite brevity guidance",
+        "No individual institution mapping is inferred from the collective credit",
+        "No repeat on the final policy-guard source; later changes were to other scoped checks"
+      ],
+      "full_pages_reviewed": [
+        1,
+        2,
+        3,
+        43,
+        44,
+        45
+      ]
+    },
+    "comparison_batch": {
+      "first_run": "comparison-batch",
+      "first_machine_passed": 2,
+      "last_run": "comparison-batch-after-fix",
+      "last_machine_passed": 3,
+      "core_source_confirmed": [
+        "dpo-instructgpt-object-and-stage",
+        "lora-qlora-mechanism",
+        "unreported-training-seed"
+      ],
+      "withheld": [
+        {
+          "case_id": "dpo-reject-global-analytic-and-sampling-free",
+          "reason": "Valid draft negation using 原文并未称 and a source-limitation note are still misread as affirmative unlimited sampling/analytic-fit statements after clause splitting; publication drops the fine-tuning/LM-sampling field",
+          "remaining_release_issue": "The surviving partial answer is not sufficiently marked incomplete; no further billed retry in this batch"
+        }
+      ],
+      "reviewed_core_pages": {
+        "2305.18290v3.pdf": [
+          1,
+          2,
+          16
+        ],
+        "2203.02155v1.pdf": [
+          6
+        ],
+        "2106.09685v2.pdf": [
+          2
+        ],
+        "2305.14314v1.pdf": [
+          4,
+          5,
+          6
+        ]
+      },
+      "scope": "Core propositions reviewed, not a general entailment certificate or same-build stability pass"
+    },
+    "online_subscription": {
+      "live_full_cases_passed": 4,
+      "external_worker_beat_checks_passed": 7,
+      "browser_checks_passed": 9,
+      "beat_interval_seconds": 15,
+      "long_duration_default_interval_or_multi_user_claimed": false,
+      "bge_reset_root_cause_proven": false,
+      "github_expected_repository": "https://github.com/microsoft/LoRA",
+      "repository_reproducibility_claimed": false
+    },
+    "whole_project_released": false
+  },
+  "calls": {
+    "deepseek_total": 36,
+    "primary_generations": 32,
+    "comparison_editors": 4,
+    "automatic_retries": 0,
+    "recorded_embedding_calls": 232,
+    "embedding_calls_succeeded": true,
+    "browser_additional_real_refreshes": 4,
+    "browser_embedding_http_count_not_directly_instrumented": true
+  },
+  "regression": {
+    "backend": {
+      "executed": 1413,
+      "passed": 1413
+    },
+    "frontend": {
+      "executed": 42,
+      "passed": 42
+    }
+  },
+  "typecheck": "passed_after_temporary_path_restore",
+  "ruff": "passed",
+  "diff_check": "passed",
+  "official_basic_coverage": {
+    "files": 39,
+    "pages": 1986,
+    "inherited": true,
+    "public_qa_files_this_batch": 6,
+    "new_complete_corpus_parse_claimed": false
+  },
+  "prior_immutable_artifacts_checked": 126,
+  "prior_changed": [],
+  "official_pdf_sha_unchanged": 39,
+  "secret_scan_findings": [],
+  "temporary_api_frontend_stopped": [
+    8039,
+    3239
+  ],
+  "temporary_next_paths_restored": true,
+  "production_library_written": false,
+  "production_containers_or_images_updated": false,
+  "temporary_vector_collections_retained_for_targeted_followup": true,
+  "bge_end_snapshot": {
+    "embedding_healthy": true,
+    "reranker_healthy": true,
+    "restart_counts": [
+      0,
+      0
+    ],
+    "oom": [
+      false,
+      false
+    ],
+    "past_connection_reset_root_cause_proven": false
+  },
+  "remaining": [
+    "DPO counterexample negation/scope and final partial-answer completeness",
+    "same-build bounded stability and complete scientific review/writing/future-work quality",
+    "legacy library reparse/vector migration and complex parsing/resource boundaries",
+    "long-running scheduling/new arrival windows, multi-user isolation and citation-value science audit",
+    "final runtime installation, technical PDF, MP4, public demo/account, key rotation and release"
+  ],
+  "source_files": [
+    {
+      "path": "backend/app/services/recommendations.py",
+      "sha256": "dffa9c05ba8e744f1fe81bd3107a1c61128501ee30bb09a2a22c1db8f280c42e"
+    },
+    {
+      "path": "backend/app/workers/tasks.py",
+      "sha256": "0c3ebeada01b647d7d34d33e062fbabda5de2977a6fd77e710c6a845925669c9"
+    },
+    {
+      "path": "backend/app/schemas/recommendation.py",
+      "sha256": "b5a2204faf9414a5d8211a35e0fa2846eccf40582c3197864188935f5165573d"
+    },
+    {
+      "path": "backend/app/services/grounded_text.py",
+      "sha256": "ef22d7573621e814c0558e3ecd34d9878c844782a06979c3c44f1096c3a6224a"
+    },
+    {
+      "path": "backend/app/services/credit_name_completion.py",
+      "sha256": "46291b96bb9e8a61893763ca6623ea923718819293272c736be305d1b6e939f9"
+    },
+    {
+      "path": "backend/app/services/answer_completeness.py",
+      "sha256": "35a318186760023be5c39fece0d6a8c21a52e66baf33b82137f8d5dcf44259e8"
+    },
+    {
+      "path": "backend/app/services/claim_semantics.py",
+      "sha256": "a9ff22adbfb128becc46dbedded4c15d58aa1de3980b95550ad45c80bcc33290"
+    },
+    {
+      "path": "backend/app/services/mechanism_evidence.py",
+      "sha256": "99226723876a02cdb6047dbbb9a8b4a1adf8a3fdc6f0cb0aeffaa860b5d3b9d9"
+    },
+    {
+      "path": "backend/tests/test_recommendation_resilience.py",
+      "sha256": "87884d2f339e189433d58f0699c1c4f9c262b840f35c04620820a0dfdb923f1c"
+    },
+    {
+      "path": "backend/tests/test_credit_and_page_provenance.py",
+      "sha256": "a79ce0b7574f3d9384b1113cb3d524a802b50d8434cf4407d23ba0dbf50d2642"
+    },
+    {
+      "path": "backend/tests/test_policy_optimization_scope.py",
+      "sha256": "04f0df3f079ae0e1b040dff8128b3e2c4cdf9457e868e28250f5c36f63101d9d"
+    },
+    {
+      "path": "backend/tests/test_mechanism_parts.py",
+      "sha256": "bf1bd75e99b4f0da83bed13b8e7b1206e67c39fa045e967375f713465c450fbe"
+    },
+    {
+      "path": "backend/scripts/verify_official_live_discovery.py",
+      "sha256": "94648835e439e4d3de7f32cf50215ba8f4c4356fdf390b206815f6b5e209d0f3"
+    },
+    {
+      "path": "backend/scripts/acceptance_subscription_app.py",
+      "sha256": "fd483431319bf4257eaa5121af725f75631547119da96b8f39b0ca768be3e2d1"
+    },
+    {
+      "path": "backend/scripts/verify_official_subscription_worker.py",
+      "sha256": "1485b09f21b03396cdf93d91df3180aea89ede519e7b6d3235bfcf6306c87010"
+    },
+    {
+      "path": "backend/scripts/verify_official_grouped_qa.py",
+      "sha256": "332c62a6ccd7199d02cfaf458829443e59a68ddcfda24a841349acf0a2f2919a"
+    },
+    {
+      "path": "backend/scripts/verify_official_comparison_batch.py",
+      "sha256": "475e1bf0f5788bcc9ec9ba3e32de91f6ac5ab327be02461a76dc418137ca211e"
+    },
+    {
+      "path": "frontend/app/page.tsx",
+      "sha256": "14fc3e35fc5c97a005502fc145ee0ed8a09e5ad1205ec51358c5ac13d19ceb9e"
+    },
+    {
+      "path": "frontend/e2e/recommendationFlow.mjs",
+      "sha256": "e8f1a39770ac440164c78d2d7a21c8345685ade49cc8fd325866618886edd136"
+    }
+  ],
+  "artifacts": [
+    {
+      "path": "backend/tmp/official-batch-acceptance-2026-10-18/backend-current.xml",
+      "sha256": "64bf9dcde42bf16d98a0e79e27eef6018afb60440a4b7fc4e1a0f7f8c738f313"
+    },
+    {
+      "path": "backend/tmp/official-batch-acceptance-2026-10-18/backend-final.xml",
+      "sha256": "310b8c6ac2c496f404e71b8f5b4728ed2695d906c4e88bdffab596b2b2e4b02a"
+    },
+    {
+      "path": "backend/tmp/official-batch-acceptance-2026-10-18/backend-release.xml",
+      "sha256": "cee59a0df21cfe70aec75feca929fe94627f5add371593ed16eb34d77068c42c"
+    },
+    {
+      "path": "backend/tmp/official-batch-acceptance-2026-10-18/bloom-extra-43.png",
+      "sha256": "02b6b21be142b6a7a03c9822c681488b69e6ccc7294fe44592692e6fdf15342e"
+    },
+    {
+      "path": "backend/tmp/official-batch-acceptance-2026-10-18/bloom-extra-44.png",
+      "sha256": "535951ce7f86f594fbb603b30f492651be5a49e5e476b98fa3651a3081219bc7"
+    },
+    {
+      "path": "backend/tmp/official-batch-acceptance-2026-10-18/bloom-extra-45.png",
+      "sha256": "6c698911ae285ca3c16cd1d1f26e9d4bcb004d4d04c9c934e12e9bc36fb23bfd"
+    },
+    {
+      "path": "backend/tmp/official-batch-acceptance-2026-10-18/comparison-batch/acceptance.db",
+      "sha256": "2142d41e34e6ea6959dc12b67a3f21317a7784db272c694d0918354a49b44f8b"
+    },
+    {
+      "path": "backend/tmp/official-batch-acceptance-2026-10-18/comparison-batch/fixture.json",
+      "sha256": "d7730edb860bcb4b6ba77311de22d749684d6fc726ea5d38b5762afc308c117f"
+    },
+    {
+      "path": "backend/tmp/official-batch-acceptance-2026-10-18/comparison-batch/model-calls.json",
+      "sha256": "099536eee3b47b36e3552857b7b865cebcc05d7005e46041cfcb705802eada1f"
+    },
+    {
+      "path": "backend/tmp/official-batch-acceptance-2026-10-18/comparison-batch/parsed/114bfa0d-d6cf-573d-82b2-cfaed94b58b6.json",
+      "sha256": "6710c78824d61e72e1b0c15aaddf534ce0872570051a9b95d6f2f39c786645d7"
+    },
+    {
+      "path": "backend/tmp/official-batch-acceptance-2026-10-18/comparison-batch/parsed/20d9fad6-9e6f-543d-a2e1-095d8056c5ff.json",
+      "sha256": "4a05a089a864b8fc603470e4f28fc480526b8184b8c5a89039db83b07bdded3d"
+    },
+    {
+      "path": "backend/tmp/official-batch-acceptance-2026-10-18/comparison-batch/parsed/855562a1-8309-57b2-b7b0-b9e7016207dc.json",
+      "sha256": "0bdf9ab2be963a5e42b3560e72b14fd247e2723c299ffc3e340682b02394db97"
+    },
+    {
+      "path": "backend/tmp/official-batch-acceptance-2026-10-18/comparison-batch/parsed/bc90bcf2-cccd-5364-94f6-5815603802f7.json",
+      "sha256": "2f5bdb78b265127069fbaf7c9841afe6e181a0d93c3209856c420d678c7825d0"
+    },
+    {
+      "path": "backend/tmp/official-batch-acceptance-2026-10-18/comparison-batch/parsed/cd05de96-3b20-5178-8953-d8ee090a4f23.json",
+      "sha256": "0ab6909920de99d93d12d57d963fe93c684446cbcfdba40bf2df1ed080d7b414"
+    },
+    {
+      "path": "backend/tmp/official-batch-acceptance-2026-10-18/comparison-batch/report.json",
+      "sha256": "fd55f084e791cef330630fe1be89f7d982ba4aef06e14f6cc393821de88d4726"
+    },
+    {
+      "path": "backend/tmp/official-batch-acceptance-2026-10-18/comparison-batch/uploads/114bfa0d-d6cf-573d-82b2-cfaed94b58b6.pdf",
+      "sha256": "92cb3a2b71362acda98a789b03d88688fd33cf5fcf13f81d2b1de30ee7d3b67a"
+    },
+    {
+      "path": "backend/tmp/official-batch-acceptance-2026-10-18/comparison-batch/uploads/20d9fad6-9e6f-543d-a2e1-095d8056c5ff.pdf",
+      "sha256": "0a9bff1be3575cf9fe26a4a3d3a9175bc791ecec90de8b9deba4cff75d2b9476"
+    },
+    {
+      "path": "backend/tmp/official-batch-acceptance-2026-10-18/comparison-batch/uploads/855562a1-8309-57b2-b7b0-b9e7016207dc.pdf",
+      "sha256": "33a4e757c19d6ea8d3cca8958fce8fe405e290272e135c99ee66065c775d5bd1"
+    },
+    {
+      "path": "backend/tmp/official-batch-acceptance-2026-10-18/comparison-batch/uploads/bc90bcf2-cccd-5364-94f6-5815603802f7.pdf",
+      "sha256": "e9a0d3128767db616085dc0f4e6e455e672e89af823e8ed1282793682787395a"
+    },
+    {
+      "path": "backend/tmp/official-batch-acceptance-2026-10-18/comparison-batch/uploads/cd05de96-3b20-5178-8953-d8ee090a4f23.pdf",
+      "sha256": "c1984bb50a5b90fddb895fdc3a0f72e5bc977148c9f63ef6040cbe7a3e1f0d98"
+    },
+    {
+      "path": "backend/tmp/official-batch-acceptance-2026-10-18/comparison-batch-after-fix/acceptance.db",
+      "sha256": "dab6e0091c489b6676247e43db87660a1f8ddf256f368ecdd03eb2170ceea98a"
+    },
+    {
+      "path": "backend/tmp/official-batch-acceptance-2026-10-18/comparison-batch-after-fix/fixture.json",
+      "sha256": "d7730edb860bcb4b6ba77311de22d749684d6fc726ea5d38b5762afc308c117f"
+    },
+    {
+      "path": "backend/tmp/official-batch-acceptance-2026-10-18/comparison-batch-after-fix/model-calls.json",
+      "sha256": "98e66ab1bf68f6ddc27681dd844d51c716fd14237d7fa3ddf8814636361d3386"
+    },
+    {
+      "path": "backend/tmp/official-batch-acceptance-2026-10-18/comparison-batch-after-fix/parsed/114bfa0d-d6cf-573d-82b2-cfaed94b58b6.json",
+      "sha256": "6710c78824d61e72e1b0c15aaddf534ce0872570051a9b95d6f2f39c786645d7"
+    },
+    {
+      "path": "backend/tmp/official-batch-acceptance-2026-10-18/comparison-batch-after-fix/parsed/20d9fad6-9e6f-543d-a2e1-095d8056c5ff.json",
+      "sha256": "4a05a089a864b8fc603470e4f28fc480526b8184b8c5a89039db83b07bdded3d"
+    },
+    {
+      "path": "backend/tmp/official-batch-acceptance-2026-10-18/comparison-batch-after-fix/parsed/855562a1-8309-57b2-b7b0-b9e7016207dc.json",
+      "sha256": "0bdf9ab2be963a5e42b3560e72b14fd247e2723c299ffc3e340682b02394db97"
+    },
+    {
+      "path": "backend/tmp/official-batch-acceptance-2026-10-18/comparison-batch-after-fix/parsed/bc90bcf2-cccd-5364-94f6-5815603802f7.json",
+      "sha256": "2f5bdb78b265127069fbaf7c9841afe6e181a0d93c3209856c420d678c7825d0"
+    },
+    {
+      "path": "backend/tmp/official-batch-acceptance-2026-10-18/comparison-batch-after-fix/parsed/cd05de96-3b20-5178-8953-d8ee090a4f23.json",
+      "sha256": "0ab6909920de99d93d12d57d963fe93c684446cbcfdba40bf2df1ed080d7b414"
+    },
+    {
+      "path": "backend/tmp/official-batch-acceptance-2026-10-18/comparison-batch-after-fix/report.json",
+      "sha256": "3a08774215f7253ecd1b431deaac2b986f480abcb651617a6274d9e7de089a74"
+    },
+    {
+      "path": "backend/tmp/official-batch-acceptance-2026-10-18/comparison-batch-after-fix/uploads/114bfa0d-d6cf-573d-82b2-cfaed94b58b6.pdf",
+      "sha256": "92cb3a2b71362acda98a789b03d88688fd33cf5fcf13f81d2b1de30ee7d3b67a"
+    },
+    {
+      "path": "backend/tmp/official-batch-acceptance-2026-10-18/comparison-batch-after-fix/uploads/20d9fad6-9e6f-543d-a2e1-095d8056c5ff.pdf",
+      "sha256": "0a9bff1be3575cf9fe26a4a3d3a9175bc791ecec90de8b9deba4cff75d2b9476"
+    },
+    {
+      "path": "backend/tmp/official-batch-acceptance-2026-10-18/comparison-batch-after-fix/uploads/855562a1-8309-57b2-b7b0-b9e7016207dc.pdf",
+      "sha256": "33a4e757c19d6ea8d3cca8958fce8fe405e290272e135c99ee66065c775d5bd1"
+    },
+    {
+      "path": "backend/tmp/official-batch-acceptance-2026-10-18/comparison-batch-after-fix/uploads/bc90bcf2-cccd-5364-94f6-5815603802f7.pdf",
+      "sha256": "e9a0d3128767db616085dc0f4e6e455e672e89af823e8ed1282793682787395a"
+    },
+    {
+      "path": "backend/tmp/official-batch-acceptance-2026-10-18/comparison-batch-after-fix/uploads/cd05de96-3b20-5178-8953-d8ee090a4f23.pdf",
+      "sha256": "c1984bb50a5b90fddb895fdc3a0f72e5bc977148c9f63ef6040cbe7a3e1f0d98"
+    },
+    {
+      "path": "backend/tmp/official-batch-acceptance-2026-10-18/comparison-fix-regressions.xml",
+      "sha256": "9d8a0bfbd38053fb18ad7e6630e1817e1c148bb5a8013073dcd1346216323851"
+    },
+    {
+      "path": "backend/tmp/official-batch-acceptance-2026-10-18/credit-page-fixed-2.xml",
+      "sha256": "2af14cadb1bbbcea26182a7362047037008aca5ae32d5892d01c0585d06066c4"
+    },
+    {
+      "path": "backend/tmp/official-batch-acceptance-2026-10-18/credit-page-fixed.xml",
+      "sha256": "59551e83f61ee48d4c9f72f92bac3aea3d9ab3e282bf7af91a8d3c9de0829e75"
+    },
+    {
+      "path": "backend/tmp/official-batch-acceptance-2026-10-18/dpo-01.png",
+      "sha256": "d867587de967d200c58e0456f11f3b860e423f03eb453defdedf5d7b9eec30f4"
+    },
+    {
+      "path": "backend/tmp/official-batch-acceptance-2026-10-18/dpo-02.png",
+      "sha256": "0cae0d5cb567b79b24f45c9b286499ab7676c3da3b73a83e190ab0a560715a7d"
+    },
+    {
+      "path": "backend/tmp/official-batch-acceptance-2026-10-18/dpo-math-16.png",
+      "sha256": "94323e22f9630f71a6b96c50b7000ed66a7a2ea66a470c895f4426786f1ba397"
+    },
+    {
+      "path": "backend/tmp/official-batch-acceptance-2026-10-18/external-worker-first/report.json",
+      "sha256": "3e63327de1dd2ae7f8a107b023e4e1aa948b5e223111b36c6ac2876ba547c956"
+    },
+    {
+      "path": "backend/tmp/official-batch-acceptance-2026-10-18/external-worker-first/worker.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "backend/tmp/official-batch-acceptance-2026-10-18/external-worker-second/acceptance.db",
+      "sha256": "387deb594cb79f86d27272fd134b7e8fa2d0d26688afeb595aba756471f3e8c9"
+    },
+    {
+      "path": "backend/tmp/official-batch-acceptance-2026-10-18/external-worker-second/beat-state",
+      "sha256": "35349c70003a5d01c6da8aa7cc58d44bbc8abcfbb68582e045ccb7704d25b89f"
+    },
+    {
+      "path": "backend/tmp/official-batch-acceptance-2026-10-18/external-worker-second/beat.log",
+      "sha256": "eb2bb477e63af06845daa37deeebee40142ff0daa5170cff6ba4792cdf59d6ce"
+    },
+    {
+      "path": "backend/tmp/official-batch-acceptance-2026-10-18/external-worker-second/feed-after-beat-a.json",
+      "sha256": "9921d999e57e9614fe851e96c6a933b672d3ece65a0f7a19629b3318119ebb67"
+    },
+    {
+      "path": "backend/tmp/official-batch-acceptance-2026-10-18/external-worker-second/feed-after-beat-b.json",
+      "sha256": "1954a75a0485b871f2f688833ef719eba8f25d5853311bb6fec8492fabea4b1f"
+    },
+    {
+      "path": "backend/tmp/official-batch-acceptance-2026-10-18/external-worker-second/feed-first.json",
+      "sha256": "7d432899d050db7a7a7dd663102c2ec8d300e4d2e3da4d817530fbd022c91f5a"
+    },
+    {
+      "path": "backend/tmp/official-batch-acceptance-2026-10-18/external-worker-second/report.json",
+      "sha256": "99032efdc637b426132016898c55347686241824a022df19ec3ae956a950f574"
+    },
+    {
+      "path": "backend/tmp/official-batch-acceptance-2026-10-18/external-worker-second/subscriptions-created.json",
+      "sha256": "805f6a08be9fa88f89c8f3108a24a58c284b3465dca7a32a5b6aee31bed1eacf"
+    },
+    {
+      "path": "backend/tmp/official-batch-acceptance-2026-10-18/external-worker-second/worker-events.jsonl",
+      "sha256": "5bb03dd291ee36f5779b64a3403b03dc3d4c36cb927b678c46a0816fae09e455"
+    },
+    {
+      "path": "backend/tmp/official-batch-acceptance-2026-10-18/external-worker-second/worker.log",
+      "sha256": "22a73e722b7296c28d61f9c6fa76648ab912f8fa0f30ca4a3a981029e2878550"
+    },
+    {
+      "path": "backend/tmp/official-batch-acceptance-2026-10-18/finalize_evidence.py",
+      "sha256": "3dfcc90eb2f1513aa8d3eb04b2ce1b0c20d406eb53c013b22f8e836202fd036a"
+    },
+    {
+      "path": "backend/tmp/official-batch-acceptance-2026-10-18/frontend-final.xml",
+      "sha256": "dcb7227bbec4e6e37aa8801556f3d981336ba9f175da0ecac2cc25286940b83e"
+    },
+    {
+      "path": "backend/tmp/official-batch-acceptance-2026-10-18/github-code/public-response.json",
+      "sha256": "a5f9fc9593f17acd7aaa697dbf934bb5009af774460b27172886f3247464c62a"
+    },
+    {
+      "path": "backend/tmp/official-batch-acceptance-2026-10-18/github-code/report.json",
+      "sha256": "1912df67a553951028338f5c6fe6000d3851571a6c49e392233945ccfcda4fca"
+    },
+    {
+      "path": "backend/tmp/official-batch-acceptance-2026-10-18/grouped-qa-after-fix/acceptance.db",
+      "sha256": "103c91b566fb03f7eaef1e38d2bad324d73bfae568952fe9681609cfe006cd5d"
+    },
+    {
+      "path": "backend/tmp/official-batch-acceptance-2026-10-18/grouped-qa-after-fix/model-calls.json",
+      "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+    },
+    {
+      "path": "backend/tmp/official-batch-acceptance-2026-10-18/grouped-qa-after-fix/parsed/576a85ca-0608-46af-8688-db8c97bcee4c.json",
+      "sha256": "e2fe13c08cdc825e40aecc6c0142ef775b4359257c079414e14906f351412d60"
+    },
+    {
+      "path": "backend/tmp/official-batch-acceptance-2026-10-18/grouped-qa-after-fix/report.json",
+      "sha256": "b25987a263a9fdd0f395a195e66d1c7338a66b70402ba0751b5b226d6b3a78d3"
+    },
+    {
+      "path": "backend/tmp/official-batch-acceptance-2026-10-18/grouped-qa-after-fix/uploads/576a85ca-0608-46af-8688-db8c97bcee4c.pdf",
+      "sha256": "8033c3e611aaa120cb7294085ebd6ee297ffae9ec02393b1c4f1593d7e6ee065"
+    },
+    {
+      "path": "backend/tmp/official-batch-acceptance-2026-10-18/grouped-qa-after-fix-2/acceptance.db",
+      "sha256": "103c91b566fb03f7eaef1e38d2bad324d73bfae568952fe9681609cfe006cd5d"
+    },
+    {
+      "path": "backend/tmp/official-batch-acceptance-2026-10-18/grouped-qa-after-fix-2/model-calls.json",
+      "sha256": "a82e5d229ee38f94b71c8ab68f6a4c14c9d02ac2cea15750227bc91f380bc96c"
+    },
+    {
+      "path": "backend/tmp/official-batch-acceptance-2026-10-18/grouped-qa-after-fix-2/parsed/576a85ca-0608-46af-8688-db8c97bcee4c.json",
+      "sha256": "e2fe13c08cdc825e40aecc6c0142ef775b4359257c079414e14906f351412d60"
+    },
+    {
+      "path": "backend/tmp/official-batch-acceptance-2026-10-18/grouped-qa-after-fix-2/report.json",
+      "sha256": "78c1488881ae6305be665fd216b1a1afd1d871a69ba20ff7bf864b3aab81e1b2"
+    },
+    {
+      "path": "backend/tmp/official-batch-acceptance-2026-10-18/grouped-qa-after-fix-2/uploads/576a85ca-0608-46af-8688-db8c97bcee4c.pdf",
+      "sha256": "8033c3e611aaa120cb7294085ebd6ee297ffae9ec02393b1c4f1593d7e6ee065"
+    },
+    {
+      "path": "backend/tmp/official-batch-acceptance-2026-10-18/grouped-qa-first/acceptance.db",
+      "sha256": "31ba645710ac00f329b42026c03f9150cadf3315a9fd3f4fd30962ac5b59afcf"
+    },
+    {
+      "path": "backend/tmp/official-batch-acceptance-2026-10-18/grouped-qa-first/model-calls.json",
+      "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+    },
+    {
+      "path": "backend/tmp/official-batch-acceptance-2026-10-18/grouped-qa-first/parsed/0430deea-f9aa-4271-94c2-10f50218d7ab.json",
+      "sha256": "e2fe13c08cdc825e40aecc6c0142ef775b4359257c079414e14906f351412d60"
+    },
+    {
+      "path": "backend/tmp/official-batch-acceptance-2026-10-18/grouped-qa-first/report.json",
+      "sha256": "914aaadb5587b40e5495b80e30cd7df1f4951bbe7d32920fb30b3b199190bce3"
+    },
+    {
+      "path": "backend/tmp/official-batch-acceptance-2026-10-18/grouped-qa-first/uploads/0430deea-f9aa-4271-94c2-10f50218d7ab.pdf",
+      "sha256": "8033c3e611aaa120cb7294085ebd6ee297ffae9ec02393b1c4f1593d7e6ee065"
+    },
+    {
+      "path": "backend/tmp/official-batch-acceptance-2026-10-18/grouped-qa-scoped/acceptance.db",
+      "sha256": "103c91b566fb03f7eaef1e38d2bad324d73bfae568952fe9681609cfe006cd5d"
+    },
+    {
+      "path": "backend/tmp/official-batch-acceptance-2026-10-18/grouped-qa-scoped/model-calls.json",
+      "sha256": "c30865a2c3d190d91351acb16e6bd347570b710842f9afecffed870e4558f739"
+    },
+    {
+      "path": "backend/tmp/official-batch-acceptance-2026-10-18/grouped-qa-scoped/parsed/576a85ca-0608-46af-8688-db8c97bcee4c.json",
+      "sha256": "e2fe13c08cdc825e40aecc6c0142ef775b4359257c079414e14906f351412d60"
+    },
+    {
+      "path": "backend/tmp/official-batch-acceptance-2026-10-18/grouped-qa-scoped/report.json",
+      "sha256": "1ac7dc86df8732a43e067c693b43cad2433c3649ef472136db943830b351d116"
+    },
+    {
+      "path": "backend/tmp/official-batch-acceptance-2026-10-18/grouped-qa-scoped/uploads/576a85ca-0608-46af-8688-db8c97bcee4c.pdf",
+      "sha256": "8033c3e611aaa120cb7294085ebd6ee297ffae9ec02393b1c4f1593d7e6ee065"
+    },
+    {
+      "path": "backend/tmp/official-batch-acceptance-2026-10-18/grouped-qa-second/acceptance.db",
+      "sha256": "103c91b566fb03f7eaef1e38d2bad324d73bfae568952fe9681609cfe006cd5d"
+    },
+    {
+      "path": "backend/tmp/official-batch-acceptance-2026-10-18/grouped-qa-second/model-calls.json",
+      "sha256": "04c671e7234fa55a54c100df2c825985e2f3af1ce5adcf0e1bf57eac7d05e23f"
+    },
+    {
+      "path": "backend/tmp/official-batch-acceptance-2026-10-18/grouped-qa-second/parsed/576a85ca-0608-46af-8688-db8c97bcee4c.json",
+      "sha256": "e2fe13c08cdc825e40aecc6c0142ef775b4359257c079414e14906f351412d60"
+    },
+    {
+      "path": "backend/tmp/official-batch-acceptance-2026-10-18/grouped-qa-second/report.json",
+      "sha256": "3cb72a20a489f70f78b60a74b20a095a66916a6aac4e131c4521c4e81fed420e"
+    },
+    {
+      "path": "backend/tmp/official-batch-acceptance-2026-10-18/grouped-qa-second/uploads/576a85ca-0608-46af-8688-db8c97bcee4c.pdf",
+      "sha256": "8033c3e611aaa120cb7294085ebd6ee297ffae9ec02393b1c4f1593d7e6ee065"
+    },
+    {
+      "path": "backend/tmp/official-batch-acceptance-2026-10-18/instructgpt-06.png",
+      "sha256": "74212743ccb6dc2ec293333fa49842e7ea9eccd83736670d886d1ad86aa0efd5"
+    },
+    {
+      "path": "backend/tmp/official-batch-acceptance-2026-10-18/live-baseline/acceptance.db",
+      "sha256": "1486ad5835012c8efb9a71fdc6862dc7482e0eb3df02050ba18a9d0b1e683c71"
+    },
+    {
+      "path": "backend/tmp/official-batch-acceptance-2026-10-18/live-baseline/downloads.json",
+      "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+    },
+    {
+      "path": "backend/tmp/official-batch-acceptance-2026-10-18/live-baseline/embedding-calls.json",
+      "sha256": "6b00bf45b56c957b0cd638872a2aa64eea696676060fb1ff6b690cdbfe9983e1"
+    },
+    {
+      "path": "backend/tmp/official-batch-acceptance-2026-10-18/live-baseline/feed-first.json",
+      "sha256": "bb3f5f572190b3679577e8980520ea4b4fe31dd3488f4ccfe916bd3b91a04968"
+    },
+    {
+      "path": "backend/tmp/official-batch-acceptance-2026-10-18/live-baseline/feed-second.json",
+      "sha256": "feea0e2ec57b38b0fcdcf0590d6659f13e67149daf14f38c8c1799a798a714e0"
+    },
+    {
+      "path": "backend/tmp/official-batch-acceptance-2026-10-18/live-baseline/network-calls.json",
+      "sha256": "6a42fc00f8e6cab070f380dd3f45e30d27d3ed789743af9310cac71673cf9359"
+    },
+    {
+      "path": "backend/tmp/official-batch-acceptance-2026-10-18/live-baseline/parsed/20d9fad6-9e6f-543d-a2e1-095d8056c5ff.json",
+      "sha256": "17b79909f6ccfbef761befa41518b887e954b41bc1b74d8cfe071d519f8db5de"
+    },
+    {
+      "path": "backend/tmp/official-batch-acceptance-2026-10-18/live-baseline/parsed/bc90bcf2-cccd-5364-94f6-5815603802f7.json",
+      "sha256": "f4c849bd4de7d5a9d75c678178548613f51c038929a18c2b6f30a74affec4fb6"
+    },
+    {
+      "path": "backend/tmp/official-batch-acceptance-2026-10-18/live-baseline/refreshes.json",
+      "sha256": "51ce4408703690ed0c945d2217a561be11a80e37ce815ddc7d4c6df0ed74552b"
+    },
+    {
+      "path": "backend/tmp/official-batch-acceptance-2026-10-18/live-baseline/report.json",
+      "sha256": "c80b2ea79de30a7f8c511497f5325367ab0aced81270e9626c40029536cc0cda"
+    },
+    {
+      "path": "backend/tmp/official-batch-acceptance-2026-10-18/live-baseline/response-001.txt",
+      "sha256": "66d0f0b3847d0c4add412f4d08e8c8b28e9d3c6aabc21e27e2b754929ed2182b"
+    },
+    {
+      "path": "backend/tmp/official-batch-acceptance-2026-10-18/live-baseline/response-002.txt",
+      "sha256": "66d0f0b3847d0c4add412f4d08e8c8b28e9d3c6aabc21e27e2b754929ed2182b"
+    },
+    {
+      "path": "backend/tmp/official-batch-acceptance-2026-10-18/live-baseline/response-003.txt",
+      "sha256": "66d0f0b3847d0c4add412f4d08e8c8b28e9d3c6aabc21e27e2b754929ed2182b"
+    },
+    {
+      "path": "backend/tmp/official-batch-acceptance-2026-10-18/live-baseline/scheduled-task-code.json",
+      "sha256": "2f15e1e56d65ceba21918124d863db71acf5831eff343be9fb3f788f3c80881d"
+    },
+    {
+      "path": "backend/tmp/official-batch-acceptance-2026-10-18/live-baseline/subscription.json",
+      "sha256": "98a553d0709a391e5bfc30a269d545153ed6fb4e901f1a19b650371d8deefa50"
+    },
+    {
+      "path": "backend/tmp/official-batch-acceptance-2026-10-18/live-baseline/uploads/20d9fad6-9e6f-543d-a2e1-095d8056c5ff.pdf",
+      "sha256": "0a9bff1be3575cf9fe26a4a3d3a9175bc791ecec90de8b9deba4cff75d2b9476"
+    },
+    {
+      "path": "backend/tmp/official-batch-acceptance-2026-10-18/live-baseline/uploads/bc90bcf2-cccd-5364-94f6-5815603802f7.pdf",
+      "sha256": "e9a0d3128767db616085dc0f4e6e455e672e89af823e8ed1282793682787395a"
+    },
+    {
+      "path": "backend/tmp/official-batch-acceptance-2026-10-18/live-full-after-fix/acceptance.db",
+      "sha256": "7ffaa54bc334f7bf9bdc07ee63bf8d3fb9ea53886a5e225b73b46ffc5d4965bd"
+    },
+    {
+      "path": "backend/tmp/official-batch-acceptance-2026-10-18/live-full-after-fix/downloads.json",
+      "sha256": "1f614f1e4147ad64d650642b74025f74484d5686aea36e71c20086e171ffbde1"
+    },
+    {
+      "path": "backend/tmp/official-batch-acceptance-2026-10-18/live-full-after-fix/duplicate-import.json",
+      "sha256": "bdc1b6738cb3e9caba006cd50c694e07b93bf3978a694e8e037cfafe51d1b177"
+    },
+    {
+      "path": "backend/tmp/official-batch-acceptance-2026-10-18/live-full-after-fix/embedding-calls.json",
+      "sha256": "23bf4e60439d8ddc9bcb410db7f92adec38e8f62bdccdb06b06d4ff4b7ebf2b5"
+    },
+    {
+      "path": "backend/tmp/official-batch-acceptance-2026-10-18/live-full-after-fix/feed-first.json",
+      "sha256": "a3650a3d6feb4c8cfbda167005c56407db61bb61772a599748575501cb52c270"
+    },
+    {
+      "path": "backend/tmp/official-batch-acceptance-2026-10-18/live-full-after-fix/feed-second.json",
+      "sha256": "961388381e3c0e7184d0555dd786f4bb7ccc145c25610575ee5221c35642c888"
+    },
+    {
+      "path": "backend/tmp/official-batch-acceptance-2026-10-18/live-full-after-fix/import.json",
+      "sha256": "32cd8825d861cdbcf7b6eba646b00cb4a853a62204e4a83adac86b6051cd8956"
+    },
+    {
+      "path": "backend/tmp/official-batch-acceptance-2026-10-18/live-full-after-fix/lora-first-page.png",
+      "sha256": "5748ab14a0021d2fc4f940b2c1d434eec12666aa36be31513951ac1710befc68"
+    },
+    {
+      "path": "backend/tmp/official-batch-acceptance-2026-10-18/live-full-after-fix/network-calls.json",
+      "sha256": "7d0e887450791bf0ad6824c1b9f6d991273bd3146d1cf0c04c7c56498e57dc6c"
+    },
+    {
+      "path": "backend/tmp/official-batch-acceptance-2026-10-18/live-full-after-fix/parsed/20d9fad6-9e6f-543d-a2e1-095d8056c5ff.json",
+      "sha256": "17b79909f6ccfbef761befa41518b887e954b41bc1b74d8cfe071d519f8db5de"
+    },
+    {
+      "path": "backend/tmp/official-batch-acceptance-2026-10-18/live-full-after-fix/parsed/3bf41c23-55b4-4575-8c6b-7d75b28ad253.json",
+      "sha256": "e47529952a89500a340c64f158a833ad2ad8e884b02c570184e1374d5ba12843"
+    },
+    {
+      "path": "backend/tmp/official-batch-acceptance-2026-10-18/live-full-after-fix/reference-input.json",
+      "sha256": "4163025543897ef0b6be572ac8c82df3399bfd5539e616c823be27000f2da694"
+    },
+    {
+      "path": "backend/tmp/official-batch-acceptance-2026-10-18/live-full-after-fix/reference-resolution.json",
+      "sha256": "45cd51fa29c292bb9b0f008163937d682f786dcab0d1c8f5133573fbf4b152b0"
+    },
+    {
+      "path": "backend/tmp/official-batch-acceptance-2026-10-18/live-full-after-fix/refreshes.json",
+      "sha256": "b3ee5567c4fa78eb5949eccf3c50e0d2f1ab72680aa324fa1773690ff5ea3817"
+    },
+    {
+      "path": "backend/tmp/official-batch-acceptance-2026-10-18/live-full-after-fix/report.json",
+      "sha256": "3b8175323eede6db0639b62c915aea2cff07752fcaefba3460a458a4817002af"
+    },
+    {
+      "path": "backend/tmp/official-batch-acceptance-2026-10-18/live-full-after-fix/response-001.txt",
+      "sha256": "65ab993d12c5c2cc9b68e6da2bb79b326930283e520363ffcdc145f88cd5a148"
+    },
+    {
+      "path": "backend/tmp/official-batch-acceptance-2026-10-18/live-full-after-fix/response-002.txt",
+      "sha256": "88b9469d3a587f78fa4c203239662cca8c6afb8d98a30b5ab9c8b340ff304d3f"
+    },
+    {
+      "path": "backend/tmp/official-batch-acceptance-2026-10-18/live-full-after-fix/response-003.txt",
+      "sha256": "53c789010c282bf9c6d8ef66407bda4c5bb35a54c5bd97e6451cb8208cdc4ed5"
+    },
+    {
+      "path": "backend/tmp/official-batch-acceptance-2026-10-18/live-full-after-fix/response-004.txt",
+      "sha256": "53c789010c282bf9c6d8ef66407bda4c5bb35a54c5bd97e6451cb8208cdc4ed5"
+    },
+    {
+      "path": "backend/tmp/official-batch-acceptance-2026-10-18/live-full-after-fix/response-005.txt",
+      "sha256": "65ab993d12c5c2cc9b68e6da2bb79b326930283e520363ffcdc145f88cd5a148"
+    },
+    {
+      "path": "backend/tmp/official-batch-acceptance-2026-10-18/live-full-after-fix/response-006.txt",
+      "sha256": "7fd9336a7025d68ff5e8d9179d609deb809a7cf8fb78944570c7b92df57c0c8a"
+    },
+    {
+      "path": "backend/tmp/official-batch-acceptance-2026-10-18/live-full-after-fix/response-007.txt",
+      "sha256": "66d0f0b3847d0c4add412f4d08e8c8b28e9d3c6aabc21e27e2b754929ed2182b"
+    },
+    {
+      "path": "backend/tmp/official-batch-acceptance-2026-10-18/live-full-after-fix/response-008.txt",
+      "sha256": "66d0f0b3847d0c4add412f4d08e8c8b28e9d3c6aabc21e27e2b754929ed2182b"
+    },
+    {
+      "path": "backend/tmp/official-batch-acceptance-2026-10-18/live-full-after-fix/response-009.txt",
+      "sha256": "66d0f0b3847d0c4add412f4d08e8c8b28e9d3c6aabc21e27e2b754929ed2182b"
+    },
+    {
+      "path": "backend/tmp/official-batch-acceptance-2026-10-18/live-full-after-fix/scheduled-task-code.json",
+      "sha256": "df97b2a48b4a9d61558f18531c488a61f0199a9e8d7477d7db00e5aca70fdff4"
+    },
+    {
+      "path": "backend/tmp/official-batch-acceptance-2026-10-18/live-full-after-fix/subscription.json",
+      "sha256": "f6e0a63c67a6ab4929ceafc4b0f6e5d595d713379956fdf120e7a4ec255948c0"
+    },
+    {
+      "path": "backend/tmp/official-batch-acceptance-2026-10-18/live-full-after-fix/title-search.json",
+      "sha256": "14b025de934f9203608338a6c58a4b9bd3675f0e4b237fad0e0ae10bf14b6d86"
+    },
+    {
+      "path": "backend/tmp/official-batch-acceptance-2026-10-18/live-full-after-fix/uploads/20d9fad6-9e6f-543d-a2e1-095d8056c5ff.pdf",
+      "sha256": "0a9bff1be3575cf9fe26a4a3d3a9175bc791ecec90de8b9deba4cff75d2b9476"
+    },
+    {
+      "path": "backend/tmp/official-batch-acceptance-2026-10-18/live-full-after-fix/uploads/268d177b-3235-45a9-9739-69ef4d571dc1.pdf",
+      "sha256": "e9a0d3128767db616085dc0f4e6e455e672e89af823e8ed1282793682787395a"
+    },
+    {
+      "path": "backend/tmp/official-batch-acceptance-2026-10-18/lora-02.png",
+      "sha256": "b4a3a8b413b38e934f3fe92fba9fa1deac041a3a63e2dbbd6836f07371a81f89"
+    },
+    {
+      "path": "backend/tmp/official-batch-acceptance-2026-10-18/manual-source-review.json",
+      "sha256": "faf11b5502e0eb074229ecb5c0c67dc836f27f384f6f72fcb993ad4366853c40"
+    },
+    {
+      "path": "backend/tmp/official-batch-acceptance-2026-10-18/qlora-04.png",
+      "sha256": "a39f36f89647806831fc001c7056098a1915b9b06118bdaf56de716514c68079"
+    },
+    {
+      "path": "backend/tmp/official-batch-acceptance-2026-10-18/qlora-05.png",
+      "sha256": "e74919a15a8169195b4a86f927a1394f9c2adefe25986bcd69807f95ec29cbc4"
+    },
+    {
+      "path": "backend/tmp/official-batch-acceptance-2026-10-18/qlora-performance-06.png",
+      "sha256": "70927f4f8e85675d5b8a2c22321cc3b37a944dd470c942ae06bca5d003a0dd4c"
+    },
+    {
+      "path": "backend/tmp/official-batch-acceptance-2026-10-18/radar-api.log",
+      "sha256": "603ece4523f82a5f7467d3c89453ac52c6ac9cbd4ed489cd86d9a7882bcbf7ba"
+    },
+    {
+      "path": "backend/tmp/official-batch-acceptance-2026-10-18/radar-browser-final/failure.png",
+      "sha256": "437e46536f6d4a9ec548c66bc7b17f3bb9f50de4bb56f512a47236bcee49d3ff"
+    },
+    {
+      "path": "backend/tmp/official-batch-acceptance-2026-10-18/radar-browser-final/report.json",
+      "sha256": "ab8f0c7078dba5441c3572a65029e5985a917bcf6ddb5c3e3825614f3e84ac7c"
+    },
+    {
+      "path": "backend/tmp/official-batch-acceptance-2026-10-18/radar-browser-final-2/after-live-refresh.json",
+      "sha256": "f7dd7a816cdc2ab2bb263b86b82ba8d4adf325c2cbd6d05431b55828afbc1a18"
+    },
+    {
+      "path": "backend/tmp/official-batch-acceptance-2026-10-18/radar-browser-final-2/desktop.png",
+      "sha256": "5fd85b93bab0e647419ef80e28ba27801247682cb67eed364de58edf8fe48892"
+    },
+    {
+      "path": "backend/tmp/official-batch-acceptance-2026-10-18/radar-browser-final-2/mobile.png",
+      "sha256": "528bd5cabebb06fd5eaae27a259d99db05b393309f2c2b00f43ef6d9f65337d1"
+    },
+    {
+      "path": "backend/tmp/official-batch-acceptance-2026-10-18/radar-browser-final-2/report.json",
+      "sha256": "89661deec493777ce149319b4f0b0fe91738fa9246084de45d2dc823f43c590c"
+    },
+    {
+      "path": "backend/tmp/official-batch-acceptance-2026-10-18/radar-browser-first/after-live-refresh.json",
+      "sha256": "48c4bdbbde51c98d83e9e5b267b706ef6ddc5c335c50dc189ac091ee6370abb2"
+    },
+    {
+      "path": "backend/tmp/official-batch-acceptance-2026-10-18/radar-browser-first/desktop.png",
+      "sha256": "12949ab19f8f4424570e89f0ca058e22d7042f01e28ceda84f1e35ac631ecc2f"
+    },
+    {
+      "path": "backend/tmp/official-batch-acceptance-2026-10-18/radar-browser-first/mobile.png",
+      "sha256": "528bd5cabebb06fd5eaae27a259d99db05b393309f2c2b00f43ef6d9f65337d1"
+    },
+    {
+      "path": "backend/tmp/official-batch-acceptance-2026-10-18/radar-browser-first/report.json",
+      "sha256": "89661deec493777ce149319b4f0b0fe91738fa9246084de45d2dc823f43c590c"
+    },
+    {
+      "path": "backend/tmp/official-batch-acceptance-2026-10-18/radar-runtime/acceptance.db",
+      "sha256": "e02b43f89ac669bd00369b9ef7ea46950ec3938956c5602629e26b67d766c05e"
+    },
+    {
+      "path": "backend/tmp/official-batch-acceptance-2026-10-18/resilience-baseline.xml",
+      "sha256": "a5aea62852897d7191a8d30e76c514010b447d7910307075fa5f0230efe5bf36"
+    },
+    {
+      "path": "backend/tmp/official-batch-acceptance-2026-10-18/resilience-fixed-2.xml",
+      "sha256": "ab3e180796cbd3bcdf083633770133a85815d50a6a8e66ee450b881f73723991"
+    },
+    {
+      "path": "backend/tmp/official-batch-acceptance-2026-10-18/resilience-fixed.xml",
+      "sha256": "8d369359d5edf881fb4971fa51ab2b1021eb818268267b64639f4d2ba6dfc4b1"
+    },
+    {
+      "path": "backend/tmp/official-batch-acceptance-2026-10-18/serve_radar.py",
+      "sha256": "afe5ca37a9fdc65e94d5f51b6e7d4de3e9f92e2733761e89553a84cb279164f7"
+    },
+    {
+      "path": "backend/tmp/official-batch-acceptance-2026-10-18/verify_github.py",
+      "sha256": "27c2bb6ca1b9b34d0c4f858c750009cd447ffc232756a417c28d94aaf8e90c52"
+    },
+    {
+      "path": "README.md",
+      "sha256": "1eefcc7a5991a25a2330cb6a3691dd8d102628d0912e45cb82e684fe3387a68b"
+    },
+    {
+      "path": "docs/acceptance-progress.md",
+      "sha256": "893962e313626cb1509c443d4c9fb3fea6d65cf62d0f9298fdb457c51e1c1703"
+    },
+    {
+      "path": "docs/competition-verification-gates.md",
+      "sha256": "94d4ae5b3c056436157b8b8a783d29dda786d5ba146d4ac96d2668fd462b28f3"
+    },
+    {
+      "path": "docs/competition-delivery-checklist.md",
+      "sha256": "c9c957c17676144870c3bbfce3d6ae99ddd7fd2b9cbc68c999460f1cc6768b58"
+    },
+    {
+      "path": "docs/official-batch-acceptance-2026-10-18.md",
+      "sha256": "216eb998891e41da4a025ff0eaeb787be9c25138c4a534e36e9d00adfb9058aa"
+    }
+  ]
+}

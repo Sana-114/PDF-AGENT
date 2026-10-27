@@ -1,6 +1,6 @@
 from app.models.conversation import AgentConversation, AgentConversationMessage
 from app.models.document import Document, DocumentStatus
-from app.models.future_work import FutureWorkDecision
+from app.models.future_work import FutureWorkAssessment, FutureWorkDecision
 from app.models.paper_source import PaperSource
 from app.models.recommendation import ArxivSubscription, PaperRecommendation
 from app.models.translation import AcademicTranslationDraft, TranslationGlossary
@@ -13,6 +13,7 @@ __all__ = [
     "Document",
     "DocumentStatus",
     "FutureWorkDecision",
+    "FutureWorkAssessment",
     "PaperRecommendation",
     "PaperSource",
     "TranslationGlossary",

@@ -24,6 +24,10 @@ def _page(page_number: int, source: str, translation: str) -> dict:
     return {
         "document_id": "doc-export",
         "page_number": page_number,
+        "target_language": "zh",
+        "source_language": "auto",
+        "provider": "stub",
+        "model": "translator-v1",
         "segments": [
             {
                 "block_id": f"p{page_number}-b1",
@@ -70,7 +74,7 @@ def test_html_translation_export_escapes_document_content() -> None:
     assert "<title>Paper &lt;Draft&gt;</title>" in export.content
     assert "<script>alert(1)</script>" not in export.content
     assert "安全译文 &amp; 公式 x &lt; y" in export.content
-    assert 'grid-template-columns: 1fr;' in export.content
+    assert "grid-template-columns: 1fr;" in export.content
 
 
 def test_completed_translation_can_be_downloaded_as_html(monkeypatch, tmp_path) -> None:
@@ -88,6 +92,19 @@ def test_completed_translation_can_be_downloaded_as_html(monkeypatch, tmp_path) 
     store.write_page("doc-export", "zh", 2, _page(2, "Second", "第二页"))
     store.set_status("doc-export", "zh", "completed")
     monkeypatch.setattr(document_routes, "translation_store", store)
+    monkeypatch.setattr(
+        document_routes,
+        "read_parsed_document",
+        lambda _: {
+            "pages": [
+                {
+                    "page_number": number,
+                    "blocks": [{"block_id": f"p{number}-b1", "text": text, "bbox": [1, 2, 3, 4]}],
+                }
+                for number, text in [(1, "First"), (2, "Second")]
+            ]
+        },
+    )
     monkeypatch.setattr(
         document_routes,
         "_get_document",
@@ -112,6 +129,19 @@ def test_completed_translation_can_be_downloaded_as_html(monkeypatch, tmp_path) 
     assert "第一页" in response.text
     assert "第二页" in response.text
     assert response.text.index("Page 1") < response.text.index("Page 2")
+
+    # A legacy completed flag must not allow a dropped source block to escape in
+    # a successful download, even when both page files still exist.
+    store.write_page("doc-export", "zh", 2, {"page_number": 2, "segments": []})
+    with TestClient(app) as client:
+        status = client.get("/api/v1/documents/doc-export/translations/zh")
+        invalid = client.get("/api/v1/documents/doc-export/translations/zh/export")
+    assert status.json()["status"] == "failed"
+    assert status.json()["completed_pages"] == 1
+    assert status.json()["resumable"] is True
+    assert store.read_manifest("doc-export", "zh")["status"] == "completed"
+    assert invalid.status_code == 409
+    assert "第 2 页" in invalid.json()["detail"]
 
 
 def test_translation_export_rejects_incomplete_job(monkeypatch, tmp_path) -> None:

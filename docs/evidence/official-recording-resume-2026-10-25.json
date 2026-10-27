@@ -1,0 +1,156 @@
+{
+  "date": "2026-10-25",
+  "status": "partial_acceptance_runtime_blocked",
+  "full_project_passed": false,
+  "formal_video_produced": false,
+  "new_cloud_calls_today": 0,
+  "new_independent_paper_questions_today": 0,
+  "backend_previous_run": {
+    "tests": "1713",
+    "errors": "0",
+    "failures": "0",
+    "skipped": "0"
+  },
+  "frontend_today": {
+    "tests": 46,
+    "passed": 46,
+    "typescript_exit_code": 0,
+    "node_test_isolation": "none"
+  },
+  "saved_artifact_audit": {
+    "status": "passed",
+    "pdf_and_ast_pairs": 20,
+    "literal_anchors": 29,
+    "does_not_prove_semantic_correctness": true
+  },
+  "app_source": {
+    "files": 142,
+    "sha256": "a5c7d6cf6f0dfaf2a3cbf08306a807fa3999e19d158262d7d4f0a65311354e49"
+  },
+  "manual_review": {
+    "saved_hardware_answer_core": "passed_with_saved_original_page_screenshot",
+    "synthetic_translation": "passed_for_saved_sample_only",
+    "complete_review": "not_passed_cross_document_synthesis_target_unmet",
+    "writing_after_year_fix": "live_retest_pending"
+  },
+  "runtime_blockers": [
+    "Edge spawn EPERM",
+    "test dependency read PermissionError",
+    "Docker named-pipe access denied",
+    "loopback HTTP health check failed"
+  ],
+  "pending": [
+    "live writing and metadata reader",
+    "live graph and charts",
+    "current runtime cross-paper and refusal",
+    "complete review quality",
+    "future-work automatic exclusion",
+    "recorded audiovisual smoke and formal MP4"
+  ],
+  "evidence": [
+    {
+      "path": "backend/tmp/official-recording-release-2026-10-24/regression.xml",
+      "sha256": "8be0751ac227651628acd2159d1a27e7f5839aea29877da8f751997a6dbdd6e2"
+    },
+    {
+      "path": "backend/tmp/official-recording-release-2026-10-24/source-text-tests.xml",
+      "sha256": "4da4f8997143f5c57396d50c3818515f9585231597c867eeed2e8017f18efeaf"
+    },
+    {
+      "path": "backend/tmp/official-recording-release-2026-10-24/browser-versions/report.json",
+      "sha256": "f27b361270959aaf455dc5727ca2375416dab85b665da05ba989f05f2fb372c7"
+    },
+    {
+      "path": "backend/tmp/official-recording-release-2026-10-24/browser-qa/report.json",
+      "sha256": "01b6e488697380e218619557e3835aacf7ebb6e95a65550feb1c30208baedaac"
+    },
+    {
+      "path": "backend/tmp/official-recording-release-2026-10-24/browser-qa/turn.json",
+      "sha256": "31624597ddd8d9f925135e5b239560b3d113e3fddae14659114cfb2bf02f6afb"
+    },
+    {
+      "path": "backend/tmp/official-recording-release-2026-10-24/browser-qa/01-public-answer.png",
+      "sha256": "6110b51cef79f43f2a6377540d668fb292b4951b0d8a3356cfa1726447b5522c"
+    },
+    {
+      "path": "backend/tmp/official-recording-release-2026-10-24/browser-qa/02-hardware-original-page.png",
+      "sha256": "c70578c982d1f5fe4f84f40641d85f41bb5b739c8dc7d4a8a488faace9e56e1a"
+    },
+    {
+      "path": "backend/tmp/official-recording-release-2026-10-24/generation-browser.json",
+      "sha256": "e41149b16bc799e8999bf12a61ca652b2d6dbca592e62d013e5d2ce14e498b27"
+    },
+    {
+      "path": "backend/tmp/official-recording-release-2026-10-24/generation-browser/generated-review.png",
+      "sha256": "874ac536ce9ca87e7d00892143f15d173b9cbc1491e2b1f6341a8fab88b31576"
+    },
+    {
+      "path": "backend/tmp/official-recording-release-2026-10-24/translation-browser.json",
+      "sha256": "28b4dceb21663c02bdfafb56e11e4c88e200f7aff132ea1ab713a517eb6d6432"
+    },
+    {
+      "path": "backend/tmp/official-recording-release-2026-10-24/translation-browser/generated-translation.png",
+      "sha256": "8269c47cd7359b1b5d1a587ac2c912d8b3b9467e819290c5a24b13f825389325"
+    },
+    {
+      "path": "backend/tmp/official-recording-release-2026-10-24/translation-browser/synthetic-translation.md",
+      "sha256": "10653113940b712257a6a98686c8085367ab01d6daa3d404724cfeee0b2da68b"
+    },
+    {
+      "path": "backend/tmp/official-recording-release-2026-10-24/bert-source-page1.png",
+      "sha256": "34d14cde3c9012f2e58a333ba3b6984a1a6df27307d07d777b1b70b3ae6d2917"
+    },
+    {
+      "path": "backend/tmp/official-recording-release-2026-10-24/data/fixture.json",
+      "sha256": "89f865d93386cbe51aff8b25f925836ea8806ea250498c19d0e405104adfa7dd"
+    },
+    {
+      "path": "backend/tmp/official-recording-release-2026-10-24/data/fixture-restoration.json",
+      "sha256": "d6fb125458e27bb9e70b665e5d5ad48e853df9d16fb0b0832e78acb908813d64"
+    },
+    {
+      "path": "backend/tmp/official-recording-release-2026-10-24/saved-output-audit-2026-10-25.json",
+      "sha256": "373242b0973489a7051e6d1bfdfae89a5a500536db83f1d012322d64780317b4"
+    },
+    {
+      "path": "backend/tmp/official-recording-release-2026-10-24/saved-output-audit-2026-10-25-v2.json",
+      "sha256": "6a544d6009ef827c597433be69603784a483ee55e77989cf886501e12a6aaf31"
+    },
+    {
+      "path": "backend/tmp/official-recording-release-2026-10-24/test_saved_audit.py",
+      "sha256": "faab2584eacc06f20ef703d566a1e22e9fbea6bb603589865a04470ac032eb9f"
+    },
+    {
+      "path": "backend/scripts/audit_recording_saved_outputs.py",
+      "sha256": "1763b3f654d97c14e8c237115a9704c5cc9138a89799dbdeabb835980151cfaf"
+    },
+    {
+      "path": "backend/scripts/verify_recording_graph.py",
+      "sha256": "7e0def553dedae73ea0b4c7baaeb0ae9d7dda56b3e758e18a516f16cbf787fbd"
+    },
+    {
+      "path": "frontend/e2e/generationReadiness.mjs",
+      "sha256": "17703b747147baf54f3265e47a553bee11672102110f00bf529f77b73857ef8f"
+    },
+    {
+      "path": "scripts/resume_recording_acceptance.ps1",
+      "sha256": "e2b8124411d3dd01ece37d305de4c91cd5ec9366c8bd3fb39ebb07b0ce9c029e"
+    },
+    {
+      "path": "docs/official-recording-resume-2026-10-25.md",
+      "sha256": "269ee5382080dec033df176f24c0a2f584e7398091d2f799db2aa78611691e3f"
+    },
+    {
+      "path": "docker-compose.recording.yml",
+      "sha256": "b1063f72aece941febf8f534fc1e7342342ef064cbe9e778e31d89586788622c"
+    },
+    {
+      "path": "backend/app/core/source_text.py",
+      "sha256": "39505ddf90c0bfb1adb339b7138e79f2dc96817af2d31eaa8cef656663be7dc1"
+    },
+    {
+      "path": "backend/app/services/publication_metadata.py",
+      "sha256": "36c7d04b351db7cc40b3118348eb4097e58d42619642d21ce2ea2a82ea5db94a"
+    }
+  ]
+}

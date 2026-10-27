@@ -1,0 +1,34 @@
+{
+  "policy_id": "official-remaining-three-fresh-answer-source-review-2026-10-11",
+  "notes": "Review only the three fresh single-attempt answers. Never overwrite historical reports, change the original questions/gold, or count a safe refusal as a complete three-model conclusion. Keyword/number matches alone are not scientific correctness.",
+  "fact_overrides": {
+    "gpt-parameter-evolution": {
+      "gpt1-from-gpt2-baseline-table": {"claim_contains_any_groups": [["GPT-1", "GPT1", "原始 GPT", "原始GPT"]]},
+      "gpt2-largest": {"claim_contains_any_groups": [["GPT-2", "GPT2"]]},
+      "gpt3-largest": {"claim_contains_any_groups": [["GPT-3", "GPT3"]]}
+    },
+    "context-evolution": {
+      "gpt1-context-from-gpt2-report": {"claim_contains_any_groups": [["GPT-1", "GPT1", "原始 GPT", "原始GPT"]]},
+      "gpt2-context": {"claim_contains_any_groups": [["GPT-2", "GPT2"]]},
+      "gpt3-context": {"claim_contains_any_groups": [["GPT-3", "GPT3"]]}
+    }
+  },
+  "source_inspection": {
+    "reviewer": "code_assistant_fresh_published_claim_and_complete_native_page_inspection",
+    "scope": "Three original questions only, using the current worktree ask harness and read-only stage94 index. Inspect the published claims, actual cited excerpts and complete physical PDF pages, preserving table column headings and source qualifiers. This is not independent expert peer review, a nine-case rerun, a frontend test, or a fresh-parser end-to-end test.",
+    "cases": {
+      "bert-inheritance": {
+        "passed": true,
+        "reason": "BERT physical page 3 explicitly identifies its bidirectional Transformer encoder based on Vaswani et al.; Transformer v1 page 2 describes encoder and decoder stacks, and page 5 explains their attention scopes. The new combined relationship claim cites E2, E7 and E15 from both original papers and explicitly labels decoder removal as architecture inference. All additional published summaries are supported by their cited passages, including BERT page 1. The production completeness gate now accepts the supported relationship instead of incorrectly declaring it incomplete."
+      },
+      "gpt-parameter-evolution": {
+        "passed": false,
+        "reason": "The final GPT-2 evidence omits physical page 4 Table 2's 117M/1542M rows. E8 includes the original-GPT equivalence and correct second-smallest description, but not the numeric table; E17 gives only the abstract's rounded 1.5B. The model declines GPT-1's exact count rather than supplying a qualified GPT-2-baseline inference. GPT-3 175B and the eight-size summary agree with Table 2.1 on physical page 8. No previously observed reversed ranking or attribution conflict is published in this attempt, but the required exact three-model comparison remains incomplete."
+      },
+      "context-evolution": {
+        "passed": false,
+        "reason": "GPT-2 physical page 4's explicit 512-to-1024 context comparison reaches E2, and GPT-3 physical page 43's full n_ctx=2048-token context window reaches E3. GPT-3 2048 is therefore real context evidence, not the page-8 table's d_model cell. Nevertheless, the answer explicitly declines GPT-1's maximum rather than giving a source-qualified inference from the later paper. Its GPT-1 refusal also contains 512 and context terms, causing both the keyword fact check and production completeness gate to wrongly count it as answered. Do not accept this safe-but-incomplete response or hide the false-positive gate."
+      }
+    }
+  }
+}

@@ -1,0 +1,575 @@
+{
+  "schema_version": 1,
+  "date": "2026-10-18",
+  "status": "passed_scoped_reader_acceptance",
+  "whole_project_released": false,
+  "current_backend_source": {
+    "python_version": "3.12.14",
+    "app_files": 132,
+    "app_sha256": "1cffb12c6fe195bd711c445b5de0011f63ceec4f2eaee30ba085c8b93101e834",
+    "requirements_sha256": "b0e75e31a3ca8f034e095fd0667e3be7e380975548c5acce90db94f96ed7283f"
+  },
+  "git": {
+    "head": "a119f5609cda544e5d587588c5a338051da129a1",
+    "branch": "codex/stage94-official-failed-qa-retest",
+    "refs_mutated": false,
+    "commit_created": false,
+    "pushed": false
+  },
+  "official_sample": {
+    "filename": "2211.05100v4.pdf",
+    "pages": 73,
+    "source_sha256": "8033c3e611aaa120cb7294085ebd6ee297ffae9ec02393b1c4f1593d7e6ee065",
+    "parser": "1.26.4-layout104",
+    "role_groups": 10,
+    "role_source_segments": 12,
+    "role_membership_entries": 553,
+    "independent_author_count_claimed": false
+  },
+  "parser_source_checks": {
+    "73_complete_physical_pages": true,
+    "collective_not_flattened_ranks": true,
+    "ten_original_role_headings": true,
+    "all_35_major_members_independently_transcribed": true,
+    "prompt_cross_page_end_complete": true,
+    "applications_cross_page_name_complete": true,
+    "wrapped_lowercase_name_join": true,
+    "wrapped_hyphen_name_preserved": true,
+    "one_collective_author_evidence": true,
+    "twelve_page_scoped_contribution_segments": true,
+    "body_structures_unchanged": true,
+    "no_abstract_or_fake_global_ranks": true,
+    "api_preserves_new_structures": true,
+    "actual_pdf_range": true,
+    "lexical_collective_source_first": true,
+    "lexical_prompt_continuation_source": true,
+    "lexical_application_continuation_source": true,
+    "no_other_corpus_front_matter_false_activation": true,
+    "official_source_unchanged": true
+  },
+  "browser_checks": {
+    "compact_api_and_distinct_collective_credit": true,
+    "real_pdf_range": true,
+    "lazy_loading_collapsed_groups_and_scope_notice": true,
+    "all_twelve_role_segments_match_raw_blocks": true,
+    "members_displayed_without_global_ordinals": true,
+    "explicit_error_and_manual_retry": true,
+    "synthetic_legacy_not_detected_unverified_states": true,
+    "mobile_source_navigation_closes_sidebar": true,
+    "mobile_sidebar_paints_above_pdf_highlight": true,
+    "no_generation_or_mutation_requests": true
+  },
+  "browser_source_jumps": [
+    {
+      "role": "论文署名",
+      "page": 1,
+      "block_id": "p1-b2",
+      "painted_canvas": true,
+      "coordinates_match": true,
+      "visible": true
+    },
+    {
+      "role": "Major Contributors",
+      "page": 1,
+      "block_id": "p1-b3",
+      "painted_canvas": true,
+      "coordinates_match": true,
+      "visible": true
+    },
+    {
+      "role": "Dataset",
+      "page": 1,
+      "block_id": "p1-b5",
+      "painted_canvas": true,
+      "coordinates_match": true,
+      "visible": true
+    },
+    {
+      "role": "Tokenization",
+      "page": 1,
+      "block_id": "p1-b6",
+      "painted_canvas": true,
+      "coordinates_match": true,
+      "visible": true
+    },
+    {
+      "role": "Prompt Engineering",
+      "page": 1,
+      "block_id": "p1-b7",
+      "painted_canvas": true,
+      "coordinates_match": true,
+      "visible": true
+    },
+    {
+      "role": "Prompt Engineering",
+      "page": 2,
+      "block_id": "p2-b2",
+      "painted_canvas": true,
+      "coordinates_match": true,
+      "visible": true
+    },
+    {
+      "role": "Architecture and Objective",
+      "page": 2,
+      "block_id": "p2-b3",
+      "painted_canvas": true,
+      "coordinates_match": true,
+      "visible": true
+    },
+    {
+      "role": "Engineering",
+      "page": 2,
+      "block_id": "p2-b4",
+      "painted_canvas": true,
+      "coordinates_match": true,
+      "visible": true
+    },
+    {
+      "role": "Evaluation and Interpretability",
+      "page": 2,
+      "block_id": "p2-b5",
+      "painted_canvas": true,
+      "coordinates_match": true,
+      "visible": true
+    },
+    {
+      "role": "Broader Impacts",
+      "page": 2,
+      "block_id": "p2-b6",
+      "painted_canvas": true,
+      "coordinates_match": true,
+      "visible": true
+    },
+    {
+      "role": "Applications",
+      "page": 2,
+      "block_id": "p2-b7",
+      "painted_canvas": true,
+      "coordinates_match": true,
+      "visible": true
+    },
+    {
+      "role": "Applications",
+      "page": 3,
+      "block_id": "p3-b2",
+      "painted_canvas": true,
+      "coordinates_match": true,
+      "visible": true
+    },
+    {
+      "role": "Organization",
+      "page": 3,
+      "block_id": "p3-b3",
+      "painted_canvas": true,
+      "coordinates_match": true,
+      "visible": true
+    },
+    {
+      "role": "Applications",
+      "page": 3,
+      "block_id": "p3-b2",
+      "painted_canvas": true,
+      "coordinates_match": true,
+      "visible": true
+    }
+  ],
+  "page_errors": [],
+  "browser": {
+    "engine": "Edge Chromium",
+    "desktop_viewport": [
+      1440,
+      1000
+    ],
+    "mobile_viewport": [
+      390,
+      844
+    ],
+    "frontend_runtime": "source Next dev",
+    "production_build_or_public_deployment_claimed": false
+  },
+  "synthetic_ui_cases": {
+    "injected_503_responses": 1,
+    "injected_empty_state_responses": 3,
+    "official_corpus_cases_claimed": false
+  },
+  "regression": {
+    "backend": {
+      "executed": 1386,
+      "passed": 1386
+    },
+    "frontend": {
+      "executed": 42,
+      "passed": 42
+    }
+  },
+  "visual_review": {
+    "full_original_pages": [
+      1,
+      2,
+      3
+    ],
+    "desktop_and_mobile_screenshots_reviewed": true,
+    "unicode_name_and_individual_affiliation_accuracy_claimed": false
+  },
+  "calls": {
+    "cloud_llm": 0,
+    "bge": 0,
+    "automatic_generation_retries": 0
+  },
+  "official_basic_coverage": {
+    "files": 39,
+    "pages": 1986,
+    "inherited": true,
+    "fresh_full_parses_in_this_scope": [
+      "2211.05100v4.pdf"
+    ],
+    "native_front_sample_files": 39
+  },
+  "prior_immutable_artifacts_checked": 63,
+  "prior_changed": [],
+  "official_pdf_sha_unchanged": 39,
+  "secret_scan_findings": [],
+  "temporary_services_stopped": [
+    3238,
+    8038
+  ],
+  "temporary_next_type_paths_restored": true,
+  "production_library_written": false,
+  "production_images_updated": false,
+  "remaining": [
+    "legacy library reparse and vector migration",
+    "new grouped-field real generation QA",
+    "cross-paper DPO completeness and same-build stability",
+    "full scientific quality of review, writing and future-work",
+    "live subscription and external worker/beat, multi-user",
+    "final runtime, technical PDF, MP4, public demo, credentials rotation and release"
+  ],
+  "source_files": [
+    {
+      "path": "backend/app/services/author_evidence.py",
+      "sha256": "2df769dc8371754b2539405495388ebb413a3d91fa1db418719ec4381aef1f59"
+    },
+    {
+      "path": "backend/app/services/document_people.py",
+      "sha256": "c7b7f90032c39a783346dac873b34ef64e46f6568bc63a59b36ae9ef9dc926a6"
+    },
+    {
+      "path": "backend/app/schemas/document.py",
+      "sha256": "c26661e9cb82b3330b6a62643e69356835d580de18b165fc84496d64728986dd"
+    },
+    {
+      "path": "backend/app/api/routes/documents.py",
+      "sha256": "3034285b4d362feea3ff311ca1320be2b9d512080dda21ff79cbd95bb3b57a0f"
+    },
+    {
+      "path": "backend/tests/test_document_people.py",
+      "sha256": "67bb62b929d237e166861ef5036173d6135e6be9076bbd28c79ba3b6ece22605"
+    },
+    {
+      "path": "backend/scripts/verify_official_grouped_contributors.py",
+      "sha256": "3a11444e1c177abb9ee4071af5c1fc35d3151556e86b1dce404e4f9aac151769"
+    },
+    {
+      "path": "frontend/components/DocumentPeoplePanel.tsx",
+      "sha256": "a5fb4b4ebf1b35d8c459999666a5115f737d3dcde847a0916dc1a1f05b885a70"
+    },
+    {
+      "path": "frontend/components/PdfReader.tsx",
+      "sha256": "1bc4e2fe60128fb5de0067890548036d6729829299211e8a622143a75ed3a4b6"
+    },
+    {
+      "path": "frontend/lib/api.ts",
+      "sha256": "e7f35351a5a0d11b2f1ea8ceca7521d62f637ada71cc5e5efd408e2101397fbd"
+    },
+    {
+      "path": "frontend/app/globals.css",
+      "sha256": "37cac74f1be4127d8c2a381b7826e23dd304e6e507cfb00a7ffd4bdd8d1a0398"
+    },
+    {
+      "path": "frontend/package.json",
+      "sha256": "2775c5b05d473b8800c50ddfbb3e506cf13d94a14d2ae6d30860a4c883f79877"
+    },
+    {
+      "path": "frontend/e2e/groupedContributors.mjs",
+      "sha256": "68bcd333df2b079e984a9026eefdc3d0fd9bf6c256971d42a70843488523d270"
+    },
+    {
+      "path": "frontend/e2e/pdfRenderReady.mjs",
+      "sha256": "073f4ba885f287564e5f3618d9fa4328906ae19ced4d37de8d27e190de4f5a9a"
+    }
+  ],
+  "artifacts": [
+    {
+      "path": "backend/tmp/official-grouped-reader-2026-10-18/backend-final.xml",
+      "sha256": "d7ed115618a57ad57dd3e51ef5c08fbd046d12835590ec251c7c108c9d30eef0"
+    },
+    {
+      "path": "backend/tmp/official-grouped-reader-2026-10-18/backend-release.xml",
+      "sha256": "829b32e0875b87636d3743dfb8cddaa98a55bb3c06f816d04cf7c7a413242bdc"
+    },
+    {
+      "path": "backend/tmp/official-grouped-reader-2026-10-18/backend-source-final.xml",
+      "sha256": "5605d0eafb6ddcc063e349067b29059cb70387718409215bc60d8a64001dc810"
+    },
+    {
+      "path": "backend/tmp/official-grouped-reader-2026-10-18/backend-tests.xml",
+      "sha256": "322d958257c00f0cfc63f8fad7dc98a5e395d594530f675d308466c0de5e10e8"
+    },
+    {
+      "path": "backend/tmp/official-grouped-reader-2026-10-18/browser-final/api-people.json",
+      "sha256": "601bfbd019f773def9b5ffaaa5504412c4979779079c6fb2601301a3afea712f"
+    },
+    {
+      "path": "backend/tmp/official-grouped-reader-2026-10-18/browser-final/Applications.png",
+      "sha256": "04d02e1d7910921a6fd10da97265c6ca6939a3a47d284bb1300ac24ef376ccaa"
+    },
+    {
+      "path": "backend/tmp/official-grouped-reader-2026-10-18/browser-final/Major-Contributors.png",
+      "sha256": "891b5ffa14df976ecfe3cc20e2da469f488a727c2dfa9bb509b434ded510f3b4"
+    },
+    {
+      "path": "backend/tmp/official-grouped-reader-2026-10-18/browser-final/mobile-Applications.png",
+      "sha256": "735893eb685b8926445e3e80a8dfe98d42a7c3f9496f543e328f73c690af0a03"
+    },
+    {
+      "path": "backend/tmp/official-grouped-reader-2026-10-18/browser-final/Prompt-Engineering.png",
+      "sha256": "5eed08003ce46695dfdc70728fcc3e041b4887dff2af4ea0ec5591ca29dc576d"
+    },
+    {
+      "path": "backend/tmp/official-grouped-reader-2026-10-18/browser-final/report.json",
+      "sha256": "6d03331a7d76f35cfbefaaf975ced810418eba9c83ce9b70d950f6faeb36405c"
+    },
+    {
+      "path": "backend/tmp/official-grouped-reader-2026-10-18/browser-first/api-people.json",
+      "sha256": "601bfbd019f773def9b5ffaaa5504412c4979779079c6fb2601301a3afea712f"
+    },
+    {
+      "path": "backend/tmp/official-grouped-reader-2026-10-18/browser-first/failure.png",
+      "sha256": "55cdd65dde852dbfec237605b5da2a5c0f079457adf6756a37edf5031a1ed642"
+    },
+    {
+      "path": "backend/tmp/official-grouped-reader-2026-10-18/browser-first/report.json",
+      "sha256": "e3570a026671a45434011f8b52dfbd6c8e0bc2b52d8822adc4b4510efd9bb2e3"
+    },
+    {
+      "path": "backend/tmp/official-grouped-reader-2026-10-18/browser-release/api-people.json",
+      "sha256": "150a42c4d1bfa9b2db1b05787444a25f42a23c7695d38d8fa07bacc8e3171000"
+    },
+    {
+      "path": "backend/tmp/official-grouped-reader-2026-10-18/browser-release/Applications.png",
+      "sha256": "c902a5312f4144f3e5eabf1bed1910874d4d5a9eb0f25c7503299c662ffc39b8"
+    },
+    {
+      "path": "backend/tmp/official-grouped-reader-2026-10-18/browser-release/Major-Contributors.png",
+      "sha256": "e81ad9d1dbf6ccf9de989b053d2c90125f56879e5abf9ee15d8ac530a856b68a"
+    },
+    {
+      "path": "backend/tmp/official-grouped-reader-2026-10-18/browser-release/mobile-Applications.png",
+      "sha256": "8098c6276d9c4cbc156210407be85fa126b4104ff71efdaa03a33ed0372140cf"
+    },
+    {
+      "path": "backend/tmp/official-grouped-reader-2026-10-18/browser-release/Prompt-Engineering.png",
+      "sha256": "60088958d71f7edefd0fc3f2bde797e2698a17e6e8fcc00f058d92798ed6c612"
+    },
+    {
+      "path": "backend/tmp/official-grouped-reader-2026-10-18/browser-release/report.json",
+      "sha256": "bbb005f63fefb0fbdc72e1c05d90ad765539f9d013640dcc8c9a154afbaffa10"
+    },
+    {
+      "path": "backend/tmp/official-grouped-reader-2026-10-18/browser-second/api-people.json",
+      "sha256": "601bfbd019f773def9b5ffaaa5504412c4979779079c6fb2601301a3afea712f"
+    },
+    {
+      "path": "backend/tmp/official-grouped-reader-2026-10-18/browser-second/Applications.png",
+      "sha256": "da6b78ceaa939338e2eba458b932cf101666596fa9520ebb836c1b7e3c0ab1b7"
+    },
+    {
+      "path": "backend/tmp/official-grouped-reader-2026-10-18/browser-second/Major-Contributors.png",
+      "sha256": "82f8af0c2520bbfa8d40cbf4388a65284585441eb1aae3a01479f768de77fa19"
+    },
+    {
+      "path": "backend/tmp/official-grouped-reader-2026-10-18/browser-second/Prompt-Engineering.png",
+      "sha256": "60705f7c00deaaa2deda2e83fd5bcc7c946e76ca846d1f02c4723900a8e7bbfc"
+    },
+    {
+      "path": "backend/tmp/official-grouped-reader-2026-10-18/browser-second/report.json",
+      "sha256": "76154598907aa449f4c9e9ea19ca6e19952a0040b1ee25d88c49cd5484f5e4d7"
+    },
+    {
+      "path": "backend/tmp/official-grouped-reader-2026-10-18/browser-source-final/api-people.json",
+      "sha256": "4a1d7eafddc5e7aa489e4a8f97c5982ab2a1c6501c8a2ea497030f44751caa2a"
+    },
+    {
+      "path": "backend/tmp/official-grouped-reader-2026-10-18/browser-source-final/Applications.png",
+      "sha256": "92383dc9910a46672575bd3b9ff82b9f90bcad0e70eafc214f1ce7bedeb28824"
+    },
+    {
+      "path": "backend/tmp/official-grouped-reader-2026-10-18/browser-source-final/Major-Contributors.png",
+      "sha256": "e81ad9d1dbf6ccf9de989b053d2c90125f56879e5abf9ee15d8ac530a856b68a"
+    },
+    {
+      "path": "backend/tmp/official-grouped-reader-2026-10-18/browser-source-final/mobile-Applications.png",
+      "sha256": "b7bcbe8a405c4e16514e4315478f4bb0560339caf95e587989fe9c1732aace79"
+    },
+    {
+      "path": "backend/tmp/official-grouped-reader-2026-10-18/browser-source-final/Prompt-Engineering.png",
+      "sha256": "60088958d71f7edefd0fc3f2bde797e2698a17e6e8fcc00f058d92798ed6c612"
+    },
+    {
+      "path": "backend/tmp/official-grouped-reader-2026-10-18/browser-source-final/report.json",
+      "sha256": "92980ca1dc3865de9906cadfb8118c8b2d74b2f45f64dec651fc860205196b71"
+    },
+    {
+      "path": "backend/tmp/official-grouped-reader-2026-10-18/browser-visual-final/api-people.json",
+      "sha256": "4a1d7eafddc5e7aa489e4a8f97c5982ab2a1c6501c8a2ea497030f44751caa2a"
+    },
+    {
+      "path": "backend/tmp/official-grouped-reader-2026-10-18/browser-visual-final/Applications.png",
+      "sha256": "9cd5b7f89bc2e9c87282b83abf0580c2e3197b6d81744b4532b9cb0985f7ba10"
+    },
+    {
+      "path": "backend/tmp/official-grouped-reader-2026-10-18/browser-visual-final/Major-Contributors.png",
+      "sha256": "02953431146a9f0d48df8800f9f309253192a23c0650d2f69a310b728fee9d65"
+    },
+    {
+      "path": "backend/tmp/official-grouped-reader-2026-10-18/browser-visual-final/mobile-Applications.png",
+      "sha256": "dbeda76d836106ded10bf49fe8af5fc95f77cb6bd950ecd31ad4fa50af70d134"
+    },
+    {
+      "path": "backend/tmp/official-grouped-reader-2026-10-18/browser-visual-final/Prompt-Engineering.png",
+      "sha256": "60088958d71f7edefd0fc3f2bde797e2698a17e6e8fcc00f058d92798ed6c612"
+    },
+    {
+      "path": "backend/tmp/official-grouped-reader-2026-10-18/browser-visual-final/report.json",
+      "sha256": "148852ac7878c0ca77c78cc0bf9473951655aa9f0ebd62a38203bfbcd3528094"
+    },
+    {
+      "path": "backend/tmp/official-grouped-reader-2026-10-18/finalize_evidence.py",
+      "sha256": "7b8f089cdd9fb775182b4b9604fc26c0fd195445a094867bdad5e6bc84d40b88"
+    },
+    {
+      "path": "backend/tmp/official-grouped-reader-2026-10-18/fixture/acceptance.db",
+      "sha256": "166a466c0ccde4b85282cb7f83b78f18915be00472e1a93258f1246f1c8fdb1e"
+    },
+    {
+      "path": "backend/tmp/official-grouped-reader-2026-10-18/fixture/api-content.json",
+      "sha256": "e2fe13c08cdc825e40aecc6c0142ef775b4359257c079414e14906f351412d60"
+    },
+    {
+      "path": "backend/tmp/official-grouped-reader-2026-10-18/fixture/corpus-front-sample.json",
+      "sha256": "c0f284d1f40c4a3d3668a506b18e3ce81240e20ab386d476d8014bdce3f0f2ab"
+    },
+    {
+      "path": "backend/tmp/official-grouped-reader-2026-10-18/fixture/fresh-parsed.json",
+      "sha256": "e2fe13c08cdc825e40aecc6c0142ef775b4359257c079414e14906f351412d60"
+    },
+    {
+      "path": "backend/tmp/official-grouped-reader-2026-10-18/fixture/parsed/1e6e643c-5057-44fb-9ef5-72517615f619.json",
+      "sha256": "e2fe13c08cdc825e40aecc6c0142ef775b4359257c079414e14906f351412d60"
+    },
+    {
+      "path": "backend/tmp/official-grouped-reader-2026-10-18/fixture/report.json",
+      "sha256": "6576adeede0b216af1388e23c57f966c3a7f1779636a166322c1410db70a8743"
+    },
+    {
+      "path": "backend/tmp/official-grouped-reader-2026-10-18/fixture/retrieval.json",
+      "sha256": "445d524f661c2b1844798adc1896f3d97f975ef73c2b8c964ed1e309c8c625ce"
+    },
+    {
+      "path": "backend/tmp/official-grouped-reader-2026-10-18/fixture/uploads/1e6e643c-5057-44fb-9ef5-72517615f619.pdf",
+      "sha256": "8033c3e611aaa120cb7294085ebd6ee297ffae9ec02393b1c4f1593d7e6ee065"
+    },
+    {
+      "path": "backend/tmp/official-grouped-reader-2026-10-18/fixture-final/acceptance.db",
+      "sha256": "9e6983cd0df47412f4dc6ed6691d3990b19d2f890ff70d42d8ac4e2f905e18f6"
+    },
+    {
+      "path": "backend/tmp/official-grouped-reader-2026-10-18/fixture-final/api-content.json",
+      "sha256": "e2fe13c08cdc825e40aecc6c0142ef775b4359257c079414e14906f351412d60"
+    },
+    {
+      "path": "backend/tmp/official-grouped-reader-2026-10-18/fixture-final/corpus-front-sample.json",
+      "sha256": "c0f284d1f40c4a3d3668a506b18e3ce81240e20ab386d476d8014bdce3f0f2ab"
+    },
+    {
+      "path": "backend/tmp/official-grouped-reader-2026-10-18/fixture-final/fresh-parsed.json",
+      "sha256": "e2fe13c08cdc825e40aecc6c0142ef775b4359257c079414e14906f351412d60"
+    },
+    {
+      "path": "backend/tmp/official-grouped-reader-2026-10-18/fixture-final/parsed/e2b43763-b407-4daf-a780-7e7de6044e62.json",
+      "sha256": "e2fe13c08cdc825e40aecc6c0142ef775b4359257c079414e14906f351412d60"
+    },
+    {
+      "path": "backend/tmp/official-grouped-reader-2026-10-18/fixture-final/report.json",
+      "sha256": "ebb25619f37886a69c91af6ab8c59895f5375496ace655a19f715d6109529d10"
+    },
+    {
+      "path": "backend/tmp/official-grouped-reader-2026-10-18/fixture-final/retrieval.json",
+      "sha256": "ed5841a7f5f527e513df9a1b696a249960321e125251bc0377d1d6730773c093"
+    },
+    {
+      "path": "backend/tmp/official-grouped-reader-2026-10-18/fixture-final/uploads/e2b43763-b407-4daf-a780-7e7de6044e62.pdf",
+      "sha256": "8033c3e611aaa120cb7294085ebd6ee297ffae9ec02393b1c4f1593d7e6ee065"
+    },
+    {
+      "path": "backend/tmp/official-grouped-reader-2026-10-18/fixture-release/acceptance.db",
+      "sha256": "1c11e5b5685579c35bdbe146261f06ece3753715ceff589d6a2bbe3ead171822"
+    },
+    {
+      "path": "backend/tmp/official-grouped-reader-2026-10-18/fixture-release/api-content.json",
+      "sha256": "e2fe13c08cdc825e40aecc6c0142ef775b4359257c079414e14906f351412d60"
+    },
+    {
+      "path": "backend/tmp/official-grouped-reader-2026-10-18/fixture-release/corpus-front-sample.json",
+      "sha256": "c0f284d1f40c4a3d3668a506b18e3ce81240e20ab386d476d8014bdce3f0f2ab"
+    },
+    {
+      "path": "backend/tmp/official-grouped-reader-2026-10-18/fixture-release/fresh-parsed.json",
+      "sha256": "e2fe13c08cdc825e40aecc6c0142ef775b4359257c079414e14906f351412d60"
+    },
+    {
+      "path": "backend/tmp/official-grouped-reader-2026-10-18/fixture-release/parsed/48d3c8ee-0f0c-4746-8fdd-3fa123df80db.json",
+      "sha256": "e2fe13c08cdc825e40aecc6c0142ef775b4359257c079414e14906f351412d60"
+    },
+    {
+      "path": "backend/tmp/official-grouped-reader-2026-10-18/fixture-release/report.json",
+      "sha256": "62c77f0cfbc83c62f4f7621337d456a5fead7b16c8d69ceaa101d9398b0552d3"
+    },
+    {
+      "path": "backend/tmp/official-grouped-reader-2026-10-18/fixture-release/retrieval.json",
+      "sha256": "7f9aeb70c530e9e5807f4720ce208cd2bdb0f8661c3cdff72f46b91fe7640cd2"
+    },
+    {
+      "path": "backend/tmp/official-grouped-reader-2026-10-18/fixture-release/uploads/48d3c8ee-0f0c-4746-8fdd-3fa123df80db.pdf",
+      "sha256": "8033c3e611aaa120cb7294085ebd6ee297ffae9ec02393b1c4f1593d7e6ee065"
+    },
+    {
+      "path": "backend/tmp/official-grouped-reader-2026-10-18/frontend-final.xml",
+      "sha256": "68968a624281a5653b5bde48fd5c48b09782ea3769a88f4c2e7d455f65c02a38"
+    },
+    {
+      "path": "backend/tmp/official-grouped-reader-2026-10-18/frontend-restored.xml",
+      "sha256": "8a875b4074c63b42becd50810f86a967b10961d34647ad0778e6958aa3910854"
+    },
+    {
+      "path": "README.md",
+      "sha256": "112983766b6d57dda54990d00528d57ca994fc847241b9c43b84ae5d3d63cc4a"
+    },
+    {
+      "path": "docs/acceptance-progress.md",
+      "sha256": "f8bc9a1de895c6167f0e02507b2350faf0b150c993ce8a28864fe76199967fff"
+    },
+    {
+      "path": "docs/competition-verification-gates.md",
+      "sha256": "f172ccc6d0860289ad0cbe1f13c70405d815c257bc70972dd9290c9f361c6f21"
+    },
+    {
+      "path": "docs/competition-delivery-checklist.md",
+      "sha256": "1a4a3957f2e842f099201e4c5e3beeb6973d5cf3221215814c52a0f99d5987d4"
+    },
+    {
+      "path": "docs/official-grouped-reader-acceptance-2026-10-18.md",
+      "sha256": "ccdea778ec2cc71ca33bac8aff89dcbf0440e88d2fe6c0945e6a5b797c234687"
+    }
+  ]
+}

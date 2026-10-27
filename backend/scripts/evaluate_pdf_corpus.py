@@ -1,9 +1,13 @@
 import argparse
+import hashlib
 import json
+import math
+import re
 import sys
 import tempfile
 import time
 import tracemalloc
+import unicodedata
 from collections import Counter
 from pathlib import Path
 from typing import Any
@@ -24,8 +28,13 @@ def evaluate_pdf(
     expectation: dict[str, Any] | None = None,
     *,
     batch_pages: int | None = None,
+    artifacts_dir: Path | None = None,
 ) -> dict[str, Any]:
     expectation = expectation or {}
+    with path.open("rb") as stream:
+        source_sha256 = hashlib.file_digest(stream, "sha256").hexdigest()
+    if artifacts_dir is not None:
+        artifacts_dir.mkdir(parents=True, exist_ok=False)
     with fitz.open(path) as document:
         page_count = len(document)
         native_text_chars = sum(len(page.get_text("text")) for page in document)
@@ -35,7 +44,19 @@ def evaluate_pdf(
     checkpoint_batches = 0
     tracemalloc.start()
     started = time.perf_counter()
-    if batch_pages:
+    if artifacts_dir is not None:
+        checkpoint_dir = artifacts_dir / "checkpoints"
+        try:
+            parsed = parser.parse(
+                str(path), checkpoint_dir=checkpoint_dir,
+                batch_size=batch_pages or 25, source_fingerprint=source_sha256,
+                progress_callback=lambda complete, total: progress_events.append((complete, total)),
+            )
+            checkpoint_batches = len(list(checkpoint_dir.glob("batch-*.json")))
+        except Exception:
+            tracemalloc.stop()
+            raise
+    elif batch_pages:
         with tempfile.TemporaryDirectory(prefix="paperpilot-checkpoint-") as directory:
             checkpoint_dir = Path(directory)
             parsed = parser.parse(
@@ -54,10 +75,12 @@ def evaluate_pdf(
     processing = processing_metadata() if callable(processing_metadata) else {}
     metrics = {
         "filename": path.name,
+        "source_sha256": source_sha256,
         "size_bytes": path.stat().st_size,
         "page_count": page_count,
         "native_text_chars": native_text_chars,
         "extracted_text_chars": len(parsed.full_text),
+        "parsed_page_count": len(parsed.pages),
         "content_kind": diagnostics.content_kind.value,
         "parser": parser.name,
         "elapsed_seconds": round(elapsed, 3),
@@ -79,6 +102,12 @@ def evaluate_pdf(
         "warnings": parsed.warnings,
     }
     failures = [*_validate(metrics, expectation), *_validate_structure(parsed, expectation)]
+    if [page.page_number for page in parsed.pages] != list(range(1, page_count + 1)):
+        failures.append("parsed page sequence does not cover every source page exactly once")
+    if artifacts_dir is not None:
+        (artifacts_dir / "parsed.json").write_text(
+            json.dumps(parsed.to_dict(), ensure_ascii=False) + "\n", encoding="utf-8",
+        )
     return {**metrics, "status": "passed" if not failures else "failed", "failures": failures}
 
 
@@ -149,6 +178,44 @@ def _validate_structure(parsed: ParsedDocument, expected: dict[str, Any]) -> lis
     for page, count in expected.get("figure_count_by_page", {}).items():
         if figure_counts[page] != count:
             failures.append(f"page {page} figures={figure_counts[page]} != {count}")
+    matched_reference_ids = []
+    for sample in expected.get("reference_samples", []):
+        source_page = sample["page_number"]
+        # A structured reference stores its printed label separately from its text.
+        # Keep the label requirement, but do not demand a duplicate label in the body.
+        label_match = re.match(
+            r"^\s*\[([A-Za-z0-9+._:-]+)\]\s*(.+)",
+            sample["contains"], flags=re.DOTALL,
+        )
+        # Unbracketed labels must be explicit, so a leading year is not mistaken for a label.
+        label = sample.get("label", label_match.group(1) if label_match else None)
+        fragment = _normalized_text(label_match.group(2) if label_match else sample["contains"])
+        matches = [ref.reference_id for ref in parsed.references if (
+            ref.page_number == source_page and (label is None or ref.label == label)
+            and fragment in _normalized_text(ref.text)
+        )]
+        if not matches:
+            failures.append(f"missing source reference sample on page {source_page}: "
+                            f"{sample['contains']}")
+        elif expected.get("reference_samples_distinct"):
+            if len(matches) != 1:
+                failures.append("source reference sample matches multiple entries")
+            matched_reference_ids.extend(matches)
+    if (expected.get("reference_samples_distinct")
+            and len(set(matched_reference_ids)) != len(matched_reference_ids)):
+        failures.append("distinct source reference samples were merged into one entry")
+    for sample in expected.get("page_text_samples", []):
+        page = next((p for p in parsed.pages if p.page_number == sample["page_number"]), None)
+        text = _normalized_text(" ".join(block.text for block in page.blocks)) if page else ""
+        if _normalized_text(sample["contains"]) not in text:
+            failures.append(f"missing source text sample on page {sample['page_number']}")
+    for page in parsed.pages:
+        if len({block.block_id for block in page.blocks}) != len(page.blocks):
+            failures.append(f"duplicate source block ID on page {page.page_number}")
+        for block in page.blocks:
+            if (len(block.bbox) != 4 or not all(math.isfinite(value) for value in block.bbox)
+                    or block.bbox[0] > block.bbox[2] or block.bbox[1] > block.bbox[3]):
+                failures.append(f"invalid block coordinates: {block.block_id}")
     # Every reference must resolve to actual source blocks on its anchor page.
     for ref in parsed.references:
         page = next((page for page in parsed.pages if page.page_number == ref.page_number), None)
@@ -162,6 +229,11 @@ def _validate_structure(parsed: ParsedDocument, expected: dict[str, Any]) -> lis
         ):
             failures.append(f"invalid reference anchor: {ref.reference_id}")
     return failures
+
+
+def _normalized_text(text: str) -> str:
+    """Normalize typography for source probes, not numerical values or author spelling."""
+    return " ".join(unicodedata.normalize("NFKC", text).split()).casefold()
 
 
 def _count_outline(nodes: list[Any]) -> int:
@@ -181,10 +253,13 @@ def evaluate_pdf_safely(
     expectation: dict[str, Any] | None = None,
     *,
     batch_pages: int | None = None,
+    artifacts_dir: Path | None = None,
 ) -> dict[str, Any]:
     try:
-        return evaluate_pdf(path, expectation, batch_pages=batch_pages)
+        return evaluate_pdf(path, expectation, batch_pages=batch_pages, artifacts_dir=artifacts_dir)
     except Exception as exc:
+        if tracemalloc.is_tracing():
+            tracemalloc.stop()
         return {
             "filename": path.name,
             "status": "failed",

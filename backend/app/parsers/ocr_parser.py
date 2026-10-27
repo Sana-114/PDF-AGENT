@@ -24,7 +24,7 @@ class SelectiveOcrParser(PyMuPDFParser):
     """Use native extraction when possible and Tesseract only for low-text pages."""
 
     name = "pymupdf+tesseract"
-    version = f"{fitz.VersionBind}-ocr-layout93"
+    version = f"{fitz.VersionBind}-ocr-layout99"
 
     def __init__(
         self,

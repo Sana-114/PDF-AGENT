@@ -1,0 +1,8 @@
+{
+  "scope": "Current saved-output guard expectations only; not a fresh generation verdict.",
+  "cases": {
+    "bleu-improvement": {"insufficient_evidence": false, "missing_fields": []},
+    "gpt-parameter-evolution": {"insufficient_evidence": false, "missing_fields": []},
+    "context-evolution": {"insufficient_evidence": false, "missing_fields": []}
+  }
+}

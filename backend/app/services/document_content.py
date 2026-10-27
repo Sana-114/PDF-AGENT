@@ -26,6 +26,22 @@ def outline_items(parsed: dict[str, Any]) -> list[dict[str, Any]]:
     return _legacy_outline(parsed)
 
 
+def block_sections(parsed: dict[str, Any]) -> dict[tuple[int, str], str | None]:
+    """Label each actual block in reading order; never borrow a neighbor's section."""
+    labels: dict[tuple[int, str], str | None] = {}
+    section: str | None = None
+    for page in parsed.get("pages", []):
+        number = int(page.get("page_number", 0))
+        for block in page.get("blocks", []):
+            text = str(block.get("text") or "").strip()
+            if block.get("type") == "heading" and text:
+                section = text[:500]
+            key = str(block.get("block_id") or "")
+            if key:
+                labels[number, key] = section
+    return labels
+
+
 def reference_links(
     parsed: dict[str, Any],
 ) -> tuple[list[dict[str, Any]], list[dict[str, Any]]]:
@@ -74,8 +90,8 @@ def page_text_segments(
     parsed: dict[str, Any],
     page_number: int,
     *,
-    max_segments: int = 80,
-    max_characters: int = 24000,
+    max_segments: int | None = 80,
+    max_characters: int | None = 24000,
 ) -> tuple[list[dict[str, Any]], bool]:
     page = next(
         (
@@ -96,7 +112,9 @@ def page_text_segments(
         text = str(block.get("text", "")).strip()
         if not block_id or not text:
             continue
-        if len(segments) >= max_segments or character_count + len(text) > max_characters:
+        if (max_segments is not None and len(segments) >= max_segments) or (
+            max_characters is not None and character_count + len(text) > max_characters
+        ):
             truncated = True
             break
         segments.append(

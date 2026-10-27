@@ -1,0 +1,1042 @@
+{
+  "schema_version": 1,
+  "date": "2026-10-20",
+  "status": "partial_project_acceptance",
+  "whole_project_released": false,
+  "whole_scientific_quality_released": false,
+  "current_backend_source": {
+    "python_version": "3.12.14",
+    "app_files": 139,
+    "app_sha256": "791c2005e8c3bcc229cbcedd16b34ebea945f5dff172d536cc8d552dfb137941",
+    "requirements_sha256": "b0e75e31a3ca8f034e095fd0667e3be7e380975548c5acce90db94f96ed7283f"
+  },
+  "official_inputs_unchanged": 39,
+  "prior_raw_artifacts_unchanged": 1684,
+  "prior_manifest_counts": {
+    "official-bounded-comparison-acceptance-2026-10-20": 61,
+    "official-vector-recovery-acceptance-2026-10-20": 173,
+    "official-response-integrity-acceptance-2026-10-19": 387,
+    "official-scope-repair-acceptance-2026-10-19": 331,
+    "official-completion-acceptance-2026-10-19": 519,
+    "official-batch-acceptance-2026-10-18": 150,
+    "official-grouped-reader-acceptance-2026-10-18": 63
+  },
+  "regression": {
+    "backend": {
+      "executed": 1654,
+      "passed": 1654
+    },
+    "frontend": {
+      "executed": 46,
+      "passed": 46
+    }
+  },
+  "static_checks": {
+    "ruff": {
+      "exit_code": 0,
+      "passed": true
+    },
+    "typescript": {
+      "exit_code": 0,
+      "passed": true
+    },
+    "diff_check": {
+      "exit_code": 0,
+      "passed": true
+    }
+  },
+  "fresh_rag": {
+    "attempts": [
+      {
+        "run": "full-rag",
+        "runtime_source": {
+          "python_version": "3.12.14",
+          "app_files": 139,
+          "app_sha256": "c13f8c21f2aa644a0641a3272414c8513617b50d0129f282ba89b6113516e596",
+          "requirements_sha256": "b0e75e31a3ca8f034e095fd0667e3be7e380975548c5acce90db94f96ed7283f"
+        },
+        "error": {
+          "type": "EmbeddingServiceError",
+          "message": "Embedding 服务调用失败: timed out"
+        },
+        "qa_executed": 0,
+        "cloud_calls": 0,
+        "embedding_calls": 2,
+        "verified_all_reused_payloads": false
+      },
+      {
+        "run": "read-only-rag",
+        "runtime_source": {
+          "python_version": "3.12.14",
+          "app_files": 139,
+          "app_sha256": "c13f8c21f2aa644a0641a3272414c8513617b50d0129f282ba89b6113516e596",
+          "requirements_sha256": "b0e75e31a3ca8f034e095fd0667e3be7e380975548c5acce90db94f96ed7283f"
+        },
+        "error": {
+          "type": "UnexpectedResponse",
+          "message": "Unexpected Response: 408 (Request Timeout)\nRaw response content:\nb''"
+        },
+        "qa_executed": 0,
+        "cloud_calls": 0,
+        "embedding_calls": 0,
+        "verified_all_reused_payloads": false
+      }
+    ],
+    "answer_accuracy_assigned": false
+  },
+  "temporary_container_attempts": {
+    "first_768m": {
+      "qa_executed": 0,
+      "cloud_calls": 0,
+      "error": "errno 12 reading bind mount",
+      "evidence_location": "tool transcript only",
+      "auto_remove": true
+    },
+    "bind_1g": {
+      "exit_code": 1,
+      "duration_seconds": 56.44,
+      "memory_limit_mib": 1024,
+      "swap_allowed": false,
+      "production_library_mounted": false,
+      "ports_published": false,
+      "automatic_retries": 0,
+      "container_auto_remove": true,
+      "stdout": "",
+      "stderr": "Traceback (most recent call last):\n  File \"/repo/backend/scripts/verify_official_comparison_batch.py\", line 311, in <module>\n    raise SystemExit(main())\n                     ^^^^^^\n  File \"/repo/backend/scripts/verify_official_comparison_batch.py\", line 64, in main\n    saved_index_metadata(args.reuse_index_from, select_sources(args.fixture, names))\n                                                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/repo/backend/scripts/verify_official_output_features.py\", line 47, in select_sources\n    if digest(fixture / kind / (row[\"document_id\"] + suffix)) != row[field]:\n       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/repo/backend/scripts/official_functional_inputs.py\", line 13, in digest\n    return hashlib.file_digest(stream, \"sha256\").hexdigest()\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/usr/local/lib/python3.11/hashlib.py\", line 295, in file_digest\n    size = fileobj.readinto(buf)\n           ^^^^^^^^^^^^^^^^^^^^^\nOSError: [Errno 12] Cannot allocate memory\n"
+    },
+    "no_bind_1g": {
+      "runtime_source_at_launch": {
+        "python_version": "3.12.14",
+        "app_files": 139,
+        "app_sha256": "2888842e62261ea677510c9f80d15c60d5c72b8392986cdd43462362aa576328",
+        "requirements_sha256": "b0e75e31a3ca8f034e095fd0667e3be7e380975548c5acce90db94f96ed7283f"
+      },
+      "docker_exit_code": 1,
+      "duration_seconds": 42.23,
+      "host_bind_mounts": 0,
+      "production_library_mounted": false,
+      "memory_limit_mib": 1024,
+      "swap_allowed": false,
+      "ports_published": false,
+      "automatic_retries": 0,
+      "container_auto_remove": true,
+      "stdout": "",
+      "stderr": "request returned 500 Internal Server Error for API route and version http://%2F%2F.%2Fpipe%2FdockerDesktopLinuxEngine/_ping, check if the server supports the requested API version\n"
+    }
+  },
+  "cloud_calls": {
+    "actual_requests": 24,
+    "primary_generations": 16,
+    "comparison_reviews": 8,
+    "automatic_retries": 0
+  },
+  "archived_evidence_generation_rounds": [
+    {
+      "run": "generation-final-guard",
+      "runtime_source": {
+        "python_version": "3.12.14",
+        "app_files": 139,
+        "app_sha256": "c13f8c21f2aa644a0641a3272414c8513617b50d0129f282ba89b6113516e596",
+        "requirements_sha256": "b0e75e31a3ca8f034e095fd0667e3be7e380975548c5acce90db94f96ed7283f"
+      },
+      "source_report_sha256": "e20be139de87b6dc5ba584b0b51eb8a364575401a7ab89b44dca2fa629dd3f63",
+      "cloud_calls": 6,
+      "machine_passed": 2,
+      "cases": [
+        {
+          "case_id": "dpo-instructgpt-object-and-stage",
+          "status": "machine_passed_pending_source_review",
+          "checks": {
+            "real_deepseek_not_fallback": true,
+            "not_insufficient": true,
+            "policy_object_and_learning_objective_present": true,
+            "sampling_object_and_stage_in_same_published_claim": true,
+            "one_comparison_cites_both_originals": true,
+            "all_original_source_anchors_valid": true,
+            "one_fresh_primary_no_retry": true
+          },
+          "cloud_calls": 2
+        },
+        {
+          "case_id": "dpo-reject-global-analytic-and-sampling-free",
+          "status": "failed",
+          "checks": {
+            "real_deepseek_not_fallback": true,
+            "not_insufficient": false,
+            "policy_object_and_learning_objective_present": true,
+            "sampling_object_and_stage_in_same_published_claim": false,
+            "explicitly_rejects_overgeneralization": false,
+            "all_original_source_anchors_valid": true,
+            "one_fresh_primary_no_retry": true
+          },
+          "cloud_calls": 1
+        },
+        {
+          "case_id": "lora-qlora-mechanism",
+          "status": "failed",
+          "checks": {
+            "real_deepseek_not_fallback": true,
+            "not_insufficient": false,
+            "one_claim_has_both_originals": false,
+            "all_published_sources_in_scope": true,
+            "quantization_and_memory_methods": false,
+            "all_original_source_anchors_valid": true,
+            "one_fresh_primary_no_retry": true
+          },
+          "cloud_calls": 2
+        },
+        {
+          "case_id": "unreported-training-seed",
+          "status": "machine_passed_pending_source_review",
+          "checks": {
+            "configured_deepseek": true,
+            "explicit_insufficient_refusal": true,
+            "no_seed_integer_invented": true,
+            "all_original_source_anchors_valid": true,
+            "one_fresh_primary_no_retry": true
+          },
+          "cloud_calls": 1
+        }
+      ]
+    },
+    {
+      "run": "generation-release",
+      "runtime_source": {
+        "python_version": "3.12.14",
+        "app_files": 139,
+        "app_sha256": "1b9f18f0f57863195a903b7f99798656f4cac7b19379b4401fb5e76d3750f04c",
+        "requirements_sha256": "b0e75e31a3ca8f034e095fd0667e3be7e380975548c5acce90db94f96ed7283f"
+      },
+      "source_report_sha256": "e20be139de87b6dc5ba584b0b51eb8a364575401a7ab89b44dca2fa629dd3f63",
+      "cloud_calls": 6,
+      "machine_passed": 4,
+      "cases": [
+        {
+          "case_id": "dpo-instructgpt-object-and-stage",
+          "status": "machine_passed_pending_source_review",
+          "checks": {
+            "real_deepseek_not_fallback": true,
+            "not_insufficient": true,
+            "policy_object_and_learning_objective_present": true,
+            "sampling_object_and_stage_in_same_published_claim": true,
+            "one_comparison_cites_both_originals": true,
+            "all_original_source_anchors_valid": true,
+            "one_fresh_primary_no_retry": true
+          },
+          "cloud_calls": 2
+        },
+        {
+          "case_id": "dpo-reject-global-analytic-and-sampling-free",
+          "status": "machine_passed_pending_source_review",
+          "checks": {
+            "real_deepseek_not_fallback": true,
+            "not_insufficient": true,
+            "policy_object_and_learning_objective_present": true,
+            "sampling_object_and_stage_in_same_published_claim": true,
+            "explicitly_rejects_overgeneralization": true,
+            "all_original_source_anchors_valid": true,
+            "one_fresh_primary_no_retry": true
+          },
+          "cloud_calls": 1
+        },
+        {
+          "case_id": "lora-qlora-mechanism",
+          "status": "machine_passed_pending_source_review",
+          "checks": {
+            "real_deepseek_not_fallback": true,
+            "not_insufficient": true,
+            "one_claim_has_both_originals": true,
+            "all_published_sources_in_scope": true,
+            "quantization_and_memory_methods": true,
+            "all_original_source_anchors_valid": true,
+            "one_fresh_primary_no_retry": true
+          },
+          "cloud_calls": 2
+        },
+        {
+          "case_id": "unreported-training-seed",
+          "status": "machine_passed_pending_source_review",
+          "checks": {
+            "configured_deepseek": true,
+            "explicit_insufficient_refusal": true,
+            "no_seed_integer_invented": true,
+            "all_original_source_anchors_valid": true,
+            "one_fresh_primary_no_retry": true
+          },
+          "cloud_calls": 1
+        }
+      ]
+    },
+    {
+      "run": "generation-scope-release",
+      "runtime_source": {
+        "python_version": "3.12.14",
+        "app_files": 139,
+        "app_sha256": "791c2005e8c3bcc229cbcedd16b34ebea945f5dff172d536cc8d552dfb137941",
+        "requirements_sha256": "b0e75e31a3ca8f034e095fd0667e3be7e380975548c5acce90db94f96ed7283f"
+      },
+      "source_report_sha256": "e20be139de87b6dc5ba584b0b51eb8a364575401a7ab89b44dca2fa629dd3f63",
+      "cloud_calls": 6,
+      "machine_passed": 4,
+      "cases": [
+        {
+          "case_id": "dpo-instructgpt-object-and-stage",
+          "status": "machine_passed_pending_source_review",
+          "checks": {
+            "real_deepseek_not_fallback": true,
+            "not_insufficient": true,
+            "policy_object_and_learning_objective_present": true,
+            "sampling_object_and_stage_in_same_published_claim": true,
+            "one_comparison_cites_both_originals": true,
+            "all_original_source_anchors_valid": true,
+            "one_fresh_primary_no_retry": true
+          },
+          "cloud_calls": 2
+        },
+        {
+          "case_id": "dpo-reject-global-analytic-and-sampling-free",
+          "status": "machine_passed_pending_source_review",
+          "checks": {
+            "real_deepseek_not_fallback": true,
+            "not_insufficient": true,
+            "policy_object_and_learning_objective_present": true,
+            "sampling_object_and_stage_in_same_published_claim": true,
+            "explicitly_rejects_overgeneralization": true,
+            "all_original_source_anchors_valid": true,
+            "one_fresh_primary_no_retry": true
+          },
+          "cloud_calls": 1
+        },
+        {
+          "case_id": "lora-qlora-mechanism",
+          "status": "machine_passed_pending_source_review",
+          "checks": {
+            "real_deepseek_not_fallback": true,
+            "not_insufficient": true,
+            "one_claim_has_both_originals": true,
+            "all_published_sources_in_scope": true,
+            "quantization_and_memory_methods": true,
+            "all_original_source_anchors_valid": true,
+            "one_fresh_primary_no_retry": true
+          },
+          "cloud_calls": 2
+        },
+        {
+          "case_id": "unreported-training-seed",
+          "status": "machine_passed_pending_source_review",
+          "checks": {
+            "configured_deepseek": true,
+            "explicit_insufficient_refusal": true,
+            "no_seed_integer_invented": true,
+            "all_original_source_anchors_valid": true,
+            "one_fresh_primary_no_retry": true
+          },
+          "cloud_calls": 1
+        }
+      ]
+    },
+    {
+      "run": "generation-stability",
+      "runtime_source": {
+        "python_version": "3.12.14",
+        "app_files": 139,
+        "app_sha256": "791c2005e8c3bcc229cbcedd16b34ebea945f5dff172d536cc8d552dfb137941",
+        "requirements_sha256": "b0e75e31a3ca8f034e095fd0667e3be7e380975548c5acce90db94f96ed7283f"
+      },
+      "source_report_sha256": "e20be139de87b6dc5ba584b0b51eb8a364575401a7ab89b44dca2fa629dd3f63",
+      "cloud_calls": 6,
+      "machine_passed": 3,
+      "cases": [
+        {
+          "case_id": "dpo-instructgpt-object-and-stage",
+          "status": "machine_passed_pending_source_review",
+          "checks": {
+            "real_deepseek_not_fallback": true,
+            "not_insufficient": true,
+            "policy_object_and_learning_objective_present": true,
+            "sampling_object_and_stage_in_same_published_claim": true,
+            "one_comparison_cites_both_originals": true,
+            "all_original_source_anchors_valid": true,
+            "one_fresh_primary_no_retry": true
+          },
+          "cloud_calls": 2
+        },
+        {
+          "case_id": "dpo-reject-global-analytic-and-sampling-free",
+          "status": "failed",
+          "checks": {
+            "real_deepseek_not_fallback": true,
+            "not_insufficient": true,
+            "policy_object_and_learning_objective_present": false,
+            "sampling_object_and_stage_in_same_published_claim": true,
+            "explicitly_rejects_overgeneralization": true,
+            "all_original_source_anchors_valid": true,
+            "one_fresh_primary_no_retry": true
+          },
+          "cloud_calls": 1
+        },
+        {
+          "case_id": "lora-qlora-mechanism",
+          "status": "machine_passed_pending_source_review",
+          "checks": {
+            "real_deepseek_not_fallback": true,
+            "not_insufficient": true,
+            "one_claim_has_both_originals": true,
+            "all_published_sources_in_scope": true,
+            "quantization_and_memory_methods": true,
+            "all_original_source_anchors_valid": true,
+            "one_fresh_primary_no_retry": true
+          },
+          "cloud_calls": 2
+        },
+        {
+          "case_id": "unreported-training-seed",
+          "status": "machine_passed_pending_source_review",
+          "checks": {
+            "configured_deepseek": true,
+            "explicit_insufficient_refusal": true,
+            "no_seed_integer_invented": true,
+            "all_original_source_anchors_valid": true,
+            "one_fresh_primary_no_retry": true
+          },
+          "cloud_calls": 1
+        }
+      ]
+    }
+  ],
+  "review_wire_checks": [
+    {
+      "wire_valid": true,
+      "checks": [
+        "supported",
+        "supported",
+        "supported"
+      ],
+      "verdict": "supported"
+    },
+    {
+      "wire_valid": true,
+      "checks": [
+        "uncertain",
+        "supported",
+        "unsupported"
+      ],
+      "verdict": "unavailable"
+    },
+    {
+      "wire_valid": true,
+      "checks": [
+        "supported",
+        "supported",
+        "supported"
+      ],
+      "verdict": "supported"
+    },
+    {
+      "wire_valid": true,
+      "checks": [
+        "supported",
+        "supported",
+        "supported"
+      ],
+      "verdict": "supported"
+    },
+    {
+      "wire_valid": true,
+      "checks": [
+        "supported",
+        "supported",
+        "supported"
+      ],
+      "verdict": "supported"
+    },
+    {
+      "wire_valid": true,
+      "checks": [
+        "supported",
+        "supported",
+        "supported"
+      ],
+      "verdict": "supported"
+    },
+    {
+      "wire_valid": true,
+      "checks": [
+        "supported",
+        "supported",
+        "supported"
+      ],
+      "verdict": "supported"
+    },
+    {
+      "wire_valid": true,
+      "checks": [
+        "supported",
+        "supported",
+        "supported"
+      ],
+      "verdict": "supported"
+    }
+  ],
+  "same_final_source_results": [
+    4,
+    3
+  ],
+  "four_question_stability_released": false,
+  "local_replays": {
+    "saved-defect-replay": {
+      "runtime_source": {
+        "python_version": "3.12.14",
+        "app_files": 139,
+        "app_sha256": "2888842e62261ea677510c9f80d15c60d5c72b8392986cdd43462362aa576328",
+        "requirements_sha256": "b0e75e31a3ca8f034e095fd0667e3be7e380975548c5acce90db94f96ed7283f"
+      },
+      "cloud_calls": 0,
+      "new_retrieval_calls": 0,
+      "new_generation_accuracy_assigned": false,
+      "claims_rewritten": false,
+      "checks": {
+        "actual_pronominal_reporting_denial_survives_unchanged": true,
+        "actual_temperature_task_mismatch_still_withheld": true,
+        "same_published_denial_checker_synonym_recognized": true,
+        "same_incomplete_saved_response_not_relabelled_passed": true
+      },
+      "original_false_positive": {
+        "text": "DPO 消去的仅是“微调期间从 LM 采样”这一环节，论文称其消除了 fine-tuning 时对 LM 采样的需要；它并未声称数据准备和推理整个流程都完全不需要采样。",
+        "evidence_ids": [
+          "E1",
+          "E7"
+        ]
+      },
+      "original_real_error": {
+        "text": "在推理/评估阶段，论文仍会采样模型补全：例如在 TL;DR 测试集上以 0.0 到 1.0 的不同温度采样 completions 计算胜率，DPO 样本也以 temperature 0.7 或 0.25 生成。",
+        "evidence_ids": [
+          "E6",
+          "E2",
+          "E4"
+        ]
+      },
+      "current_false_positive_audit": {
+        "input_claim_count": 1,
+        "accepted_claim_count": 1,
+        "document_claim_counts": {
+          "114bfa0d-d6cf-573d-82b2-cfaed94b58b6": 1
+        },
+        "rejections": []
+      },
+      "current_real_error_audit": {
+        "input_claim_count": 1,
+        "accepted_claim_count": 0,
+        "document_claim_counts": {
+          "114bfa0d-d6cf-573d-82b2-cfaed94b58b6": 1
+        },
+        "rejections": [
+          {
+            "claim_index": 0,
+            "evidence_ids": [
+              "E6",
+              "E2",
+              "E4"
+            ],
+            "reasons": [
+              "semantic_conflict:sampling_temperature_task_mismatch"
+            ]
+          }
+        ]
+      },
+      "checker_only_not_a_new_qa_result": {
+        "real_deepseek_not_fallback": true,
+        "not_insufficient": false,
+        "published_sources_scoped_and_hybrid_reranked": true,
+        "policy_object_and_learning_objective_present": true,
+        "sampling_object_and_stage_in_same_published_claim": false,
+        "explicitly_rejects_overgeneralization": true
+      },
+      "inputs": [
+        {
+          "path": "backend/tmp/official-full-chain-return-2026-10-20/generation-final-guard/report.json",
+          "sha256": "27ebbd37e24a8ce29c19e5c1928a91a84e94b3cba27e5ef6082035c7c946cbc6"
+        },
+        {
+          "path": "backend/tmp/official-full-chain-return-2026-10-20/generation-final-guard/model-calls.json",
+          "sha256": "8bc952dc09970f93339d0054412aca0ac13c8eda87e7f4a714ef52eb2332927a"
+        }
+      ]
+    },
+    "scope-gap-replay": {
+      "runtime_source": {
+        "python_version": "3.12.14",
+        "app_files": 139,
+        "app_sha256": "791c2005e8c3bcc229cbcedd16b34ebea945f5dff172d536cc8d552dfb137941",
+        "requirements_sha256": "b0e75e31a3ca8f034e095fd0667e3be7e380975548c5acce90db94f96ed7283f"
+      },
+      "cloud_calls": 0,
+      "new_retrieval_calls": 0,
+      "saved_live_score_changed": false,
+      "checks": {
+        "real_plot_temperature_task_transfer_now_withheld": true,
+        "real_uncited_matrix_symbols_now_withheld": true,
+        "real_supportive_reviewer_miss_preserved": true
+      },
+      "original_temperature_claim": {
+        "text": "实验与评估中仍使用采样：TL;DR 评估对包括 DPO 在内的各方法在不同温度下采样 completion，DPO 样本有 temperature 0.25 和 0.7 的生成设置；图 3 还报告了不同采样温度下 DPO 的 win rate，说明采样出现在微调之外的流程中。",
+        "evidence_ids": [
+          "E6",
+          "E4",
+          "E5"
+        ]
+      },
+      "original_comparison": {
+        "status": "inferred",
+        "text": "",
+        "source_statements": [
+          {
+            "subject": "LoRA",
+            "paper_id": "P1",
+            "text": "LoRA 冻结预训练权重，只优化注入的低秩分解矩阵 A、B。",
+            "evidence_ids": [
+              "E11"
+            ]
+          },
+          {
+            "subject": "QLoRA",
+            "paper_id": "P2",
+            "text": "QLoRA 在一个冻结的、4 比特量化的预训练模型上，把梯度反传进低秩适配器。",
+            "evidence_ids": [
+              "E18"
+            ]
+          }
+        ],
+        "relation": "contrast"
+      },
+      "original_reviewer": {
+        "checks": [
+          "supported",
+          "supported",
+          "supported"
+        ]
+      },
+      "current_temperature_audit": {
+        "input_claim_count": 1,
+        "accepted_claim_count": 0,
+        "document_claim_counts": {
+          "114bfa0d-d6cf-573d-82b2-cfaed94b58b6": 1
+        },
+        "rejections": [
+          {
+            "claim_index": 0,
+            "evidence_ids": [
+              "E6",
+              "E4",
+              "E5"
+            ],
+            "reasons": [
+              "semantic_conflict:sampling_temperature_task_mismatch"
+            ]
+          }
+        ]
+      },
+      "inputs": [
+        {
+          "path": "backend/tmp/official-full-chain-return-2026-10-20/generation-release/report.json",
+          "sha256": "93b715a6dee9d4e912de18bc4a2aa57602c8e15d55a1585fd2a01395439d8ba9"
+        },
+        {
+          "path": "backend/tmp/official-full-chain-return-2026-10-20/generation-release/model-calls.json",
+          "sha256": "1416825bc5f4d23b5a51abc6cec7b4536b55fd4df2c6dc9bc75ca14e019b7e56"
+        }
+      ]
+    }
+  },
+  "scientific_review": {
+    "date": "2026-10-20",
+    "runtime_app_sha256": "791c2005e8c3bcc229cbcedd16b34ebea945f5dff172d536cc8d552dfb137941",
+    "scope": "Core source-page review of two final same-source archived-evidence generation rounds; not new retrieval or whole-sentence expert certification",
+    "final_rounds": [
+      {
+        "run": "generation-scope-release",
+        "machine_passed": 4,
+        "executed": 4
+      },
+      {
+        "run": "generation-stability",
+        "machine_passed": 3,
+        "executed": 4
+      }
+    ],
+    "checks": [
+      "Both final DPO/InstructGPT comparisons use each original: classification preference objective versus explicit reward modeling/PPO, optimal policy rather than analytical neural-weight fitting, and fine-tuning LM sampling boundaries.",
+      "Both final LoRA comparisons explicitly select E1 containing the matrix labels A and B; the earlier introductory E11 alone did not contain them. QLoRA freezing, quantized base, adapter gradients and memory mechanisms have separately selected sources.",
+      "The final DPO counterexample answers retain the optimal-policy object, gradient-based training, fine-tuning sampling bound and offline-data sampling. The stability answer omits the explicit classification-loss label required by the unchanged gate: preserve that failure rather than substitute a narrower manual goal.",
+      "Normal-distribution qualification, four-bit storage versus BFloat16 computation, quantized quantization constants and optimizer-state CPU/GPU paging match the QLoRA pages viewed.",
+      "The scope-release seed generation added warmup_steps=4000 without that value in its selected excerpts. It was withheld and returned safe insufficient evidence, not an invented seed. The stability refusal is explicitly limited to supplied excerpts.",
+      "An earlier machine-4/4 round had a plot-temperature task transfer and a matrix-label citation gap despite a supportive reviewer. Final guards reject both unchanged old claims; no citations or text are repaired."
+    ],
+    "reservations": [
+      "No new full-RAG question completed: fresh indexing timed out and the separate verified-index restore failed with scroll HTTP 408.",
+      "Two container bind-mount reads failed with errno 12; a no-bind-mount run received Docker /_ping HTTP 500. Neither uniquely establishes an OOM-kill or networking root cause.",
+      "Two same-source rounds are a bounded sample only; the unchanged four-question stability gate was not met.",
+      "Neural network parameters (pi_theta) is imprecise: pi_theta is a parameterized policy and theta denotes parameters. E19's extracted formula is truncated although the complete original page shows the denominator. Whole-sentence scientific quality and full formula-excerpt fidelity remain reserved.",
+      "NF4-memory causal glosses and performance-preservation wording need cited experimental scope, not universal guarantees. Reviewer decisions remain fallible.",
+      "No new all-39-file parse/QA, full browser acceptance, production install/migration or submission/public-deployment acceptance was done."
+    ],
+    "full_pages_viewed": [
+      "backend/tmp/official-batch-acceptance-2026-10-18/dpo-02.png",
+      "backend/tmp/official-batch-acceptance-2026-10-18/dpo-math-16.png",
+      "backend/tmp/official-batch-acceptance-2026-10-18/instructgpt-06.png",
+      "backend/tmp/official-batch-acceptance-2026-10-18/lora-02.png",
+      "backend/tmp/official-batch-acceptance-2026-10-18/qlora-04.png",
+      "backend/tmp/official-batch-acceptance-2026-10-18/qlora-05.png",
+      "backend/tmp/official-batch-acceptance-2026-10-18/qlora-performance-06.png",
+      "backend/tmp/official-vector-recovery-2026-10-20/source-pages/2305.18290v3-p5.png"
+    ],
+    "whole_scientific_quality_released": false,
+    "whole_project_released": false
+  },
+  "runtime_observation": {
+    "services": [
+      {
+        "service": "BGE",
+        "url": "http://127.0.0.1:8001/health",
+        "status_code": 200,
+        "body_bytes": 0,
+        "duration_ms": 293.61
+      },
+      {
+        "service": "TEI",
+        "url": "http://127.0.0.1:8002/health",
+        "status_code": 200,
+        "body_bytes": 0,
+        "duration_ms": 293.37
+      },
+      {
+        "service": "Qdrant",
+        "url": "http://127.0.0.1:7333/healthz",
+        "status_code": 200,
+        "body_bytes": 20,
+        "duration_ms": 307.65
+      }
+    ],
+    "docker": {
+      "containers": {
+        "exit_code": 0,
+        "stdout": "pdfagent-beat-1\tUp 4 hours\npdfagent-worker-1\tUp 4 hours (healthy)\npdfagent-backend-1\tUp 4 hours (healthy)\npdfagent-frontend-1\tUp 4 hours (healthy)\npdfagent-postgres-1\tUp 4 hours (healthy)\npdfagent-redis-1\tUp 4 hours (healthy)\npdfagent-qdrant-1\tUp 4 hours\npdfagent-bge-reranker-1\tUp 4 hours (healthy)\npdfagent-bge-embedding-1\tUp 4 hours (healthy)\npdfagent-minio-1\tUp 4 hours\nlangfuse-langfuse-web-1\tUp 4 hours\nlangfuse-langfuse-worker-1\tUp 4 hours\nlangfuse-clickhouse-1\tUp 4 hours (healthy)\nlangfuse-redis-1\tUp 4 hours (healthy)\nlangfuse-postgres-1\tUp 4 hours (healthy)\nlangfuse-minio-1\tUp 4 hours (healthy)\n",
+        "stderr": ""
+      },
+      "resources": {
+        "exit_code": 0,
+        "stdout": "pdfagent-beat-1\t30.7MiB / 15.43GiB\t0.00%\npdfagent-worker-1\t85.81MiB / 15.43GiB\t3.36%\npdfagent-backend-1\t65.69MiB / 15.43GiB\t1.27%\npdfagent-frontend-1\t35.96MiB / 15.43GiB\t0.00%\npdfagent-postgres-1\t9.852MiB / 15.43GiB\t0.00%\npdfagent-redis-1\t6.488MiB / 15.43GiB\t1.43%\npdfagent-qdrant-1\t283.7MiB / 15.43GiB\t23.57%\npdfagent-bge-reranker-1\t6.11GiB / 15.43GiB\t2.12%\npdfagent-bge-embedding-1\t4.896GiB / 15.43GiB\t2.06%\npdfagent-minio-1\t59.89MiB / 15.43GiB\t0.00%\nlangfuse-langfuse-web-1\t917.5MiB / 15.43GiB\t0.67%\nlangfuse-langfuse-worker-1\t573.1MiB / 15.43GiB\t4.58%\nlangfuse-clickhouse-1\t1.174GiB / 15.43GiB\t84.03%\nlangfuse-redis-1\t10.76MiB / 15.43GiB\t0.88%\nlangfuse-postgres-1\t22.78MiB / 15.43GiB\t0.00%\nlangfuse-minio-1\t97.41MiB / 15.43GiB\t0.00%\n",
+        "stderr": ""
+      }
+    },
+    "automatic_retries": 0,
+    "service_mutations": 0,
+    "inference_probes": 0
+  },
+  "whole_corpus_accuracy_assigned": false,
+  "production_image_replaced": false,
+  "production_database_migrated": false,
+  "git": {
+    "branch": "codex/stage94-official-failed-qa-retest",
+    "head": "a119f5609cda544e5d587588c5a338051da129a1",
+    "refs_mutated": false,
+    "pushed": false
+  },
+  "secret_scan_findings": [],
+  "source_and_document_files": [
+    {
+      "path": "backend/app/services/claim_semantics.py",
+      "sha256": "d0d2934986ff6f0c5c2dce4c6a905c710f217394305652bcd569fd8075e7c4be"
+    },
+    {
+      "path": "backend/app/services/scope_provenance.py",
+      "sha256": "5bec6514861243b288039c22e08cb3f154c1a46a2b6669db337dec1b6c777cfc"
+    },
+    {
+      "path": "backend/app/llm/comparison_support.py",
+      "sha256": "3ce7344bbdf268bcf5ca8a66d392d6dcc53ad21eaa2ee639129e9bfb7a44989e"
+    },
+    {
+      "path": "backend/scripts/official_index_reuse.py",
+      "sha256": "692e5bb5cf8616ee783c643efa82116a6cba30ab16f29c03acfb86390470d744"
+    },
+    {
+      "path": "backend/scripts/official_vector_audit.py",
+      "sha256": "0f14ca0e8945a0c4bc9a652101f9aaafb75b0f3b274c34f11b8f43bf5f5bbfcd"
+    },
+    {
+      "path": "backend/scripts/verify_official_comparison_batch.py",
+      "sha256": "91a3fa58726b93260f76cc00d2e1e0ec3cc54bed0956bb37afd3b6ad1ef55e29"
+    },
+    {
+      "path": "backend/scripts/verify_official_candidate_qa.py",
+      "sha256": "fd71618d98752c59b2b3ee3ba7bea60e0dabb35e752e790c3dd87ab0a6f17c49"
+    },
+    {
+      "path": "backend/tests/test_policy_optimization_scope.py",
+      "sha256": "30a1defc6a39a227bfacc3ca8d191be2c6437769844cc0f8124181228e829822"
+    },
+    {
+      "path": "backend/tests/test_comparison_support.py",
+      "sha256": "59f1a83d4f7c355ef9d2291f366facc95912f604cc1dd1b58b717a45679a15f4"
+    },
+    {
+      "path": "backend/tests/test_official_candidate_runtime_safety.py",
+      "sha256": "42f4b933fc2979ef2ff10acb65274739793a6383a6fae7b0355d06fc817083a8"
+    },
+    {
+      "path": "backend/tests/test_official_vector_audit.py",
+      "sha256": "d33d4f22916139885f2b56a8139576d53fa942b926298b576929178b0c496d1d"
+    },
+    {
+      "path": "backend/tests/test_scope_provenance.py",
+      "sha256": "57a2579e9bf77132fbff979a422419b3dbc2618d387c8fd4fa4ba5341cff0d19"
+    },
+    {
+      "path": "README.md",
+      "sha256": "47aa310486a3feede350e9e9fe3975b5cfbc7e6ff0860cd3ccbc565545765d35"
+    },
+    {
+      "path": "docs/acceptance-progress.md",
+      "sha256": "920533309bfcff77fa7d361a24c9e61180da2cb1a6874a447cc83a9cf7931ad4"
+    },
+    {
+      "path": "docs/competition-verification-gates.md",
+      "sha256": "d9ec5a392d16508dcb8dd051b2415631d265e59a7e40ce6b96cd4b93ad40e9f0"
+    },
+    {
+      "path": "docs/competition-delivery-checklist.md",
+      "sha256": "ba3417527249d2180cf2eaec6b03a3bd2b29f4231d47ab855ba992b142db205a"
+    },
+    {
+      "path": "docs/official-rag-transport-acceptance-2026-10-20.md",
+      "sha256": "9071f0e44cbe6894551eeecb59511549cbdc30d9ce47acd2d9214b72e7f71879"
+    }
+  ],
+  "artifacts": [
+    {
+      "path": "backend/tmp/official-full-chain-return-2026-10-20/backend-release.xml",
+      "sha256": "21b1e8135cec109eb2a518aa9104d1b39d132128d5372e87ac86c15cafb846f2"
+    },
+    {
+      "path": "backend/tmp/official-full-chain-return-2026-10-20/backend.xml",
+      "sha256": "9a4dde7bcc3d4775c16679c4dffff530ff828f38cbc8399cbaede08a48406df2"
+    },
+    {
+      "path": "backend/tmp/official-full-chain-return-2026-10-20/compose-run-observation.json",
+      "sha256": "971bef746c33ca1ab9626733a72c12035d0ab6764eb01a00861cc346cd5a4667"
+    },
+    {
+      "path": "backend/tmp/official-full-chain-return-2026-10-20/finalize_evidence.py",
+      "sha256": "4ce10155c0026433a58651681098a274abae55e0fbcb8858bdedf91694faf208"
+    },
+    {
+      "path": "backend/tmp/official-full-chain-return-2026-10-20/frontend.xml",
+      "sha256": "0262a9c9a2b44e066b59e1c43146fb8df93e4fc18cec7036ccc03485fab5c08c"
+    },
+    {
+      "path": "backend/tmp/official-full-chain-return-2026-10-20/full-rag/acceptance.db",
+      "sha256": "83c6029e33f10f06aa868a50c5b3949181ad432a5b176afc1efb567c9b66ca36"
+    },
+    {
+      "path": "backend/tmp/official-full-chain-return-2026-10-20/full-rag/fixture.json",
+      "sha256": "d7730edb860bcb4b6ba77311de22d749684d6fc726ea5d38b5762afc308c117f"
+    },
+    {
+      "path": "backend/tmp/official-full-chain-return-2026-10-20/full-rag/model-calls.json",
+      "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+    },
+    {
+      "path": "backend/tmp/official-full-chain-return-2026-10-20/full-rag/parsed/114bfa0d-d6cf-573d-82b2-cfaed94b58b6.json",
+      "sha256": "6710c78824d61e72e1b0c15aaddf534ce0872570051a9b95d6f2f39c786645d7"
+    },
+    {
+      "path": "backend/tmp/official-full-chain-return-2026-10-20/full-rag/parsed/20d9fad6-9e6f-543d-a2e1-095d8056c5ff.json",
+      "sha256": "4a05a089a864b8fc603470e4f28fc480526b8184b8c5a89039db83b07bdded3d"
+    },
+    {
+      "path": "backend/tmp/official-full-chain-return-2026-10-20/full-rag/parsed/855562a1-8309-57b2-b7b0-b9e7016207dc.json",
+      "sha256": "0bdf9ab2be963a5e42b3560e72b14fd247e2723c299ffc3e340682b02394db97"
+    },
+    {
+      "path": "backend/tmp/official-full-chain-return-2026-10-20/full-rag/parsed/bc90bcf2-cccd-5364-94f6-5815603802f7.json",
+      "sha256": "2f5bdb78b265127069fbaf7c9841afe6e181a0d93c3209856c420d678c7825d0"
+    },
+    {
+      "path": "backend/tmp/official-full-chain-return-2026-10-20/full-rag/parsed/cd05de96-3b20-5178-8953-d8ee090a4f23.json",
+      "sha256": "0ab6909920de99d93d12d57d963fe93c684446cbcfdba40bf2df1ed080d7b414"
+    },
+    {
+      "path": "backend/tmp/official-full-chain-return-2026-10-20/full-rag/report.json",
+      "sha256": "cddb412c22a084858a07e68c60974ee7b2db9bcbc714ee317a931bba245a9630"
+    },
+    {
+      "path": "backend/tmp/official-full-chain-return-2026-10-20/full-rag/uploads/114bfa0d-d6cf-573d-82b2-cfaed94b58b6.pdf",
+      "sha256": "92cb3a2b71362acda98a789b03d88688fd33cf5fcf13f81d2b1de30ee7d3b67a"
+    },
+    {
+      "path": "backend/tmp/official-full-chain-return-2026-10-20/full-rag/uploads/20d9fad6-9e6f-543d-a2e1-095d8056c5ff.pdf",
+      "sha256": "0a9bff1be3575cf9fe26a4a3d3a9175bc791ecec90de8b9deba4cff75d2b9476"
+    },
+    {
+      "path": "backend/tmp/official-full-chain-return-2026-10-20/full-rag/uploads/855562a1-8309-57b2-b7b0-b9e7016207dc.pdf",
+      "sha256": "33a4e757c19d6ea8d3cca8958fce8fe405e290272e135c99ee66065c775d5bd1"
+    },
+    {
+      "path": "backend/tmp/official-full-chain-return-2026-10-20/full-rag/uploads/bc90bcf2-cccd-5364-94f6-5815603802f7.pdf",
+      "sha256": "e9a0d3128767db616085dc0f4e6e455e672e89af823e8ed1282793682787395a"
+    },
+    {
+      "path": "backend/tmp/official-full-chain-return-2026-10-20/full-rag/uploads/cd05de96-3b20-5178-8953-d8ee090a4f23.pdf",
+      "sha256": "c1984bb50a5b90fddb895fdc3a0f72e5bc977148c9f63ef6040cbe7a3e1f0d98"
+    },
+    {
+      "path": "backend/tmp/official-full-chain-return-2026-10-20/generation-final-guard/model-calls.json",
+      "sha256": "8bc952dc09970f93339d0054412aca0ac13c8eda87e7f4a714ef52eb2332927a"
+    },
+    {
+      "path": "backend/tmp/official-full-chain-return-2026-10-20/generation-final-guard/report.json",
+      "sha256": "27ebbd37e24a8ce29c19e5c1928a91a84e94b3cba27e5ef6082035c7c946cbc6"
+    },
+    {
+      "path": "backend/tmp/official-full-chain-return-2026-10-20/generation-release/model-calls.json",
+      "sha256": "1416825bc5f4d23b5a51abc6cec7b4536b55fd4df2c6dc9bc75ca14e019b7e56"
+    },
+    {
+      "path": "backend/tmp/official-full-chain-return-2026-10-20/generation-release/report.json",
+      "sha256": "93b715a6dee9d4e912de18bc4a2aa57602c8e15d55a1585fd2a01395439d8ba9"
+    },
+    {
+      "path": "backend/tmp/official-full-chain-return-2026-10-20/generation-scope-release/model-calls.json",
+      "sha256": "c4a71292e9ecfa4b354a262fda8608dbefbcfd9e2697427eea8212f520b8c8c4"
+    },
+    {
+      "path": "backend/tmp/official-full-chain-return-2026-10-20/generation-scope-release/report.json",
+      "sha256": "bf439827fc8c27009fee1e004c4ba581aa991c8154e27835eb8b0f65c1929cc5"
+    },
+    {
+      "path": "backend/tmp/official-full-chain-return-2026-10-20/generation-stability/model-calls.json",
+      "sha256": "ca9196280d1a82a79dc97dc2033b75b67763b672851647d3ddd4ead5be42b646"
+    },
+    {
+      "path": "backend/tmp/official-full-chain-return-2026-10-20/generation-stability/report.json",
+      "sha256": "c91258c18ee01439fd96d1fa25661fab94c25c20c8fcd4862362c1bb51333bfb"
+    },
+    {
+      "path": "backend/tmp/official-full-chain-return-2026-10-20/index-reuse-tests.xml",
+      "sha256": "610336b914cef387d1adcffdbe9d1eaa13a8b43909c72ecbddc393f8b03155fd"
+    },
+    {
+      "path": "backend/tmp/official-full-chain-return-2026-10-20/manual-source-review.json",
+      "sha256": "a4493797f8ba150a8ba06e9bac3b352d3d252dfb9a4f77f30b83682303946602"
+    },
+    {
+      "path": "backend/tmp/official-full-chain-return-2026-10-20/read-only-rag/acceptance.db",
+      "sha256": "3cadd6eb8181d13dede5466cd8b1e3076074dc5508cb7bd5cd459d44ace6b76b"
+    },
+    {
+      "path": "backend/tmp/official-full-chain-return-2026-10-20/read-only-rag/fixture.json",
+      "sha256": "d7730edb860bcb4b6ba77311de22d749684d6fc726ea5d38b5762afc308c117f"
+    },
+    {
+      "path": "backend/tmp/official-full-chain-return-2026-10-20/read-only-rag/model-calls.json",
+      "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+    },
+    {
+      "path": "backend/tmp/official-full-chain-return-2026-10-20/read-only-rag/parsed/114bfa0d-d6cf-573d-82b2-cfaed94b58b6.json",
+      "sha256": "6710c78824d61e72e1b0c15aaddf534ce0872570051a9b95d6f2f39c786645d7"
+    },
+    {
+      "path": "backend/tmp/official-full-chain-return-2026-10-20/read-only-rag/parsed/20d9fad6-9e6f-543d-a2e1-095d8056c5ff.json",
+      "sha256": "4a05a089a864b8fc603470e4f28fc480526b8184b8c5a89039db83b07bdded3d"
+    },
+    {
+      "path": "backend/tmp/official-full-chain-return-2026-10-20/read-only-rag/parsed/855562a1-8309-57b2-b7b0-b9e7016207dc.json",
+      "sha256": "0bdf9ab2be963a5e42b3560e72b14fd247e2723c299ffc3e340682b02394db97"
+    },
+    {
+      "path": "backend/tmp/official-full-chain-return-2026-10-20/read-only-rag/parsed/bc90bcf2-cccd-5364-94f6-5815603802f7.json",
+      "sha256": "2f5bdb78b265127069fbaf7c9841afe6e181a0d93c3209856c420d678c7825d0"
+    },
+    {
+      "path": "backend/tmp/official-full-chain-return-2026-10-20/read-only-rag/parsed/cd05de96-3b20-5178-8953-d8ee090a4f23.json",
+      "sha256": "0ab6909920de99d93d12d57d963fe93c684446cbcfdba40bf2df1ed080d7b414"
+    },
+    {
+      "path": "backend/tmp/official-full-chain-return-2026-10-20/read-only-rag/report.json",
+      "sha256": "d7f35a49d358dd3b46d54f536a0ca96ec381bef61cd086faea5023e953b7453b"
+    },
+    {
+      "path": "backend/tmp/official-full-chain-return-2026-10-20/read-only-rag/uploads/114bfa0d-d6cf-573d-82b2-cfaed94b58b6.pdf",
+      "sha256": "92cb3a2b71362acda98a789b03d88688fd33cf5fcf13f81d2b1de30ee7d3b67a"
+    },
+    {
+      "path": "backend/tmp/official-full-chain-return-2026-10-20/read-only-rag/uploads/20d9fad6-9e6f-543d-a2e1-095d8056c5ff.pdf",
+      "sha256": "0a9bff1be3575cf9fe26a4a3d3a9175bc791ecec90de8b9deba4cff75d2b9476"
+    },
+    {
+      "path": "backend/tmp/official-full-chain-return-2026-10-20/read-only-rag/uploads/855562a1-8309-57b2-b7b0-b9e7016207dc.pdf",
+      "sha256": "33a4e757c19d6ea8d3cca8958fce8fe405e290272e135c99ee66065c775d5bd1"
+    },
+    {
+      "path": "backend/tmp/official-full-chain-return-2026-10-20/read-only-rag/uploads/bc90bcf2-cccd-5364-94f6-5815603802f7.pdf",
+      "sha256": "e9a0d3128767db616085dc0f4e6e455e672e89af823e8ed1282793682787395a"
+    },
+    {
+      "path": "backend/tmp/official-full-chain-return-2026-10-20/read-only-rag/uploads/cd05de96-3b20-5178-8953-d8ee090a4f23.pdf",
+      "sha256": "c1984bb50a5b90fddb895fdc3a0f72e5bc977148c9f63ef6040cbe7a3e1f0d98"
+    },
+    {
+      "path": "backend/tmp/official-full-chain-return-2026-10-20/regression-data/isolated.db",
+      "sha256": "dc35ad43bd7bb40de46244fcd529855152c6e52ebd636f35e36c2f64de4b104a"
+    },
+    {
+      "path": "backend/tmp/official-full-chain-return-2026-10-20/regression-release-data/isolated.db",
+      "sha256": "87f367af27e172f4774072150931d21f54013b4eab6e72e14c1268c9692b9b8a"
+    },
+    {
+      "path": "backend/tmp/official-full-chain-return-2026-10-20/replay_current_defects.py",
+      "sha256": "480e7129a16166fb0be23cf4b15f185873d31bbae9c9cabf7d9c6b60e161e04b"
+    },
+    {
+      "path": "backend/tmp/official-full-chain-return-2026-10-20/replay_scope_gaps.py",
+      "sha256": "dea9e52f3651775d9a99cd58fca363e45408656a954e3966658740874cc2e77e"
+    },
+    {
+      "path": "backend/tmp/official-full-chain-return-2026-10-20/run_compose_check.py",
+      "sha256": "694ab3819cb58ce7abbb46c33540eb27676a7581e2fc2658fead2c6053b5d929"
+    },
+    {
+      "path": "backend/tmp/official-full-chain-return-2026-10-20/run_streamed_check.py",
+      "sha256": "bf327bd01b0b9de9e9659adf78ecd5f811b1c4a63f58e47f73dbf434673d8b84"
+    },
+    {
+      "path": "backend/tmp/official-full-chain-return-2026-10-20/runtime-observation.json",
+      "sha256": "728740ed62b873b94efdab255fbb919a6c64b99ba3c024892d875f2ddc09c40d"
+    },
+    {
+      "path": "backend/tmp/official-full-chain-return-2026-10-20/runtime_probe.py",
+      "sha256": "ea15b9ef219ae085eaaf5ababbc0b735d95d59e99600db7e304fcef3f4e4d1f9"
+    },
+    {
+      "path": "backend/tmp/official-full-chain-return-2026-10-20/saved-defect-replay.json",
+      "sha256": "f7c85f5779a67ca2abf785fd929d1ffc179b71641f627cbb01b9ebbd2c252550"
+    },
+    {
+      "path": "backend/tmp/official-full-chain-return-2026-10-20/scope-gap-replay.json",
+      "sha256": "073b9c66a5f097bd27f6bbdc78d44176c6db38f681b1875ab01bb7c71d57f559"
+    },
+    {
+      "path": "backend/tmp/official-full-chain-return-2026-10-20/static-checks.json",
+      "sha256": "aca7d40555d5370352a14d00c8de354198c94df2b0f06208e7130e34f5a1e21a"
+    },
+    {
+      "path": "backend/tmp/official-full-chain-return-2026-10-20/streamed-run-observation.json",
+      "sha256": "1b5c6b008af54f0265234b7262715c5e09c18989ca1e17f223630337fd5507fe"
+    },
+    {
+      "path": "backend/tmp/official-full-chain-return-2026-10-20/target-tests.xml",
+      "sha256": "264926ec21560fd9dbdf69d520fa85bde0de5b438e192977c01cb781d41ed161"
+    }
+  ]
+}

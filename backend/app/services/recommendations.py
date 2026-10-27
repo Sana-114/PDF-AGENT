@@ -3,8 +3,10 @@ import json
 import math
 from dataclasses import dataclass
 from datetime import UTC, datetime
+from typing import NamedTuple
 
 from sqlalchemy import select
+from sqlalchemy.exc import SQLAlchemyError
 from sqlalchemy.orm import Session
 
 from app.core.config import Settings, settings
@@ -27,6 +29,15 @@ class RefreshSummary:
     discovered: int
     updated: int
     error: str | None = None
+    ranking_provider: str | None = None
+    ranking_warning: str | None = None
+
+
+class _RankingResult(NamedTuple):
+    vectors: list[list[float]]
+    scores: list[float]
+    provider: str
+    warning: str | None
 
 
 def _clamp(value: float) -> float:
@@ -66,22 +77,58 @@ class RecommendationService:
         if subscription is None:
             return RefreshSummary(subscription_id=subscription_id, discovered=0, updated=0)
         try:
-            candidates = await self.discovery.search_arxiv(
+            fetched = await self.discovery.search_arxiv(
                 query=subscription.query,
                 category=subscription.category,
                 limit=subscription.max_results,
             )
+            # Feed entries can repeat a work or include revisions out of order.
+            # Keep one complete version's metadata; never merge two revisions.
+            unique: dict[str, PaperCandidate] = {}
+            for candidate in fetched:
+                if not candidate.arxiv_id or not candidate.pdf_url or not candidate.landing_url:
+                    continue
+                previous = unique.get(candidate.arxiv_id)
+                if previous is None or (candidate.arxiv_version or 0) > (
+                    previous.arxiv_version or 0
+                ):
+                    unique[candidate.arxiv_id] = candidate
+            candidates = list(unique.values())
+            if not candidates:
+                subscription.last_refreshed_at = datetime.now(UTC)
+                subscription.last_error = None
+                db.commit()
+                return RefreshSummary(subscription.id, 0, 0)
             await self._attach_code(candidates)
             vectors = await self._recommendation_vectors(db, subscription, candidates)
             discovered, updated = self._persist(db, subscription, candidates, vectors)
             subscription.last_refreshed_at = datetime.now(UTC)
             subscription.last_error = None
             db.commit()
-            return RefreshSummary(subscription.id, discovered, updated)
+            return RefreshSummary(
+                subscription.id,
+                discovered,
+                updated,
+                ranking_provider=vectors.provider,
+                ranking_warning=vectors.warning,
+            )
         except Exception as exc:
-            subscription.last_error = str(exc)[:2000]
-            db.commit()
-            return RefreshSummary(subscription.id, 0, 0, str(exc))
+            # A failed flush leaves the session unusable until rollback. Also
+            # discard partial metadata changes before recording the failure.
+            db.rollback()
+            error = (
+                f"推荐写入失败（{type(exc).__name__}）；本次数据已回滚，可手动重试。"
+                if isinstance(exc, SQLAlchemyError) else str(exc) or type(exc).__name__
+            )[:2000]
+            try:
+                subscription = db.get(ArxivSubscription, subscription_id)
+                if subscription is not None:
+                    subscription.last_error = error
+                    db.commit()
+            except SQLAlchemyError:
+                db.rollback()
+                error += " 错误状态未能写入数据库。"
+            return RefreshSummary(subscription_id, 0, 0, error)
 
     async def _attach_code(self, candidates: list[PaperCandidate]) -> None:
         lookups = 0
@@ -104,7 +151,7 @@ class RecommendationService:
         db: Session,
         subscription: ArxivSubscription,
         candidates: list[PaperCandidate],
-    ) -> tuple[list[list[float]], list[float]]:
+    ) -> _RankingResult:
         document_titles = db.scalars(
             select(Document.title)
             .where(Document.status == DocumentStatus.READY, Document.title.is_not(None))
@@ -131,37 +178,50 @@ class RecommendationService:
         candidate_texts = [
             f"{item.title}\n{item.abstract or ''}\n{item.venue or ''}" for item in candidates
         ]
-        texts = [profile or subscription.name, negative_profile, *candidate_texts]
+        # TEI rejects blank inputs. A new workspace has no disliked papers yet;
+        # omit that absent profile instead of silently falling back to hashing.
+        texts = [profile or subscription.name, *candidate_texts]
+        if negative_profile:
+            texts.insert(1, negative_profile)
+        warning = None
+        ranking_provider = self.config.embedding_provider
         try:
             provider = get_embedding_provider(self.config)
             vectors = await asyncio.to_thread(provider.embed_dense, texts)
         except Exception:
             fallback = HashEmbeddingProvider(dimensions=384)
             vectors = fallback.embed_dense(texts)
-        profile_vector, negative_vector, *candidate_vectors = vectors
+            ranking_provider = "hash"
+            warning = "语义向量服务暂不可用，本次使用词项哈希排序，不代表 BGE 语义推荐。"
+        profile_vector = vectors[0]
+        negative_vector = vectors[1] if negative_profile else []
+        candidate_vectors = vectors[2:] if negative_profile else vectors[1:]
         scores = [
             _clamp((_similarity(profile_vector, vector) + 1.0) / 2.0)
             for vector in candidate_vectors
         ]
         negative_scores = [
-            _clamp((_similarity(negative_vector, vector) + 1.0) / 2.0)
-            if negative_profile
-            else 0.0
+            _clamp((_similarity(negative_vector, vector) + 1.0) / 2.0) if negative_profile else 0.0
             for vector in candidate_vectors
         ]
-        return candidate_vectors, [
-            _clamp(score - 0.12 * negative)
-            for score, negative in zip(scores, negative_scores, strict=False)
-        ]
+        return _RankingResult(
+            candidate_vectors,
+            [
+                _clamp(score - 0.12 * negative)
+                for score, negative in zip(scores, negative_scores, strict=False)
+            ],
+            ranking_provider,
+            warning,
+        )
 
     def _persist(
         self,
         db: Session,
         subscription: ArxivSubscription,
         candidates: list[PaperCandidate],
-        vectors: tuple[list[list[float]], list[float]],
+        vectors: _RankingResult,
     ) -> tuple[int, int]:
-        _, relevance_scores = vectors
+        relevance_scores = vectors.scores
         existing = {
             item.arxiv_id: item
             for item in db.scalars(
@@ -179,6 +239,9 @@ class RecommendationService:
             code_bonus = 1.0 if candidate.code_url else 0.0
             final_score = _clamp(0.62 * relevance + 0.28 * freshness + 0.10 * code_bonus)
             recommendation = existing.get(candidate.arxiv_id)
+            if (recommendation is not None and recommendation.arxiv_version is not None
+                    and (candidate.arxiv_version or 0) < recommendation.arxiv_version):
+                continue
             if recommendation is None:
                 recommendation = PaperRecommendation(
                     subscription_id=subscription.id,
@@ -189,6 +252,7 @@ class RecommendationService:
                     recommendation_reason="",
                 )
                 db.add(recommendation)
+                existing[candidate.arxiv_id] = recommendation
                 discovered += 1
             else:
                 updated += 1
@@ -208,7 +272,12 @@ class RecommendationService:
             recommendation.relevance_score = round(relevance, 4)
             recommendation.freshness_score = round(freshness, 4)
             recommendation.final_score = round(final_score, 4)
-            reasons = [f"与本地研究兴趣相关度 {relevance:.0%}", f"时效性 {freshness:.0%}"]
+            freshness_reason = (
+                f"时效性 {freshness:.0%}"
+                if candidate.published_at
+                else "发布时间未知，使用默认时效权重"
+            )
+            reasons = [f"与本地研究兴趣相关度 {relevance:.0%}", freshness_reason]
             if candidate.code_url:
                 code_label = (
                     f"GitHub 代码 {candidate.code_stars}★"
@@ -216,9 +285,18 @@ class RecommendationService:
                     else "附 GitHub 代码"
                 )
                 reasons.append(code_label)
+            if vectors.warning:
+                reasons.append(vectors.warning)
             recommendation.recommendation_reason = "；".join(reasons)
             recommendation.metadata_json = json.dumps(
-                candidate.model_dump(mode="json"), ensure_ascii=False
+                {
+                    **candidate.model_dump(mode="json"),
+                    "ranking": {
+                        "provider": vectors.provider,
+                        "warning": vectors.warning,
+                    },
+                },
+                ensure_ascii=False,
             )
         return discovered, updated
 

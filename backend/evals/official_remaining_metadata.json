@@ -1,0 +1,43 @@
+{
+  "schema_version": "1.0",
+  "scope": "First-page title fragment and one credited author or team for all documents; exact ordered author lists for seven separately source-reviewed documents only.",
+  "excluded_previously_tested": [
+    "1706.03762v1.pdf", "1706.03762v7.pdf", "1706.03762v1_img.pdf",
+    "UnderstandingDeepLearning_02_09_26_C.pdf", "N19-1423.pdf",
+    "language_understanding_paper.pdf", "2005.14165v4.pdf"
+  ],
+  "documents": [
+    {"filename":"1607.06450v1.pdf","title_contains":"Layer Normalization","author":"Jimmy Lei Ba"},
+    {"filename":"1707.06347v2.pdf","title_contains":"Proximal Policy Optimization Algorithms","author":"John Schulman"},
+    {"filename":"1910.02054v3.pdf","title_contains":"ZeRO: Memory Optimizations","author":"Samyam Rajbhandari","authors_exact":["Samyam Rajbhandari","Jeff Rasley","Olatunji Ruwase","Yuxiong He"]},
+    {"filename":"1910.10683v4.pdf","title_contains":"Exploring the Limits of Transfer Learning","author":"Colin Raffel"},
+    {"filename":"2001.08361v1.pdf","title_contains":"Scaling Laws for Neural Language Models","author":"Jared Kaplan"},
+    {"filename":"2002.04745v2.pdf","title_contains":"On Layer Normalization in the Transformer Architecture","author":"Ruibin Xiong"},
+    {"filename":"2010.11929v2.pdf","title_contains":"AN IMAGE IS WORTH 16X16 WORDS","author":"Alexey Dosovitskiy"},
+    {"filename":"209_Emergent_Abilities_of_Larg.pdf","title_contains":"Emergent Abilities of Large Language Models","author":"Jason Wei"},
+    {"filename":"2101.03961v3.pdf","title_contains":"Switch Transformers: Scaling to Trillion Parameter Models","author":"William Fedus"},
+    {"filename":"2103.00020v1.pdf","title_contains":"Learning Transferable Visual Models From Natural Language Supervision","author":"Alec Radford"},
+    {"filename":"2106.09685v2.pdf","title_contains":"LOW-RANK ADAPTATION","author":"Edward Hu","authors_exact":["Edward Hu","Yelong Shen","Phillip Wallis","Zeyuan Allen-Zhu","Yuanzhi Li","Shean Wang","Lu Wang","Weizhu Chen"]},
+    {"filename":"2107.03374v2.pdf","title_contains":"Evaluating Large Language Models Trained on Code","author":"Mark Chen"},
+    {"filename":"2201.11903v6.pdf","title_contains":"Chain-of-Thought Prompting Elicits Reasoning","author":"Jason Wei"},
+    {"filename":"2203.02155v1.pdf","title_contains":"Training language models to follow instructions","author":"Long Ouyang"},
+    {"filename":"2205.14135v2.pdf","title_contains":"FlashAttention: Fast and Memory","author":"Tri Dao"},
+    {"filename":"2206.07682v2.pdf","title_contains":"Emergent Abilities of Large Language Models","author":"Jason Wei"},
+    {"filename":"2210.02414v2.pdf","title_contains":"GLM-130B: AN OPEN BILINGUAL PRE-TRAINED","author":"Aohan Zeng","authors_exact":["Aohan Zeng","Xiao Liu","Zhengxiao Du","Zihan Wang","Hanyu Lai","Ming Ding","Zhuoyi Yang","Yifan Xu","Wendi Zheng","Xiao Xia","Weng Lam Tam","Zixuan Ma","Yufei Xue","Jidong Zhai","Wenguang Chen","Peng Zhang","Yuxiao Dong","Jie Tang"]},
+    {"filename":"2211.05100v4.pdf","title_contains":"BLOOM: A 176B-Parameter Open-Access Multilingual","author":"BigScience Workshop"},
+    {"filename":"2212.04356v1.pdf","title_contains":"Robust Speech Recognition via Large-Scale Weak Supervision","author":"Alec Radford"},
+    {"filename":"2303.08774v6.pdf","title_contains":"GPT-4 Technical Report","author":"OpenAI","authors_exact":["OpenAI"]},
+    {"filename":"2304.08485v2.pdf","title_contains":"Visual Instruction Tuning","author":"Haotian Liu"},
+    {"filename":"2305.13048v2.pdf","title_contains":"RWKV: Reinventing RNNs for the Transformer Era","author":"Bo Peng"},
+    {"filename":"2305.14314v1.pdf","title_contains":"QLORA: Efficient Finetuning of Quantized LLMs","author":"Tim Dettmers"},
+    {"filename":"2305.18290v3.pdf","title_contains":"Direct Preference Optimization","author":"Rafael Rafailov"},
+    {"filename":"2307.09288v2.pdf","title_contains":"Llama 2: Open Foundation and Fine-Tuned Chat Models","author":"Hugo Touvron"},
+    {"filename":"2310.06825v1.pdf","title_contains":"Mistral 7B","author":"Albert Q. Jiang","authors_exact":["Albert Q. Jiang","Alexandre Sablayrolles","Arthur Mensch","Chris Bamford","Devendra Singh Chaplot","Diego de las Casas","Florian Bressand","Gianna Lengyel","Guillaume Lample","Lucile Saulnier","Lélio Renard Lavaud","Marie-Anne Lachaux","Pierre Stock","Teven Le Scao","Thibaut Lavril","Thomas Wang","Timothée Lacroix","William El Sayed"]},
+    {"filename":"2406.14491v2.pdf","title_contains":"Instruction Pre-Training","author":"Daixuan Cheng","authors_exact":["Daixuan Cheng","Yuxian Gu","Shaohan Huang","Junyu Bi","Minlie Huang","Furu Wei"]},
+    {"filename":"2407.21783v3.pdf","title_contains":"The Llama 3 Herd of Models","author":"Llama Team, AI @ Meta","authors_exact":["Llama Team, AI @ Meta"]},
+    {"filename":"2412.15115v2.pdf","title_contains":"Qwen2.5 Technical Report","author":"Qwen Team"},
+    {"filename":"2412.19437v1.pdf","title_contains":"DeepSeek-V3 Technical Report","author":"DeepSeek-AI"},
+    {"filename":"2501.12948v2.pdf","title_contains":"DeepSeek-R1: Incentivizing Reasoning Capability","author":"DeepSeek-AI"},
+    {"filename":"333078981_693988129081760_4712707815225756708_n.pdf","title_contains":"LLaMA: Open and Efficient Foundation Language Models","author":"Hugo Touvron"}
+  ]
+}

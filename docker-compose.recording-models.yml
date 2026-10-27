@@ -1,0 +1,20 @@
+# Local CUDA recovery override, verified on the RTX 4070 / driver 617.42 host.
+# Combine with docker-compose.yml and docker-compose.bge-gpu.yml, never alone.
+# Uses the already downloaded GPU image and named model caches. No new weights.
+x-recording-model: &recording-model
+  image: ghcr.io/huggingface/text-embeddings-inference:89-1.9
+  entrypoint: [text-embeddings-router]
+  cpus: 2
+  mem_limit: 4g
+
+services:
+  bge-embedding:
+    <<: *recording-model
+    command: [--model-id, BAAI/bge-m3, --dtype, float16, --auto-truncate,
+              --max-batch-tokens, '8192', --max-batch-requests, '1',
+              --max-client-batch-size, '32', --max-concurrent-requests, '32']
+  bge-reranker:
+    <<: *recording-model
+    command: [--model-id, BAAI/bge-reranker-v2-m3, --dtype, float16, --auto-truncate,
+              --max-batch-tokens, '8192', --max-batch-requests, '1',
+              --max-client-batch-size, '32', --max-concurrent-requests, '32']

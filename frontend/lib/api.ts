@@ -94,6 +94,22 @@ export interface DocumentReference {
   block_ids: string[];
 }
 
+export interface PeopleSource {
+  page_number: number;
+  block_id: string;
+  bbox: number[];
+  text: string;
+}
+
+export interface DocumentPeople {
+  document_id: string;
+  authors: string[];
+  affiliations: string[];
+  author_sources: PeopleSource[];
+  contributor_groups: { role: string; members: string[]; sources: PeopleSource[] }[];
+  contributor_status: "available" | "not_detected" | "legacy" | "unverified";
+}
+
 export interface CitationMention {
   citation_id: string;
   label: string;
@@ -287,13 +303,14 @@ export interface CitationGraphResponse {
 }
 
 export interface ReviewEvidence extends EvidenceAnchor {
-  evidence_kind: "overview" | "future_work" | "later_progress";
+  evidence_kind: "overview" | "future_work" | "later_progress" | "citation_relation";
 }
 
 export interface ReviewPaper {
   document_id: string;
   title: string;
   publication_year: number | null;
+  metadata_evidence?: EvidenceAnchor | null;
   graph_role: CitationGraphRole;
   foundation_score: number;
   overview_evidence_ids: string[];
@@ -307,12 +324,54 @@ export interface FutureDirection {
   source_title: string;
   source_year: number | null;
   source_evidence_id: string;
-  status: "open" | "possibly_addressed" | "confirmed_addressed";
+  status: "open" | "possibly_addressed" | "confirmed_addressed" | "evidence_addressed";
   possibly_addressed_by_document_ids: string[];
   progress_evidence_ids: string[];
   exploration_score: number;
   reason: string;
   confirmation: FutureWorkConfirmation | null;
+  assessment?: FutureWorkAssessment | null;
+}
+
+export interface FutureWorkAssessment {
+  direction_id: string;
+  status: "insufficient" | "partial_progress" | "supported_progress";
+  facets: Array<{
+    goal_quote: string;
+    status: "addressed" | "partial" | "not_established";
+    explanation: string;
+    evidence_ids: string[];
+    proof: Array<{ evidence_id: string; quote: string }>;
+  }>;
+  progress_evidence: EvidenceAnchor[];
+  scope_coverage_complete: boolean;
+  automatically_resolved: false;
+  excluded_from_recommendations?: boolean;
+  exclusion_review?: {
+    status: "approved" | "rejected" | "unavailable";
+    scope_check: "supported" | "unsupported" | "uncertain";
+    facet_checks: Array<"supported" | "unsupported" | "uncertain">;
+  } | null;
+  provider: string;
+  model: string | null;
+  warnings: string[];
+  updated_at: string;
+}
+
+export async function assessFutureWorkProgress(
+  directionId: string, source: ReviewEvidence, progress: ReviewEvidence[],
+): Promise<FutureWorkAssessment> {
+  const passage = (item: ReviewEvidence) => ({
+    document_id: item.document_id, page_number: item.page_number,
+    block_ids: item.block_ids, quote: item.quote,
+  });
+  const response = await assertResponse(await fetch(
+    `${API_BASE_URL}/reviews/future-directions/${directionId}/assess`, {
+      method: "POST", headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ source: passage(source), progress: progress.map(passage) }),
+    },
+  ));
+  return response.json();
 }
 
 export interface FutureWorkConfirmation {
@@ -344,12 +403,27 @@ export async function saveFutureWorkDecision(
 }
 
 export interface ResearchReviewResponse {
+  citation_relations?: Array<{
+    source_document_id: string;
+    source_title: string;
+    target_document_id: string;
+    target_title: string;
+    evidence_id: string;
+    match_reason: string;
+  }>;
   generated_at: string;
   review: string;
   claims: Array<{ text: string; evidence_ids: string[] }>;
   papers: ReviewPaper[];
   future_directions: FutureDirection[];
   evidence: ReviewEvidence[];
+  /** Local candidates, not extra evidence included in the model prompt. */
+  future_work_evidence?: ReviewEvidence[];
+  themes?: Array<{
+    title: string;
+    claim_indices: number[];
+    cross_paper_claim_indices: number[];
+  }>;
   graph_stats: CitationGraphResponse["stats"];
   provider: string;
   model: string | null;
@@ -377,6 +451,7 @@ export interface VerifiedReference {
   provenance: string;
   verified_fields: string[];
   formatted_citation: string;
+  metadata_evidence?: EvidenceAnchor | null;
   evidence_ids: string[];
 }
 
@@ -386,6 +461,13 @@ export interface WritingOutlineResponse {
   sections: WritingSection[];
   references: VerifiedReference[];
   claims: Array<{ text: string; evidence_ids: string[] }>;
+  deferred_claims?: Array<{ text: string; evidence_ids: string[] }>;
+  grounding_audit?: {
+    input_claim_count: number;
+    accepted_claim_count: number;
+    document_claim_counts: Record<string, number>;
+    rejections: Array<{ claim_index: number; evidence_ids: string[]; reasons: string[] }>;
+  } | null;
   evidence: EvidenceAnchor[];
   provider: string;
   model: string | null;
@@ -413,6 +495,7 @@ export interface ScientificChart {
   chart_type: CsvChartType;
   title: string;
   categories: string[];
+  x_coordinates?: number[];
   series: Array<{
     name: string;
     values: Array<number | null>;
@@ -529,7 +612,7 @@ export interface EvidenceAnchor {
   bbox: number[] | null;
   section: string | null;
   source_type: "text" | "abstract" | "table" | "figure" | "formula" | "reference";
-  retrieval_mode: "lexical" | "vector" | "hybrid" | "reranked";
+  retrieval_mode: "lexical" | "vector" | "hybrid" | "reranked" | "local_context";
   recall_mode?: "lexical" | "vector" | "hybrid" | null;
   quote: string;
   score: number;
@@ -1130,6 +1213,13 @@ export async function getDocumentOutline(documentId: string): Promise<DocumentOu
 export async function getDocumentReferences(documentId: string): Promise<DocumentReferencesResponse> {
   const response = await assertResponse(
     await fetch(`${API_BASE_URL}/documents/${documentId}/references`, { cache: "no-store" }),
+  );
+  return response.json();
+}
+
+export async function getDocumentPeople(documentId: string, signal?: AbortSignal): Promise<DocumentPeople> {
+  const response = await assertResponse(
+    await fetch(`${API_BASE_URL}/documents/${documentId}/people`, { cache: "no-store", signal }),
   );
   return response.json();
 }

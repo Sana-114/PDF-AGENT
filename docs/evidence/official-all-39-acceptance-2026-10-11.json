@@ -1,0 +1,1128 @@
+{
+  "evaluation_kind": "public_bounded_official_39_acceptance_snapshot",
+  "date": "2026-10-11",
+  "new_model_calls_by_export": 0,
+  "scope": "39 official PDF files, one bounded QA sample per file. Manual review of requested core fields only; not complete answers or all six modules.",
+  "cloud_budget": {
+    "authorized": 42,
+    "used": 42,
+    "remaining": 0,
+    "automatic_retries": false
+  },
+  "cloud_model": {
+    "provider": "deepseek",
+    "model": "deepseek-flash"
+  },
+  "corpus_summary": {
+    "files": 39,
+    "pages": 1986,
+    "foundation_passed": 39,
+    "independent_source_retrieved": 39,
+    "original_machine_passed": 33,
+    "requested_core_accepted": 37,
+    "additional_quality_holds": 4
+  },
+  "whole_answer_acceptance": "not_certified",
+  "source_review": {
+    "reviewer": "Codex source inspection, not independent expert peer review",
+    "scope": "Requested core fields only, after inspecting 39 complete independent gold pages and five additional cited complete pages. Does not accept every incidental published statement, statistical accuracy or all six modules. Original questions, numerical gold and original machine failures are unchanged.",
+    "complete_gold_pages_viewed": 39,
+    "additional_complete_cited_pages_viewed": 5,
+    "not_independent_expert_review": true
+  },
+  "targeted_three": {
+    "actual_calls": 3,
+    "original_source_review": {
+      "total": 3,
+      "original_machine_passed": 2,
+      "reviewed_machine_passed": 2,
+      "accepted": 2
+    },
+    "zero_call_replay_status": "passed",
+    "zero_call_replay_cases": 3,
+    "not_a_new_generation": true
+  },
+  "saved_output_replay": {
+    "replayed": 39,
+    "nonempty_answers": 39,
+    "incomplete": 1,
+    "new_model_calls": 0,
+    "new_retrieval_calls": 0,
+    "not_a_new_generation": true
+  },
+  "version_pair": {
+    "status": "passed",
+    "checks": {
+      "same_arxiv_id": true,
+      "existing_is_v7": true,
+      "current_is_v1": true,
+      "identity_detected_without_original_filenames": true,
+      "duplicate_warning_triggered": true,
+      "newer_existing_version_recommended": true,
+      "production_worker_matched_existing_v7": true,
+      "production_worker_recommends_keep_v7": true,
+      "evidence_linked_difference_available": true
+    },
+    "not_learned_semantic_similarity": true
+  },
+  "book_engineering": {
+    "status": "passed",
+    "checks": {
+      "exact_page_count": true,
+      "interruption_checkpoint_committed": true,
+      "resume_skipped_completed_batches": true,
+      "final_checkpoint_complete": true,
+      "all_batches_present": true,
+      "text_extracted": true,
+      "elapsed_within_limit": true,
+      "python_memory_within_limit": true
+    },
+    "metrics": {
+      "page_count": 541,
+      "native_text_chars": 1313319,
+      "extracted_text_chars": 1312857,
+      "title": "Understanding Deep Learning",
+      "authors": 1,
+      "outline_nodes": 533,
+      "tables": 0,
+      "figures": 386,
+      "formulas": 1225,
+      "references": 1187,
+      "batch_size_pages": 25,
+      "interrupted_after_pages": 50,
+      "first_resumed_page": 75,
+      "checkpoint_batches": 22,
+      "first_pass_seconds": 6.049,
+      "resume_seconds": 59.895,
+      "total_seconds": 65.964,
+      "python_peak_memory_mb": 11.01,
+      "process_peak_rss_mb": null,
+      "warnings": []
+    },
+    "node_counts_are_not_accuracy_scores": true
+  },
+  "backend_regression": {
+    "tests": 634,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0
+  },
+  "index_actions": {
+    "verified_read_only_reuse": 35,
+    "new_full_document_isolated_index": 3,
+    "changed_ast_new_isolated_index": 1
+  },
+  "production_library_modified": false,
+  "sparse_note": "BGE learned dense + hash sparse/BM25; not learned BGE sparse",
+  "runtime_browser_verified_this_run": false,
+  "original_generation_code_sha256": {
+    "scripts\\evaluate_official_all_document_qa.py": "9da94ab7a8c63bc3a305751ed0ac2aede53da9c4befade7ac20d1c5ade3b47f0",
+    "app\\__init__.py": "13467f977b6c1ebb03e488935f342b3c25fb9b4e637afd02e0fede88a6bd202b",
+    "app\\agent\\__init__.py": "4a45575116dfa11770a57a8d31334b2f397d82fa7e9cca1c59f2ffb739e62d05",
+    "app\\agent\\harness.py": "eeb7f935e8d6c910838bc1c3d2a7e6789fc244e84154324f499791981ccfea7b",
+    "app\\agent\\registry.py": "936952012cec3e7293f90d5572bef393f7e1aec86ea30e85ab8298ba1cef7f65",
+    "app\\agent\\skills.py": "7aa651371dce6f80bb0a326e57220941a0210aa09d90025e07e235642f8b668c",
+    "app\\api\\__init__.py": "bef9ac0fbdb88dd69007b4adbc94e2071b6bee5909e29833ff76e091b022ddf6",
+    "app\\api\\router.py": "8d56066b0d56fcae94307634e5d3d626cded36a259a7c4a4be0224c9c9a03f1a",
+    "app\\api\\routes\\__init__.py": "8771d9f39955492961ae0cf4077c8c8844cf870c80625fbb5c47c2334762d2c6",
+    "app\\api\\routes\\agent.py": "94a2f55c9d82f0faed3e1e64f60d070997343b529a200d8435d66ebbcd4f2bb6",
+    "app\\api\\routes\\citation_graph.py": "6520c74065a238ffc73713c018074bcf42ccb2330813768c2933f2b16c9c7886",
+    "app\\api\\routes\\diagrams.py": "1bc9e9343b4d60e0f589a812cac8fdac06f6efb8a8af3f15ebbbf5633aec97f0",
+    "app\\api\\routes\\discovery.py": "aaa84c4d54d83a0d0017506eff2092beb95d69ade9c7f02563d02cec49b3b292",
+    "app\\api\\routes\\documents.py": "0584f5d7a06424b9f9b1d3c9e225bbae5dfb7c8477643c0e2bf895800e2d77c4",
+    "app\\api\\routes\\health.py": "d06c32991f883c11c406100d972190d969e5b658b111c7250ad0fa6d238cea4b",
+    "app\\api\\routes\\recommendations.py": "c7fbef80d474cd1739bbb2d3dd6e6c4ff2056b68e496ef490f1666e8fa5002a0",
+    "app\\api\\routes\\reviews.py": "9117409a888b224c0c12461dd5357e4292d4d07c87ccf1205dce9b4823bcf166",
+    "app\\api\\routes\\visualizations.py": "191f5bc8de29858cfcb1a5ca01e04c4418321ec0890f05dc27b5ca190969b6ee",
+    "app\\api\\routes\\writing.py": "ef32143ed1f6dc3ee019b31c300f84508e55de96d8832d23eab910dc018ee362",
+    "app\\core\\__init__.py": "eb1351c7460cf16ea2c7ed92a4a374db842a9c2809d3d40e9ba89402dddbc7d0",
+    "app\\core\\config.py": "18c5e2c1025cfaa4ca2de92c3abeec0e1f1291603c54f726d6620d350348b967",
+    "app\\core\\database.py": "9f645ead8158b7b352faaab93a69ad9c27e4efd99026f13c5f6323386e5f41a3",
+    "app\\embeddings\\__init__.py": "e678f03ab8119dd83fc1fd28084e15a4a4bbf32b172bb483f0d6575076061a71",
+    "app\\embeddings\\base.py": "61dbfca8c41b4ab727dcb24335b805531ca8cbc196abd9368a0789b6d0b1a960",
+    "app\\embeddings\\factory.py": "8d99160d02988c56be5cb3b9d7805e57793f2c9629e1718e313bf762cf48473f",
+    "app\\embeddings\\hashing.py": "c4949f1b3b4318c1f6b3dd383d412f56fca5324126313efd0e12ce12d87ab058",
+    "app\\embeddings\\openai_compatible.py": "1f26daeedabe56b4acdf2d67ca323abc1db8270a0e8956ac6a652c624c2a0a3d",
+    "app\\evaluation\\__init__.py": "914476da297c5489104f645c52219e2bcc57061a792748f40a777e8600f3e18a",
+    "app\\evaluation\\grounded_rag.py": "125c4c66e8ede81fb9b7ff556608b2ee0f70cd9f32d66d48898621278b22bba0",
+    "app\\evaluation\\models.py": "61be2617eb2cffbf1b8e71d4dc034b6165ff5f08bc1bf226749038f8d92c5494",
+    "app\\evaluation\\retrieval.py": "2a3efbb428aa54fdbca52e8df5501e63b983f83c93dc0af41bb76e28dae75779",
+    "app\\llm\\__init__.py": "c11dfba7bb587e393faf0134e53a0caa61318ac7a99017ecab228f5fe99308db",
+    "app\\llm\\base.py": "b0b35c30ed5a17ae2dbc22c360861a657753c2e6c4d7b9db036e798b59757137",
+    "app\\llm\\deepseek_responses.py": "6038b221bbed4ff874ba03457de2a50f21de9639d86dd5774aae11ef59871874",
+    "app\\llm\\extractive.py": "679e1e3ddbc5835f1d6f4e4f9aaf46998c594334e03bc4d6e7d19e1cc0f9bc82",
+    "app\\llm\\factory.py": "b83dd6959e6e43bf2e9ac9c7e57c149a70af0646a219efbb3f66bc7d9736b837",
+    "app\\llm\\openai_responses.py": "9bc6cb2f4707bcf69649ac2784b46cd5cdadcda45bf3be853966c4ca45cc6f21",
+    "app\\main.py": "d21d84abd887a56ab48edb4407c06f5faeac2ab63d67d22dfb831c4654961608",
+    "app\\models\\__init__.py": "ba2e4609e0a5b31f336124c789640ae9889f7095a7bfa07e66ae1e3f870754f2",
+    "app\\models\\chunk.py": "c563c0bc76473badf2787d21653ece84dde7792697e6b7a2aa2b37750539d166",
+    "app\\models\\conversation.py": "08c19bd72a2e885678450b538b38c4f31e7817a78e9da2a343f1a0cfcdac7405",
+    "app\\models\\document.py": "54f61ef01ecedf4664a4027e54cc50fb57863b1e3a9f2312b86823621ebd586c",
+    "app\\models\\future_work.py": "68f4fdee359ba38b36113d3b2d06cf8355afe6d3582ad49e253693f2d017df14",
+    "app\\models\\paper_source.py": "fc5fb3f234a9179b4bcc516b04fec7696d0d9e56e749461d497afed1dfd093db",
+    "app\\models\\recommendation.py": "ae5d9ca3a32513a73e22b4de9dfc06d244c632c12af803e45357f4473ad3559e",
+    "app\\models\\translation.py": "294f83d5ee81a9d98f492c9b807ad3c7a46bc492d81184058a7d8ba40f1e659a",
+    "app\\parsers\\__init__.py": "12416401b84622b3492e0aa4ba067488f24d014f35efd6560c79c13171cca6ab",
+    "app\\parsers\\base.py": "bff7dfff0118fcf4ad17f612c49e0ad6924b6d30a5b00c9ce614ace45fa76321",
+    "app\\parsers\\checkpoint.py": "7363555faf10b1b3c10494ef27b0f7a6b3eb5ca0a4c572da3ac38654b2d7ad4d",
+    "app\\parsers\\diagnostics.py": "955e28bb251c3751206c4da554119eb98a8418ffd6b81ecbf35f2e2416babc5c",
+    "app\\parsers\\front_matter_ocr.py": "10d5a7b83640f060a00120c7dc28f18cd904ce2ad3ecf1a94d005ffcb6a9a52c",
+    "app\\parsers\\layout.py": "0f052e0b3dc5995cbb0d88a160e5868a691080135342dff4e19ff3c46652df23",
+    "app\\parsers\\ocr_parser.py": "9ba903c3ae3af1d1c0351a38bac7314cf43b90efca14bda5c99a71c83f4b76f0",
+    "app\\parsers\\people.py": "916e7c192c0682fa9e1a32efdbbcea792291277ce6e59d1aa04b63b43c7d3aa5",
+    "app\\parsers\\pymupdf_parser.py": "84900a3a5507bf66d2bce75ab6012488acfb7ad6b1eb9efa0e28869eacad75dc",
+    "app\\parsers\\raster_layout.py": "720c0f74a6ce68dc500d4eea019f11810595a7549cc462dce604f12e385a5d70",
+    "app\\parsers\\registry.py": "a450b48ac4f3187fab37ffdd7f1378b775df1a0d3b5e0e2bc7b9082248da2a15",
+    "app\\parsers\\table_stitching.py": "a7473aacf68260f45b979a00af11e5e9e6b78523e11233ee7b8901b3a5ee740e",
+    "app\\parsers\\text_table.py": "7323d047b8e2390297943ffd2d9528ca6874c508e1546a5c5639c0b9e024a072",
+    "app\\rerankers\\__init__.py": "86d7204e37612cce491e4ef0fec23386c4dec211cb12ad1595c9150efe1ec8c8",
+    "app\\rerankers\\base.py": "f312272e3a6970d4f7bf9c9dade1988c8e97b2c9abe39e5e3159f05ab7dc44de",
+    "app\\rerankers\\disabled.py": "a323493f61d32e7cdf65aac5634003709831735ca086a220ef6f352c62f99ff2",
+    "app\\rerankers\\factory.py": "df5fa1d78b4ab2da25a699b9d3f0f7381eea9d3d10508cb1da5ed2f95d3db4d2",
+    "app\\rerankers\\http.py": "242da7a8eda9d57fdafb68b072dd2cf7b6f02bdc3bc47c5d75fe492a31163e21",
+    "app\\rerankers\\tei.py": "41d6b3528e908e9a761bd58aeb1d2cf6e6ed1fb10999c0ca03688a813a85e3c7",
+    "app\\schemas\\__init__.py": "7df353486fb01413afb286f6a7670d148b52166f5156e15270598898726270d5",
+    "app\\schemas\\academic_translation.py": "8209cb27d96a9ca673118cb28c30f88caae95419102a8d9d703c5b2d155c7a15",
+    "app\\schemas\\agent.py": "db09e5252ddb499e058b7d24fea9dcfeccb468a187745c78e2763dea5565aba2",
+    "app\\schemas\\citation_graph.py": "47733dc757772d321e0b93eaadc3889c0384460ca61bc17eb6fa4695f2771eb7",
+    "app\\schemas\\comparison.py": "8a81cf71782f6b8f127e0f4cb221bd0d80549f14c72995923c182a338f4a2bd4",
+    "app\\schemas\\conversation.py": "8bc361f53b846546e9ee3a0dc65df33f36af19ef1776fa1d6e6b8dc25d8f0575",
+    "app\\schemas\\diagram.py": "61dcf4b16fa24934300b67815dfe3e395856e1a23098957c6a5fb7ccacad79de",
+    "app\\schemas\\discovery.py": "2d0e75971bf94cfc6e3aa698fd582ae10059b0ae5a495313f8c8943c3f7c7dec",
+    "app\\schemas\\document.py": "a34e70d1b99efb746e0ff9c64bdb644326faebb16dd54dc0a9564ceb0cd71789",
+    "app\\schemas\\recommendation.py": "44ad345d856301d0c4ffad7f24af12550d997b09529b472416c04bc09b714560",
+    "app\\schemas\\review.py": "fb082e09a640e7b572ab6ea30c8981a71880910529ea115b0eb120cd83df98a4",
+    "app\\schemas\\translation_workspace.py": "4e4290dee94faf33cd31649eb6cea0db1de62cc0776207806a6c0fd1101ab8e1",
+    "app\\schemas\\visualization.py": "c27c788e33caedb371a5d2d5991b85e0434551a8a5d311726954394538e5ba38",
+    "app\\schemas\\writing.py": "38a9273b82efbe02e6e6ff7181a95c57b15f70a246bacf6ad4870c988de42bcd",
+    "app\\services\\__init__.py": "5d4e9f46ab05f7ba8e3b9ce4c553d264766f0c3fd5de73d76a6765e5f71e5764",
+    "app\\services\\academic_translation.py": "e251b672c7c342dec4d2dce6eb2600173c08f0f93262c9bfad026185654753d6",
+    "app\\services\\answer_completeness.py": "7e3fa0dda9bb22cd0d9392b76023fd6b17b364313db7f89d4ca5d96cf338d6ca",
+    "app\\services\\architecture_diagram.py": "2cc8320c4c7ce155d968129250ef69c8f350d8f2b7a5bbd0e52b00f048997d22",
+    "app\\services\\author_evidence.py": "59b23bc0ecf3dcdefa3aff9e4d91e26c0d603452e4c89f5265c25bece54d3d12",
+    "app\\services\\chunking.py": "93906c7a9a1188212319b83bd8b977616bc2e8e48f980df90a7915a763e06d2a",
+    "app\\services\\citation_graph.py": "033b7ec63530dc943eb87b1961d90924a699c17af8390bc6305786be123f9e51",
+    "app\\services\\citation_value.py": "35784e6994ea90be7e7749bc173c329df8597e32d112e4e0d53b1de280e47891",
+    "app\\services\\claim_semantics.py": "e970adbbacce6df3e591cd6ad6c6035d2b01975e9770f9c0d733a762631c2e61",
+    "app\\services\\conversations.py": "56399d50853c40bd68b09dd8fab810e63eba11c3fa176f4b1dc4c72e758bc7ce",
+    "app\\services\\csv_visualization.py": "daf6915fb686761c337e01d889c654bead3a26fd64049c3a34f0f4dd613bde05",
+    "app\\services\\document_content.py": "b1697b32cc828eadffcd71ce6df86d0f1aa986e2fd261f5291f5f55729f6caed",
+    "app\\services\\document_duplicates.py": "c4d7a7f46d43b06b3e979536a54860b91755a4b5cd6867d506b0b6259f43a2dd",
+    "app\\services\\document_ingestion.py": "d072e3ef1ee50520263a225e1dd6510a70aa9dadaf529a0ed79ac789a95462b5",
+    "app\\services\\document_translation.py": "7edc80f0775ad393c3c92f41580bc1714e4f45b76830fa8be55ae0ffbdebee8c",
+    "app\\services\\document_translation_export.py": "38265f3ee3db132def676fdff3a9d0883d43d143fbca6ddef315bc7c6d4c0db5",
+    "app\\services\\document_version_diff.py": "7b78a5af03939ef2d5f1478ce768c660426c92abab80a22b44b44e4a5ab2f5f8",
+    "app\\services\\evidence_fields.py": "6553860bd939b4cfdc9e14594dd555110c5b4ec9ce3d849e27987c25a2d79ffa",
+    "app\\services\\evidence_review.py": "872f876b0a1d6590c354edefa92afd0ec3060a4f21555b7083d35fe8c54f1d69",
+    "app\\services\\fingerprints.py": "9787e2464adb5f7b453af4405e88150af944badf463f793278f04b3496056bfd",
+    "app\\services\\future_work_review.py": "b8ac6af38f482c1002ecafb129895a7592f50a8f3f8d56aab70287fa0caaa9db",
+    "app\\services\\github_code.py": "07c556f84f1935719b76b1bd9057f7c4821598c7c2e46e3af64d1218c6aa357f",
+    "app\\services\\grounded_text.py": "10848cc7a9d4caf3ebe7dacb0501fde8d9dae0b3ab8b7b993cba1acd7650854a",
+    "app\\services\\paper_comparison.py": "813c020a01b4c981362846d9058a01109760fd2fede2a66cb542ab8f521a8d90",
+    "app\\services\\paper_discovery.py": "0e70af80f1bcf932a16bc34c831cc6fc3eb5eaeb20a1e53880ac28fb90a857c8",
+    "app\\services\\recommendations.py": "058f8f4fab4a7fac3ddf6e0af28d81bce1d7a6e48bf040fe1d18f881062db97f",
+    "app\\services\\reference_discovery.py": "eb4644e7d6eefa59055e5f319f0b0f18a2ece6ed5258cf4d928865c632ff4c5b",
+    "app\\services\\retrieval.py": "217bd368d6edc26f663faf20553ae0661c4d26151f7fa2df2610fee16822a521",
+    "app\\services\\retrieval_policy.py": "20db90c4b795994bd46610a596ccdb6ad0fd66ad3f638c345f6b325e3bc1ba8c",
+    "app\\services\\storage.py": "8a63bad79a7b3823b304db98bb94e3a0fa3afcb2220e9a1e8f24421d9596895a",
+    "app\\services\\table_comparison.py": "891f179b0a4df31e0d29611f0ed3499ac50c1439b2aa91a479433b6c816a64f2",
+    "app\\services\\text_features.py": "228d80c5376c04d79c192b2b80c0ac6ba4eb9296f54a3dbf589407e39a12bbcb",
+    "app\\services\\translation_store.py": "1847a2f30056556e8a7a9338722a28e4d17d62ef3012842458035b02e1ea284a",
+    "app\\services\\vector_index.py": "550299418e009a8287a4af82ae9c7e169fe7d5fc3a082fa2a82b08bc3e591433",
+    "app\\services\\writing_outline.py": "192bb2c72914f0a76f3f3bf13e6fa3c84326d87f3100eee4399140c9eccf3885",
+    "app\\workers\\__init__.py": "a130abf2f20917967bf78145152fdad7d2d705eafbc1ffb473553069c112a1af",
+    "app\\workers\\celery_app.py": "e987276670297963f1c5d6b38aa6186d4df712010ed6981ffe08a3e45850f7ea",
+    "app\\workers\\tasks.py": "7d694cf33f16df87a17bceaf52c19ee93e59e093032db05757d57b2855f92422"
+  },
+  "candidate_repaired_production_code_sha256": {
+    "app/agent/harness.py": "fe14df34931bbc24b39b2b1d5b119753f1c872480a6f9abc60b2c1a4b536e2b4",
+    "app/llm/openai_responses.py": "b82216134ede10782dfa790064b904b492b85b2a63294a212a70a2d78665375a",
+    "app/parsers/people.py": "916e7c192c0682fa9e1a32efdbbcea792291277ce6e59d1aa04b63b43c7d3aa5",
+    "app/parsers/pymupdf_parser.py": "84900a3a5507bf66d2bce75ab6012488acfb7ad6b1eb9efa0e28869eacad75dc",
+    "app/services/answer_completeness.py": "0b072c0287a8035edc4d68564099c70786a92e26551e68452d41802ef03bb9e3",
+    "app/services/grounded_text.py": "7dadbba0b6b5a5f83cdc8f2aefa1f30b4298ba44ec3ee9d0dfde9d76f5dbb047"
+  },
+  "local_artifacts_sha256": {
+    "sources-1/manifest.json": "8e1fca75960d9af84298f3ee608f763c4a0297e40c74472e95c16b256600c183",
+    "parse-32-final/report.json": "5d86e3a5674c81f3d2c3a6f9dad9269487e29a0f55b9eaea60f14b1695b3a72c",
+    "parse-core-7-final/report.json": "f0b6ed56fcfc9307612dac724d3dd1547de0298461f9797f0744f17287055bb8",
+    "version-pair-final.json": "79a727275577dbcf2cd80864a4e1ed8a197ec0081fd8471911078447e50464e3",
+    "book-resume-final.json": "868ff8fe167b0d1cf5394d0481b489f01998a0502288195f68bbb6dc2461ef3e",
+    "targeted-3-1/report.json": "b15b8dba1fcd9582cd6b6a2cce30b58dd48081b6309a4e834ec6d187bf7ae061",
+    "targeted-3-review-1.json": "2aa4b7f3d02279cefacef238a39b90e2077a1f80f940219f22a0c792caf82dac",
+    "targeted-3-guard-replay-final.json": "43840759524f03d6250c78fe30742ab8bbff1cafad3edc8cfdef8224452d716b",
+    "qa-39-1/report.json": "7160b1d64b5b7884c12581062f4631423ab0bd181199b45e5c827a94566dfc9f",
+    "qa-39-2/report.json": "4e76c66b32e0dd563360e16c86f080c3c1f4162bdce188ebbe4ab4b6d73285d1",
+    "qa-39-2/source-gold.json": "f91f310bb6d32f01439f7b3e125acf00260234f7c7a9cb6ee4c4bef7a05230da",
+    "qa-core-review-1.json": "5321853fa68d880e2adc9ee84b6978677a50d303cab6cb3bef301b16b233d156",
+    "qa-replay-final.json": "635099ad60a21ff16d78e54be136306dde4f272b05650179ce90b29820f1b222",
+    "gold-pages-1/sources.json": "d432b069a1cf4d487840b69f6803f4eb4c0752a70a66923219e5478200a38df6",
+    "qa-cited-pages-1/sources.json": "24d679c9360b828e545df44af69e24252f0d663608ec917dd72854fdcc0a5f92",
+    "full-unit-1.xml": "0f9289e210ab88540a24dafcdf0d866bde150b1921b517d30e01246f9cefe2c6",
+    "trillion-repair-tests.xml": "a01bad16bbe83a72d6fbead9d0f59357df64236aba1a43fc3395ab316d8c422e",
+    "full-unit-delivery-final.xml": "a2927a4218ee5b4690da39f0d8c82c25d247a32fac22510b2fb4851e4fa8e958"
+  },
+  "original_questions_sha256": "9c17a9ae78ae9dd779d391af869b048db4c3d78c87fcc765fc4ff389c9483cd7",
+  "manual_policy_sha256": "6557c0e101a995e15ec71b9f0ed53a423b2e1811049dd5ed6d01802aa519b063",
+  "files": [
+    {
+      "filename": "1607.06450v1.pdf",
+      "source_sha256": "c464f839fb8d59f7fde92f9b4caa67c2d1f2f196b88f93fb60502249df0aaef7",
+      "pages": 14,
+      "parser_gate_passed": true,
+      "index_action": "verified_read_only_reuse",
+      "independent_source_in_original_request": true,
+      "original_machine_status": "machine_passed_pending_source_review",
+      "original_machine_failures": [],
+      "requested_core_accepted": true,
+      "core_source_proofs": [
+        {
+          "claim_index": 0,
+          "evidence_id": "E1",
+          "page": 1
+        }
+      ],
+      "review_note": "单样本、同层全部神经元输入的均值和方差。",
+      "quality_holds": [],
+      "whole_answer_reviewed": false
+    },
+    {
+      "filename": "1707.06347v2.pdf",
+      "source_sha256": "e78feadadbdbb0b601b3c2bcc81404722cd431a489b307545f9b7bea1e8c4f5b",
+      "pages": 12,
+      "parser_gate_passed": true,
+      "index_action": "verified_read_only_reuse",
+      "independent_source_in_original_request": true,
+      "original_machine_status": "machine_passed_pending_source_review",
+      "original_machine_failures": [],
+      "requested_core_accepted": false,
+      "core_source_proofs": [],
+      "review_note": "虽给出裁剪目标和多轮更新，但随后明确声称缺少为何有效的解释；原机器未发现这一不完整问题。",
+      "quality_holds": [],
+      "whole_answer_reviewed": false
+    },
+    {
+      "filename": "1910.02054v3.pdf",
+      "source_sha256": "c531734c7d9ee647fda9b4f0e1a6abd6d58ad34e862bc945451b09032be3167e",
+      "pages": 24,
+      "parser_gate_passed": true,
+      "index_action": "verified_read_only_reuse",
+      "independent_source_in_original_request": true,
+      "original_machine_status": "machine_passed_pending_source_review",
+      "original_machine_failures": [],
+      "requested_core_accepted": true,
+      "core_source_proofs": [
+        {
+          "claim_index": 0,
+          "evidence_id": "E4",
+          "page": 1
+        }
+      ],
+      "review_note": "400 GPU，未混淆另外的128 GPU实验。",
+      "quality_holds": [],
+      "whole_answer_reviewed": false
+    },
+    {
+      "filename": "1910.10683v4.pdf",
+      "source_sha256": "ad07e47cedf437a4156419ce5d3076e08a3e59bbfd6dac7cc53df1009cdcbe7f",
+      "pages": 67,
+      "parser_gate_passed": true,
+      "index_action": "verified_read_only_reuse",
+      "independent_source_in_original_request": true,
+      "original_machine_status": "machine_passed_pending_source_review",
+      "original_machine_failures": [],
+      "requested_core_accepted": true,
+      "core_source_proofs": [
+        {
+          "claim_index": 0,
+          "evidence_id": "E5",
+          "page": 1
+        }
+      ],
+      "review_note": "统一为text-to-text格式。",
+      "quality_holds": [],
+      "whole_answer_reviewed": false
+    },
+    {
+      "filename": "2001.08361v1.pdf",
+      "source_sha256": "a41bd7877fd1a6bcbba096b2619618bd2f90e02488f2365644903eb2f7c6a494",
+      "pages": 30,
+      "parser_gate_passed": true,
+      "index_action": "verified_read_only_reuse",
+      "independent_source_in_original_request": true,
+      "original_machine_status": "machine_passed_pending_source_review",
+      "original_machine_failures": [],
+      "requested_core_accepted": true,
+      "core_source_proofs": [
+        {
+          "claim_index": 0,
+          "evidence_id": "E1",
+          "page": 1
+        }
+      ],
+      "review_note": "模型规模、数据规模和训练计算量三项完整。",
+      "quality_holds": [],
+      "whole_answer_reviewed": false
+    },
+    {
+      "filename": "2002.04745v2.pdf",
+      "source_sha256": "e1fa0519ed8e09a676d56c983e99ead5effd7ef840ae86a186729287469bf883",
+      "pages": 17,
+      "parser_gate_passed": true,
+      "index_action": "verified_read_only_reuse",
+      "independent_source_in_original_request": true,
+      "original_machine_status": "failed",
+      "original_machine_failures": [
+        "missing_answer_field_or_required_independent_source"
+      ],
+      "requested_core_accepted": true,
+      "core_source_proofs": [
+        {
+          "claim_index": 2,
+          "evidence_id": "E3",
+          "page": 1
+        }
+      ],
+      "review_note": "残差块内部正确；中文括号拆开了机器关键词，原机器失败保留。",
+      "quality_holds": [],
+      "whole_answer_reviewed": false
+    },
+    {
+      "filename": "2010.11929v2.pdf",
+      "source_sha256": "8ce7b83971a14508ca711a27c875c9b6914c4f6767cf3150fb1ca6c07aa056d6",
+      "pages": 22,
+      "parser_gate_passed": true,
+      "index_action": "verified_read_only_reuse",
+      "independent_source_in_original_request": true,
+      "original_machine_status": "failed",
+      "original_machine_failures": [
+        "missing_answer_field_or_required_independent_source"
+      ],
+      "requested_core_accepted": true,
+      "core_source_proofs": [
+        {
+          "claim_index": 0,
+          "evidence_id": "E1",
+          "page": 1
+        },
+        {
+          "claim_index": 0,
+          "evidence_id": "E17",
+          "page": 3
+        }
+      ],
+      "review_note": "图像切patch、线性与位置嵌入、输入Transformer；图1完整页确认步骤。原机器失败保留。",
+      "quality_holds": [],
+      "whole_answer_reviewed": false
+    },
+    {
+      "filename": "209_Emergent_Abilities_of_Larg.pdf",
+      "source_sha256": "2d5d4690b43be8965a6b17ae28b370ab4b8774b2213c41111c1f584cc3c447a3",
+      "pages": 30,
+      "parser_gate_passed": true,
+      "index_action": "verified_read_only_reuse",
+      "independent_source_in_original_request": true,
+      "original_machine_status": "machine_passed_pending_source_review",
+      "original_machine_failures": [],
+      "requested_core_accepted": true,
+      "core_source_proofs": [
+        {
+          "claim_index": 0,
+          "evidence_id": "E1",
+          "page": 1
+        }
+      ],
+      "review_note": "较小模型不存在、较大模型存在的定义。",
+      "quality_holds": [],
+      "whole_answer_reviewed": false
+    },
+    {
+      "filename": "2101.03961v3.pdf",
+      "source_sha256": "f340f6ace31abf7d0730ef461404279f40d3c890e9cc2daeb7068b3304afdbd6",
+      "pages": 40,
+      "parser_gate_passed": true,
+      "index_action": "verified_read_only_reuse",
+      "independent_source_in_original_request": true,
+      "original_machine_status": "failed",
+      "original_machine_failures": [
+        "missing_answer_field_or_required_independent_source"
+      ],
+      "requested_core_accepted": true,
+      "core_source_proofs": [
+        {
+          "claim_index": 0,
+          "evidence_id": "E7",
+          "page": 13
+        }
+      ],
+      "review_note": "图5完整页：同质量时间为1/7，等价该实验7倍加速；不是所有设置的普遍保证。原机器失败保留。",
+      "quality_holds": [],
+      "whole_answer_reviewed": false
+    },
+    {
+      "filename": "2103.00020v1.pdf",
+      "source_sha256": "6478b6e571a7d6fcd846d8ef77bfd60c285f1986abb8f475eedc43de403074f5",
+      "pages": 48,
+      "parser_gate_passed": true,
+      "index_action": "verified_read_only_reuse",
+      "independent_source_in_original_request": true,
+      "original_machine_status": "machine_passed_pending_source_review",
+      "original_machine_failures": [],
+      "requested_core_accepted": true,
+      "core_source_proofs": [
+        {
+          "claim_index": 0,
+          "evidence_id": "E2",
+          "page": 1
+        }
+      ],
+      "review_note": "4亿图像文本对。",
+      "quality_holds": [],
+      "whole_answer_reviewed": false
+    },
+    {
+      "filename": "2106.09685v2.pdf",
+      "source_sha256": "e9a0d3128767db616085dc0f4e6e455e672e89af823e8ed1282793682787395a",
+      "pages": 26,
+      "parser_gate_passed": true,
+      "index_action": "verified_read_only_reuse",
+      "independent_source_in_original_request": true,
+      "original_machine_status": "machine_passed_pending_source_review",
+      "original_machine_failures": [],
+      "requested_core_accepted": true,
+      "core_source_proofs": [
+        {
+          "claim_index": 0,
+          "evidence_id": "E1",
+          "page": 1
+        }
+      ],
+      "review_note": "相对Adam微调GPT-3 175B的GPU内存降低3倍。",
+      "quality_holds": [],
+      "whole_answer_reviewed": false
+    },
+    {
+      "filename": "2107.03374v2.pdf",
+      "source_sha256": "ebae72ea0e8a5eb2ecbccdb985aec6cc1254a7c4d29e6d4de7866db1e66c4855",
+      "pages": 35,
+      "parser_gate_passed": true,
+      "index_action": "verified_read_only_reuse",
+      "independent_source_in_original_request": true,
+      "original_machine_status": "machine_passed_pending_source_review",
+      "original_machine_failures": [],
+      "requested_core_accepted": true,
+      "core_source_proofs": [
+        {
+          "claim_index": 0,
+          "evidence_id": "E5",
+          "page": 1
+        }
+      ],
+      "review_note": "单次生成28.8%，不是100次采样结果。",
+      "quality_holds": [],
+      "whole_answer_reviewed": false
+    },
+    {
+      "filename": "2201.11903v6.pdf",
+      "source_sha256": "7d9f878c23b460e4566aa4ec9201b1abfb3b8faefb2b1356e411cb90fef72a12",
+      "pages": 43,
+      "parser_gate_passed": true,
+      "index_action": "verified_read_only_reuse",
+      "independent_source_in_original_request": true,
+      "original_machine_status": "machine_passed_pending_source_review",
+      "original_machine_failures": [],
+      "requested_core_accepted": true,
+      "core_source_proofs": [
+        {
+          "claim_index": 0,
+          "evidence_id": "E2",
+          "page": 1
+        }
+      ],
+      "review_note": "PaLM 540B、八个推理示例的核心结论正确。",
+      "quality_holds": [
+        "附加PaLM 62B缺证声明与原题无关，其缺失断言不在核心放行范围。"
+      ],
+      "whole_answer_reviewed": false
+    },
+    {
+      "filename": "2203.02155v1.pdf",
+      "source_sha256": "c1984bb50a5b90fddb895fdc3a0f72e5bc977148c9f63ef6040cbe7a3e1f0d98",
+      "pages": 68,
+      "parser_gate_passed": true,
+      "index_action": "verified_read_only_reuse",
+      "independent_source_in_original_request": true,
+      "original_machine_status": "failed",
+      "original_machine_failures": [
+        "missing_answer_field_or_required_independent_source"
+      ],
+      "requested_core_accepted": true,
+      "core_source_proofs": [
+        {
+          "claim_index": 0,
+          "evidence_id": "E2",
+          "page": 2
+        }
+      ],
+      "review_note": "图1完整页直接注明InstructGPT=PPO-ptx及1.3B优先于175B GPT-3；只限人类偏好，非全面性能优越。原机器失败保留。",
+      "quality_holds": [],
+      "whole_answer_reviewed": false
+    },
+    {
+      "filename": "2205.14135v2.pdf",
+      "source_sha256": "ca7f9fda10b90fc05dd291a3accc85e9c1a4a860b99b31928dab03ed3fcb14e4",
+      "pages": 34,
+      "parser_gate_passed": true,
+      "index_action": "verified_read_only_reuse",
+      "independent_source_in_original_request": true,
+      "original_machine_status": "machine_passed_pending_source_review",
+      "original_machine_failures": [],
+      "requested_core_accepted": true,
+      "core_source_proofs": [
+        {
+          "claim_index": 1,
+          "evidence_id": "E2",
+          "page": 1
+        }
+      ],
+      "review_note": "精确注意力与tiling减少HBM/SRAM读写两项完整；block-sparse扩展另属近似算法。",
+      "quality_holds": [],
+      "whole_answer_reviewed": false
+    },
+    {
+      "filename": "2206.07682v2.pdf",
+      "source_sha256": "f457f08102eb381f2300e1653bf4c82a9aa5dce0eb8dba8fe744ccc2500c3755",
+      "pages": 30,
+      "parser_gate_passed": true,
+      "index_action": "verified_read_only_reuse",
+      "independent_source_in_original_request": true,
+      "original_machine_status": "machine_passed_pending_source_review",
+      "original_machine_failures": [],
+      "requested_core_accepted": true,
+      "core_source_proofs": [
+        {
+          "claim_index": 0,
+          "evidence_id": "E1",
+          "page": 1
+        }
+      ],
+      "review_note": "涌现定义正确，与另一文件为同论文不同版本，仍作为独立文件测试。",
+      "quality_holds": [],
+      "whole_answer_reviewed": false
+    },
+    {
+      "filename": "2210.02414v2.pdf",
+      "source_sha256": "82d5b9634b3d2601b3eb494dcc9e2189132f5d6e479233b91c7ce411dbdfcfa4",
+      "pages": 56,
+      "parser_gate_passed": true,
+      "index_action": "verified_read_only_reuse",
+      "independent_source_in_original_request": true,
+      "original_machine_status": "machine_passed_pending_source_review",
+      "original_machine_failures": [],
+      "requested_core_accepted": true,
+      "core_source_proofs": [
+        {
+          "claim_index": 0,
+          "evidence_id": "E1",
+          "page": 1
+        },
+        {
+          "claim_index": 1,
+          "evidence_id": "E1",
+          "page": 1
+        }
+      ],
+      "review_note": "英语、中文、1300亿参数三项完整。",
+      "quality_holds": [],
+      "whole_answer_reviewed": false
+    },
+    {
+      "filename": "2211.05100v4.pdf",
+      "source_sha256": "8033c3e611aaa120cb7294085ebd6ee297ffae9ec02393b1c4f1593d7e6ee065",
+      "pages": 73,
+      "parser_gate_passed": true,
+      "index_action": "verified_read_only_reuse",
+      "independent_source_in_original_request": true,
+      "original_machine_status": "machine_passed_pending_source_review",
+      "original_machine_failures": [],
+      "requested_core_accepted": true,
+      "core_source_proofs": [
+        {
+          "claim_index": 1,
+          "evidence_id": "E2",
+          "page": 4
+        }
+      ],
+      "review_note": "46自然语言、13编程语言。",
+      "quality_holds": [
+        "中文提问却以英文发布，核心事实正确不代表回答语言体验通过。"
+      ],
+      "whole_answer_reviewed": false
+    },
+    {
+      "filename": "2212.04356v1.pdf",
+      "source_sha256": "6337bde031b2f237547a977b022f831169a7e05b4d9047f29501166d83594566",
+      "pages": 28,
+      "parser_gate_passed": true,
+      "index_action": "verified_read_only_reuse",
+      "independent_source_in_original_request": true,
+      "original_machine_status": "machine_passed_pending_source_review",
+      "original_machine_failures": [],
+      "requested_core_accepted": true,
+      "core_source_proofs": [
+        {
+          "claim_index": 0,
+          "evidence_id": "E1",
+          "page": 1
+        }
+      ],
+      "review_note": "680000小时。",
+      "quality_holds": [],
+      "whole_answer_reviewed": false
+    },
+    {
+      "filename": "2303.08774v6.pdf",
+      "source_sha256": "c33a66dadca2388d7b172d6293b00dc32b71110c6f38fafe0d41112e61be7774",
+      "pages": 100,
+      "parser_gate_passed": true,
+      "index_action": "verified_read_only_reuse",
+      "independent_source_in_original_request": true,
+      "original_machine_status": "machine_passed_pending_source_review",
+      "original_machine_failures": [],
+      "requested_core_accepted": true,
+      "core_source_proofs": [
+        {
+          "claim_index": 0,
+          "evidence_id": "E2",
+          "page": 1
+        }
+      ],
+      "review_note": "前10%，不是GPT-3.5的后10%。",
+      "quality_holds": [],
+      "whole_answer_reviewed": false
+    },
+    {
+      "filename": "2304.08485v2.pdf",
+      "source_sha256": "dc8bace378a282ea78caa9b5959306202fbfa3b8cedaf8a66541a9af18f4d3bf",
+      "pages": 25,
+      "parser_gate_passed": true,
+      "index_action": "verified_read_only_reuse",
+      "independent_source_in_original_request": true,
+      "original_machine_status": "machine_passed_pending_source_review",
+      "original_machine_failures": [],
+      "requested_core_accepted": true,
+      "core_source_proofs": [
+        {
+          "claim_index": 0,
+          "evidence_id": "E1",
+          "page": 1
+        }
+      ],
+      "review_note": "合成多模态指令数据上相对GPT-4为85.1%。",
+      "quality_holds": [],
+      "whole_answer_reviewed": false
+    },
+    {
+      "filename": "2305.13048v2.pdf",
+      "source_sha256": "57d18c40bdbb4bc1ab69c078a304f97e31657b4f543c408d8a5520e672a3fab0",
+      "pages": 30,
+      "parser_gate_passed": true,
+      "index_action": "verified_read_only_reuse",
+      "independent_source_in_original_request": true,
+      "original_machine_status": "machine_passed_pending_source_review",
+      "original_machine_failures": [],
+      "requested_core_accepted": true,
+      "core_source_proofs": [
+        {
+          "claim_index": 0,
+          "evidence_id": "E1",
+          "page": 1
+        }
+      ],
+      "review_note": "Transformer并行训练与RNN高效推理。",
+      "quality_holds": [],
+      "whole_answer_reviewed": false
+    },
+    {
+      "filename": "2305.14314v1.pdf",
+      "source_sha256": "33a4e757c19d6ea8d3cca8958fce8fe405e290272e135c99ee66065c775d5bd1",
+      "pages": 26,
+      "parser_gate_passed": true,
+      "index_action": "verified_read_only_reuse",
+      "independent_source_in_original_request": true,
+      "original_machine_status": "machine_passed_pending_source_review",
+      "original_machine_failures": [],
+      "requested_core_accepted": true,
+      "core_source_proofs": [
+        {
+          "claim_index": 1,
+          "evidence_id": "E3",
+          "page": 1
+        }
+      ],
+      "review_note": "单卡48GB微调65B；不混淆33B的24GB设置。",
+      "quality_holds": [],
+      "whole_answer_reviewed": false
+    },
+    {
+      "filename": "2305.18290v3.pdf",
+      "source_sha256": "92cb3a2b71362acda98a789b03d88688fd33cf5fcf13f81d2b1de30ee7d3b67a",
+      "pages": 27,
+      "parser_gate_passed": true,
+      "index_action": "verified_read_only_reuse",
+      "independent_source_in_original_request": true,
+      "original_machine_status": "machine_passed_pending_source_review",
+      "original_machine_failures": [],
+      "requested_core_accepted": true,
+      "core_source_proofs": [
+        {
+          "claim_index": 0,
+          "evidence_id": "E1",
+          "page": 1
+        }
+      ],
+      "review_note": "简单分类损失替代复杂RLHF。",
+      "quality_holds": [],
+      "whole_answer_reviewed": false
+    },
+    {
+      "filename": "2307.09288v2.pdf",
+      "source_sha256": "1df284ce95f783002074bfe8f21d47c646b396ceb1736ea3ec0ea212fc070d91",
+      "pages": 77,
+      "parser_gate_passed": true,
+      "index_action": "verified_read_only_reuse",
+      "independent_source_in_original_request": true,
+      "original_machine_status": "machine_passed_pending_source_review",
+      "original_machine_failures": [],
+      "requested_core_accepted": true,
+      "core_source_proofs": [
+        {
+          "claim_index": 0,
+          "evidence_id": "E1",
+          "page": 1
+        }
+      ],
+      "review_note": "7B至70B。",
+      "quality_holds": [],
+      "whole_answer_reviewed": false
+    },
+    {
+      "filename": "2310.06825v1.pdf",
+      "source_sha256": "dfbac4e7035344b305c947481f2e7e8a02f7a24a563917eb6e47f6591d14c5ae",
+      "pages": 9,
+      "parser_gate_passed": true,
+      "index_action": "verified_read_only_reuse",
+      "independent_source_in_original_request": true,
+      "original_machine_status": "machine_passed_pending_source_review",
+      "original_machine_failures": [],
+      "requested_core_accepted": true,
+      "core_source_proofs": [
+        {
+          "claim_index": 0,
+          "evidence_id": "E2",
+          "page": 1
+        }
+      ],
+      "review_note": "GQA与SWA。",
+      "quality_holds": [],
+      "whole_answer_reviewed": false
+    },
+    {
+      "filename": "2406.14491v2.pdf",
+      "source_sha256": "8bc106e62eeb6f6f15328e8af107df8eb66ce7ddc3ba694a2ef8ea743f829f0f",
+      "pages": 22,
+      "parser_gate_passed": true,
+      "index_action": "verified_read_only_reuse",
+      "independent_source_in_original_request": true,
+      "original_machine_status": "machine_passed_pending_source_review",
+      "original_machine_failures": [],
+      "requested_core_accepted": true,
+      "core_source_proofs": [
+        {
+          "claim_index": 0,
+          "evidence_id": "E1",
+          "page": 1
+        },
+        {
+          "claim_index": 1,
+          "evidence_id": "E1",
+          "page": 1
+        }
+      ],
+      "review_note": "200M响应对、40+任务类别。",
+      "quality_holds": [],
+      "whole_answer_reviewed": false
+    },
+    {
+      "filename": "2407.21783v3.pdf",
+      "source_sha256": "481f1599468f95a07d05e97fafe55bbe786dc1624c6f881bcb4c7d14c933d083",
+      "pages": 92,
+      "parser_gate_passed": true,
+      "index_action": "verified_read_only_reuse",
+      "independent_source_in_original_request": true,
+      "original_machine_status": "machine_passed_pending_source_review",
+      "original_machine_failures": [],
+      "requested_core_accepted": true,
+      "core_source_proofs": [
+        {
+          "claim_index": 0,
+          "evidence_id": "E2",
+          "page": 1
+        }
+      ],
+      "review_note": "最大405B与最高128K窗口；不把预训练8K误报为最终支持窗口。",
+      "quality_holds": [],
+      "whole_answer_reviewed": false
+    },
+    {
+      "filename": "2412.15115v2.pdf",
+      "source_sha256": "73b3292bead3ac8896679d3ac8be87439756faf356566cbda3ccc8a3dc7d79d3",
+      "pages": 26,
+      "parser_gate_passed": true,
+      "index_action": "verified_read_only_reuse",
+      "independent_source_in_original_request": true,
+      "original_machine_status": "failed",
+      "original_machine_failures": [
+        "missing_valid_claim_citation",
+        "no_complete_real_model_answer",
+        "missing_answer_field_or_required_independent_source"
+      ],
+      "requested_core_accepted": false,
+      "core_source_proofs": [],
+      "review_note": "原始生成7万亿到18万亿正确，但发布为空；trillion单位误拒已本地修复，离线恢复不改写本次真实成绩。",
+      "quality_holds": [],
+      "whole_answer_reviewed": false
+    },
+    {
+      "filename": "2412.19437v1.pdf",
+      "source_sha256": "a67e18a4ca6e2c81abc030239a3ee53705f656b79efab8ce1d6b5ac25630c2a5",
+      "pages": 53,
+      "parser_gate_passed": true,
+      "index_action": "verified_read_only_reuse",
+      "independent_source_in_original_request": true,
+      "original_machine_status": "machine_passed_pending_source_review",
+      "original_machine_failures": [],
+      "requested_core_accepted": true,
+      "core_source_proofs": [
+        {
+          "claim_index": 0,
+          "evidence_id": "E1",
+          "page": 1
+        }
+      ],
+      "review_note": "671B总参数、37B激活参数，字段未对调。",
+      "quality_holds": [],
+      "whole_answer_reviewed": false
+    },
+    {
+      "filename": "2501.12948v2.pdf",
+      "source_sha256": "b191b0a365a64b4ab2791d117069ed17a2933d03554a662ced58b37df52018f4",
+      "pages": 86,
+      "parser_gate_passed": true,
+      "index_action": "verified_read_only_reuse",
+      "independent_source_in_original_request": true,
+      "original_machine_status": "machine_passed_pending_source_review",
+      "original_machine_failures": [],
+      "requested_core_accepted": true,
+      "core_source_proofs": [
+        {
+          "claim_index": 0,
+          "evidence_id": "E1",
+          "page": 1
+        }
+      ],
+      "review_note": "论文摘要的纯RL与无需人工推理轨迹结论正确。",
+      "quality_holds": [
+        "附加绕过SFT说明应明确归于R1-Zero，不应让读者误以为R1所有阶段无SFT。"
+      ],
+      "whole_answer_reviewed": false
+    },
+    {
+      "filename": "333078981_693988129081760_4712707815225756708_n.pdf",
+      "source_sha256": "775ff8d09b6e5b06314135d87c194ce3535a821eeaee4be9051b331162c5fefd",
+      "pages": 27,
+      "parser_gate_passed": true,
+      "index_action": "verified_read_only_reuse",
+      "independent_source_in_original_request": true,
+      "original_machine_status": "machine_passed_pending_source_review",
+      "original_machine_failures": [],
+      "requested_core_accepted": true,
+      "core_source_proofs": [
+        {
+          "claim_index": 0,
+          "evidence_id": "E2",
+          "page": 1
+        }
+      ],
+      "review_note": "第一代LLaMA为7B至65B。",
+      "quality_holds": [],
+      "whole_answer_reviewed": false
+    },
+    {
+      "filename": "1706.03762v1.pdf",
+      "source_sha256": "0a9bff1be3575cf9fe26a4a3d3a9175bc791ecec90de8b9deba4cff75d2b9476",
+      "pages": 15,
+      "parser_gate_passed": true,
+      "index_action": "verified_read_only_reuse",
+      "independent_source_in_original_request": true,
+      "original_machine_status": "machine_passed_pending_source_review",
+      "original_machine_failures": [],
+      "requested_core_accepted": true,
+      "core_source_proofs": [
+        {
+          "claim_index": 0,
+          "evidence_id": "E1",
+          "page": 7
+        }
+      ],
+      "review_note": "beta1=0.9，beta2=0.98，数值与字段对应。",
+      "quality_holds": [],
+      "whole_answer_reviewed": false
+    },
+    {
+      "filename": "1706.03762v7.pdf",
+      "source_sha256": "bdfaa68d8984f0dc02beaca527b76f207d99b666d31d1da728ee0728182df697",
+      "pages": 15,
+      "parser_gate_passed": true,
+      "index_action": "new_full_document_isolated_index",
+      "independent_source_in_original_request": true,
+      "original_machine_status": "machine_passed_pending_source_review",
+      "original_machine_failures": [],
+      "requested_core_accepted": true,
+      "core_source_proofs": [
+        {
+          "claim_index": 0,
+          "evidence_id": "E1",
+          "page": 7
+        }
+      ],
+      "review_note": "新版beta1=0.9，beta2=0.98。",
+      "quality_holds": [],
+      "whole_answer_reviewed": false
+    },
+    {
+      "filename": "1706.03762v1_img.pdf",
+      "source_sha256": "64094fe169dd4ff454f579e9f197298df1c118c24b71b1f1ca8bb218c9e4801d",
+      "pages": 15,
+      "parser_gate_passed": true,
+      "index_action": "new_full_document_isolated_index",
+      "independent_source_in_original_request": true,
+      "original_machine_status": "machine_passed_pending_source_review",
+      "original_machine_failures": [],
+      "requested_core_accepted": true,
+      "core_source_proofs": [
+        {
+          "claim_index": 0,
+          "evidence_id": "E1",
+          "page": 7
+        }
+      ],
+      "review_note": "扫描页完整可视来源确认beta1=0.9，beta2=0.98，非依赖OCR自作金标。",
+      "quality_holds": [],
+      "whole_answer_reviewed": false
+    },
+    {
+      "filename": "N19-1423.pdf",
+      "source_sha256": "987545ffb087f1ece898142c403a516baeabeb70ce19089397fac6f7db12c3d4",
+      "pages": 16,
+      "parser_gate_passed": true,
+      "index_action": "changed_ast_new_isolated_index",
+      "independent_source_in_original_request": true,
+      "original_machine_status": "machine_passed_pending_source_review",
+      "original_machine_failures": [],
+      "requested_core_accepted": true,
+      "core_source_proofs": [
+        {
+          "claim_index": 0,
+          "evidence_id": "E1",
+          "page": 1
+        }
+      ],
+      "review_note": "完整BERT英文名称。",
+      "quality_holds": [],
+      "whole_answer_reviewed": false
+    },
+    {
+      "filename": "language_understanding_paper.pdf",
+      "source_sha256": "eb81a65e0856bd38e855e1f1de6ee12e7c3eb92ae05c8270d345a475beb631d0",
+      "pages": 12,
+      "parser_gate_passed": true,
+      "index_action": "verified_read_only_reuse",
+      "independent_source_in_original_request": true,
+      "original_machine_status": "failed",
+      "original_machine_failures": [
+        "missing_answer_field_or_required_independent_source"
+      ],
+      "requested_core_accepted": true,
+      "core_source_proofs": [
+        {
+          "claim_index": 2,
+          "evidence_id": "E6",
+          "page": 1
+        },
+        {
+          "claim_index": 3,
+          "evidence_id": "E1",
+          "page": 4
+        }
+      ],
+      "review_note": "生成式预训练、判别式微调、少量架构改动，后两项有不同完整来源页。原机器失败保留。",
+      "quality_holds": [
+        "附加只增加输出层的绝对措辞应避免忽略分隔符嵌入；全文额外声明未放行。"
+      ],
+      "whole_answer_reviewed": false
+    },
+    {
+      "filename": "2005.14165v4.pdf",
+      "source_sha256": "97fd272f1fdfc18677462d0292f5fbf26ca86b4d1b485c2dba03269b643a0e83",
+      "pages": 75,
+      "parser_gate_passed": true,
+      "index_action": "verified_read_only_reuse",
+      "independent_source_in_original_request": true,
+      "original_machine_status": "machine_passed_pending_source_review",
+      "original_machine_failures": [],
+      "requested_core_accepted": true,
+      "core_source_proofs": [
+        {
+          "claim_index": 0,
+          "evidence_id": "E3",
+          "page": 1
+        }
+      ],
+      "review_note": "摘要175B，问题明确要求摘要而非另一模型基线。",
+      "quality_holds": [],
+      "whole_answer_reviewed": false
+    },
+    {
+      "filename": "UnderstandingDeepLearning_02_09_26_C.pdf",
+      "source_sha256": "f8237d393163900fa8e43210e680a3f987b45ccac7750b372e156fae3df0bf32",
+      "pages": 541,
+      "parser_gate_passed": true,
+      "index_action": "new_full_document_isolated_index",
+      "independent_source_in_original_request": true,
+      "original_machine_status": "machine_passed_pending_source_review",
+      "original_machine_failures": [],
+      "requested_core_accepted": true,
+      "core_source_proofs": [
+        {
+          "claim_index": 0,
+          "evidence_id": "E7",
+          "page": 1
+        }
+      ],
+      "review_note": "教材首页Simon J.D. Prince；该问答仅检验作者，不代表541页全部内容准确。",
+      "quality_holds": [],
+      "whole_answer_reviewed": false
+    }
+  ],
+  "known_limits": [
+    "37/39 is a requested-core-field source review, not full-answer or general accuracy.",
+    "The original cloud machine score remains 33/39; all failed results are retained.",
+    "PPO mechanism is incomplete; Qwen was empty in the original published response.",
+    "Four core-accepted answers retain language, unnecessary content or variant scope holds.",
+    "New prompt effectiveness requires separately authorized fresh generation.",
+    "Parser foundation checks do not certify every formula, table cell or structural node.",
+    "Python allocation peak is not total RSS, GPU memory or deployment sizing.",
+    "Final original-nine generation, runtime-browser checks and six-module release gates remain open."
+  ]
+}

@@ -1,0 +1,301 @@
+{
+  "original_report_sha256": "805f8e2ddabe54782b7d57036c77ceae7ca22289b48a4ad4b5e4677ac2c7b2ed",
+  "reviewer": "code_assistant_full_original_page_visual_review",
+  "scope": "Original nine on last candidate, one generation per case. Requested core, whole-answer quality and finite-repeat stability are separate; not independent expert review, statistical accuracy or fresh all-39 acceptance.",
+  "machine_passed": 9,
+  "requested_core_accepted": 9,
+  "whole_answers_accepted": 8,
+  "published_claims_reviewed": 26,
+  "published_claims_accepted": 25,
+  "cases": {
+    "sixth-author": {
+      "accepted": true,
+      "core_accepted": true,
+      "proofs": [
+        [
+          0,
+          "E1",
+          1
+        ],
+        [
+          1,
+          "E1",
+          1
+        ],
+        [
+          2,
+          "E1",
+          1
+        ]
+      ],
+      "note": "排版顺序、署名机构、邮箱及工作地点脚注区分正确。"
+    },
+    "adam-settings": {
+      "accepted": true,
+      "core_accepted": true,
+      "proofs": [
+        [
+          0,
+          "E1",
+          7
+        ],
+        [
+          0,
+          "E2",
+          7
+        ]
+      ],
+      "note": "beta 字段与值配对正确，没有使用其他默认值。"
+    },
+    "base-gpus": {
+      "accepted": true,
+      "core_accepted": true,
+      "proofs": [
+        [
+          0,
+          "E1",
+          7
+        ],
+        [
+          0,
+          "E2",
+          2
+        ],
+        [
+          1,
+          "E1",
+          7
+        ],
+        [
+          1,
+          "E3",
+          7
+        ]
+      ],
+      "note": "数量、型号、base 的时长与 big 的补充说明都对应各自原段。"
+    },
+    "bleu-improvement": {
+      "accepted": true,
+      "core_accepted": true,
+      "proofs": [
+        [
+          0,
+          "E2",
+          7
+        ],
+        [
+          0,
+          "E3",
+          8
+        ],
+        [
+          0,
+          "E4",
+          1
+        ],
+        [
+          1,
+          "E3",
+          8
+        ],
+        [
+          2,
+          "E2",
+          7
+        ],
+        [
+          2,
+          "E3",
+          8
+        ],
+        [
+          2,
+          "E4",
+          1
+        ],
+        [
+          3,
+          "E3",
+          8
+        ],
+        [
+          4,
+          "E3",
+          8
+        ],
+        [
+          5,
+          "E3",
+          8
+        ]
+      ],
+      "note": "同一 EN-DE 列，包含 ensemble，精确减法标为推导；有重复，不影响本次原字段正确。"
+    },
+    "layernorm-reference": {
+      "accepted": true,
+      "core_accepted": true,
+      "proofs": [
+        [
+          0,
+          "E1",
+          10
+        ],
+        [
+          0,
+          "E2",
+          10
+        ]
+      ],
+      "note": "指定条目作者与年份符合原页。"
+    },
+    "bert-inheritance": {
+      "accepted": false,
+      "core_accepted": true,
+      "proofs": [
+        [
+          0,
+          "E4",
+          3
+        ],
+        [
+          0,
+          "E9",
+          2
+        ],
+        [
+          1,
+          "E5",
+          2
+        ],
+        [
+          1,
+          "E9",
+          2
+        ],
+        [
+          1,
+          "E4",
+          3
+        ]
+      ],
+      "held_claim_index": 2,
+      "note": "两项核心为双原文的架构推断，接受。额外比较最后说明基线为 GPT，但开头泛称‘原 Transformer 中注意力掩码’，易与原始 Encoder 混淆，整条暂缓；不把仅子句正确当成整条无歧义通过。"
+    },
+    "gpt-parameter-evolution": {
+      "accepted": true,
+      "core_accepted": true,
+      "proofs": [
+        [
+          0,
+          "E5",
+          4
+        ],
+        [
+          0,
+          "E2",
+          4
+        ],
+        [
+          1,
+          "E2",
+          4
+        ],
+        [
+          1,
+          "E5",
+          4
+        ],
+        [
+          2,
+          "E3",
+          8
+        ],
+        [
+          2,
+          "E9",
+          8
+        ]
+      ],
+      "note": "GPT-1 标为后出论文的基线推断；两种最大模型的量值、单位和身份正确。"
+    },
+    "gpt2-ln-change": {
+      "accepted": true,
+      "core_accepted": true,
+      "proofs": [
+        [
+          0,
+          "E8",
+          4
+        ],
+        [
+          1,
+          "E8",
+          4
+        ],
+        [
+          2,
+          "E8",
+          4
+        ],
+        [
+          3,
+          "E8",
+          4
+        ]
+      ],
+      "note": "只报告迁移目标与最终额外 LN，不凭‘广泛使用’认定起始 post-norm。补充摘录为带锚点的原句。"
+    },
+    "context-evolution": {
+      "accepted": true,
+      "core_accepted": true,
+      "proofs": [
+        [
+          0,
+          "E2",
+          4
+        ],
+        [
+          0,
+          "E5",
+          12
+        ],
+        [
+          1,
+          "E2",
+          4
+        ],
+        [
+          2,
+          "E3",
+          43
+        ]
+      ],
+      "note": "本次身份、推断与配置正确；不能代替同版有限复测的漏引用失败。"
+    }
+  },
+  "inspected_sources": {
+    "1706.03762v1.pdf": [
+      1,
+      2,
+      7,
+      8,
+      10
+    ],
+    "N19-1423.pdf": [
+      3,
+      4,
+      13
+    ],
+    "gpt2-openai-2019.pdf": [
+      4,
+      12
+    ],
+    "2005.14165v4.pdf": [
+      8,
+      43
+    ],
+    "language_understanding_paper.pdf": [
+      5
+    ]
+  }
+}

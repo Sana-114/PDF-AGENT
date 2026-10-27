@@ -40,6 +40,7 @@ class ScientificChartRead(BaseModel):
     chart_type: ChartType
     title: str
     categories: list[str]
+    x_coordinates: list[float] = Field(default_factory=list)
     series: list[ChartSeriesRead]
     x_label: str
     y_label: str

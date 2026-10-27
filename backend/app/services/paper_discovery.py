@@ -131,7 +131,15 @@ class PaperDiscoveryService:
             ) as client:
                 return await client.get(url, params=params, headers=self._headers(provider))
         except httpx.RequestError as exc:
-            raise PaperDiscoveryError(f"{provider} 暂时不可用：{exc}") from exc
+            # Timeout exceptions often have an empty str(). Keep the failing
+            # layer visible without exposing credentials from an endpoint URL.
+            kind = type(exc).__name__
+            detail = (
+                f"网络超时（{kind}，超时配置 {self.config.scholarly_api_timeout_seconds:g}s）"
+                if isinstance(exc, httpx.TimeoutException)
+                else f"网络连接失败（{kind}）"
+            )
+            raise PaperDiscoveryError(f"{provider} 暂时不可用：{detail}；本次未自动重试。") from exc
 
     async def search(
         self, query: str, limit: int = 8
@@ -147,7 +155,17 @@ class PaperDiscoveryService:
                 return query_kind, [candidate] if candidate else [], warnings
             except PaperDiscoveryError as exc:
                 warnings.append(str(exc))
-                candidate = await self._semantic_paper(f"ARXIV:{normalized}")
+                base, version = _extract_arxiv_id(normalized)
+                # Semantic Scholar identifies a work, not an arXiv revision.
+                candidate = await self._semantic_paper(f"ARXIV:{base}")
+                if candidate and candidate.arxiv_id != base:
+                    raise PaperDiscoveryError("备用来源返回了不同论文，已拒绝使用。") from exc
+                if candidate and version is not None and candidate.arxiv_version != version:
+                    reason = f"备用来源无法核验请求的 arXiv v{version}，暂不允许导入其他版本。"
+                    candidate = candidate.model_copy(
+                        update={"importable": False, "import_reason": reason}
+                    )
+                    warnings.append(reason)
                 return query_kind, [candidate] if candidate else [], warnings
 
         if query_kind == "doi":
@@ -166,8 +184,43 @@ class PaperDiscoveryService:
                 return query_kind, candidates, warnings
         except PaperDiscoveryError as exc:
             warnings.append(str(exc))
+        # Crossref does not index every preprint. A failed/empty primary title
+        # search must also consult arXiv before falling back to metadata only.
+        try:
+            candidates = await self._arxiv_title_search(normalized, limit)
+            if candidates:
+                return query_kind, candidates, warnings
+        except PaperDiscoveryError as exc:
+            warnings.append(str(exc))
         candidates = await self._crossref_search(normalized, limit)
         return query_kind, candidates, warnings
+
+    async def _arxiv_title_search(self, title: str, limit: int) -> list[PaperCandidate]:
+        # Keep user text inside one title-field phrase, not query operators.
+        phrase = title.replace('"', "").strip()
+        if not phrase:
+            return []
+        response = await self._get(
+            f"{self.config.arxiv_api_base_url.rstrip('/')}/query",
+            provider="arxiv",
+            params={"search_query": f'ti:"{phrase}"', "start": 0, "max_results": limit},
+        )
+        return [self._arxiv_candidate(entry) for entry in self._arxiv_entries(response, "题名检索")]
+
+    @staticmethod
+    def _arxiv_entries(response: httpx.Response, operation: str) -> list[ElementTree.Element]:
+        if response.status_code == 429:
+            raise PaperDiscoveryError(
+                f"arXiv {operation}请求频率受限（HTTP 429）；本次未重试。", 429
+            )
+        try:
+            response.raise_for_status()
+            root = ElementTree.fromstring(response.content)
+        except (httpx.HTTPStatusError, ElementTree.ParseError) as exc:
+            raise PaperDiscoveryError(f"arXiv {operation}返回了无效响应。") from exc
+        if root.tag != "{http://www.w3.org/2005/Atom}feed":
+            raise PaperDiscoveryError(f"arXiv {operation}返回的不是有效 Atom feed。")
+        return root.findall("{http://www.w3.org/2005/Atom}entry")
 
     async def resolve_import(self, source: str, source_id: str) -> PaperCandidate:
         clean_id = source_id.strip()
@@ -215,13 +268,7 @@ class PaperDiscoveryService:
                 "sortOrder": "descending",
             },
         )
-        try:
-            response.raise_for_status()
-            root = ElementTree.fromstring(response.content)
-        except (httpx.HTTPStatusError, ElementTree.ParseError) as exc:
-            raise PaperDiscoveryError("arXiv 动态追踪返回了无效响应。") from exc
-        atom = "{http://www.w3.org/2005/Atom}"
-        return [self._arxiv_candidate(entry) for entry in root.findall(f"{atom}entry")]
+        return [self._arxiv_candidate(entry) for entry in self._arxiv_entries(response, "动态追踪")]
 
     async def download(self, candidate: PaperCandidate) -> StagedUpload:
         if candidate.pdf_url is None or not self._is_safe_pdf_url(candidate.pdf_url):
@@ -347,13 +394,15 @@ class PaperDiscoveryService:
             provider="arxiv",
             params={"id_list": requested, "max_results": 1},
         )
-        try:
-            response.raise_for_status()
-            root = ElementTree.fromstring(response.content)
-        except (httpx.HTTPStatusError, ElementTree.ParseError) as exc:
-            raise PaperDiscoveryError("arXiv 返回了无效响应。") from exc
-        entry = root.find("{http://www.w3.org/2005/Atom}entry")
-        return self._arxiv_candidate(entry) if entry is not None else None
+        entries = self._arxiv_entries(response, "检索")
+        entry = entries[0] if entries else None
+        candidate = self._arxiv_candidate(entry) if entry is not None else None
+        if candidate and (
+            candidate.arxiv_id != base
+            or (version is not None and candidate.arxiv_version != version)
+        ):
+            raise PaperDiscoveryError("arXiv 返回的论文或版本与请求不一致，已拒绝使用。")
+        return candidate
 
     def _arxiv_candidate(self, entry: ElementTree.Element) -> PaperCandidate:
         atom = "{http://www.w3.org/2005/Atom}"
@@ -368,8 +417,7 @@ class PaperDiscoveryService:
         doi = _extract_doi(_clean_text(entry.findtext(f"{arxiv_ns}doi")))
         published = _clean_text(entry.findtext(f"{atom}published")) or None
         authors = [
-            _clean_text(author.findtext(f"{atom}name"))
-            for author in entry.findall(f"{atom}author")
+            _clean_text(author.findtext(f"{atom}name")) for author in entry.findall(f"{atom}author")
         ]
         categories = [item.attrib.get("term", "") for item in entry.findall(f"{atom}category")]
         abstract = _clean_text(entry.findtext(f"{atom}summary")) or None
@@ -443,9 +491,7 @@ class PaperDiscoveryService:
                 _clean_text(author.get("given")),
                 _clean_text(author.get("family")),
             )
-            name = " ".join(
-                value for value in name_parts if value
-            )
+            name = " ".join(value for value in name_parts if value)
             if name:
                 authors.append(name)
         return PaperCandidate(

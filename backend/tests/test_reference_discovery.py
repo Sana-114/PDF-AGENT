@@ -52,9 +52,7 @@ def test_reference_search_query_prefers_exact_identifiers() -> None:
     assert reference_search_query("[7] A. Author. doi:10.1000/example. 2020.") == (
         "10.1000/example"
     )
-    assert reference_search_query("[11] arXiv preprint arXiv:1706.03762v7") == (
-        "1706.03762v7"
-    )
+    assert reference_search_query("[11] arXiv preprint arXiv:1706.03762v7") == ("1706.03762v7")
     assert reference_search_query("[3] A. Author. Useful Paper. 2022.") == (
         "A. Author. Useful Paper. 2022."
     )
@@ -73,6 +71,52 @@ def test_reference_match_score_uses_title_authors_and_year() -> None:
     )
     assert exact_score == 1.0
     assert exact_reason == "arXiv ID 完全一致"
+
+
+@pytest.mark.parametrize(
+    ("entry", "title"),
+    [
+        (
+            "Diederik Kingma and Jimmy Ba. Adam: A method for stochastic optimization. "
+            "In ICLR, 2015.",
+            "Adam: A method for stochastic optimization",
+        ),
+        (
+            "A. Vaswani, N. Shazeer et al. Attention Is All You Need. NeurIPS, 2017.",
+            "Attention Is All You Need",
+        ),
+        (
+            '[8] A. Author, "A useful method for sequence modelling," in Example, 2020.',
+            "A useful method for sequence modelling",
+        ),
+    ],
+)
+def test_reference_title_cleanup_preserves_full_title(entry, title):
+    assert reference_search_query(entry) == title
+
+
+def test_generic_short_title_cannot_match_adam_from_shared_topic_and_year():
+    entry = (
+        "Diederik Kingma and Jimmy Ba. Adam: A method for stochastic optimization. In ICLR, 2015."
+    )
+    wrong = _paper(
+        title="Stochastic Optimization Methods", authors=["Kurt Marti"], arxiv_id=None, year=2015
+    )
+    score, reason = score_reference_candidate(entry, wrong)
+    assert score < 0.55
+    assert "条目覆盖" in reason
+    correct = _paper(
+        title="Adam: A Method for Stochastic Optimization",
+        authors=["Diederik P. Kingma", "Jimmy Ba"],
+        arxiv_id="1412.6980",
+        year=2014,
+    )
+    assert score_reference_candidate(entry, correct)[0] > 0.9
+
+
+def test_unrecognized_bibliography_does_not_invent_a_title():
+    entry = "A short unclear entry without sentence boundaries"
+    assert reference_search_query(entry) == entry
 
 
 @pytest.mark.asyncio

@@ -1,0 +1,807 @@
+{
+  "schema_version": 1,
+  "date": "2026-10-14",
+  "status": "local_future_budget_and_browser_pass__generated_review_quality_and_deployment_hold",
+  "git": {
+    "branch": "codex/stage94-official-failed-qa-retest",
+    "head": "a119f5609cda544e5d587588c5a338051da129a1",
+    "dirty_worktree": true,
+    "branch_created": false,
+    "commit_created": false,
+    "merged": false,
+    "pushed": false
+  },
+  "scope": "Official public fixtures; no private documents or full-document cloud transmission.",
+  "yesterday_record": {
+    "path": "docs/evidence/official-synthesis-acceptance-2026-10-13.json",
+    "artifacts_verified": 43,
+    "mismatches": 0,
+    "new_model_calls_recounted": false
+  },
+  "cloud": {
+    "provider": "deepseek",
+    "model": "deepseek-flash",
+    "calls": 3,
+    "automatic_retries": 0,
+    "evidence_per_call": 40,
+    "selected_public_papers": 20,
+    "local_F_and_L_pool_not_sent": true,
+    "BGE_dense_or_reranker_test": false
+  },
+  "generation_runs": [
+    {
+      "name": "review-final-1",
+      "cloud_calls": 1,
+      "actual_saved_calls": 1,
+      "app_sha256": "d99dbcba17f4d26f76baf96b50530617e9c3b655f2c0a70ec3034fc3fa1281bb",
+      "status": "source_checks_passed",
+      "provider": "deepseek",
+      "raw_claims": 8,
+      "published_claims": 8,
+      "brevity": {
+        "claims": 8,
+        "rendered_chars": 550,
+        "within_requested_length": true
+      },
+      "multi_source_claims": 4,
+      "warnings": [
+        "正文证据预算为 36，已按文献均衡选择 36 条；另有 47 条候选未发送。",
+        "综述生成仅获得 4 条有原页锚点的明确书目关联；未发送的图谱边不作为生成依据。书目匹配不证明贡献继承或科研影响。"
+      ]
+    },
+    {
+      "name": "review-final-2",
+      "cloud_calls": 1,
+      "actual_saved_calls": 1,
+      "app_sha256": "13cd012745b8e04eeec41a63b2ace67c3a8a00ad44bb9185a33c63038ae12895",
+      "status": "failed",
+      "provider": "extractive",
+      "raw_claims": 8,
+      "published_claims": 2,
+      "brevity": {
+        "claims": 2,
+        "rendered_chars": 2098,
+        "within_requested_length": false
+      },
+      "multi_source_claims": 0,
+      "warnings": [
+        "正文证据预算为 36，已按文献均衡选择 36 条；另有 44 条候选未发送。",
+        "综述生成仅获得 4 条有原页锚点的明确书目关联；未发送的图谱边不作为生成依据。书目匹配不证明贡献继承或科研影响。",
+        "生成式综述不可用，已使用抽取式综述：生成综述超过声明数量或单条长度约束，未截断或自动重试。",
+        "已移除 1 条无有效引用或含无依据数值的声明。"
+      ]
+    },
+    {
+      "name": "review-final-3",
+      "cloud_calls": 1,
+      "actual_saved_calls": 1,
+      "app_sha256": "d971b63dbd95cbcf74fe07d70d26162aa88f83f4dab4c1c03348acb2339f9223",
+      "status": "source_checks_passed",
+      "provider": "deepseek",
+      "raw_claims": 8,
+      "published_claims": 8,
+      "brevity": {
+        "claims": 8,
+        "rendered_chars": 827,
+        "within_requested_length": true
+      },
+      "multi_source_claims": 0,
+      "warnings": [
+        "正文证据预算为 36，已按文献均衡选择 36 条；另有 44 条候选未发送。",
+        "综述生成仅获得 4 条有原页锚点的明确书目关联；未发送的图谱边不作为生成依据。书目匹配不证明贡献继承或科研影响。"
+      ]
+    }
+  ],
+  "final_app": {
+    "python_version": "3.12.14",
+    "app_files": 124,
+    "app_sha256": "1f3134c70e4f73dcf252b513edb2a64c4f72708072caf3e9bd24ef7ff658f51e",
+    "requirements_sha256": "b0e75e31a3ca8f034e095fd0667e3be7e380975548c5acce90db94f96ed7283f"
+  },
+  "final_candidate_new_generation": false,
+  "local_budget_acceptance": {
+    "source": [
+      {
+        "document_id": "0188171d-87ae-5a2f-acc2-87f71bc5db58",
+        "filename": "1607.06450v1.pdf",
+        "source_sha256": "c464f839fb8d59f7fde92f9b4caa67c2d1f2f196b88f93fb60502249df0aaef7",
+        "ast_sha256": "6611f04506807ec34453f5e5d85fb1e089c509a10b95a2e7557984094a6bd4d5"
+      },
+      {
+        "document_id": "20d9fad6-9e6f-543d-a2e1-095d8056c5ff",
+        "filename": "1706.03762v1.pdf",
+        "source_sha256": "0a9bff1be3575cf9fe26a4a3d3a9175bc791ecec90de8b9deba4cff75d2b9476",
+        "ast_sha256": "17b79909f6ccfbef761befa41518b887e954b41bc1b74d8cfe071d519f8db5de"
+      },
+      {
+        "document_id": "7d515295-ef2b-5de4-a760-a1cf06b3eaf6",
+        "filename": "1706.03762v1_img.pdf",
+        "source_sha256": "64094fe169dd4ff454f579e9f197298df1c118c24b71b1f1ca8bb218c9e4801d",
+        "ast_sha256": "daffb5878761dcce6e738c9f4417af0dfc625606ba971db4b28f6721fa9c4558"
+      },
+      {
+        "document_id": "d40833c9-fdb4-5dcc-8e4e-7389306d035a",
+        "filename": "1706.03762v7.pdf",
+        "source_sha256": "bdfaa68d8984f0dc02beaca527b76f207d99b666d31d1da728ee0728182df697",
+        "ast_sha256": "d5faf7e73740723c1ecd80905df79a65a58f51cf54cc878a133ae25344ce0608"
+      },
+      {
+        "document_id": "1f104048-0d8e-59ac-bc55-92c6c3773d08",
+        "filename": "1707.06347v2.pdf",
+        "source_sha256": "e78feadadbdbb0b601b3c2bcc81404722cd431a489b307545f9b7bea1e8c4f5b",
+        "ast_sha256": "50933f82813e5a26bab6d10afa8b97100e588f032a3e5d3ecdca3795c8ddb60c"
+      },
+      {
+        "document_id": "4ac3cbf3-13b9-5022-863f-a2dbe9391e58",
+        "filename": "1910.02054v3.pdf",
+        "source_sha256": "c531734c7d9ee647fda9b4f0e1a6abd6d58ad34e862bc945451b09032be3167e",
+        "ast_sha256": "af48027ab1f69128c86caf8792c1a46966cdc57896e82ca054e4b9f6c393cd20"
+      },
+      {
+        "document_id": "d9d5065d-9706-53db-b856-427c2c58bd1a",
+        "filename": "1910.10683v4.pdf",
+        "source_sha256": "ad07e47cedf437a4156419ce5d3076e08a3e59bbfd6dac7cc53df1009cdcbe7f",
+        "ast_sha256": "ef4608da1839b472920b80fc912542b891e896d8303c43b205fe65488ddc8f8d"
+      },
+      {
+        "document_id": "806425fa-1015-5452-91ee-cdb6b106183f",
+        "filename": "2001.08361v1.pdf",
+        "source_sha256": "a41bd7877fd1a6bcbba096b2619618bd2f90e02488f2365644903eb2f7c6a494",
+        "ast_sha256": "7645101da07b1c37d21bd8a20054fdd456ec8ac4f20ac3c2dccf59b87bbe375c"
+      },
+      {
+        "document_id": "9f2229cc-c150-5bbc-a615-53046bc74763",
+        "filename": "2002.04745v2.pdf",
+        "source_sha256": "e1fa0519ed8e09a676d56c983e99ead5effd7ef840ae86a186729287469bf883",
+        "ast_sha256": "8b31ed1bfe15be06f613724a67ab274f214171381c6ae43a3df1e8647b8ea37b"
+      },
+      {
+        "document_id": "4eb9ae9c-2278-5530-ad02-d02e38f9088c",
+        "filename": "2005.14165v4.pdf",
+        "source_sha256": "97fd272f1fdfc18677462d0292f5fbf26ca86b4d1b485c2dba03269b643a0e83",
+        "ast_sha256": "1c3d0de91e2ba7cd815e11227057c543c1342cb073150db7f698f56d4d523485"
+      },
+      {
+        "document_id": "788f47ff-23de-5f78-896b-7d3fe6e1bb92",
+        "filename": "2010.11929v2.pdf",
+        "source_sha256": "8ce7b83971a14508ca711a27c875c9b6914c4f6767cf3150fb1ca6c07aa056d6",
+        "ast_sha256": "de022dddb27d7defb935525ad5671da0c14c73b228926d08cd8fe78f5a5cd471"
+      },
+      {
+        "document_id": "e7a6ad7b-2791-53d7-988c-f1b52be3c688",
+        "filename": "209_Emergent_Abilities_of_Larg.pdf",
+        "source_sha256": "2d5d4690b43be8965a6b17ae28b370ab4b8774b2213c41111c1f584cc3c447a3",
+        "ast_sha256": "a67baf579badca13374ec734b001720a370e4ba1d35560b4a03a03701e04f3d7"
+      },
+      {
+        "document_id": "0fedc9b8-1c87-5178-87a1-3bb5a02de3b8",
+        "filename": "2101.03961v3.pdf",
+        "source_sha256": "f340f6ace31abf7d0730ef461404279f40d3c890e9cc2daeb7068b3304afdbd6",
+        "ast_sha256": "49ea976655d88d88e7096fe8486c848cba75fc48f041fa8d019acb411b33131b"
+      },
+      {
+        "document_id": "1ae43cdf-aa5d-533e-8caa-c65a403deaf2",
+        "filename": "2103.00020v1.pdf",
+        "source_sha256": "6478b6e571a7d6fcd846d8ef77bfd60c285f1986abb8f475eedc43de403074f5",
+        "ast_sha256": "3acf3beac5486f12e34fd2cbae2b0b4e96c80cb1e6e164de74fb11f6f152c7e7"
+      },
+      {
+        "document_id": "bc90bcf2-cccd-5364-94f6-5815603802f7",
+        "filename": "2106.09685v2.pdf",
+        "source_sha256": "e9a0d3128767db616085dc0f4e6e455e672e89af823e8ed1282793682787395a",
+        "ast_sha256": "f4c849bd4de7d5a9d75c678178548613f51c038929a18c2b6f30a74affec4fb6"
+      },
+      {
+        "document_id": "fefabe1a-496e-5b57-83cf-c73f831b1275",
+        "filename": "2107.03374v2.pdf",
+        "source_sha256": "ebae72ea0e8a5eb2ecbccdb985aec6cc1254a7c4d29e6d4de7866db1e66c4855",
+        "ast_sha256": "7e24c24f1c3cb1d94f25172826f6f1d897be75bd1322304630e7944ea8fe9067"
+      },
+      {
+        "document_id": "5b4ad1aa-0c85-5a2b-a5ca-97eb8dd4d2aa",
+        "filename": "2201.11903v6.pdf",
+        "source_sha256": "7d9f878c23b460e4566aa4ec9201b1abfb3b8faefb2b1356e411cb90fef72a12",
+        "ast_sha256": "b223f6a82fcd5aa9a7d700517d0a2ab067fa30ddaf75ae05bdd359359c3a8a18"
+      },
+      {
+        "document_id": "cd05de96-3b20-5178-8953-d8ee090a4f23",
+        "filename": "2203.02155v1.pdf",
+        "source_sha256": "c1984bb50a5b90fddb895fdc3a0f72e5bc977148c9f63ef6040cbe7a3e1f0d98",
+        "ast_sha256": "19742a09056a4771803ce938bf6b08dbfb372f81d419fc84bcff855cf34cc1d4"
+      },
+      {
+        "document_id": "518cf49d-121d-55b9-834e-4160cf927fe9",
+        "filename": "2205.14135v2.pdf",
+        "source_sha256": "ca7f9fda10b90fc05dd291a3accc85e9c1a4a860b99b31928dab03ed3fcb14e4",
+        "ast_sha256": "b6051dfb0f0e21d3d9ccdf3c5acda45b85fb75af2cf721c3b5c175457bf09a49"
+      },
+      {
+        "document_id": "8556102a-09bd-550f-b757-4e37ea6598e6",
+        "filename": "2206.07682v2.pdf",
+        "source_sha256": "f457f08102eb381f2300e1653bf4c82a9aa5dce0eb8dba8fe744ccc2500c3755",
+        "ast_sha256": "c4253372c4901cd2fc2f545cdd3afadd4ada2b1c0b3b8d76970832eb4827c047"
+      },
+      {
+        "document_id": "6acf3042-ffe7-5a68-ab1b-c2e0a7c6031e",
+        "filename": "2210.02414v2.pdf",
+        "source_sha256": "82d5b9634b3d2601b3eb494dcc9e2189132f5d6e479233b91c7ce411dbdfcfa4",
+        "ast_sha256": "7029d02f6adf423ca7df26a7a7520e59a3c61da18cf7d94911ea8fa56d517042"
+      },
+      {
+        "document_id": "c0e0bd0d-b7c4-5cd3-9789-994041402cdc",
+        "filename": "2211.05100v4.pdf",
+        "source_sha256": "8033c3e611aaa120cb7294085ebd6ee297ffae9ec02393b1c4f1593d7e6ee065",
+        "ast_sha256": "3f88e72b67f1715a9dc3fa4d3bdff50e3fc5b8c9dadd4a60e6e7884b10a60dad"
+      },
+      {
+        "document_id": "31783478-4706-5535-ab6d-b8561029d20d",
+        "filename": "2212.04356v1.pdf",
+        "source_sha256": "6337bde031b2f237547a977b022f831169a7e05b4d9047f29501166d83594566",
+        "ast_sha256": "d096ca1bafdb0bc2ab05f4765fed4b35173a13b5399d28e64d5219fe2c8f7419"
+      },
+      {
+        "document_id": "1f556b8b-f299-5351-8a71-119b0ccde3b7",
+        "filename": "2303.08774v6.pdf",
+        "source_sha256": "c33a66dadca2388d7b172d6293b00dc32b71110c6f38fafe0d41112e61be7774",
+        "ast_sha256": "ce45b52e2ef8261976f3cca2aa404bb953d4028d6b0c635ce4b9351f0171ff66"
+      },
+      {
+        "document_id": "5a255683-8595-5149-b056-77bb917f85f9",
+        "filename": "2304.08485v2.pdf",
+        "source_sha256": "dc8bace378a282ea78caa9b5959306202fbfa3b8cedaf8a66541a9af18f4d3bf",
+        "ast_sha256": "be836ba4d69a02e79030fbf2df1956bd10c56a5a548a90a453959a2e1710bf31"
+      },
+      {
+        "document_id": "3fa2a50b-4610-5256-8e13-842263cc18bf",
+        "filename": "2305.13048v2.pdf",
+        "source_sha256": "57d18c40bdbb4bc1ab69c078a304f97e31657b4f543c408d8a5520e672a3fab0",
+        "ast_sha256": "fca48e3fdc5ef39dfece23e2a7974e4c290130f548fef4eff41b8dee47956d6f"
+      },
+      {
+        "document_id": "855562a1-8309-57b2-b7b0-b9e7016207dc",
+        "filename": "2305.14314v1.pdf",
+        "source_sha256": "33a4e757c19d6ea8d3cca8958fce8fe405e290272e135c99ee66065c775d5bd1",
+        "ast_sha256": "53deba177eac63b4a690dc3f4353b602c4267a3a77940a0327d8a1e469d307dc"
+      },
+      {
+        "document_id": "114bfa0d-d6cf-573d-82b2-cfaed94b58b6",
+        "filename": "2305.18290v3.pdf",
+        "source_sha256": "92cb3a2b71362acda98a789b03d88688fd33cf5fcf13f81d2b1de30ee7d3b67a",
+        "ast_sha256": "43cdfdd569318044ed9d604aa1d5398d6974edd6b1ecdee44175ba99e8624966"
+      },
+      {
+        "document_id": "1021f255-7dc6-5f39-9a6c-c38dfa2c5377",
+        "filename": "2307.09288v2.pdf",
+        "source_sha256": "1df284ce95f783002074bfe8f21d47c646b396ceb1736ea3ec0ea212fc070d91",
+        "ast_sha256": "87ee001c9306c8014bc7ec15a54687359e132d7526db34a6b24f4d0842175be0"
+      },
+      {
+        "document_id": "e8fa0c44-256b-5e7e-975d-059199cc2df8",
+        "filename": "2310.06825v1.pdf",
+        "source_sha256": "dfbac4e7035344b305c947481f2e7e8a02f7a24a563917eb6e47f6591d14c5ae",
+        "ast_sha256": "67c734cb1d9569612f20676d7b5fc9263dd07ea392a0f1d3b1ff9835bf419245"
+      },
+      {
+        "document_id": "ccda31fd-65fe-5697-8d2e-38cd4fe0c95e",
+        "filename": "2406.14491v2.pdf",
+        "source_sha256": "8bc106e62eeb6f6f15328e8af107df8eb66ce7ddc3ba694a2ef8ea743f829f0f",
+        "ast_sha256": "13eb0d70597b43d93c1da81014645a3d846df557b493e99f49bec696c2b39378"
+      },
+      {
+        "document_id": "43c954f1-9f8b-5c6e-95f1-eaebb2737c7c",
+        "filename": "2407.21783v3.pdf",
+        "source_sha256": "481f1599468f95a07d05e97fafe55bbe786dc1624c6f881bcb4c7d14c933d083",
+        "ast_sha256": "41c1113e826bb3edb7ae5d93f63f329b194a73530d48a4b6b266b7fd33e73ae3"
+      },
+      {
+        "document_id": "1170f421-2c67-5d4b-a8fd-f25c295c1b5d",
+        "filename": "2412.15115v2.pdf",
+        "source_sha256": "73b3292bead3ac8896679d3ac8be87439756faf356566cbda3ccc8a3dc7d79d3",
+        "ast_sha256": "78f943a558cf8b94dbd97ca3def3ca8da8c385b23687bdd40ce9a45b6dbac51b"
+      },
+      {
+        "document_id": "b4a5dc17-5385-505c-94bc-a74b2b8e6b57",
+        "filename": "2412.19437v1.pdf",
+        "source_sha256": "a67e18a4ca6e2c81abc030239a3ee53705f656b79efab8ce1d6b5ac25630c2a5",
+        "ast_sha256": "377aabc359e878ec1555e2ec329c244088e725f7b0928fe963d8f932c1bc0e3a"
+      },
+      {
+        "document_id": "431d388b-53d5-59e3-ad1a-1bf9f281f789",
+        "filename": "2501.12948v2.pdf",
+        "source_sha256": "b191b0a365a64b4ab2791d117069ed17a2933d03554a662ced58b37df52018f4",
+        "ast_sha256": "aab6bd41c7c8e14d7dbccb99763aec4fbde0ab151c2186b9a4f3dc80b68d2d1d"
+      },
+      {
+        "document_id": "9cffd575-3d37-5dde-8bdf-3e4703913cbd",
+        "filename": "333078981_693988129081760_4712707815225756708_n.pdf",
+        "source_sha256": "775ff8d09b6e5b06314135d87c194ce3535a821eeaee4be9051b331162c5fefd",
+        "ast_sha256": "3cf0729fc539117171d2982e4210b29b50a8b886d02cbc16f3698932a69638ce"
+      },
+      {
+        "document_id": "86e85629-7347-5f1a-92d7-089475d96cdb",
+        "filename": "N19-1423.pdf",
+        "source_sha256": "987545ffb087f1ece898142c403a516baeabeb70ce19089397fac6f7db12c3d4",
+        "ast_sha256": "08b02b0b8e3224d8b93dd6fa84bb5c0966f99162cd0c0bc2d4fe7be3eaed0b13"
+      },
+      {
+        "document_id": "0f5c8501-f249-594b-b55b-8e1867dfa344",
+        "filename": "UnderstandingDeepLearning_02_09_26_C.pdf",
+        "source_sha256": "f8237d393163900fa8e43210e680a3f987b45ccac7750b372e156fae3df0bf32",
+        "ast_sha256": "a7422703a5ac5335504073391728d8860f0a41a4e8d4b946b277fb4883c0f435"
+      },
+      {
+        "document_id": "f5b4ca83-6f08-5d85-b64f-a292b7b1f7b6",
+        "filename": "language_understanding_paper.pdf",
+        "source_sha256": "eb81a65e0856bd38e855e1f1de6ee12e7c3eb92ae05c8270d345a475beb631d0",
+        "ast_sha256": "3a1864cf4a08f50578b55c3d81c0da69379da0a6eebc59fb44dc173364ca0842"
+      }
+    ],
+    "runs": [
+      {
+        "scope": "distinct-20",
+        "selected_files": 20,
+        "budget": 20,
+        "generation_evidence": 20,
+        "local_evidence": 80,
+        "future_candidates": 52,
+        "candidate_source_files": 17,
+        "state_invariant": true,
+        "local_direction_links_valid": true,
+        "generation_claims_use_only_sent_evidence": true,
+        "generation_within_budget": true,
+        "per_file_candidate_limit": true
+      },
+      {
+        "scope": "distinct-20",
+        "selected_files": 20,
+        "budget": 30,
+        "generation_evidence": 30,
+        "local_evidence": 80,
+        "future_candidates": 52,
+        "candidate_source_files": 17,
+        "state_invariant": true,
+        "local_direction_links_valid": true,
+        "generation_claims_use_only_sent_evidence": true,
+        "generation_within_budget": true,
+        "per_file_candidate_limit": true
+      },
+      {
+        "scope": "distinct-20",
+        "selected_files": 20,
+        "budget": 40,
+        "generation_evidence": 40,
+        "local_evidence": 80,
+        "future_candidates": 52,
+        "candidate_source_files": 17,
+        "state_invariant": true,
+        "local_direction_links_valid": true,
+        "generation_claims_use_only_sent_evidence": true,
+        "generation_within_budget": true,
+        "per_file_candidate_limit": true
+      },
+      {
+        "scope": "distinct-20",
+        "selected_files": 20,
+        "budget": 60,
+        "generation_evidence": 60,
+        "local_evidence": 80,
+        "future_candidates": 52,
+        "candidate_source_files": 17,
+        "state_invariant": true,
+        "local_direction_links_valid": true,
+        "generation_claims_use_only_sent_evidence": true,
+        "generation_within_budget": true,
+        "per_file_candidate_limit": true
+      },
+      {
+        "scope": "files-39",
+        "selected_files": 39,
+        "budget": 40,
+        "generation_evidence": 40,
+        "local_evidence": 167,
+        "future_candidates": 113,
+        "candidate_source_files": 36,
+        "state_invariant": true,
+        "local_direction_links_valid": true,
+        "generation_claims_use_only_sent_evidence": true,
+        "generation_within_budget": true,
+        "per_file_candidate_limit": true
+      },
+      {
+        "scope": "files-39",
+        "selected_files": 39,
+        "budget": 60,
+        "generation_evidence": 60,
+        "local_evidence": 167,
+        "future_candidates": 113,
+        "candidate_source_files": 36,
+        "state_invariant": true,
+        "local_direction_links_valid": true,
+        "generation_claims_use_only_sent_evidence": true,
+        "generation_within_budget": true,
+        "per_file_candidate_limit": true
+      }
+    ],
+    "AST_anchors_checked": 167,
+    "native_audit": {
+      "literal_match": 164,
+      "no_native_layer": 3
+    },
+    "scan_original_pages_reviewed": [
+      1,
+      6,
+      10
+    ],
+    "source_unchanged": true,
+    "feature_source_unchanged_after_this_run": "Only review publication guards and concise prompt wording changed afterward, not local direction extraction or matching.",
+    "initial_retained_candidate_counts": {
+      "distinct_20": 56,
+      "official_files_39": 123
+    },
+    "final_candidate_counts": {
+      "distinct_20": 52,
+      "official_files_39": 113
+    },
+    "candidates_are_not_certified_open_ideas": true,
+    "per_file_max_directions": 4,
+    "per_file_max_local_overviews": 2,
+    "all_Future_Work_recall_proven": false,
+    "scientific_solved_status_verified": false
+  },
+  "semantic_review": {
+    "reviewer": "Codex complete-original-page inspection, not independent expert review",
+    "latest_generated_output": "review-final-3",
+    "original_claims": 8,
+    "original_held_index": 2,
+    "reason": "Necessary warm-up language overgeneralizes the large-learning-rate stability motivation; original Pre-LN physical page 8 also discusses a Post-LN optimizer without warm-up.",
+    "remaining_core_claims_supported": 7,
+    "whole_generated_review_accepted": false,
+    "multidocument_body_claims": 0,
+    "benchmark_caption_context_note": "Published speedup claim should explicitly state the comparison baseline; not certification of full publication-ready prose.",
+    "source_pages_inspected": [
+      {
+        "id": "R1",
+        "page": 1
+      },
+      {
+        "id": "R7",
+        "page": 1
+      },
+      {
+        "id": "R26",
+        "page": 8
+      },
+      {
+        "id": "R22",
+        "page": 6
+      },
+      {
+        "id": "R16",
+        "page": 1
+      },
+      {
+        "id": "R35",
+        "page": 6
+      },
+      {
+        "id": "R15",
+        "page": 1
+      },
+      {
+        "id": "R18",
+        "page": 1
+      },
+      {
+        "id": "R12",
+        "page": 1
+      }
+    ]
+  },
+  "final_publication_replay": {
+    "mode": "saved_output_not_new_generation",
+    "model_calls": 0,
+    "original_output_sha256": "a41f422c5fbbb6b5b1f70720324b815ad65fc2b42448b5855b1da01fa29a64a3",
+    "original_report_sha256": "036e4334288c811c6c9248b9441aae2549a82e8e39526d9508d9fe3a8bb60f22",
+    "original_claims": 8,
+    "published_claims": 7,
+    "withheld_original_indices": [
+      2
+    ],
+    "rendered_chars": 694,
+    "claimed_source_files": 6,
+    "local_F_and_L_evidence_unchanged": true,
+    "warnings": [
+      "正文证据预算为 36，已按文献均衡选择 36 条；另有 44 条候选未发送。",
+      "综述生成仅获得 4 条有原页锚点的明确书目关联；未发送的图谱边不作为生成依据。书目匹配不证明贡献继承或科研影响。",
+      "已暂缓 1 条将预热动机扩大为无条件必要的陈述；请保留学习率条件或文中设置，不能由局部稳定性分析推断所有配置都必须预热。",
+      "当前仅有 0 条包含多篇正文来源的论点，尚未达到跨文综合目标；不能把多篇摘录汇集当成完整领域综述。"
+    ]
+  },
+  "browser": {
+    "status": "passed",
+    "cloud_calls": 0,
+    "scope": "Actual source frontend and isolated extractive API, not production Docker",
+    "run": "browser-final-1",
+    "viewport": [
+      1920,
+      1080
+    ],
+    "checks": 4,
+    "direction_cards": 52,
+    "citation_relations": 4,
+    "PDF_pixels_and_text_layer_waited": true,
+    "api_started_before_final_review_publication_only_guards": true
+  },
+  "regression": {
+    "backend": {
+      "tests": 1009,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    "frontend_passed": 35,
+    "typecheck_passed": true,
+    "ruff_passed": true,
+    "diff_check_passed": true
+  },
+  "retained_failures": [
+    {
+      "run": "local-1",
+      "reason": "Literal anchors supported but candidate list included contents/background/late-paragraph truncation false positives."
+    },
+    {
+      "run": "review-final-1",
+      "reason": "Vague short-sequence speed comparison omitted relative dimension condition; original source checks remain unchanged."
+    },
+    {
+      "run": "review-final-2",
+      "reason": "Two claims exceed 160-character format bound; raw eight claims preserved. Explicit extractive fallback is not a generative success."
+    },
+    {
+      "run": "review-final-3",
+      "reason": "Warm-up scope overclaim plus no multidocument body synthesis."
+    },
+    {
+      "run": "review-publication-replay",
+      "reason": "First necessity guard missed PDF us- ing line-wrap; original replay retained."
+    },
+    {
+      "run": "backend-final.xml",
+      "reason": "One test assumed TMP under backend/tmp; unit isolation corrected, production restriction unchanged."
+    }
+  ],
+  "deployment": {
+    "Docker_running_at_initial_probe": false,
+    "observed_error": "dockerDesktopLinuxEngine pipe not found",
+    "Docker_restarted": false,
+    "volumes_removed": false,
+    "final_backend_or_frontend_installed_verified": false,
+    "production_library_modified": false,
+    "temporary_owned_API_and_frontend_stopped_at_handoff": true
+  },
+  "remaining": [
+    "Generated review genuine cross-paper synthesis and source-scope confirmation on final candidate.",
+    "Writing conservative cross-page holds and fresh current-candidate writing confirmation.",
+    "Docker/BGE recovery followed by actual runtime acceptance and finite QA closure.",
+    "Future direction relevance, latest dated follow-up evidence and recall audit; no absence-to-unresolved inference.",
+    "Real online download/tracking, author-year navigation, multi-user boundaries, clean installation and final submission materials."
+  ],
+  "artifacts": [
+    {
+      "path": "backend/tmp/official-future-budget-2026-10-14/local-1/distinct-20-budget-20.json",
+      "sha256": "6b8d4ac2745b99c2ef1badbbd9c378d32029bad3e81e6e9a79c8bfe945eabf8e"
+    },
+    {
+      "path": "backend/tmp/official-future-budget-2026-10-14/local-1/distinct-20-budget-30.json",
+      "sha256": "db5286b5f07ac0e39e1a33fd061bc8e84f706b438d1340adc1d6839fa12be311"
+    },
+    {
+      "path": "backend/tmp/official-future-budget-2026-10-14/local-1/distinct-20-budget-40.json",
+      "sha256": "7a00ce77619b67079faf53b8ed4d61994c90d4dc9a5fa6fbcfc8168dae3b0dd6"
+    },
+    {
+      "path": "backend/tmp/official-future-budget-2026-10-14/local-1/distinct-20-budget-60.json",
+      "sha256": "aa7b022ad602c288c3d0fe9b1b5d3db6f8e1db275895cd6ad35a79c1403fe5c2"
+    },
+    {
+      "path": "backend/tmp/official-future-budget-2026-10-14/local-1/files-39-budget-40.json",
+      "sha256": "3d0d20a8cd6d9fa282dafdb45858354270cfb61944d0d5bbc1b2b4c3f55a0aea"
+    },
+    {
+      "path": "backend/tmp/official-future-budget-2026-10-14/local-1/files-39-budget-60.json",
+      "sha256": "13a1794c6e13e3d5cf72b615718f8285a5e0ec81c521d685315ae01e252c1937"
+    },
+    {
+      "path": "backend/tmp/official-future-budget-2026-10-14/local-1/report.json",
+      "sha256": "b7b9f3a433a75740b23b25f1ed657c7c449446e0896f13547bf68f47ae291223"
+    },
+    {
+      "path": "backend/tmp/official-future-budget-2026-10-14/local-2/distinct-20-budget-20.json",
+      "sha256": "ba12a85bcaf8eed6e5ab9ec3a03321a694f3b5946a57ac9d6089cbb2bd96bf03"
+    },
+    {
+      "path": "backend/tmp/official-future-budget-2026-10-14/local-2/distinct-20-budget-30.json",
+      "sha256": "85b02f5ac67295fde098f399ac4ea196f11ad93df204c2003e7668a2d30b7d94"
+    },
+    {
+      "path": "backend/tmp/official-future-budget-2026-10-14/local-2/distinct-20-budget-40.json",
+      "sha256": "968e73189d48a00eb7d1c5d06bb1ba4683ebf9280f3c9989ece1aae782a4fdd9"
+    },
+    {
+      "path": "backend/tmp/official-future-budget-2026-10-14/local-2/distinct-20-budget-60.json",
+      "sha256": "c5cc2f1181ab7e2d7e714df44c181be197e5a437d84b982dde1ea7a724f8964e"
+    },
+    {
+      "path": "backend/tmp/official-future-budget-2026-10-14/local-2/files-39-budget-40.json",
+      "sha256": "d3b8cc367954cf3782f742ad979d2bdd13d7fb208ef8141167bd0c8780cd9665"
+    },
+    {
+      "path": "backend/tmp/official-future-budget-2026-10-14/local-2/files-39-budget-60.json",
+      "sha256": "be6e36965ed6b7c582807e0bacf70ee06152faea76c5f3c8bb9867c40876309e"
+    },
+    {
+      "path": "backend/tmp/official-future-budget-2026-10-14/local-2/report.json",
+      "sha256": "b3982d4f2b5febd828e61984cd0d3e596650cc69076ec641120f832487829c8b"
+    },
+    {
+      "path": "backend/tmp/official-future-budget-2026-10-14/review-final-1/calls.json",
+      "sha256": "d87e8dd796135945368951f37dd9fee8a5e0ac457aa274df35446ee46216e53f"
+    },
+    {
+      "path": "backend/tmp/official-future-budget-2026-10-14/review-final-1/generated-review.json",
+      "sha256": "92ccee73ddeac51710bc91c485632597a2480546f155892832c5cbd2ce3e8b8d"
+    },
+    {
+      "path": "backend/tmp/official-future-budget-2026-10-14/review-final-1/report.json",
+      "sha256": "ca682844b822713e78d92097b02b9a7a1433ce862bacef26dd5e1ae7abcca5e5"
+    },
+    {
+      "path": "backend/tmp/official-future-budget-2026-10-14/review-final-2/calls.json",
+      "sha256": "4743136e1652b7005922be04694e961c55e5a8e32916c984ba5d35364a018af8"
+    },
+    {
+      "path": "backend/tmp/official-future-budget-2026-10-14/review-final-2/generated-review.json",
+      "sha256": "ab5c5f4237b61252f8c759b992e9b3c9222c5c18b1c3b203b7c3d1186cf2a545"
+    },
+    {
+      "path": "backend/tmp/official-future-budget-2026-10-14/review-final-2/report.json",
+      "sha256": "49e878f3fd316c86fbd8d1d01556748a1b95bae9f578a4140ba76accc4a9fb6c"
+    },
+    {
+      "path": "backend/tmp/official-future-budget-2026-10-14/review-final-3/calls.json",
+      "sha256": "5a1412e82927e862aaef463600b75ef4e5cfdbccd748342726d7a6f662b3bbdd"
+    },
+    {
+      "path": "backend/tmp/official-future-budget-2026-10-14/review-final-3/generated-review.json",
+      "sha256": "a41f422c5fbbb6b5b1f70720324b815ad65fc2b42448b5855b1da01fa29a64a3"
+    },
+    {
+      "path": "backend/tmp/official-future-budget-2026-10-14/review-final-3/report.json",
+      "sha256": "036e4334288c811c6c9248b9441aae2549a82e8e39526d9508d9fe3a8bb60f22"
+    },
+    {
+      "path": "backend/tmp/official-future-budget-2026-10-14/review-publication-replay/generated-review.json",
+      "sha256": "f9191d3a75dcdf3484cf3708b51506d3a59f29b29f8d8208100fc2d22fbc1f42"
+    },
+    {
+      "path": "backend/tmp/official-future-budget-2026-10-14/review-publication-replay/report.json",
+      "sha256": "922d05210b2099660a7bf7b75180c446420890d86fba9d8c465d926f77401bab"
+    },
+    {
+      "path": "backend/tmp/official-future-budget-2026-10-14/review-publication-replay-2/generated-review.json",
+      "sha256": "f7dce9f403b83b07f0e7a1f4ea9b24e145a573220356edc44cc108619f80df97"
+    },
+    {
+      "path": "backend/tmp/official-future-budget-2026-10-14/review-publication-replay-2/report.json",
+      "sha256": "7fd4d9bb890d4848d05c1dbea9f44b9281bf807c27b5335cb75b43c340c8b0bc"
+    },
+    {
+      "path": "backend/tmp/official-future-budget-2026-10-14/browser-final-1/01-relations.png",
+      "sha256": "6b0350ec21515eefc1a58665e2cce52f60e99d322e677d51a776ab538e2bb524"
+    },
+    {
+      "path": "backend/tmp/official-future-budget-2026-10-14/browser-final-1/02-reference-original.png",
+      "sha256": "e02db6a522e56527840e0e658d22189ae34dac71857f580ae837f92e580631b2"
+    },
+    {
+      "path": "backend/tmp/official-future-budget-2026-10-14/browser-final-1/03-local-direction-original.png",
+      "sha256": "edad1e711e819329230177d04fcb7f1f839c7799175b82cd3d6fb1178f6e5b63"
+    },
+    {
+      "path": "backend/tmp/official-future-budget-2026-10-14/browser-final-1/report.json",
+      "sha256": "9099ce29a8ec783c6ceae54ec5a6fe784a09a6a2a6470c8ef7fff221f23cd390"
+    },
+    {
+      "path": "backend/tmp/official-future-budget-2026-10-14/browser-final-1/review.json",
+      "sha256": "7692eeab8daf920b8ae1a2f785f27a2e06d0efe2f5758e2fe1faed12f8757f09"
+    },
+    {
+      "path": "backend/tmp/official-future-budget-2026-10-14/backend-complete.xml",
+      "sha256": "bcf50d53fe15b5e3b3091e08f89107da80f9883678dd4f69be3b58cf1f542545"
+    },
+    {
+      "path": "backend/tmp/official-future-budget-2026-10-14/backend-final-2.xml",
+      "sha256": "35937c6aa8e48d02cc326517af9dc4f6414273073a91c28f37bf67040181ea54"
+    },
+    {
+      "path": "backend/tmp/official-future-budget-2026-10-14/backend-final-3.xml",
+      "sha256": "6ffc55493e1d45646e39af1eaecfa9bfa7a977a833cf9e0dc03c28a0051207d7"
+    },
+    {
+      "path": "backend/tmp/official-future-budget-2026-10-14/backend-final.xml",
+      "sha256": "5f29d02ddeeda0c71a19c0ccd2cdb8803befb7c9b3793b9e504417ea2ee1d5cf"
+    },
+    {
+      "path": "backend/tmp/official-future-budget-2026-10-14/backend-release.xml",
+      "sha256": "c149514a1d2171934073621f8efbc0f491e3fa8949795bef31ad57ba2f53b4b2"
+    },
+    {
+      "path": "backend/tmp/official-future-budget-2026-10-14/source-pages/R1.png",
+      "sha256": "cfd04cf9a63739513797773fd4a4abfe62bf5e13c1ba34affca84181ad484477"
+    },
+    {
+      "path": "backend/tmp/official-future-budget-2026-10-14/source-pages/R12.png",
+      "sha256": "802a28af9c4612f7ecd9b67e8a6f09c24dcda636a7ecfb48855b8cb4653ee012"
+    },
+    {
+      "path": "backend/tmp/official-future-budget-2026-10-14/source-pages/R15.png",
+      "sha256": "2fab4571d5e0039e872c6026be821c07ca57cf0148a4644dac4355528e8fdc52"
+    },
+    {
+      "path": "backend/tmp/official-future-budget-2026-10-14/source-pages/R16.png",
+      "sha256": "ef6904d79f432d07386bdcb2d802660647d2a038d7b15d62d24a65b901606ae0"
+    },
+    {
+      "path": "backend/tmp/official-future-budget-2026-10-14/source-pages/R18.png",
+      "sha256": "39ce4fad2f6f6652d07c5d9f0b10d0db0b725ff9906b548a932384476daeacdd"
+    },
+    {
+      "path": "backend/tmp/official-future-budget-2026-10-14/source-pages/R22.png",
+      "sha256": "3b8c401719995efd27ac52528aec59c80b96e89627eb54c3c800abb13aba1901"
+    },
+    {
+      "path": "backend/tmp/official-future-budget-2026-10-14/source-pages/R26.png",
+      "sha256": "1a9c241a8f056bc99b99a34adb6913e90e211e0307f6abe984d45bbff34d3591"
+    },
+    {
+      "path": "backend/tmp/official-future-budget-2026-10-14/source-pages/R35.png",
+      "sha256": "46d3311257a86e760265b018664dbdfd1a3c150251b9ab1397d48c9fb411d2d4"
+    },
+    {
+      "path": "backend/tmp/official-future-budget-2026-10-14/source-pages/R7.png",
+      "sha256": "6af1ec5040cc41896089365e0e0bc39138d620a05b057aed04fd6f0fb9a5cdf4"
+    },
+    {
+      "path": "backend/tmp/official-future-budget-2026-10-14/source-pages/scan-p1.png",
+      "sha256": "30f22d4e3fcc42cc5129ffbcf6b15d62add5597316ae41296d17037ae463a939"
+    },
+    {
+      "path": "backend/tmp/official-future-budget-2026-10-14/source-pages/scan-p10.png",
+      "sha256": "0de1c5909c48e7e5c8c50d4a1d811ffd8e6dd60bf7c5c4d9ca1bb8b52573a949"
+    },
+    {
+      "path": "backend/tmp/official-future-budget-2026-10-14/source-pages/scan-p6.png",
+      "sha256": "448dcdad7671b3e1244252d7f2ae039e6c286e196d18a9f534e54105a6e6c57b"
+    },
+    {
+      "path": "backend/scripts/verify_official_future_budget.py",
+      "sha256": "747963f01cc21b2f0f5d4adf0d2177b42d4c99d8dbd71e8946fb7a537c4166a1"
+    },
+    {
+      "path": "frontend/components/ResearchReview.tsx",
+      "sha256": "e556488ec2c9e3a8abc7934f91054a2313f2d892c40624277c4bae5cdd6f8b9f"
+    },
+    {
+      "path": "frontend/lib/reviewEvidence.ts",
+      "sha256": "e5f91e226c98317d5fe7df0de89b777bd96eedd114a0f8f2a3118ef44daca15b"
+    },
+    {
+      "path": "frontend/lib/reviewEvidence.test.mjs",
+      "sha256": "fe99c88485ede69634e7af985d34ebf4123740244a0a38112449e1df4318c5d1"
+    },
+    {
+      "path": "frontend/e2e/officialSynthesisAcceptance.mjs",
+      "sha256": "9a10be032abb815e593a055c1be7933841068ba963540008a454d00608925872"
+    }
+  ]
+}

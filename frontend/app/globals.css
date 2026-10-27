@@ -302,6 +302,12 @@ h1 { margin: 0; color: var(--ink); font-size: 24px; line-height: 1.2; letter-spa
 .writing-draft > section > div { display: flex; flex-wrap: wrap; gap: 5px; margin-top: 10px; }
 .writing-draft > section button, .verified-references article > div button { padding: 4px 6px; color: var(--green); background: #e4f0e8; border: 1px solid #c8dfd0; border-radius: 5px; font-size: 8px; cursor: pointer; }
 .verified-references { max-height: 720px; overflow: auto; padding: 20px; background: #f5f4ee; }
+.writing-supplement { margin-top: 18px; padding-top: 12px; border-top: 1px solid var(--line); }
+.writing-supplement summary { cursor: pointer; font-size: 12px; }
+.writing-supplement p { font-size: 12px; line-height: 1.7; }
+.writing-supplement > p { color: var(--muted); }
+.writing-supplement section { margin-top: 12px; }
+.writing-supplement button { margin-right: 6px; color: var(--ink); background: var(--card); border: 1px solid var(--line); border-radius: 4px; cursor: pointer; }
 .verified-references > h3 { margin: 0 0 12px; font-size: 11px; }
 .verified-references > article { margin-top: 9px; padding: 12px; background: var(--card); border: 1px solid var(--line); border-radius: 9px; }
 .verified-references article > header { display: flex; align-items: center; justify-content: space-between; }
@@ -861,7 +867,7 @@ footer { padding: 28px; color: var(--muted); border-top: 1px solid var(--line); 
   top: 0;
   z-index: 3;
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: 1fr 1fr 1.6fr;
   gap: 5px;
   padding: 9px;
   background: rgba(247,247,242,.96);
@@ -885,6 +891,17 @@ footer { padding: 28px; color: var(--muted); border-top: 1px solid var(--line); 
 .pdf-sidebar-tabs button:hover { color: var(--ink); background: #eceee7; }
 .pdf-sidebar-tabs button.active { color: var(--green-deep); background: #dfeadb; border-color: #cbdcc5; }
 .pdf-sidebar-tabs button span { color: #8b938f; font-size: 8px; }
+.pdf-people-panel { padding: 0 14px 20px; font-size: 12px; line-height: 1.7; overflow-wrap: anywhere; }
+.pdf-people-panel section { padding: 14px 0; border-bottom: 1px solid var(--line); }
+.pdf-people-panel h3 { margin: 0 0 8px; font-size: 13px; font-weight: 600; }
+.pdf-people-panel p { margin: 6px 0; }
+.pdf-people-note { color: var(--muted); font-size: 11px; }
+.pdf-people-panel details { padding: 9px 0; border-top: 1px solid var(--line); }
+.pdf-people-panel summary { cursor: pointer; }
+.pdf-people-panel summary small { color: var(--muted); font-size: 10px; white-space: nowrap; }
+.pdf-people-sources { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 8px; }
+.pdf-people-sources button { padding: 3px 7px; border: 1px solid var(--line); background: transparent; color: inherit; cursor: pointer; font-size: 11px; }
+.pdf-people-sources button:hover, .pdf-people-sources button[aria-pressed="true"] { background: #e5e7e4; border-color: #87918c; }
 .pdf-outline-heading {
   display: flex;
   align-items: end;
@@ -962,6 +979,7 @@ footer { padding: 28px; color: var(--muted); border-top: 1px solid var(--line); 
 .pdf-citation-locations button:hover, .pdf-citation-locations button.active { color: #215c3f; background: #dceee2; border-color: #9cc6aa; }
 .pdf-citation-locations span { padding: 4px 1px; color: #909793; font-size: 8px; }
 .pdf-reader-viewport {
+  isolation: isolate;
   overflow: auto;
   padding: 32px max(24px, calc((100% - 900px) / 2));
   background-color: #303934;

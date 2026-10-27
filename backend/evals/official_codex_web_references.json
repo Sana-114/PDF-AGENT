@@ -1,0 +1,25 @@
+{
+  "schema_version": "1.0",
+  "origin": "official-source-page-15-manually-reviewed",
+  "downloads": [
+    {
+      "filename": "2107.03374v2.pdf",
+      "sha256": "ebae72ea0e8a5eb2ecbccdb985aec6cc1254a7c4d29e6d4de7866db1e66c4855",
+      "expect": {
+        "exact_pages": 35,
+        "title_contains": "Evaluating Large Language Models Trained on Code",
+        "required_authors": ["Mark Chen", "Henrique Ponde de Oliveira Pinto", "Wojciech Zaremba"],
+        "min_outline_nodes": 1,
+        "min_references": 3,
+        "max_elapsed_seconds": 300,
+        "max_python_peak_memory_mb": 256,
+        "reference_samples_distinct": true,
+        "reference_samples": [
+          {"page_number": 15, "contains": "Cwe-327: Use of a broken or risky cryptographic algorithm, 2006."},
+          {"page_number": 15, "contains": "Cwe-780: Use of rsa algorithm without oaep, 2009."},
+          {"page_number": 15, "contains": "A6:2017-security misconﬁguration, 2017."}
+        ]
+      }
+    }
+  ]
+}

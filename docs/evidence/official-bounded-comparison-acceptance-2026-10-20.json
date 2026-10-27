@@ -1,0 +1,1046 @@
+{
+  "schema_version": 1,
+  "date": "2026-10-20",
+  "status": "partial_project_acceptance",
+  "whole_project_released": false,
+  "current_backend_source": {
+    "python_version": "3.12.14",
+    "app_files": 139,
+    "app_sha256": "c13f8c21f2aa644a0641a3272414c8513617b50d0129f282ba89b6113516e596",
+    "requirements_sha256": "b0e75e31a3ca8f034e095fd0667e3be7e380975548c5acce90db94f96ed7283f"
+  },
+  "git": {
+    "branch": "codex/stage94-official-failed-qa-retest",
+    "head": "a119f5609cda544e5d587588c5a338051da129a1",
+    "refs_mutated": false,
+    "pushed": false
+  },
+  "official_inputs_unchanged": 39,
+  "prior_raw_artifacts_unchanged": 1623,
+  "prior_manifest_counts": {
+    "official-vector-recovery-acceptance-2026-10-20": 173,
+    "official-response-integrity-acceptance-2026-10-19": 387,
+    "official-scope-repair-acceptance-2026-10-19": 331,
+    "official-completion-acceptance-2026-10-19": 519,
+    "official-batch-acceptance-2026-10-18": 150,
+    "official-grouped-reader-acceptance-2026-10-18": 63
+  },
+  "regression": {
+    "backend": {
+      "executed": 1632,
+      "passed": 1632
+    },
+    "frontend": {
+      "executed": 46,
+      "passed": 46
+    }
+  },
+  "static_checks": {
+    "ruff": {
+      "exit_code": 0,
+      "passed": true
+    },
+    "typescript": {
+      "exit_code": 0,
+      "passed": true
+    },
+    "diff_check": {
+      "exit_code": 0,
+      "passed": true
+    }
+  },
+  "fresh_rag": {
+    "attempts": [
+      {
+        "run": "round-a",
+        "runtime_source": {
+          "python_version": "3.12.14",
+          "app_files": 139,
+          "app_sha256": "b28a02cd3dc239302c7ee6e642695e29e50c691d1e1420427929de00cfed6b09",
+          "requirements_sha256": "b0e75e31a3ca8f034e095fd0667e3be7e380975548c5acce90db94f96ed7283f"
+        },
+        "error": {
+          "type": "EmbeddingServiceError",
+          "message": "Embedding 服务调用失败: timed out"
+        },
+        "cloud_calls": 0,
+        "qa_executed": 0,
+        "embedding_calls": 34
+      },
+      {
+        "run": "round-b",
+        "runtime_source": {
+          "python_version": "3.12.14",
+          "app_files": 139,
+          "app_sha256": "0902267f3d15cc5723a6aaa84fd4a9e5bad5f5025a70924c891bfdfd09c71b4b",
+          "requirements_sha256": "b0e75e31a3ca8f034e095fd0667e3be7e380975548c5acce90db94f96ed7283f"
+        },
+        "error": {
+          "type": "ResponseHandlingException",
+          "message": "timed out"
+        },
+        "cloud_calls": 0,
+        "qa_executed": 0,
+        "embedding_calls": 0
+      }
+    ],
+    "new_answer_accuracy_assigned": false
+  },
+  "cloud_calls": {
+    "actual_requests": 30,
+    "primary_generations": 20,
+    "comparison_reviews": 10,
+    "automatic_retries": 0
+  },
+  "archived_evidence_generation_rounds": [
+    {
+      "run": "generation-a",
+      "runtime_source": {
+        "python_version": "3.12.14",
+        "app_files": 139,
+        "app_sha256": "0902267f3d15cc5723a6aaa84fd4a9e5bad5f5025a70924c891bfdfd09c71b4b",
+        "requirements_sha256": "b0e75e31a3ca8f034e095fd0667e3be7e380975548c5acce90db94f96ed7283f"
+      },
+      "cloud_calls": 6,
+      "machine_passed": 1,
+      "cases": [
+        {
+          "case_id": "dpo-instructgpt-object-and-stage",
+          "status": "failed",
+          "checks": {
+            "real_deepseek_not_fallback": true,
+            "not_insufficient": false,
+            "policy_object_and_learning_objective_present": true,
+            "sampling_object_and_stage_in_same_published_claim": true,
+            "one_comparison_cites_both_originals": false,
+            "all_original_source_anchors_valid": true,
+            "one_fresh_primary_no_retry": true
+          },
+          "cloud_calls": 2
+        },
+        {
+          "case_id": "dpo-reject-global-analytic-and-sampling-free",
+          "status": "failed",
+          "checks": {
+            "real_deepseek_not_fallback": true,
+            "not_insufficient": false,
+            "policy_object_and_learning_objective_present": false,
+            "sampling_object_and_stage_in_same_published_claim": true,
+            "explicitly_rejects_overgeneralization": true,
+            "all_original_source_anchors_valid": true,
+            "one_fresh_primary_no_retry": true
+          },
+          "cloud_calls": 1
+        },
+        {
+          "case_id": "lora-qlora-mechanism",
+          "status": "failed",
+          "checks": {
+            "real_deepseek_not_fallback": true,
+            "not_insufficient": false,
+            "one_claim_has_both_originals": false,
+            "all_published_sources_in_scope": true,
+            "quantization_and_memory_methods": false,
+            "all_original_source_anchors_valid": true,
+            "one_fresh_primary_no_retry": true
+          },
+          "cloud_calls": 2
+        },
+        {
+          "case_id": "unreported-training-seed",
+          "status": "machine_passed_pending_source_review",
+          "checks": {
+            "configured_deepseek": true,
+            "explicit_insufficient_refusal": true,
+            "no_seed_integer_invented": true,
+            "all_original_source_anchors_valid": true,
+            "one_fresh_primary_no_retry": true
+          },
+          "cloud_calls": 1
+        }
+      ],
+      "source_report_sha256": "e20be139de87b6dc5ba584b0b51eb8a364575401a7ab89b44dca2fa629dd3f63"
+    },
+    {
+      "run": "generation-b",
+      "runtime_source": {
+        "python_version": "3.12.14",
+        "app_files": 139,
+        "app_sha256": "0902267f3d15cc5723a6aaa84fd4a9e5bad5f5025a70924c891bfdfd09c71b4b",
+        "requirements_sha256": "b0e75e31a3ca8f034e095fd0667e3be7e380975548c5acce90db94f96ed7283f"
+      },
+      "cloud_calls": 6,
+      "machine_passed": 4,
+      "cases": [
+        {
+          "case_id": "dpo-instructgpt-object-and-stage",
+          "status": "machine_passed_pending_source_review",
+          "checks": {
+            "real_deepseek_not_fallback": true,
+            "not_insufficient": true,
+            "policy_object_and_learning_objective_present": true,
+            "sampling_object_and_stage_in_same_published_claim": true,
+            "one_comparison_cites_both_originals": true,
+            "all_original_source_anchors_valid": true,
+            "one_fresh_primary_no_retry": true
+          },
+          "cloud_calls": 2
+        },
+        {
+          "case_id": "dpo-reject-global-analytic-and-sampling-free",
+          "status": "machine_passed_pending_source_review",
+          "checks": {
+            "real_deepseek_not_fallback": true,
+            "not_insufficient": true,
+            "policy_object_and_learning_objective_present": true,
+            "sampling_object_and_stage_in_same_published_claim": true,
+            "explicitly_rejects_overgeneralization": true,
+            "all_original_source_anchors_valid": true,
+            "one_fresh_primary_no_retry": true
+          },
+          "cloud_calls": 1
+        },
+        {
+          "case_id": "lora-qlora-mechanism",
+          "status": "machine_passed_pending_source_review",
+          "checks": {
+            "real_deepseek_not_fallback": true,
+            "not_insufficient": true,
+            "one_claim_has_both_originals": true,
+            "all_published_sources_in_scope": true,
+            "quantization_and_memory_methods": true,
+            "all_original_source_anchors_valid": true,
+            "one_fresh_primary_no_retry": true
+          },
+          "cloud_calls": 2
+        },
+        {
+          "case_id": "unreported-training-seed",
+          "status": "machine_passed_pending_source_review",
+          "checks": {
+            "configured_deepseek": true,
+            "explicit_insufficient_refusal": true,
+            "no_seed_integer_invented": true,
+            "all_original_source_anchors_valid": true,
+            "one_fresh_primary_no_retry": true
+          },
+          "cloud_calls": 1
+        }
+      ],
+      "source_report_sha256": "e20be139de87b6dc5ba584b0b51eb8a364575401a7ab89b44dca2fa629dd3f63"
+    },
+    {
+      "run": "generation-focus-a",
+      "runtime_source": {
+        "python_version": "3.12.14",
+        "app_files": 139,
+        "app_sha256": "2abed66904fd6f50cc578517d57c1ca1af1fdc788b07631f59a012ed031ced31",
+        "requirements_sha256": "b0e75e31a3ca8f034e095fd0667e3be7e380975548c5acce90db94f96ed7283f"
+      },
+      "cloud_calls": 6,
+      "machine_passed": 4,
+      "cases": [
+        {
+          "case_id": "dpo-instructgpt-object-and-stage",
+          "status": "machine_passed_pending_source_review",
+          "checks": {
+            "real_deepseek_not_fallback": true,
+            "not_insufficient": true,
+            "policy_object_and_learning_objective_present": true,
+            "sampling_object_and_stage_in_same_published_claim": true,
+            "one_comparison_cites_both_originals": true,
+            "all_original_source_anchors_valid": true,
+            "one_fresh_primary_no_retry": true
+          },
+          "cloud_calls": 2
+        },
+        {
+          "case_id": "dpo-reject-global-analytic-and-sampling-free",
+          "status": "machine_passed_pending_source_review",
+          "checks": {
+            "real_deepseek_not_fallback": true,
+            "not_insufficient": true,
+            "policy_object_and_learning_objective_present": true,
+            "sampling_object_and_stage_in_same_published_claim": true,
+            "explicitly_rejects_overgeneralization": true,
+            "all_original_source_anchors_valid": true,
+            "one_fresh_primary_no_retry": true
+          },
+          "cloud_calls": 1
+        },
+        {
+          "case_id": "lora-qlora-mechanism",
+          "status": "machine_passed_pending_source_review",
+          "checks": {
+            "real_deepseek_not_fallback": true,
+            "not_insufficient": true,
+            "one_claim_has_both_originals": true,
+            "all_published_sources_in_scope": true,
+            "quantization_and_memory_methods": true,
+            "all_original_source_anchors_valid": true,
+            "one_fresh_primary_no_retry": true
+          },
+          "cloud_calls": 2
+        },
+        {
+          "case_id": "unreported-training-seed",
+          "status": "machine_passed_pending_source_review",
+          "checks": {
+            "configured_deepseek": true,
+            "explicit_insufficient_refusal": true,
+            "no_seed_integer_invented": true,
+            "all_original_source_anchors_valid": true,
+            "one_fresh_primary_no_retry": true
+          },
+          "cloud_calls": 1
+        }
+      ],
+      "source_report_sha256": "e20be139de87b6dc5ba584b0b51eb8a364575401a7ab89b44dca2fa629dd3f63"
+    },
+    {
+      "run": "generation-focus-b",
+      "runtime_source": {
+        "python_version": "3.12.14",
+        "app_files": 139,
+        "app_sha256": "2abed66904fd6f50cc578517d57c1ca1af1fdc788b07631f59a012ed031ced31",
+        "requirements_sha256": "b0e75e31a3ca8f034e095fd0667e3be7e380975548c5acce90db94f96ed7283f"
+      },
+      "cloud_calls": 6,
+      "machine_passed": 3,
+      "cases": [
+        {
+          "case_id": "dpo-instructgpt-object-and-stage",
+          "status": "machine_passed_pending_source_review",
+          "checks": {
+            "real_deepseek_not_fallback": true,
+            "not_insufficient": true,
+            "policy_object_and_learning_objective_present": true,
+            "sampling_object_and_stage_in_same_published_claim": true,
+            "one_comparison_cites_both_originals": true,
+            "all_original_source_anchors_valid": true,
+            "one_fresh_primary_no_retry": true
+          },
+          "cloud_calls": 2
+        },
+        {
+          "case_id": "dpo-reject-global-analytic-and-sampling-free",
+          "status": "machine_passed_pending_source_review",
+          "checks": {
+            "real_deepseek_not_fallback": true,
+            "not_insufficient": true,
+            "policy_object_and_learning_objective_present": true,
+            "sampling_object_and_stage_in_same_published_claim": true,
+            "explicitly_rejects_overgeneralization": true,
+            "all_original_source_anchors_valid": true,
+            "one_fresh_primary_no_retry": true
+          },
+          "cloud_calls": 1
+        },
+        {
+          "case_id": "lora-qlora-mechanism",
+          "status": "failed",
+          "checks": {
+            "real_deepseek_not_fallback": true,
+            "not_insufficient": false,
+            "one_claim_has_both_originals": false,
+            "all_published_sources_in_scope": true,
+            "quantization_and_memory_methods": false,
+            "all_original_source_anchors_valid": true,
+            "one_fresh_primary_no_retry": true
+          },
+          "cloud_calls": 2
+        },
+        {
+          "case_id": "unreported-training-seed",
+          "status": "machine_passed_pending_source_review",
+          "checks": {
+            "configured_deepseek": true,
+            "explicit_insufficient_refusal": true,
+            "no_seed_integer_invented": true,
+            "all_original_source_anchors_valid": true,
+            "one_fresh_primary_no_retry": true
+          },
+          "cloud_calls": 1
+        }
+      ],
+      "source_report_sha256": "e20be139de87b6dc5ba584b0b51eb8a364575401a7ab89b44dca2fa629dd3f63"
+    },
+    {
+      "run": "generation-release",
+      "runtime_source": {
+        "python_version": "3.12.14",
+        "app_files": 139,
+        "app_sha256": "e2e3e45a212346db7f7a0ece10891d9f3c71110c875981d2f81a437fbef1b548",
+        "requirements_sha256": "b0e75e31a3ca8f034e095fd0667e3be7e380975548c5acce90db94f96ed7283f"
+      },
+      "cloud_calls": 6,
+      "machine_passed": 3,
+      "cases": [
+        {
+          "case_id": "dpo-instructgpt-object-and-stage",
+          "status": "machine_passed_pending_source_review",
+          "checks": {
+            "real_deepseek_not_fallback": true,
+            "not_insufficient": true,
+            "policy_object_and_learning_objective_present": true,
+            "sampling_object_and_stage_in_same_published_claim": true,
+            "one_comparison_cites_both_originals": true,
+            "all_original_source_anchors_valid": true,
+            "one_fresh_primary_no_retry": true
+          },
+          "cloud_calls": 2
+        },
+        {
+          "case_id": "dpo-reject-global-analytic-and-sampling-free",
+          "status": "failed",
+          "checks": {
+            "real_deepseek_not_fallback": true,
+            "not_insufficient": false,
+            "policy_object_and_learning_objective_present": false,
+            "sampling_object_and_stage_in_same_published_claim": true,
+            "explicitly_rejects_overgeneralization": true,
+            "all_original_source_anchors_valid": true,
+            "one_fresh_primary_no_retry": true
+          },
+          "cloud_calls": 1
+        },
+        {
+          "case_id": "lora-qlora-mechanism",
+          "status": "machine_passed_pending_source_review",
+          "checks": {
+            "real_deepseek_not_fallback": true,
+            "not_insufficient": true,
+            "one_claim_has_both_originals": true,
+            "all_published_sources_in_scope": true,
+            "quantization_and_memory_methods": true,
+            "all_original_source_anchors_valid": true,
+            "one_fresh_primary_no_retry": true
+          },
+          "cloud_calls": 2
+        },
+        {
+          "case_id": "unreported-training-seed",
+          "status": "machine_passed_pending_source_review",
+          "checks": {
+            "configured_deepseek": true,
+            "explicit_insufficient_refusal": true,
+            "no_seed_integer_invented": true,
+            "all_original_source_anchors_valid": true,
+            "one_fresh_primary_no_retry": true
+          },
+          "cloud_calls": 1
+        }
+      ],
+      "source_report_sha256": "e20be139de87b6dc5ba584b0b51eb8a364575401a7ab89b44dca2fa629dd3f63"
+    }
+  ],
+  "review_wire_checks": [
+    {
+      "wire_valid": true,
+      "verdict": "unavailable",
+      "checks": [
+        "supported",
+        "supported",
+        "unsupported"
+      ]
+    },
+    {
+      "wire_valid": true,
+      "verdict": "unavailable",
+      "checks": [
+        "supported",
+        "supported",
+        "unsupported"
+      ]
+    },
+    {
+      "wire_valid": true,
+      "verdict": "supported",
+      "checks": [
+        "supported",
+        "supported",
+        "supported"
+      ]
+    },
+    {
+      "wire_valid": true,
+      "verdict": "supported",
+      "checks": [
+        "supported",
+        "supported",
+        "supported"
+      ]
+    },
+    {
+      "wire_valid": true,
+      "verdict": "supported",
+      "checks": [
+        "supported",
+        "supported",
+        "supported"
+      ]
+    },
+    {
+      "wire_valid": true,
+      "verdict": "supported",
+      "checks": [
+        "supported",
+        "supported",
+        "supported"
+      ]
+    },
+    {
+      "wire_valid": true,
+      "verdict": "supported",
+      "checks": [
+        "supported",
+        "supported",
+        "supported"
+      ]
+    },
+    {
+      "wire_valid": true,
+      "verdict": "unavailable",
+      "checks": [
+        "supported",
+        "unsupported",
+        "unsupported"
+      ]
+    },
+    {
+      "wire_valid": true,
+      "verdict": "supported",
+      "checks": [
+        "supported",
+        "supported",
+        "supported"
+      ]
+    },
+    {
+      "wire_valid": true,
+      "verdict": "supported",
+      "checks": [
+        "supported",
+        "supported",
+        "supported"
+      ]
+    }
+  ],
+  "scientific_review": {
+    "date": "2026-10-20",
+    "runtime_app_sha256": "c13f8c21f2aa644a0641a3272414c8513617b50d0129f282ba89b6113516e596",
+    "scope": "Core source-page review plus actual defects; not expert review of every sentence or fresh retrieval acceptance",
+    "latest_generation_run": "generation-release",
+    "latest_generation_app_sha256": "e2e3e45a212346db7f7a0ece10891d9f3c71110c875981d2f81a437fbef1b548",
+    "latest_generation_machine_result": "3/4 before final passive-denial repair",
+    "checks": [
+      "DPO versus InstructGPT workflow uses each original's method paragraphs; the bounded operator does not add a shared KL condition.",
+      "The policy's displayed analytical expression remains distinct from neural-weight learning. Sampling exemption retains the fine-tuning LM object.",
+      "LoRA freezes pretrained weights and trains low-rank matrices; QLoRA's frozen quantized base and adapter gradients follow the selected originals.",
+      "4-bit storage and usual BFloat16 computation remain distinct. NF4's distribution qualification and optimizer-state paging are preserved.",
+      "Figure 3's small gains refer to accuracy, not a small memory reduction. A real published component answer transferred the metric; the final local guard now withholds that saved claim.",
+      "The last DPO negative question was withheld by a passive reporting-denial false positive. Its exact saved claim now survives unchanged under the final guard, without new generation.",
+      "Seed refusal is limited to supplied excerpts, not asserted absence from the entire paper."
+    ],
+    "reservations": [
+      "Some no-degradation wording should be read only within cited experimental settings, not as a universal guarantee.",
+      "The phrase beta constraint is less precise than a KL penalty coefficient; whole-sentence scientific quality is not released.",
+      "One focus-round QLoRA premise adds a storage gloss while citing only its abstract; the reviewer withholds it. This is not proof that the underlying paper lacks a storage description elsewhere.",
+      "Compact reviewer decisions are fallible and can be conservative. Ten well-formed responses do not establish permanent format reliability.",
+      "Full fresh BGE/TEI retrieval was not completed this turn; archived retrieval metadata is provenance, not a new retrieval event."
+    ],
+    "full_pages_viewed": [
+      "backend/tmp/official-batch-acceptance-2026-10-18/dpo-01.png",
+      "backend/tmp/official-batch-acceptance-2026-10-18/dpo-02.png",
+      "backend/tmp/official-batch-acceptance-2026-10-18/dpo-math-16.png",
+      "backend/tmp/official-batch-acceptance-2026-10-18/instructgpt-06.png",
+      "backend/tmp/official-batch-acceptance-2026-10-18/lora-02.png",
+      "backend/tmp/official-batch-acceptance-2026-10-18/qlora-04.png",
+      "backend/tmp/official-batch-acceptance-2026-10-18/qlora-05.png",
+      "backend/tmp/official-batch-acceptance-2026-10-18/qlora-performance-06.png",
+      "backend/tmp/official-completion-2026-10-19/source-pages-2/2305.14314v1-p1.png"
+    ],
+    "whole_scientific_quality_released": false,
+    "whole_project_released": false
+  },
+  "local_replay": {
+    "runtime_source": {
+      "python_version": "3.12.14",
+      "app_files": 139,
+      "app_sha256": "c13f8c21f2aa644a0641a3272414c8513617b50d0129f282ba89b6113516e596",
+      "requirements_sha256": "b0e75e31a3ca8f034e095fd0667e3be7e380975548c5acce90db94f96ed7283f"
+    },
+    "cloud_calls": 0,
+    "new_retrieval_calls": 0,
+    "new_generation_accuracy": false,
+    "scope": "Explicit offline composition with test-selected contrast plus saved-defect checks",
+    "checks": {
+      "dpo-instructgpt-object-and-stage:old_free_wire_rejected": true,
+      "dpo-instructgpt-object-and-stage:derived_candidate_scope_checked": true,
+      "lora-qlora-mechanism:old_free_wire_rejected": true,
+      "lora-qlora-mechanism:derived_candidate_scope_checked": true,
+      "archived_duplicate_reason_json_still_rejected": true,
+      "old_editor_not_a_live_fallback": true,
+      "compact_check_cannot_rewrite": true,
+      "compact_check_cannot_add_sources": true,
+      "actual_memory_metric_transfer_withheld_without_rewriting": true,
+      "actual_did_not_say_denial_preserved_unchanged": true,
+      "actual_passive_reporting_denial_preserved_unchanged": true
+    },
+    "derivations": [
+      {
+        "case_id": "dpo-instructgpt-object-and-stage",
+        "candidate": {
+          "status": "inferred",
+          "text": "在所问机制上，二者处理方式不同：DPO: DPO隐式优化与现有RLHF算法相同的目标（带KL散度约束的奖励最大化），但把偏好损失直接定义为策略的函数，用简单的二元交叉熵目标优化策略，无需显式奖励建模或强化学习。；InstructGPT: InstructGPT先收集演示数据用监督学习训练策略，再收集模型输出比较数据训练奖励模型，最后以该奖励模型的输出为标量奖励，用PPO微调该监督策略以优化此奖励。",
+          "source_statements": [
+            {
+              "subject": "DPO",
+              "paper_id": "P1",
+              "text": "DPO隐式优化与现有RLHF算法相同的目标（带KL散度约束的奖励最大化），但把偏好损失直接定义为策略的函数，用简单的二元交叉熵目标优化策略，无需显式奖励建模或强化学习。",
+              "evidence_ids": [
+                "E9",
+                "E11"
+              ]
+            },
+            {
+              "subject": "InstructGPT",
+              "paper_id": "P2",
+              "text": "InstructGPT先收集演示数据用监督学习训练策略，再收集模型输出比较数据训练奖励模型，最后以该奖励模型的输出为标量奖励，用PPO微调该监督策略以优化此奖励。",
+              "evidence_ids": [
+                "E2",
+                "E4"
+              ]
+            }
+          ]
+        },
+        "selected_evidence_ids": [
+          "E9",
+          "E11",
+          "E2",
+          "E4"
+        ],
+        "independent_live_review": "not_run"
+      },
+      {
+        "case_id": "lora-qlora-mechanism",
+        "candidate": {
+          "status": "inferred",
+          "text": "在所问机制上，二者处理方式不同：LoRA: LoRA 冻结预训练权重，通过优化稠密层权重变化的低秩分解矩阵来间接训练这些层。；QLoRA: QLoRA 让梯度通过冻结的4-bit量化预训练模型反向传播到低秩适配器（LoRA）。",
+          "source_statements": [
+            {
+              "subject": "LoRA",
+              "paper_id": "P1",
+              "text": "LoRA 冻结预训练权重，通过优化稠密层权重变化的低秩分解矩阵来间接训练这些层。",
+              "evidence_ids": [
+                "E19"
+              ]
+            },
+            {
+              "subject": "QLoRA",
+              "paper_id": "P2",
+              "text": "QLoRA 让梯度通过冻结的4-bit量化预训练模型反向传播到低秩适配器（LoRA）。",
+              "evidence_ids": [
+                "E18"
+              ]
+            }
+          ]
+        },
+        "selected_evidence_ids": [
+          "E19",
+          "E18"
+        ],
+        "independent_live_review": "not_run"
+      }
+    ],
+    "inputs": [
+      {
+        "path": "backend/tmp/official-vector-recovery-2026-10-20/comparison-formula-release/report.json",
+        "sha256": "e20be139de87b6dc5ba584b0b51eb8a364575401a7ab89b44dca2fa629dd3f63"
+      },
+      {
+        "path": "backend/tmp/official-vector-recovery-2026-10-20/comparison-formula-release/model-calls.json",
+        "sha256": "9830cf6b191329c150bf7c3cb4301414fdaeb9da36504a152476607f7429b5d3"
+      },
+      {
+        "path": "backend/tmp/official-bounded-comparison-2026-10-20/generation-focus-b/report.json",
+        "sha256": "c1b7fb3958279eaf856ff70c8f466af90d670313bcccc8d4c652a4ca2ca48e90"
+      },
+      {
+        "path": "backend/tmp/official-bounded-comparison-2026-10-20/generation-a/report.json",
+        "sha256": "e79b48fd095f33a9281f239610f4962ba851bc17fc8db57394d43839eb100a18"
+      },
+      {
+        "path": "backend/tmp/official-bounded-comparison-2026-10-20/generation-a/model-calls.json",
+        "sha256": "2d3a2460b4946887f565b1b55dcb073f92e5cefa93bf969acfb91ae4b2f6d1d5"
+      },
+      {
+        "path": "backend/tmp/official-bounded-comparison-2026-10-20/generation-release/report.json",
+        "sha256": "7e7391f161e5620de396a11bc9954e8e01415942d527aee4994d57ba58ce6d34"
+      },
+      {
+        "path": "backend/tmp/official-bounded-comparison-2026-10-20/generation-release/model-calls.json",
+        "sha256": "6d892707dbfcc03f0788e64a8b5fbe815ec53faed1ee2e20cd167880e48a4ca4"
+      }
+    ]
+  },
+  "runtime_observation": {
+    "source": "Direct read-only tool observations during this batch, not a continuous monitor",
+    "external_health_probe_timeout_seconds": 4,
+    "external_health": {
+      "bge": "timed_out",
+      "tei": "timed_out",
+      "qdrant": 200
+    },
+    "docker_memory_total_gib": 15.43,
+    "model_memory_snapshot_gib": {
+      "bge_embedding": 4.9,
+      "bge_reranker": 6.109
+    },
+    "embedding_container": {
+      "running": true,
+      "oom_killed_flag": false,
+      "internal_health_label": "healthy"
+    },
+    "interpretation": "Resource pressure is plausible, not a proven unique cause; container survival and health label do not establish client-side availability.",
+    "docker_restarted": false,
+    "service_containers_stopped": false,
+    "volumes_deleted": false,
+    "unrelated_services_modified": false
+  },
+  "last_live_app_sha256": "e2e3e45a212346db7f7a0ece10891d9f3c71110c875981d2f81a437fbef1b548",
+  "new_cloud_generation_after_final_passive_denial_fix": false,
+  "fresh_retrieval_or_whole_corpus_accuracy_assigned": false,
+  "stable_scientific_quality_released": false,
+  "production_image_replaced": false,
+  "production_database_migrated": false,
+  "secret_scan_findings": [],
+  "source_and_document_files": [
+    {
+      "path": "backend/app/agent/harness.py",
+      "sha256": "e1b5e86f77051376b00c2171cec4568ce64afdf576945e1e990038e0938c643d"
+    },
+    {
+      "path": "backend/app/llm/comparison_support.py",
+      "sha256": "be9c36d3fbbcf5386fb2df7534c724ffdae7bf825f858dd4af15faad1382df57"
+    },
+    {
+      "path": "backend/app/llm/comparison_review.py",
+      "sha256": "9a2c9552e28e4137326706208d6211aecd21d4f231ad805f079e373ceffb3930"
+    },
+    {
+      "path": "backend/app/llm/explanation_fields.py",
+      "sha256": "db7acb5d65343bbcaab2372642a0dc1c78d25d5481fc6e83353b5913726edd35"
+    },
+    {
+      "path": "backend/app/llm/openai_responses.py",
+      "sha256": "32020b217ea6467a3e5ace87a86d9d113385aaef983f5b3c216bbb589a83b38c"
+    },
+    {
+      "path": "backend/app/services/claim_semantics.py",
+      "sha256": "da5ea2924244dbe92b41fe974d87949a0074ac7d7b85ec296663878897c0fcd0"
+    },
+    {
+      "path": "backend/app/services/scope_provenance.py",
+      "sha256": "00d254935671a08d574b72860c56124c702466b03a5f8f10fe8c2dce56f4ed1a"
+    },
+    {
+      "path": "backend/app/services/grounded_text.py",
+      "sha256": "87903705f94936b65194d215e34007f1f26ba2a883dfd8f84b1be66e2d88cac3"
+    },
+    {
+      "path": "backend/scripts/verify_official_grounded_replay.py",
+      "sha256": "06993c9a5c05dab69f15c23cbd0f94deb65e24bec12cf951e068151cf11830ff"
+    },
+    {
+      "path": "backend/tests/test_comparison_support.py",
+      "sha256": "ebad5d41a9bf660738ac818d9e21ea2de3cf0bbf024e59b98458608e77766611"
+    },
+    {
+      "path": "backend/tests/test_comparison_review.py",
+      "sha256": "fde3046eb55af3c5a15acbbaf4a388c8b846464aab0bb280a686f7dd8c46236b"
+    },
+    {
+      "path": "backend/tests/test_explanation_fields.py",
+      "sha256": "24e6b290bbb88566f44f28f37b592a92ab91c414f1ff2e20ae82104349ae2529"
+    },
+    {
+      "path": "backend/tests/test_policy_optimization_scope.py",
+      "sha256": "bc86e32864bfedf712544ecafe1a60f591b46e8a84c093fe919564c5769b18b7"
+    },
+    {
+      "path": "backend/tests/test_grounded_replay_registry.py",
+      "sha256": "886ba98f51b07c5509eeecf1db3811efd826616c12f50182f3e5c6c7bb41208f"
+    },
+    {
+      "path": "backend/tests/test_metric_gain_scope.py",
+      "sha256": "23d8e5066e5a4b7a3fc397945ccfe63ec30e3abbefa55d0b4d9157cabc230068"
+    },
+    {
+      "path": "README.md",
+      "sha256": "c5aab3cbe8ca886a9a3efd4fdc0d53d5b9b01b57a547bae121d501fa59b7ac2a"
+    },
+    {
+      "path": "docs/acceptance-progress.md",
+      "sha256": "7c52bc44a09530f5e01fcfeac121fc02628f5ae552d8f86a4d62ec4a3e920648"
+    },
+    {
+      "path": "docs/competition-verification-gates.md",
+      "sha256": "e7f8e9519b2b7042b8f083dc0354c3e977aaa7172619e436887631fe571d5858"
+    },
+    {
+      "path": "docs/competition-delivery-checklist.md",
+      "sha256": "8389db8a84a30000d996156da958b4bd4da602ec5892e078bbf44be206fa1eb4"
+    },
+    {
+      "path": "docs/official-bounded-comparison-acceptance-2026-10-20.md",
+      "sha256": "2f53a57a27b7135f49dd1bc6a14e206e9a0b11da4d05fe8694084f87178c23d0"
+    }
+  ],
+  "artifacts": [
+    {
+      "path": "backend/tmp/official-bounded-comparison-2026-10-20/backend-final.xml",
+      "sha256": "44874580dec44aab6200200ad9fb2f3eb12d7f8c5685b7bafdcaec31d45534de"
+    },
+    {
+      "path": "backend/tmp/official-bounded-comparison-2026-10-20/backend-metric.xml",
+      "sha256": "77e9b77ba2494afc3e403aedb1704f8344f0e21c3312727d2c5794b7ca459749"
+    },
+    {
+      "path": "backend/tmp/official-bounded-comparison-2026-10-20/backend-release.xml",
+      "sha256": "4093a50493d3fb9fe658ea205429b0a14b8dd7e5ecf820f8cef68836c3eaffba"
+    },
+    {
+      "path": "backend/tmp/official-bounded-comparison-2026-10-20/backend.xml",
+      "sha256": "4c67f2c56b0817f8b98d324871ddf49b677c7ee7b113317db95cc6da1712a88d"
+    },
+    {
+      "path": "backend/tmp/official-bounded-comparison-2026-10-20/finalize_evidence.py",
+      "sha256": "c32dce8d0a5a18ae5b18239952e805d12526856e092360c8cf3e2de3cc273d23"
+    },
+    {
+      "path": "backend/tmp/official-bounded-comparison-2026-10-20/focus-target.xml",
+      "sha256": "cd5751bd05a48c6d3ee29ee11fff63031e53eeae7b880818f03ed96e65c86b9a"
+    },
+    {
+      "path": "backend/tmp/official-bounded-comparison-2026-10-20/format-equivalence.json",
+      "sha256": "8f0e6ef26172383bb1b5702b5f93f57cba00c3d578354f745b52ce19ccfbb149"
+    },
+    {
+      "path": "backend/tmp/official-bounded-comparison-2026-10-20/frontend.xml",
+      "sha256": "ee5b31ba7d00740788bab5a3338caa47a5fc88f7083fff37b7f2b3ac6e810bcd"
+    },
+    {
+      "path": "backend/tmp/official-bounded-comparison-2026-10-20/generation-a/model-calls.json",
+      "sha256": "2d3a2460b4946887f565b1b55dcb073f92e5cefa93bf969acfb91ae4b2f6d1d5"
+    },
+    {
+      "path": "backend/tmp/official-bounded-comparison-2026-10-20/generation-a/report.json",
+      "sha256": "e79b48fd095f33a9281f239610f4962ba851bc17fc8db57394d43839eb100a18"
+    },
+    {
+      "path": "backend/tmp/official-bounded-comparison-2026-10-20/generation-b/model-calls.json",
+      "sha256": "a3b6673f127c7346c1eedd29bc148fc3e75041e312b57a4de137ef2960900a22"
+    },
+    {
+      "path": "backend/tmp/official-bounded-comparison-2026-10-20/generation-b/report.json",
+      "sha256": "5d365401421ed3bb7225ac9c07d1878b85c379b28b7ac52753092a78c76946ec"
+    },
+    {
+      "path": "backend/tmp/official-bounded-comparison-2026-10-20/generation-focus-a/model-calls.json",
+      "sha256": "3ac8617fc730ebc8995ed10741cc8cd9ccdbdffd18f966f8f59a952be7247049"
+    },
+    {
+      "path": "backend/tmp/official-bounded-comparison-2026-10-20/generation-focus-a/report.json",
+      "sha256": "7a7f5e1b5249bbc61c78543606624846f6c8acf43866c921580b98b7f9f8e77d"
+    },
+    {
+      "path": "backend/tmp/official-bounded-comparison-2026-10-20/generation-focus-b/model-calls.json",
+      "sha256": "78eaaeed9bdd8b770dab684f158203439c7305fdaf31b2eeebc4705f30429ec5"
+    },
+    {
+      "path": "backend/tmp/official-bounded-comparison-2026-10-20/generation-focus-b/report.json",
+      "sha256": "c1b7fb3958279eaf856ff70c8f466af90d670313bcccc8d4c652a4ca2ca48e90"
+    },
+    {
+      "path": "backend/tmp/official-bounded-comparison-2026-10-20/generation-release/model-calls.json",
+      "sha256": "6d892707dbfcc03f0788e64a8b5fbe815ec53faed1ee2e20cd167880e48a4ca4"
+    },
+    {
+      "path": "backend/tmp/official-bounded-comparison-2026-10-20/generation-release/report.json",
+      "sha256": "7e7391f161e5620de396a11bc9954e8e01415942d527aee4994d57ba58ce6d34"
+    },
+    {
+      "path": "backend/tmp/official-bounded-comparison-2026-10-20/manual-source-review.json",
+      "sha256": "dec9891b579a94a71aabfcab1d81d56e3d3989ec943debe3a2c9b730d0531b72"
+    },
+    {
+      "path": "backend/tmp/official-bounded-comparison-2026-10-20/metric-target.xml",
+      "sha256": "17af06ca3273dcdb290b9fce43bb66ca6d1278ada8febc5c738e6121b8598d10"
+    },
+    {
+      "path": "backend/tmp/official-bounded-comparison-2026-10-20/regression/test.db",
+      "sha256": "f5b522d7b1c2692e5fdc9d630df2ff93f0952ef02ede259b1d2df60c1c2589b5"
+    },
+    {
+      "path": "backend/tmp/official-bounded-comparison-2026-10-20/regression-final/test.db",
+      "sha256": "1201991784b3e9e777aab5bc41bfed5323d2b096c89b8ad72fc36bbfa262db21"
+    },
+    {
+      "path": "backend/tmp/official-bounded-comparison-2026-10-20/regression-metric/test.db",
+      "sha256": "e122d87d5ed500e02112083aba08ece3b158e0e81b5ddd0e1a57e1233e92501d"
+    },
+    {
+      "path": "backend/tmp/official-bounded-comparison-2026-10-20/regression-release/test.db",
+      "sha256": "1097c384ea52ca99b8aac42283ac7c7e44caa99f7ff98693d958421e9c9438ab"
+    },
+    {
+      "path": "backend/tmp/official-bounded-comparison-2026-10-20/replay_saved_premises.py",
+      "sha256": "cc23087492184fd081499da048e29a8b1d7df74a6285cb885d97aeaf91ce60ca"
+    },
+    {
+      "path": "backend/tmp/official-bounded-comparison-2026-10-20/round-a/acceptance.db",
+      "sha256": "c0fdd9abc3a99d94cdc34bc3fe96bb73f3d72cd4f98650f3582765e7519928ff"
+    },
+    {
+      "path": "backend/tmp/official-bounded-comparison-2026-10-20/round-a/fixture.json",
+      "sha256": "d7730edb860bcb4b6ba77311de22d749684d6fc726ea5d38b5762afc308c117f"
+    },
+    {
+      "path": "backend/tmp/official-bounded-comparison-2026-10-20/round-a/model-calls.json",
+      "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+    },
+    {
+      "path": "backend/tmp/official-bounded-comparison-2026-10-20/round-a/parsed/114bfa0d-d6cf-573d-82b2-cfaed94b58b6.json",
+      "sha256": "6710c78824d61e72e1b0c15aaddf534ce0872570051a9b95d6f2f39c786645d7"
+    },
+    {
+      "path": "backend/tmp/official-bounded-comparison-2026-10-20/round-a/parsed/20d9fad6-9e6f-543d-a2e1-095d8056c5ff.json",
+      "sha256": "4a05a089a864b8fc603470e4f28fc480526b8184b8c5a89039db83b07bdded3d"
+    },
+    {
+      "path": "backend/tmp/official-bounded-comparison-2026-10-20/round-a/parsed/855562a1-8309-57b2-b7b0-b9e7016207dc.json",
+      "sha256": "0bdf9ab2be963a5e42b3560e72b14fd247e2723c299ffc3e340682b02394db97"
+    },
+    {
+      "path": "backend/tmp/official-bounded-comparison-2026-10-20/round-a/parsed/bc90bcf2-cccd-5364-94f6-5815603802f7.json",
+      "sha256": "2f5bdb78b265127069fbaf7c9841afe6e181a0d93c3209856c420d678c7825d0"
+    },
+    {
+      "path": "backend/tmp/official-bounded-comparison-2026-10-20/round-a/parsed/cd05de96-3b20-5178-8953-d8ee090a4f23.json",
+      "sha256": "0ab6909920de99d93d12d57d963fe93c684446cbcfdba40bf2df1ed080d7b414"
+    },
+    {
+      "path": "backend/tmp/official-bounded-comparison-2026-10-20/round-a/report.json",
+      "sha256": "9f8ff98ef5774dc623e0138d1af7f8c62cee7daf41c4027367ada8d09ce4e9bd"
+    },
+    {
+      "path": "backend/tmp/official-bounded-comparison-2026-10-20/round-a/uploads/114bfa0d-d6cf-573d-82b2-cfaed94b58b6.pdf",
+      "sha256": "92cb3a2b71362acda98a789b03d88688fd33cf5fcf13f81d2b1de30ee7d3b67a"
+    },
+    {
+      "path": "backend/tmp/official-bounded-comparison-2026-10-20/round-a/uploads/20d9fad6-9e6f-543d-a2e1-095d8056c5ff.pdf",
+      "sha256": "0a9bff1be3575cf9fe26a4a3d3a9175bc791ecec90de8b9deba4cff75d2b9476"
+    },
+    {
+      "path": "backend/tmp/official-bounded-comparison-2026-10-20/round-a/uploads/855562a1-8309-57b2-b7b0-b9e7016207dc.pdf",
+      "sha256": "33a4e757c19d6ea8d3cca8958fce8fe405e290272e135c99ee66065c775d5bd1"
+    },
+    {
+      "path": "backend/tmp/official-bounded-comparison-2026-10-20/round-a/uploads/bc90bcf2-cccd-5364-94f6-5815603802f7.pdf",
+      "sha256": "e9a0d3128767db616085dc0f4e6e455e672e89af823e8ed1282793682787395a"
+    },
+    {
+      "path": "backend/tmp/official-bounded-comparison-2026-10-20/round-a/uploads/cd05de96-3b20-5178-8953-d8ee090a4f23.pdf",
+      "sha256": "c1984bb50a5b90fddb895fdc3a0f72e5bc977148c9f63ef6040cbe7a3e1f0d98"
+    },
+    {
+      "path": "backend/tmp/official-bounded-comparison-2026-10-20/round-b/acceptance.db",
+      "sha256": "b402f8312eed223a982b74dad75b59cacb00a4dbd6279ebefab36985644ff8bc"
+    },
+    {
+      "path": "backend/tmp/official-bounded-comparison-2026-10-20/round-b/fixture.json",
+      "sha256": "d7730edb860bcb4b6ba77311de22d749684d6fc726ea5d38b5762afc308c117f"
+    },
+    {
+      "path": "backend/tmp/official-bounded-comparison-2026-10-20/round-b/model-calls.json",
+      "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+    },
+    {
+      "path": "backend/tmp/official-bounded-comparison-2026-10-20/round-b/parsed/114bfa0d-d6cf-573d-82b2-cfaed94b58b6.json",
+      "sha256": "6710c78824d61e72e1b0c15aaddf534ce0872570051a9b95d6f2f39c786645d7"
+    },
+    {
+      "path": "backend/tmp/official-bounded-comparison-2026-10-20/round-b/parsed/20d9fad6-9e6f-543d-a2e1-095d8056c5ff.json",
+      "sha256": "4a05a089a864b8fc603470e4f28fc480526b8184b8c5a89039db83b07bdded3d"
+    },
+    {
+      "path": "backend/tmp/official-bounded-comparison-2026-10-20/round-b/parsed/855562a1-8309-57b2-b7b0-b9e7016207dc.json",
+      "sha256": "0bdf9ab2be963a5e42b3560e72b14fd247e2723c299ffc3e340682b02394db97"
+    },
+    {
+      "path": "backend/tmp/official-bounded-comparison-2026-10-20/round-b/parsed/bc90bcf2-cccd-5364-94f6-5815603802f7.json",
+      "sha256": "2f5bdb78b265127069fbaf7c9841afe6e181a0d93c3209856c420d678c7825d0"
+    },
+    {
+      "path": "backend/tmp/official-bounded-comparison-2026-10-20/round-b/parsed/cd05de96-3b20-5178-8953-d8ee090a4f23.json",
+      "sha256": "0ab6909920de99d93d12d57d963fe93c684446cbcfdba40bf2df1ed080d7b414"
+    },
+    {
+      "path": "backend/tmp/official-bounded-comparison-2026-10-20/round-b/report.json",
+      "sha256": "9f28bc04599be678121f9e6d47607e1b0b7efa03e80de144bb81c2e9e459cbec"
+    },
+    {
+      "path": "backend/tmp/official-bounded-comparison-2026-10-20/round-b/uploads/114bfa0d-d6cf-573d-82b2-cfaed94b58b6.pdf",
+      "sha256": "92cb3a2b71362acda98a789b03d88688fd33cf5fcf13f81d2b1de30ee7d3b67a"
+    },
+    {
+      "path": "backend/tmp/official-bounded-comparison-2026-10-20/round-b/uploads/20d9fad6-9e6f-543d-a2e1-095d8056c5ff.pdf",
+      "sha256": "0a9bff1be3575cf9fe26a4a3d3a9175bc791ecec90de8b9deba4cff75d2b9476"
+    },
+    {
+      "path": "backend/tmp/official-bounded-comparison-2026-10-20/round-b/uploads/855562a1-8309-57b2-b7b0-b9e7016207dc.pdf",
+      "sha256": "33a4e757c19d6ea8d3cca8958fce8fe405e290272e135c99ee66065c775d5bd1"
+    },
+    {
+      "path": "backend/tmp/official-bounded-comparison-2026-10-20/round-b/uploads/bc90bcf2-cccd-5364-94f6-5815603802f7.pdf",
+      "sha256": "e9a0d3128767db616085dc0f4e6e455e672e89af823e8ed1282793682787395a"
+    },
+    {
+      "path": "backend/tmp/official-bounded-comparison-2026-10-20/round-b/uploads/cd05de96-3b20-5178-8953-d8ee090a4f23.pdf",
+      "sha256": "c1984bb50a5b90fddb895fdc3a0f72e5bc977148c9f63ef6040cbe7a3e1f0d98"
+    },
+    {
+      "path": "backend/tmp/official-bounded-comparison-2026-10-20/runtime-observation.json",
+      "sha256": "d411cb73e070e1e6585856175282c034dce45d12d80ae4173b6f9547f3d3ada3"
+    },
+    {
+      "path": "backend/tmp/official-bounded-comparison-2026-10-20/saved-premise-replay-final.json",
+      "sha256": "c6788d35e7e82cdf9f1c812b323ee10ea19f6c137cb0c4f640b8b22fa83a42f9"
+    },
+    {
+      "path": "backend/tmp/official-bounded-comparison-2026-10-20/saved-premise-replay-release.json",
+      "sha256": "bcf32dd99c74b1bddcb3f53f231d66d579d4eec566c4d88a7ff91f830d0c6ed7"
+    },
+    {
+      "path": "backend/tmp/official-bounded-comparison-2026-10-20/saved-premise-replay.json",
+      "sha256": "1b6c5ae33c3b0b67ae0923f1139b7230d6955fed74191a91b4c98101967426db"
+    },
+    {
+      "path": "backend/tmp/official-bounded-comparison-2026-10-20/static-checks.json",
+      "sha256": "aca7d40555d5370352a14d00c8de354198c94df2b0f06208e7130e34f5a1e21a"
+    },
+    {
+      "path": "backend/tmp/official-bounded-comparison-2026-10-20/target-final.xml",
+      "sha256": "dfdf716e6d2dae2a16cede261f3c6614e471816c924bee66fca15e0cbae77ba6"
+    },
+    {
+      "path": "backend/tmp/official-bounded-before.xml",
+      "sha256": "8bb2246a859bc6e5b491d614f094051817c903209de6b28d1f25a4bfa6d8aed5"
+    },
+    {
+      "path": "backend/tmp/official-bounded-target.xml",
+      "sha256": "56b931055c7982442276b238f61098668a9d2d31f9d817cf87bcdf2d3f5d5b3f"
+    }
+  ]
+}

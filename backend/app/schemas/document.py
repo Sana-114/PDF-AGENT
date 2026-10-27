@@ -130,6 +130,28 @@ class DocumentReferencesRead(BaseModel):
     mentions: list[CitationMentionRead]
 
 
+class PeopleSourceRead(BaseModel):
+    page_number: int = Field(ge=1)
+    block_id: str
+    bbox: list[float] = Field(min_length=4, max_length=4)
+    text: str
+
+
+class ContributorGroupRead(BaseModel):
+    role: str
+    members: list[str]
+    sources: list[PeopleSourceRead]
+
+
+class DocumentPeopleRead(BaseModel):
+    document_id: str
+    authors: list[str]
+    affiliations: list[str]
+    author_sources: list[PeopleSourceRead]
+    contributor_groups: list[ContributorGroupRead]
+    contributor_status: Literal["available", "not_detected", "legacy", "unverified"]
+
+
 class PageTranslationRequest(BaseModel):
     target_language: Literal["zh", "en"]
 

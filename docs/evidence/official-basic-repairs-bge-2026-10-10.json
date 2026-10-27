@@ -1,0 +1,24 @@
+{
+  "schema_version": "1.0",
+  "date": "2026-10-10",
+  "git_branch": "codex/stage94-official-failed-qa-retest",
+  "committed": false,
+  "pushed": false,
+  "generative_llm_calls": 0,
+  "production_library_modified": false,
+  "offline_tests_passed": 424,
+  "offline_tests_failed": 0,
+  "ruff_passed": true,
+  "parser": {"documents":32,"pages":1297,"passed":32,"failed":0,"exact_author_lists":7,"elapsed_seconds_sum":1012.815,"maximum_python_allocation_mib":168.25,"ppo_before_mib":323.59,"ppo_after_mib":5.71,"codex_distinct_reference_supplement_passed":true},
+  "bge": {"embedding_model":"BAAI/bge-m3","dimensions":1024,"reranker_model":"BAAI/bge-reranker-v2-m3","sparse":"hash_sparse_plus_BM25_not_BGE_learned_sparse","selected_documents":32,"selected_chunks":10391,"top_k":10,"raw_passed":58,"raw_failed":10,"reviewed_passed":60,"reviewed_failed":8,"review_new_embedding_calls":0,"review_new_reranker_calls":0,"author_probes_passed":31,"author_probes_total":32,"method_probes_passed":25,"method_probes_total":32,"reference_probes_passed":4,"reference_probes_total":4},
+  "failure_case_ids": ["method:209_Emergent_Abilities_of_Larg.pdf","method:2101.03961v3.pdf","method:2206.07682v2.pdf","authors:2211.05100v4.pdf","method:2212.04356v1.pdf","method:2303.08774v6.pdf","method:2305.13048v2.pdf","method:2501.12948v2.pdf"],
+  "sha256": {
+    "parser_report":"801c36279b3accd3ccb80c29d3227ac0cda6c859205cba2271642c87c754807d",
+    "codex_supplement_report":"a045f68b35dc928d44a9658d0f293772c57099ec4c4fa36073217246260ed350",
+    "parser_manifest":"a86a3f320eee930513af4da8f3c0c3965482e6d1c02388069f0ebe3cfc40148e",
+    "retrieval_dataset":"f2affef5f932d365666636d97a0353056693cda53df9447abe59e3f6da7bd82e",
+    "raw_retrieval_report":"717a1b6d788c87018827aa1561b8d444864bf0f3b5837dbfa247a2f04c2030d2",
+    "reviewed_retrieval_report":"9e6d3575171241f21d2eefced098c74165f14edf3dbbb61688bd3471ec0e2925"
+  },
+  "limits": ["Not full six-module competition acceptance","Seven previously tested files not rerun in this batch","Only seven complete author lists checked","Strict gold page/quote recall, not generated-answer correctness","Table and formula candidates are not exhaustive accuracy gold","Raw retrieval failures and interrupted index checkpoints retained"]
+}

@@ -24,3 +24,18 @@ class FutureWorkDecision(Base):
         default=lambda: datetime.now(UTC),
         onupdate=lambda: datetime.now(UTC),
     )
+
+
+class FutureWorkAssessment(Base):
+    __tablename__ = "future_work_assessments"
+
+    direction_id: Mapped[str] = mapped_column(String(40), primary_key=True)
+    source_document_id: Mapped[str] = mapped_column(
+        String(36), ForeignKey("documents.id", ondelete="CASCADE"), index=True,
+    )
+    request_json: Mapped[str] = mapped_column(Text)
+    result_json: Mapped[str] = mapped_column(Text)
+    updated_at: Mapped[datetime] = mapped_column(
+        DateTime(timezone=True), default=lambda: datetime.now(UTC),
+        onupdate=lambda: datetime.now(UTC),
+    )

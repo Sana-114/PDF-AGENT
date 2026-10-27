@@ -11,6 +11,7 @@ backend/data/
 /data/*.db
 backend/htmlcov/
 frontend/.next/
+frontend/.next-acceptance-*/
 frontend/node_modules/
 frontend/npm-debug.log*
 *.tsbuildinfo
@@ -26,3 +27,9 @@ output/evals/*.json
 
 # Organizer-provided PDFs are local inputs; commit hashes and tests, not the corpus.
 /科研小助手/
+
+# Submission artifacts and demo media stay outside the source repository.
+/output/pre-submission/
+/output/video/
+/output/translations/
+/output/pdf/PaperPilot-pre-submission-introduction-*.pdf

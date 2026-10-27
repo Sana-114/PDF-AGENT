@@ -1,0 +1,30 @@
+{
+  "dataset_id": "public-transformer-fixed-counterexamples-2026-10-13",
+  "source_filename": "1706.03762v1.pdf",
+  "source_sha256": "0a9bff1be3575cf9fe26a4a3d3a9175bc791ecec90de8b9deba4cff75d2b9476",
+  "cases": [
+    {
+      "case_id": "wrong-adam-premise",
+      "question": "请核对：Attention Is All You Need 中 Adam 的 β2 设置为 0.999，对吗？",
+      "expectation": "correct_false_premise",
+      "required_correct_value": "0.98",
+      "source_page": 7,
+      "note": "原第 7 页 optimizer 段独立核对；错误前提不能被当成证据。"
+    },
+    {
+      "case_id": "wrong-bleu-direction",
+      "question": "Transformer (big) 在 English-to-German 任务的 BLEU 是 41.0，对吗？请根据论文表格核对。",
+      "expectation": "correct_false_premise",
+      "required_correct_value": "28.4",
+      "source_page": 8,
+      "note": "原 Table 2 的 EN-DE 为 28.4；41.0 属于 EN-FR，不能串列。"
+    },
+    {
+      "case_id": "unreported-training-seed",
+      "question": "Attention Is All You Need 训练 Base 模型时，随机种子的具体整数值是多少？只接受论文原文明确报告的编号，没有依据请说明。",
+      "expectation": "refuse_without_inventing_seed",
+      "source_absence_regex": "(?i)\\b(?:random[ -]?)?seed\\b",
+      "note": "发送前检查完整官方 PDF 原生文本没有 seed 报告；不以训练步数或 warmup 步数充当种子。"
+    }
+  ]
+}

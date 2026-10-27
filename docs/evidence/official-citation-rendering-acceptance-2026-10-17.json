@@ -1,0 +1,1495 @@
+{
+  "schema_version": 1,
+  "summary": {
+    "date": "2026-10-17",
+    "current_source": {
+      "python_version": "3.12.14",
+      "app_files": 130,
+      "app_sha256": "8e91623b3d7d73dd8f7ada7856b0dc4ac48f911e58f160894d6cfe899cd800de",
+      "requirements_sha256": "b0e75e31a3ca8f034e095fd0667e3be7e380975548c5acce90db94f96ed7283f"
+    },
+    "runs": [
+      {
+        "run": "round-1-mechanism",
+        "source": {
+          "python_version": "3.12.14",
+          "app_files": 129,
+          "app_sha256": "4c3564596a081dbd920cbe2f148a050b73c0aaac25932eb4ae4b457e0cf3549a",
+          "requirements_sha256": "b0e75e31a3ca8f034e095fd0667e3be7e380975548c5acce90db94f96ed7283f"
+        },
+        "original_status": "source_checks_passed",
+        "original_case_statuses": [
+          "source_checks_passed",
+          "source_checks_passed"
+        ]
+      },
+      {
+        "run": "round-1-policy",
+        "source": {
+          "python_version": "3.12.14",
+          "app_files": 129,
+          "app_sha256": "4c3564596a081dbd920cbe2f148a050b73c0aaac25932eb4ae4b457e0cf3549a",
+          "requirements_sha256": "b0e75e31a3ca8f034e095fd0667e3be7e380975548c5acce90db94f96ed7283f"
+        },
+        "original_status": "failed",
+        "original_case_statuses": [
+          "failed",
+          "source_checks_passed"
+        ]
+      },
+      {
+        "run": "review-mechanism",
+        "source": {
+          "python_version": "3.12.14",
+          "app_files": 130,
+          "app_sha256": "a1c5e8844436b297e8a31d235997dce30dcbbc42b3f0f63a92b4f927cd58a8ec",
+          "requirements_sha256": "b0e75e31a3ca8f034e095fd0667e3be7e380975548c5acce90db94f96ed7283f"
+        },
+        "original_status": "failed",
+        "original_case_statuses": [
+          "failed",
+          "source_checks_passed"
+        ]
+      },
+      {
+        "run": "review-policy",
+        "source": {
+          "python_version": "3.12.14",
+          "app_files": 130,
+          "app_sha256": "a1c5e8844436b297e8a31d235997dce30dcbbc42b3f0f63a92b4f927cd58a8ec",
+          "requirements_sha256": "b0e75e31a3ca8f034e095fd0667e3be7e380975548c5acce90db94f96ed7283f"
+        },
+        "original_status": "failed",
+        "original_case_statuses": [
+          "failed",
+          "source_checks_passed"
+        ]
+      }
+    ],
+    "cloud_calls": 10,
+    "request_counts": {
+      "round-1": {
+        "calls": 4,
+        "main": 4,
+        "editor": 0
+      },
+      "review": {
+        "calls": 5,
+        "main": 4,
+        "editor": 1
+      }
+    },
+    "saved_draft_editor_calls": 1,
+    "automatic_model_retries": 0,
+    "original_round_machine_passes": [
+      3,
+      2
+    ],
+    "cases_per_round": 4,
+    "qa_anchors": 156,
+    "anchor_checks": [
+      {
+        "run": "round-1-mechanism",
+        "case_id": "lora-qlora-mechanism",
+        "evidence_id": "E1",
+        "valid": true,
+        "hybrid_reranked": true
+      },
+      {
+        "run": "round-1-mechanism",
+        "case_id": "lora-qlora-mechanism",
+        "evidence_id": "E2",
+        "valid": true,
+        "hybrid_reranked": true
+      },
+      {
+        "run": "round-1-mechanism",
+        "case_id": "lora-qlora-mechanism",
+        "evidence_id": "E3",
+        "valid": true,
+        "hybrid_reranked": true
+      },
+      {
+        "run": "round-1-mechanism",
+        "case_id": "lora-qlora-mechanism",
+        "evidence_id": "E5",
+        "valid": true,
+        "hybrid_reranked": true
+      },
+      {
+        "run": "round-1-mechanism",
+        "case_id": "lora-qlora-mechanism",
+        "evidence_id": "E9",
+        "valid": true,
+        "hybrid_reranked": true
+      },
+      {
+        "run": "round-1-mechanism",
+        "case_id": "lora-qlora-mechanism",
+        "evidence_id": "E15",
+        "valid": true,
+        "hybrid_reranked": true
+      },
+      {
+        "run": "round-1-mechanism",
+        "case_id": "lora-qlora-mechanism",
+        "evidence_id": "E16",
+        "valid": true,
+        "hybrid_reranked": true
+      },
+      {
+        "run": "round-1-mechanism",
+        "case_id": "lora-qlora-mechanism",
+        "evidence_id": "E19",
+        "valid": true,
+        "hybrid_reranked": true
+      },
+      {
+        "run": "round-1-mechanism",
+        "case_id": "lora-qlora-mechanism",
+        "evidence_id": "E4",
+        "valid": true,
+        "hybrid_reranked": true
+      },
+      {
+        "run": "round-1-mechanism",
+        "case_id": "lora-qlora-mechanism",
+        "evidence_id": "E6",
+        "valid": true,
+        "hybrid_reranked": true
+      },
+      {
+        "run": "round-1-mechanism",
+        "case_id": "lora-qlora-mechanism",
+        "evidence_id": "E7",
+        "valid": true,
+        "hybrid_reranked": true
+      },
+      {
+        "run": "round-1-mechanism",
+        "case_id": "lora-qlora-mechanism",
+        "evidence_id": "E8",
+        "valid": true,
+        "hybrid_reranked": true
+      },
+      {
+        "run": "round-1-mechanism",
+        "case_id": "lora-qlora-mechanism",
+        "evidence_id": "E10",
+        "valid": true,
+        "hybrid_reranked": true
+      },
+      {
+        "run": "round-1-mechanism",
+        "case_id": "lora-qlora-mechanism",
+        "evidence_id": "E11",
+        "valid": true,
+        "hybrid_reranked": true
+      },
+      {
+        "run": "round-1-mechanism",
+        "case_id": "lora-qlora-mechanism",
+        "evidence_id": "E12",
+        "valid": true,
+        "hybrid_reranked": true
+      },
+      {
+        "run": "round-1-mechanism",
+        "case_id": "lora-qlora-mechanism",
+        "evidence_id": "E13",
+        "valid": true,
+        "hybrid_reranked": true
+      },
+      {
+        "run": "round-1-mechanism",
+        "case_id": "lora-qlora-mechanism",
+        "evidence_id": "E14",
+        "valid": true,
+        "hybrid_reranked": true
+      },
+      {
+        "run": "round-1-mechanism",
+        "case_id": "lora-qlora-mechanism",
+        "evidence_id": "E17",
+        "valid": true,
+        "hybrid_reranked": true
+      },
+      {
+        "run": "round-1-mechanism",
+        "case_id": "lora-qlora-mechanism",
+        "evidence_id": "E18",
+        "valid": true,
+        "hybrid_reranked": true
+      },
+      {
+        "run": "round-1-mechanism",
+        "case_id": "lora-qlora-mechanism",
+        "evidence_id": "E20",
+        "valid": true,
+        "hybrid_reranked": true
+      },
+      {
+        "run": "round-1-mechanism",
+        "case_id": "unreported-training-seed",
+        "evidence_id": "E1",
+        "valid": true,
+        "hybrid_reranked": true
+      },
+      {
+        "run": "round-1-mechanism",
+        "case_id": "unreported-training-seed",
+        "evidence_id": "E2",
+        "valid": true,
+        "hybrid_reranked": true
+      },
+      {
+        "run": "round-1-mechanism",
+        "case_id": "unreported-training-seed",
+        "evidence_id": "E3",
+        "valid": true,
+        "hybrid_reranked": true
+      },
+      {
+        "run": "round-1-mechanism",
+        "case_id": "unreported-training-seed",
+        "evidence_id": "E4",
+        "valid": true,
+        "hybrid_reranked": true
+      },
+      {
+        "run": "round-1-mechanism",
+        "case_id": "unreported-training-seed",
+        "evidence_id": "E5",
+        "valid": true,
+        "hybrid_reranked": true
+      },
+      {
+        "run": "round-1-mechanism",
+        "case_id": "unreported-training-seed",
+        "evidence_id": "E6",
+        "valid": true,
+        "hybrid_reranked": true
+      },
+      {
+        "run": "round-1-mechanism",
+        "case_id": "unreported-training-seed",
+        "evidence_id": "E7",
+        "valid": true,
+        "hybrid_reranked": true
+      },
+      {
+        "run": "round-1-mechanism",
+        "case_id": "unreported-training-seed",
+        "evidence_id": "E8",
+        "valid": true,
+        "hybrid_reranked": true
+      },
+      {
+        "run": "round-1-mechanism",
+        "case_id": "unreported-training-seed",
+        "evidence_id": "E9",
+        "valid": true,
+        "hybrid_reranked": true
+      },
+      {
+        "run": "round-1-mechanism",
+        "case_id": "unreported-training-seed",
+        "evidence_id": "E10",
+        "valid": true,
+        "hybrid_reranked": true
+      },
+      {
+        "run": "round-1-mechanism",
+        "case_id": "unreported-training-seed",
+        "evidence_id": "E11",
+        "valid": true,
+        "hybrid_reranked": true
+      },
+      {
+        "run": "round-1-mechanism",
+        "case_id": "unreported-training-seed",
+        "evidence_id": "E12",
+        "valid": true,
+        "hybrid_reranked": true
+      },
+      {
+        "run": "round-1-mechanism",
+        "case_id": "unreported-training-seed",
+        "evidence_id": "E13",
+        "valid": true,
+        "hybrid_reranked": true
+      },
+      {
+        "run": "round-1-mechanism",
+        "case_id": "unreported-training-seed",
+        "evidence_id": "E14",
+        "valid": true,
+        "hybrid_reranked": true
+      },
+      {
+        "run": "round-1-mechanism",
+        "case_id": "unreported-training-seed",
+        "evidence_id": "E15",
+        "valid": true,
+        "hybrid_reranked": true
+      },
+      {
+        "run": "round-1-mechanism",
+        "case_id": "unreported-training-seed",
+        "evidence_id": "E16",
+        "valid": true,
+        "hybrid_reranked": true
+      },
+      {
+        "run": "round-1-mechanism",
+        "case_id": "unreported-training-seed",
+        "evidence_id": "E17",
+        "valid": true,
+        "hybrid_reranked": true
+      },
+      {
+        "run": "round-1-mechanism",
+        "case_id": "unreported-training-seed",
+        "evidence_id": "E18",
+        "valid": true,
+        "hybrid_reranked": true
+      },
+      {
+        "run": "round-1-policy",
+        "case_id": "dpo-instructgpt-object-and-stage",
+        "evidence_id": "E3",
+        "valid": true,
+        "hybrid_reranked": true
+      },
+      {
+        "run": "round-1-policy",
+        "case_id": "dpo-instructgpt-object-and-stage",
+        "evidence_id": "E6",
+        "valid": true,
+        "hybrid_reranked": true
+      },
+      {
+        "run": "round-1-policy",
+        "case_id": "dpo-instructgpt-object-and-stage",
+        "evidence_id": "E9",
+        "valid": true,
+        "hybrid_reranked": true
+      },
+      {
+        "run": "round-1-policy",
+        "case_id": "dpo-instructgpt-object-and-stage",
+        "evidence_id": "E11",
+        "valid": true,
+        "hybrid_reranked": true
+      },
+      {
+        "run": "round-1-policy",
+        "case_id": "dpo-instructgpt-object-and-stage",
+        "evidence_id": "E15",
+        "valid": true,
+        "hybrid_reranked": true
+      },
+      {
+        "run": "round-1-policy",
+        "case_id": "dpo-instructgpt-object-and-stage",
+        "evidence_id": "E17",
+        "valid": true,
+        "hybrid_reranked": true
+      },
+      {
+        "run": "round-1-policy",
+        "case_id": "dpo-instructgpt-object-and-stage",
+        "evidence_id": "E20",
+        "valid": true,
+        "hybrid_reranked": true
+      },
+      {
+        "run": "round-1-policy",
+        "case_id": "dpo-instructgpt-object-and-stage",
+        "evidence_id": "E1",
+        "valid": true,
+        "hybrid_reranked": true
+      },
+      {
+        "run": "round-1-policy",
+        "case_id": "dpo-instructgpt-object-and-stage",
+        "evidence_id": "E2",
+        "valid": true,
+        "hybrid_reranked": true
+      },
+      {
+        "run": "round-1-policy",
+        "case_id": "dpo-instructgpt-object-and-stage",
+        "evidence_id": "E4",
+        "valid": true,
+        "hybrid_reranked": true
+      },
+      {
+        "run": "round-1-policy",
+        "case_id": "dpo-instructgpt-object-and-stage",
+        "evidence_id": "E5",
+        "valid": true,
+        "hybrid_reranked": true
+      },
+      {
+        "run": "round-1-policy",
+        "case_id": "dpo-instructgpt-object-and-stage",
+        "evidence_id": "E7",
+        "valid": true,
+        "hybrid_reranked": true
+      },
+      {
+        "run": "round-1-policy",
+        "case_id": "dpo-instructgpt-object-and-stage",
+        "evidence_id": "E8",
+        "valid": true,
+        "hybrid_reranked": true
+      },
+      {
+        "run": "round-1-policy",
+        "case_id": "dpo-instructgpt-object-and-stage",
+        "evidence_id": "E10",
+        "valid": true,
+        "hybrid_reranked": true
+      },
+      {
+        "run": "round-1-policy",
+        "case_id": "dpo-instructgpt-object-and-stage",
+        "evidence_id": "E12",
+        "valid": true,
+        "hybrid_reranked": true
+      },
+      {
+        "run": "round-1-policy",
+        "case_id": "dpo-instructgpt-object-and-stage",
+        "evidence_id": "E13",
+        "valid": true,
+        "hybrid_reranked": true
+      },
+      {
+        "run": "round-1-policy",
+        "case_id": "dpo-instructgpt-object-and-stage",
+        "evidence_id": "E14",
+        "valid": true,
+        "hybrid_reranked": true
+      },
+      {
+        "run": "round-1-policy",
+        "case_id": "dpo-instructgpt-object-and-stage",
+        "evidence_id": "E16",
+        "valid": true,
+        "hybrid_reranked": true
+      },
+      {
+        "run": "round-1-policy",
+        "case_id": "dpo-instructgpt-object-and-stage",
+        "evidence_id": "E18",
+        "valid": true,
+        "hybrid_reranked": true
+      },
+      {
+        "run": "round-1-policy",
+        "case_id": "dpo-instructgpt-object-and-stage",
+        "evidence_id": "E19",
+        "valid": true,
+        "hybrid_reranked": true
+      },
+      {
+        "run": "round-1-policy",
+        "case_id": "dpo-reject-global-analytic-and-sampling-free",
+        "evidence_id": "E1",
+        "valid": true,
+        "hybrid_reranked": true
+      },
+      {
+        "run": "round-1-policy",
+        "case_id": "dpo-reject-global-analytic-and-sampling-free",
+        "evidence_id": "E2",
+        "valid": true,
+        "hybrid_reranked": true
+      },
+      {
+        "run": "round-1-policy",
+        "case_id": "dpo-reject-global-analytic-and-sampling-free",
+        "evidence_id": "E3",
+        "valid": true,
+        "hybrid_reranked": true
+      },
+      {
+        "run": "round-1-policy",
+        "case_id": "dpo-reject-global-analytic-and-sampling-free",
+        "evidence_id": "E4",
+        "valid": true,
+        "hybrid_reranked": true
+      },
+      {
+        "run": "round-1-policy",
+        "case_id": "dpo-reject-global-analytic-and-sampling-free",
+        "evidence_id": "E5",
+        "valid": true,
+        "hybrid_reranked": true
+      },
+      {
+        "run": "round-1-policy",
+        "case_id": "dpo-reject-global-analytic-and-sampling-free",
+        "evidence_id": "E6",
+        "valid": true,
+        "hybrid_reranked": true
+      },
+      {
+        "run": "round-1-policy",
+        "case_id": "dpo-reject-global-analytic-and-sampling-free",
+        "evidence_id": "E7",
+        "valid": true,
+        "hybrid_reranked": true
+      },
+      {
+        "run": "round-1-policy",
+        "case_id": "dpo-reject-global-analytic-and-sampling-free",
+        "evidence_id": "E8",
+        "valid": true,
+        "hybrid_reranked": true
+      },
+      {
+        "run": "round-1-policy",
+        "case_id": "dpo-reject-global-analytic-and-sampling-free",
+        "evidence_id": "E9",
+        "valid": true,
+        "hybrid_reranked": true
+      },
+      {
+        "run": "round-1-policy",
+        "case_id": "dpo-reject-global-analytic-and-sampling-free",
+        "evidence_id": "E10",
+        "valid": true,
+        "hybrid_reranked": true
+      },
+      {
+        "run": "round-1-policy",
+        "case_id": "dpo-reject-global-analytic-and-sampling-free",
+        "evidence_id": "E11",
+        "valid": true,
+        "hybrid_reranked": true
+      },
+      {
+        "run": "round-1-policy",
+        "case_id": "dpo-reject-global-analytic-and-sampling-free",
+        "evidence_id": "E12",
+        "valid": true,
+        "hybrid_reranked": true
+      },
+      {
+        "run": "round-1-policy",
+        "case_id": "dpo-reject-global-analytic-and-sampling-free",
+        "evidence_id": "E13",
+        "valid": true,
+        "hybrid_reranked": true
+      },
+      {
+        "run": "round-1-policy",
+        "case_id": "dpo-reject-global-analytic-and-sampling-free",
+        "evidence_id": "E14",
+        "valid": true,
+        "hybrid_reranked": true
+      },
+      {
+        "run": "round-1-policy",
+        "case_id": "dpo-reject-global-analytic-and-sampling-free",
+        "evidence_id": "E15",
+        "valid": true,
+        "hybrid_reranked": true
+      },
+      {
+        "run": "round-1-policy",
+        "case_id": "dpo-reject-global-analytic-and-sampling-free",
+        "evidence_id": "E16",
+        "valid": true,
+        "hybrid_reranked": true
+      },
+      {
+        "run": "round-1-policy",
+        "case_id": "dpo-reject-global-analytic-and-sampling-free",
+        "evidence_id": "E17",
+        "valid": true,
+        "hybrid_reranked": true
+      },
+      {
+        "run": "round-1-policy",
+        "case_id": "dpo-reject-global-analytic-and-sampling-free",
+        "evidence_id": "E18",
+        "valid": true,
+        "hybrid_reranked": true
+      },
+      {
+        "run": "round-1-policy",
+        "case_id": "dpo-reject-global-analytic-and-sampling-free",
+        "evidence_id": "E19",
+        "valid": true,
+        "hybrid_reranked": true
+      },
+      {
+        "run": "round-1-policy",
+        "case_id": "dpo-reject-global-analytic-and-sampling-free",
+        "evidence_id": "E20",
+        "valid": true,
+        "hybrid_reranked": true
+      },
+      {
+        "run": "review-mechanism",
+        "case_id": "lora-qlora-mechanism",
+        "evidence_id": "E1",
+        "valid": true,
+        "hybrid_reranked": true
+      },
+      {
+        "run": "review-mechanism",
+        "case_id": "lora-qlora-mechanism",
+        "evidence_id": "E2",
+        "valid": true,
+        "hybrid_reranked": true
+      },
+      {
+        "run": "review-mechanism",
+        "case_id": "lora-qlora-mechanism",
+        "evidence_id": "E3",
+        "valid": true,
+        "hybrid_reranked": true
+      },
+      {
+        "run": "review-mechanism",
+        "case_id": "lora-qlora-mechanism",
+        "evidence_id": "E5",
+        "valid": true,
+        "hybrid_reranked": true
+      },
+      {
+        "run": "review-mechanism",
+        "case_id": "lora-qlora-mechanism",
+        "evidence_id": "E9",
+        "valid": true,
+        "hybrid_reranked": true
+      },
+      {
+        "run": "review-mechanism",
+        "case_id": "lora-qlora-mechanism",
+        "evidence_id": "E15",
+        "valid": true,
+        "hybrid_reranked": true
+      },
+      {
+        "run": "review-mechanism",
+        "case_id": "lora-qlora-mechanism",
+        "evidence_id": "E16",
+        "valid": true,
+        "hybrid_reranked": true
+      },
+      {
+        "run": "review-mechanism",
+        "case_id": "lora-qlora-mechanism",
+        "evidence_id": "E19",
+        "valid": true,
+        "hybrid_reranked": true
+      },
+      {
+        "run": "review-mechanism",
+        "case_id": "lora-qlora-mechanism",
+        "evidence_id": "E4",
+        "valid": true,
+        "hybrid_reranked": true
+      },
+      {
+        "run": "review-mechanism",
+        "case_id": "lora-qlora-mechanism",
+        "evidence_id": "E6",
+        "valid": true,
+        "hybrid_reranked": true
+      },
+      {
+        "run": "review-mechanism",
+        "case_id": "lora-qlora-mechanism",
+        "evidence_id": "E7",
+        "valid": true,
+        "hybrid_reranked": true
+      },
+      {
+        "run": "review-mechanism",
+        "case_id": "lora-qlora-mechanism",
+        "evidence_id": "E8",
+        "valid": true,
+        "hybrid_reranked": true
+      },
+      {
+        "run": "review-mechanism",
+        "case_id": "lora-qlora-mechanism",
+        "evidence_id": "E10",
+        "valid": true,
+        "hybrid_reranked": true
+      },
+      {
+        "run": "review-mechanism",
+        "case_id": "lora-qlora-mechanism",
+        "evidence_id": "E11",
+        "valid": true,
+        "hybrid_reranked": true
+      },
+      {
+        "run": "review-mechanism",
+        "case_id": "lora-qlora-mechanism",
+        "evidence_id": "E12",
+        "valid": true,
+        "hybrid_reranked": true
+      },
+      {
+        "run": "review-mechanism",
+        "case_id": "lora-qlora-mechanism",
+        "evidence_id": "E13",
+        "valid": true,
+        "hybrid_reranked": true
+      },
+      {
+        "run": "review-mechanism",
+        "case_id": "lora-qlora-mechanism",
+        "evidence_id": "E14",
+        "valid": true,
+        "hybrid_reranked": true
+      },
+      {
+        "run": "review-mechanism",
+        "case_id": "lora-qlora-mechanism",
+        "evidence_id": "E17",
+        "valid": true,
+        "hybrid_reranked": true
+      },
+      {
+        "run": "review-mechanism",
+        "case_id": "lora-qlora-mechanism",
+        "evidence_id": "E18",
+        "valid": true,
+        "hybrid_reranked": true
+      },
+      {
+        "run": "review-mechanism",
+        "case_id": "lora-qlora-mechanism",
+        "evidence_id": "E20",
+        "valid": true,
+        "hybrid_reranked": true
+      },
+      {
+        "run": "review-mechanism",
+        "case_id": "unreported-training-seed",
+        "evidence_id": "E1",
+        "valid": true,
+        "hybrid_reranked": true
+      },
+      {
+        "run": "review-mechanism",
+        "case_id": "unreported-training-seed",
+        "evidence_id": "E2",
+        "valid": true,
+        "hybrid_reranked": true
+      },
+      {
+        "run": "review-mechanism",
+        "case_id": "unreported-training-seed",
+        "evidence_id": "E3",
+        "valid": true,
+        "hybrid_reranked": true
+      },
+      {
+        "run": "review-mechanism",
+        "case_id": "unreported-training-seed",
+        "evidence_id": "E4",
+        "valid": true,
+        "hybrid_reranked": true
+      },
+      {
+        "run": "review-mechanism",
+        "case_id": "unreported-training-seed",
+        "evidence_id": "E5",
+        "valid": true,
+        "hybrid_reranked": true
+      },
+      {
+        "run": "review-mechanism",
+        "case_id": "unreported-training-seed",
+        "evidence_id": "E6",
+        "valid": true,
+        "hybrid_reranked": true
+      },
+      {
+        "run": "review-mechanism",
+        "case_id": "unreported-training-seed",
+        "evidence_id": "E7",
+        "valid": true,
+        "hybrid_reranked": true
+      },
+      {
+        "run": "review-mechanism",
+        "case_id": "unreported-training-seed",
+        "evidence_id": "E8",
+        "valid": true,
+        "hybrid_reranked": true
+      },
+      {
+        "run": "review-mechanism",
+        "case_id": "unreported-training-seed",
+        "evidence_id": "E9",
+        "valid": true,
+        "hybrid_reranked": true
+      },
+      {
+        "run": "review-mechanism",
+        "case_id": "unreported-training-seed",
+        "evidence_id": "E10",
+        "valid": true,
+        "hybrid_reranked": true
+      },
+      {
+        "run": "review-mechanism",
+        "case_id": "unreported-training-seed",
+        "evidence_id": "E11",
+        "valid": true,
+        "hybrid_reranked": true
+      },
+      {
+        "run": "review-mechanism",
+        "case_id": "unreported-training-seed",
+        "evidence_id": "E12",
+        "valid": true,
+        "hybrid_reranked": true
+      },
+      {
+        "run": "review-mechanism",
+        "case_id": "unreported-training-seed",
+        "evidence_id": "E13",
+        "valid": true,
+        "hybrid_reranked": true
+      },
+      {
+        "run": "review-mechanism",
+        "case_id": "unreported-training-seed",
+        "evidence_id": "E14",
+        "valid": true,
+        "hybrid_reranked": true
+      },
+      {
+        "run": "review-mechanism",
+        "case_id": "unreported-training-seed",
+        "evidence_id": "E15",
+        "valid": true,
+        "hybrid_reranked": true
+      },
+      {
+        "run": "review-mechanism",
+        "case_id": "unreported-training-seed",
+        "evidence_id": "E16",
+        "valid": true,
+        "hybrid_reranked": true
+      },
+      {
+        "run": "review-mechanism",
+        "case_id": "unreported-training-seed",
+        "evidence_id": "E17",
+        "valid": true,
+        "hybrid_reranked": true
+      },
+      {
+        "run": "review-mechanism",
+        "case_id": "unreported-training-seed",
+        "evidence_id": "E18",
+        "valid": true,
+        "hybrid_reranked": true
+      },
+      {
+        "run": "review-policy",
+        "case_id": "dpo-instructgpt-object-and-stage",
+        "evidence_id": "E3",
+        "valid": true,
+        "hybrid_reranked": true
+      },
+      {
+        "run": "review-policy",
+        "case_id": "dpo-instructgpt-object-and-stage",
+        "evidence_id": "E6",
+        "valid": true,
+        "hybrid_reranked": true
+      },
+      {
+        "run": "review-policy",
+        "case_id": "dpo-instructgpt-object-and-stage",
+        "evidence_id": "E9",
+        "valid": true,
+        "hybrid_reranked": true
+      },
+      {
+        "run": "review-policy",
+        "case_id": "dpo-instructgpt-object-and-stage",
+        "evidence_id": "E11",
+        "valid": true,
+        "hybrid_reranked": true
+      },
+      {
+        "run": "review-policy",
+        "case_id": "dpo-instructgpt-object-and-stage",
+        "evidence_id": "E15",
+        "valid": true,
+        "hybrid_reranked": true
+      },
+      {
+        "run": "review-policy",
+        "case_id": "dpo-instructgpt-object-and-stage",
+        "evidence_id": "E17",
+        "valid": true,
+        "hybrid_reranked": true
+      },
+      {
+        "run": "review-policy",
+        "case_id": "dpo-instructgpt-object-and-stage",
+        "evidence_id": "E20",
+        "valid": true,
+        "hybrid_reranked": true
+      },
+      {
+        "run": "review-policy",
+        "case_id": "dpo-instructgpt-object-and-stage",
+        "evidence_id": "E1",
+        "valid": true,
+        "hybrid_reranked": true
+      },
+      {
+        "run": "review-policy",
+        "case_id": "dpo-instructgpt-object-and-stage",
+        "evidence_id": "E2",
+        "valid": true,
+        "hybrid_reranked": true
+      },
+      {
+        "run": "review-policy",
+        "case_id": "dpo-instructgpt-object-and-stage",
+        "evidence_id": "E4",
+        "valid": true,
+        "hybrid_reranked": true
+      },
+      {
+        "run": "review-policy",
+        "case_id": "dpo-instructgpt-object-and-stage",
+        "evidence_id": "E5",
+        "valid": true,
+        "hybrid_reranked": true
+      },
+      {
+        "run": "review-policy",
+        "case_id": "dpo-instructgpt-object-and-stage",
+        "evidence_id": "E7",
+        "valid": true,
+        "hybrid_reranked": true
+      },
+      {
+        "run": "review-policy",
+        "case_id": "dpo-instructgpt-object-and-stage",
+        "evidence_id": "E8",
+        "valid": true,
+        "hybrid_reranked": true
+      },
+      {
+        "run": "review-policy",
+        "case_id": "dpo-instructgpt-object-and-stage",
+        "evidence_id": "E10",
+        "valid": true,
+        "hybrid_reranked": true
+      },
+      {
+        "run": "review-policy",
+        "case_id": "dpo-instructgpt-object-and-stage",
+        "evidence_id": "E12",
+        "valid": true,
+        "hybrid_reranked": true
+      },
+      {
+        "run": "review-policy",
+        "case_id": "dpo-instructgpt-object-and-stage",
+        "evidence_id": "E13",
+        "valid": true,
+        "hybrid_reranked": true
+      },
+      {
+        "run": "review-policy",
+        "case_id": "dpo-instructgpt-object-and-stage",
+        "evidence_id": "E14",
+        "valid": true,
+        "hybrid_reranked": true
+      },
+      {
+        "run": "review-policy",
+        "case_id": "dpo-instructgpt-object-and-stage",
+        "evidence_id": "E16",
+        "valid": true,
+        "hybrid_reranked": true
+      },
+      {
+        "run": "review-policy",
+        "case_id": "dpo-instructgpt-object-and-stage",
+        "evidence_id": "E18",
+        "valid": true,
+        "hybrid_reranked": true
+      },
+      {
+        "run": "review-policy",
+        "case_id": "dpo-instructgpt-object-and-stage",
+        "evidence_id": "E19",
+        "valid": true,
+        "hybrid_reranked": true
+      },
+      {
+        "run": "review-policy",
+        "case_id": "dpo-reject-global-analytic-and-sampling-free",
+        "evidence_id": "E1",
+        "valid": true,
+        "hybrid_reranked": true
+      },
+      {
+        "run": "review-policy",
+        "case_id": "dpo-reject-global-analytic-and-sampling-free",
+        "evidence_id": "E2",
+        "valid": true,
+        "hybrid_reranked": true
+      },
+      {
+        "run": "review-policy",
+        "case_id": "dpo-reject-global-analytic-and-sampling-free",
+        "evidence_id": "E3",
+        "valid": true,
+        "hybrid_reranked": true
+      },
+      {
+        "run": "review-policy",
+        "case_id": "dpo-reject-global-analytic-and-sampling-free",
+        "evidence_id": "E4",
+        "valid": true,
+        "hybrid_reranked": true
+      },
+      {
+        "run": "review-policy",
+        "case_id": "dpo-reject-global-analytic-and-sampling-free",
+        "evidence_id": "E5",
+        "valid": true,
+        "hybrid_reranked": true
+      },
+      {
+        "run": "review-policy",
+        "case_id": "dpo-reject-global-analytic-and-sampling-free",
+        "evidence_id": "E6",
+        "valid": true,
+        "hybrid_reranked": true
+      },
+      {
+        "run": "review-policy",
+        "case_id": "dpo-reject-global-analytic-and-sampling-free",
+        "evidence_id": "E7",
+        "valid": true,
+        "hybrid_reranked": true
+      },
+      {
+        "run": "review-policy",
+        "case_id": "dpo-reject-global-analytic-and-sampling-free",
+        "evidence_id": "E8",
+        "valid": true,
+        "hybrid_reranked": true
+      },
+      {
+        "run": "review-policy",
+        "case_id": "dpo-reject-global-analytic-and-sampling-free",
+        "evidence_id": "E9",
+        "valid": true,
+        "hybrid_reranked": true
+      },
+      {
+        "run": "review-policy",
+        "case_id": "dpo-reject-global-analytic-and-sampling-free",
+        "evidence_id": "E10",
+        "valid": true,
+        "hybrid_reranked": true
+      },
+      {
+        "run": "review-policy",
+        "case_id": "dpo-reject-global-analytic-and-sampling-free",
+        "evidence_id": "E11",
+        "valid": true,
+        "hybrid_reranked": true
+      },
+      {
+        "run": "review-policy",
+        "case_id": "dpo-reject-global-analytic-and-sampling-free",
+        "evidence_id": "E12",
+        "valid": true,
+        "hybrid_reranked": true
+      },
+      {
+        "run": "review-policy",
+        "case_id": "dpo-reject-global-analytic-and-sampling-free",
+        "evidence_id": "E13",
+        "valid": true,
+        "hybrid_reranked": true
+      },
+      {
+        "run": "review-policy",
+        "case_id": "dpo-reject-global-analytic-and-sampling-free",
+        "evidence_id": "E14",
+        "valid": true,
+        "hybrid_reranked": true
+      },
+      {
+        "run": "review-policy",
+        "case_id": "dpo-reject-global-analytic-and-sampling-free",
+        "evidence_id": "E15",
+        "valid": true,
+        "hybrid_reranked": true
+      },
+      {
+        "run": "review-policy",
+        "case_id": "dpo-reject-global-analytic-and-sampling-free",
+        "evidence_id": "E16",
+        "valid": true,
+        "hybrid_reranked": true
+      },
+      {
+        "run": "review-policy",
+        "case_id": "dpo-reject-global-analytic-and-sampling-free",
+        "evidence_id": "E17",
+        "valid": true,
+        "hybrid_reranked": true
+      },
+      {
+        "run": "review-policy",
+        "case_id": "dpo-reject-global-analytic-and-sampling-free",
+        "evidence_id": "E18",
+        "valid": true,
+        "hybrid_reranked": true
+      },
+      {
+        "run": "review-policy",
+        "case_id": "dpo-reject-global-analytic-and-sampling-free",
+        "evidence_id": "E19",
+        "valid": true,
+        "hybrid_reranked": true
+      },
+      {
+        "run": "review-policy",
+        "case_id": "dpo-reject-global-analytic-and-sampling-free",
+        "evidence_id": "E20",
+        "valid": true,
+        "hybrid_reranked": true
+      }
+    ],
+    "all_qa_anchors_valid_hybrid_reranked": true,
+    "model_editor_false_endorsement_preserved": true,
+    "old_immutable_count": 20,
+    "old_changed": [],
+    "tests": {
+      "backend-final-exact.xml": {
+        "tests": 1347,
+        "failures": 0,
+        "errors": 0
+      },
+      "frontend-tests.xml": {
+        "tests": 42,
+        "failures": 0,
+        "errors": 0
+      }
+    },
+    "last_source_new_generation": false,
+    "typecheck": "observed_exit_0",
+    "ruff": "observed_exit_0",
+    "acceptance_8018_stopped": true,
+    "official_basic_coverage_inherited": {
+      "files": 39,
+      "pages": 1986
+    },
+    "production_library_modified": false,
+    "git_refs_mutated": false,
+    "same_build_scientific_stability_released": false,
+    "whole_project_released": false
+  },
+  "manual_review": {
+    "date": "2026-10-17",
+    "kind": "scientific_review_separate_from_original_machine_status",
+    "basis": "Complete rendered LoRA physical page 2 and QLoRA page 4; complete QLoRA page 5 native text and declared source chunks with original block/geometry anchors.",
+    "whole_project_released": false,
+    "findings": [
+      {
+        "run": "round-1-mechanism",
+        "case_id": "lora-qlora-mechanism",
+        "original_machine_status": "source_checks_passed",
+        "scientific_result": "whole_comparison_held",
+        "detail": "Citation-array duplication is eliminated, but the comparison still adds original precision for LoRA. Its selected own-paper passages establish frozen weights and low-rank updates, not a numerical storage precision. The final local guard now rejects this clause, including comma-separated subject clauses."
+      },
+      {
+        "run": "round-1-policy",
+        "case_id": "dpo-instructgpt-object-and-stage",
+        "original_machine_status": "failed",
+        "scientific_result": "partial_withheld_comparison",
+        "detail": "The selected short draft quote did not include the RL wording added to its statement. Current live format directly selects existing full source paragraphs; legacy failure is not rescored as a new pass."
+      },
+      {
+        "run": "review-mechanism",
+        "case_id": "lora-qlora-mechanism",
+        "original_machine_status": "failed",
+        "scientific_result": "five_requested_core_parts_confirmed_original_completeness_flag_failed",
+        "detail": "The comparison and all four mechanism details have declared support; the separate editor retained a comparison without unsupported original-precision language. The completeness detector missed the actual allocation/CPU paging action; this is fixed only in the final zero-call replay. It is not a new HTTP generation pass."
+      },
+      {
+        "run": "review-policy",
+        "case_id": "dpo-instructgpt-object-and-stage",
+        "original_machine_status": "failed",
+        "scientific_result": "partial_and_not_released",
+        "detail": "Draft comparison adds unrequested PPO-ptx evaluation comparability without corresponding DPO/original support, and a sampling detail restates the exemption without its required object/stage in a later proposition. Comparison and that detail were held. Final editor-order repair was not rerun through this HTTP question."
+      },
+      {
+        "runs": [
+          "round-1-policy",
+          "review-policy"
+        ],
+        "case_id": "dpo-reject-global-analytic-and-sampling-free",
+        "original_machine_status": "source_checks_passed",
+        "scientific_result": "requested_core_has_sources_not_all_added_claims_certified",
+        "detail": "Both preserve policy/weight distinction and preparation/fine-tuning/evaluation sampling boundaries. Additional Best-of-N implementation/comparator wording is not counted as an independently accepted result."
+      },
+      {
+        "runs": [
+          "round-1-mechanism",
+          "review-mechanism"
+        ],
+        "case_id": "unreported-training-seed",
+        "original_machine_status": "source_checks_passed",
+        "scientific_result": "correct_refusal_without_seed_invention",
+        "detail": "No random seed is fabricated; related training settings do not replace the missing requested seed, and insufficient status remains true."
+      },
+      {
+        "run": "saved-draft-review",
+        "original_editor_status": "supported",
+        "scientific_result": "false_endorsement_preserved_final_local_guard_rejects",
+        "detail": "Exactly one new editorial call on the pinned first-round draft mistakenly endorsed the unreported original-precision clause. Its original passing content checks remain unchanged. This proves a same-model editorial pass is not a factual oracle. Final source-specific precision and comma-subject checks now withhold that comparison without changing the draft, editor output or source IDs."
+      }
+    ],
+    "next_action": "Close DPO per-proposition object/stage and unrequested comparator coverage before a finite new same-build confirmation; do not repeat the whole corpus or count editor approval as scientific accuracy."
+  },
+  "secret_scan_findings": [],
+  "artifacts": [
+    {
+      "path": "backend/app/agent/harness.py",
+      "sha256": "0ff7c1257e26244d46c77411cd7d24b0e6e887fc76524995e27fd94d634d96f6"
+    },
+    {
+      "path": "backend/app/llm/base.py",
+      "sha256": "2fc22e7e8735d7cb2611020e9a7124ada749abbcad7e09f0c3c5f0f70b127b7a"
+    },
+    {
+      "path": "backend/app/llm/comparison_review.py",
+      "sha256": "c08621a9f36788d785e41c831f90802e91ac493cbfc2ac283123280d6b841575"
+    },
+    {
+      "path": "backend/app/llm/comparison_support.py",
+      "sha256": "0430d25cdd6a13c61eb61da90a6d97b5782af3ee7328d3e07224765c63cfbffd"
+    },
+    {
+      "path": "backend/app/llm/explanation_fields.py",
+      "sha256": "ab6f7667c42c9faeef9d5c6692794edf1e91b97aac6a82c7441c7dcb5a73bf30"
+    },
+    {
+      "path": "backend/app/llm/openai_responses.py",
+      "sha256": "95b273a37e58fa8809e21eaf5c7aeb6675e29d3cf25e47431244877f551594d2"
+    },
+    {
+      "path": "backend/app/services/mechanism_evidence.py",
+      "sha256": "b63f07e66fff5efc77d5f24bc07eaf95189e8ad838536f2ca788dce463a4776c"
+    },
+    {
+      "path": "backend/tests/test_comparison_review.py",
+      "sha256": "6b3ca044fc2ce634db63f43e5a1b005586904415dea664a7be0661b7ae14d232"
+    },
+    {
+      "path": "backend/tests/test_comparison_support.py",
+      "sha256": "98e893342964796524dd42065dbc253f5d815025e97336483dd31a80e1a31fec"
+    },
+    {
+      "path": "backend/tests/test_explanation_fields.py",
+      "sha256": "144264c4b6f89b65e13284ff0336207f9613f97888c8b0d48137669b77a50136"
+    },
+    {
+      "path": "backend/tests/test_mechanism_parts.py",
+      "sha256": "20da17fb462003dae9b516a40abb07371531b2fa11841d6ec3c85b48304b54df"
+    },
+    {
+      "path": "backend/tmp/official-citation-rendering-2026-10-17/audit_rendering.py",
+      "sha256": "063c20958b28328bc8df994508cb7591b2bbae1182a1c45c07d7976129323350"
+    },
+    {
+      "path": "backend/tmp/official-citation-rendering-2026-10-17/backend-final-exact.xml",
+      "sha256": "65eae19e38b6518ccc4bb6694f56ea1b4cb8208476e85311276d770f989a8d97"
+    },
+    {
+      "path": "backend/tmp/official-citation-rendering-2026-10-17/backend-final-postrepair.xml",
+      "sha256": "cee29c4b687b4b9cdec42d7aed5ebb247b48f50b9f6866376a3ec231b012fff3"
+    },
+    {
+      "path": "backend/tmp/official-citation-rendering-2026-10-17/backend-final.xml",
+      "sha256": "47555a3ff63075856c3f32aa55b37e7e4fa801a45e5db2a72ee0b8c829f62fa2"
+    },
+    {
+      "path": "backend/tmp/official-citation-rendering-2026-10-17/backend-release.xml",
+      "sha256": "a4a0bd6a6208d5a158e767b694ef94ccac57c78f09d342d5a1f8094579c24154"
+    },
+    {
+      "path": "backend/tmp/official-citation-rendering-2026-10-17/backend-review.xml",
+      "sha256": "4331c7238e7f23992f5ba8f7cebb0333cdf1277e8e3420d23c8255368d286cf7"
+    },
+    {
+      "path": "backend/tmp/official-citation-rendering-2026-10-17/final-audit.json",
+      "sha256": "8f8b81407014a580074d918d519c11324947e8082463701f24e11383c42a2486"
+    },
+    {
+      "path": "backend/tmp/official-citation-rendering-2026-10-17/frontend-tests.xml",
+      "sha256": "311a56d329f2c446c27868251e25c26d018743da8f16d7918a421d30826d7629"
+    },
+    {
+      "path": "backend/tmp/official-citation-rendering-2026-10-17/lora-2.png",
+      "sha256": "ae0587d6eeaa1f405fb56f214a7903c94947ac1eb2664fc55d10d622a9386a6c"
+    },
+    {
+      "path": "backend/tmp/official-citation-rendering-2026-10-17/manual-source-review.json",
+      "sha256": "5a8375be1112d8550b803a8d7dd8732143e6221022215daecc73ab4d4cc886b7"
+    },
+    {
+      "path": "backend/tmp/official-citation-rendering-2026-10-17/post-repair-replay.json",
+      "sha256": "e22d266ebb8b80331413971e49a3067584319bdd1ef2eaec3d43dc90ba9ba82f"
+    },
+    {
+      "path": "backend/tmp/official-citation-rendering-2026-10-17/qlora-4.png",
+      "sha256": "dac528a3dbe2dcbfcfd331cdf5a50e3a1607c372dff573b669b21e717a64323c"
+    },
+    {
+      "path": "backend/tmp/official-citation-rendering-2026-10-17/review-mechanism/report.json",
+      "sha256": "839c52d72ed05cacbf820190ce51d4fb8c6d396b482d42c6a33f4644b7fa3bd2"
+    },
+    {
+      "path": "backend/tmp/official-citation-rendering-2026-10-17/review-policy/report.json",
+      "sha256": "687e3a674714f9059271cdfbab25a071668a884ad0a8fedaf58d71cd00c59c66"
+    },
+    {
+      "path": "backend/tmp/official-citation-rendering-2026-10-17/review_saved_draft.py",
+      "sha256": "bfb60ac0dfcebb129b155c6f6b39a57acc59e568743e16e1e5792188b997970c"
+    },
+    {
+      "path": "backend/tmp/official-citation-rendering-2026-10-17/round-1-mechanism/report.json",
+      "sha256": "f226f1244ac5bb8580f56904d2652964429d562658d3077499627947901345c0"
+    },
+    {
+      "path": "backend/tmp/official-citation-rendering-2026-10-17/round-1-policy/report.json",
+      "sha256": "7e341ef7fe13bf52394dc0c37aca9a8ebaef87b62ee5376ea152b9ef74f5a0b4"
+    },
+    {
+      "path": "backend/tmp/official-citation-rendering-2026-10-17/runtime-fixture/fixture.json",
+      "sha256": "d7730edb860bcb4b6ba77311de22d749684d6fc726ea5d38b5762afc308c117f"
+    },
+    {
+      "path": "backend/tmp/official-citation-rendering-2026-10-17/runtime-fixture/parsed/114bfa0d-d6cf-573d-82b2-cfaed94b58b6.json",
+      "sha256": "6710c78824d61e72e1b0c15aaddf534ce0872570051a9b95d6f2f39c786645d7"
+    },
+    {
+      "path": "backend/tmp/official-citation-rendering-2026-10-17/runtime-fixture/parsed/20d9fad6-9e6f-543d-a2e1-095d8056c5ff.json",
+      "sha256": "4a05a089a864b8fc603470e4f28fc480526b8184b8c5a89039db83b07bdded3d"
+    },
+    {
+      "path": "backend/tmp/official-citation-rendering-2026-10-17/runtime-fixture/parsed/855562a1-8309-57b2-b7b0-b9e7016207dc.json",
+      "sha256": "0bdf9ab2be963a5e42b3560e72b14fd247e2723c299ffc3e340682b02394db97"
+    },
+    {
+      "path": "backend/tmp/official-citation-rendering-2026-10-17/runtime-fixture/parsed/bc90bcf2-cccd-5364-94f6-5815603802f7.json",
+      "sha256": "2f5bdb78b265127069fbaf7c9841afe6e181a0d93c3209856c420d678c7825d0"
+    },
+    {
+      "path": "backend/tmp/official-citation-rendering-2026-10-17/runtime-fixture/parsed/cd05de96-3b20-5178-8953-d8ee090a4f23.json",
+      "sha256": "0ab6909920de99d93d12d57d963fe93c684446cbcfdba40bf2df1ed080d7b414"
+    },
+    {
+      "path": "backend/tmp/official-citation-rendering-2026-10-17/runtime-fixture/preparation.json",
+      "sha256": "856dd9d79313822509ba1f12ecea214328ad0ae9d681e2d3c261fabde68c2e02"
+    },
+    {
+      "path": "backend/tmp/official-citation-rendering-2026-10-17/runtime-fixture/retrieval-preflight.json",
+      "sha256": "0a28a88c5de15b15852c0c704e2aeab81a04ce6c5d523969f7d3237877997f0f"
+    },
+    {
+      "path": "backend/tmp/official-citation-rendering-2026-10-17/runtime-fixture/runtime-calls.json",
+      "sha256": "b47ec97cd4c49f186514fb5dfe2ae5dfa52bc2331c20ea38ccad6f967f3fc0a0"
+    },
+    {
+      "path": "backend/tmp/official-citation-rendering-2026-10-17/runtime-fixture/server-source.json",
+      "sha256": "9e28b7eabf0d941575cb946b98dce1378c8e5b1c87af7433ef216ee1aa0de602"
+    },
+    {
+      "path": "backend/tmp/official-citation-rendering-2026-10-17/runtime-fixture-review/fixture.json",
+      "sha256": "d7730edb860bcb4b6ba77311de22d749684d6fc726ea5d38b5762afc308c117f"
+    },
+    {
+      "path": "backend/tmp/official-citation-rendering-2026-10-17/runtime-fixture-review/parsed/114bfa0d-d6cf-573d-82b2-cfaed94b58b6.json",
+      "sha256": "6710c78824d61e72e1b0c15aaddf534ce0872570051a9b95d6f2f39c786645d7"
+    },
+    {
+      "path": "backend/tmp/official-citation-rendering-2026-10-17/runtime-fixture-review/parsed/20d9fad6-9e6f-543d-a2e1-095d8056c5ff.json",
+      "sha256": "4a05a089a864b8fc603470e4f28fc480526b8184b8c5a89039db83b07bdded3d"
+    },
+    {
+      "path": "backend/tmp/official-citation-rendering-2026-10-17/runtime-fixture-review/parsed/855562a1-8309-57b2-b7b0-b9e7016207dc.json",
+      "sha256": "0bdf9ab2be963a5e42b3560e72b14fd247e2723c299ffc3e340682b02394db97"
+    },
+    {
+      "path": "backend/tmp/official-citation-rendering-2026-10-17/runtime-fixture-review/parsed/bc90bcf2-cccd-5364-94f6-5815603802f7.json",
+      "sha256": "2f5bdb78b265127069fbaf7c9841afe6e181a0d93c3209856c420d678c7825d0"
+    },
+    {
+      "path": "backend/tmp/official-citation-rendering-2026-10-17/runtime-fixture-review/parsed/cd05de96-3b20-5178-8953-d8ee090a4f23.json",
+      "sha256": "0ab6909920de99d93d12d57d963fe93c684446cbcfdba40bf2df1ed080d7b414"
+    },
+    {
+      "path": "backend/tmp/official-citation-rendering-2026-10-17/runtime-fixture-review/preparation.json",
+      "sha256": "856dd9d79313822509ba1f12ecea214328ad0ae9d681e2d3c261fabde68c2e02"
+    },
+    {
+      "path": "backend/tmp/official-citation-rendering-2026-10-17/runtime-fixture-review/retrieval-preflight.json",
+      "sha256": "5cfcb00f750c3adf6aab22dd6ed8b6a2a17735ee653b0541e68330357ea1c352"
+    },
+    {
+      "path": "backend/tmp/official-citation-rendering-2026-10-17/runtime-fixture-review/runtime-calls.json",
+      "sha256": "b357c7d4c0a67db8e4511730c91d36c582f5ac266bee63089f73c54a68fd44dc"
+    },
+    {
+      "path": "backend/tmp/official-citation-rendering-2026-10-17/runtime-fixture-review/server-source.json",
+      "sha256": "da61c76465eb35d7060d9cdc373843130d32480484105fafa108cd3d1cb00e6d"
+    },
+    {
+      "path": "backend/tmp/official-citation-rendering-2026-10-17/saved-draft-review-calls.json",
+      "sha256": "9f3e14e7a9f103157dafaabf3212a1823c090ea615545f6bb55e22a2446a33a7"
+    },
+    {
+      "path": "backend/tmp/official-citation-rendering-2026-10-17/saved-draft-review.json",
+      "sha256": "83e15291223590110c56370782e001a0b5a18415a2b24b692413eb8a01c43476"
+    },
+    {
+      "path": "docs/acceptance-progress.md",
+      "sha256": "851d033b0228a75b7d8a81a7ae9f652e007fcb2ff9f0321657c21e797d9e442c"
+    },
+    {
+      "path": "docs/competition-delivery-checklist.md",
+      "sha256": "9e63973b1aa34daa582cd5e0ca2a3551d08502850c3b93927c3213d3ff560497"
+    },
+    {
+      "path": "docs/competition-verification-gates.md",
+      "sha256": "6da7848945ba4d11f0d114f70f8a9926b5bb00046065c0d6f223e7e41f8593fc"
+    },
+    {
+      "path": "docs/official-citation-rendering-acceptance-2026-10-17.md",
+      "sha256": "7786a778b1f88cae86f11785ab33a9d7e938695fb0f48154c681b6bc8d7f8c16"
+    }
+  ]
+}

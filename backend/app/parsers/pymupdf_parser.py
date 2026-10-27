@@ -13,6 +13,7 @@ from app.parsers.checkpoint import (
     utc_timestamp,
     write_json_atomic,
 )
+from app.parsers.contributors import extract_contributor_groups
 from app.parsers.layout import (
     TABLE_PAGE_HINT,
     RawTextBlock,
@@ -31,11 +32,12 @@ from app.parsers.layout import (
     is_table_caption,
     make_figure_nodes,
     make_table_node,
+    mark_rule_separated_footnotes,
     nearest_caption,
     order_page_blocks,
     snapshot_table,
 )
-from app.parsers.people import extract_front_matter_people
+from app.parsers.people import enrich_people_geometry, extract_front_matter_people
 from app.parsers.table_stitching import (
     is_unlabelled_snapshot_continuation,
     stitch_cross_page_tables,
@@ -47,7 +49,7 @@ class PyMuPDFParser:
     """Layout-aware local parser with page and bounding-box provenance."""
 
     name = "pymupdf-layout"
-    version = f"{fitz.VersionBind}-layout93"
+    version = f"{fitz.VersionBind}-layout104"
 
     def parse(
         self,
@@ -145,7 +147,13 @@ class PyMuPDFParser:
             figures = []
             for page_index, page in enumerate(pages):
                 for table_index, table in enumerate(page_tables[page_index], start=1):
-                    caption = nearest_caption(page.blocks, list(table.bbox), "table_caption")
+                    caption = (
+                        next((block for block in page.blocks
+                              if block.type == "table_caption"
+                              and block.bbox == table.caption_bbox), None)
+                        if table.caption_bbox is not None
+                        else nearest_caption(page.blocks, list(table.bbox), "table_caption")
+                    )
                     tables.append(
                         make_table_node(
                             table,
@@ -168,6 +176,12 @@ class PyMuPDFParser:
             authors, affiliations = extract_front_matter_people(raw_pages, title)
             if not authors:
                 authors, affiliations = extract_first_page_people(pages[0].blocks if pages else [])
+            collective, contributor_groups = extract_contributor_groups(raw_pages, pages, title)
+            if collective and contributor_groups:
+                authors = [collective]
+                warnings.append(
+                    "已将团体署名与贡献分组分开；成员按原文字层转写，重音字形请核对原页。"
+                )
             outline = build_outline(pages)
             text_parts = [block.text for page in pages for block in page.blocks]
             if not text_parts:
@@ -186,6 +200,7 @@ class PyMuPDFParser:
                 formulas=extract_formulas(pages),
                 references=extract_references(pages),
                 appendices=appendix_nodes(outline),
+                contributor_groups=contributor_groups,
                 full_text="\n".join(text_parts),
                 warnings=warnings,
             )
@@ -206,35 +221,45 @@ class PyMuPDFParser:
             raw_blocks = self._refine_text_blocks(
                 pdf_page, textpage=textpage, raw_blocks=raw_blocks, warnings=warnings,
             )
+            if page_number <= 3 and textpage is None:
+                enrich_people_geometry(raw_blocks, pdf_page.get_text(
+                    "rawdict", flags=fitz.TEXTFLAGS_RAWDICT & ~fitz.TEXT_PRESERVE_IMAGES,
+                ))
             raster_tables, raster_images = self._extract_raster_layout(
                 pdf_page,
                 textpage=textpage,
                 raw_blocks=raw_blocks,
                 warnings=warnings,
             )
+            tables = [*self._extract_native_tables(
+                pdf_page, textpage=textpage, raw_blocks=raw_blocks, warnings=warnings,
+            ), *raster_tables]
+            images = [*self._extract_image_info(pdf_page, warnings),
+                      *self._extract_vector_info(pdf_page, raw_blocks, warnings), *raster_images]
+            if textpage is None:
+                try:
+                    separators = [
+                        [min(item[1].x, item[2].x), min(item[1].y, item[2].y),
+                         max(item[1].x, item[2].x), max(item[1].y, item[2].y)]
+                        for drawing in pdf_page.get_drawings()
+                        if drawing.get("type") == "s"
+                        for item in drawing.get("items", []) if item[0] == "l"
+                    ]
+                    mark_rule_separated_footnotes(
+                        raw_blocks, float(pdf_page.rect.width), float(pdf_page.rect.height),
+                        separators, [*[table.bbox for table in tables],
+                                     *[list(i["bbox"]) for i in images if i.get("bbox")]],
+                    )
+                except Exception as exc:
+                    warnings.append(f"第 {page_number} 页脚注分隔检测跳过：{type(exc).__name__}")
             pages.append(
                 {
                     "page_number": page_number,
                     "width": float(pdf_page.rect.width),
                     "height": float(pdf_page.rect.height),
                     "raw_blocks": [asdict(block) for block in raw_blocks],
-                    "images": [
-                        *self._extract_image_info(pdf_page, warnings),
-                        *self._extract_vector_info(pdf_page, raw_blocks, warnings),
-                        *raster_images,
-                    ],
-                    "tables": [
-                        asdict(table)
-                        for table in [
-                            *self._extract_native_tables(
-                                pdf_page,
-                                textpage=textpage,
-                                raw_blocks=raw_blocks,
-                                warnings=warnings,
-                            ),
-                            *raster_tables,
-                        ]
-                    ],
+                    "images": images,
+                    "tables": [asdict(table) for table in tables],
                 }
             )
         return {
@@ -419,19 +444,26 @@ class PyMuPDFParser:
         if textpage is not None or not PyMuPDFParser._should_detect_tables(raw_blocks):
             return []
         tables: list[TableSnapshot] = []
+        figure_boxes = PyMuPDFParser._table_figure_boxes(page, raw_blocks, warnings)
         try:
-            finder = page.find_tables()
+            finder = page.find_tables(paths=PyMuPDFParser._table_paths(
+                page, figure_boxes=figure_boxes,
+            ))
             tables.extend(snapshot_table(table) for table in finder.tables)
         except Exception as exc:
             warnings.append(f"第 {page.number + 1} 页表格检测跳过：{type(exc).__name__}")
         try:
-            borderless = extract_borderless_tables(page, raw_blocks)
+            borderless = extract_borderless_tables(page, raw_blocks, excluded_boxes=figure_boxes)
         except Exception as exc:
             warnings.append(f"第 {page.number + 1} 页无框表格检测跳过：{type(exc).__name__}")
             borderless = []
         for candidate in borderless:
-            if not any(PyMuPDFParser._table_overlap(candidate, table) >= 0.72 for table in tables):
+            matched = next((table for table in tables
+                            if PyMuPDFParser._table_overlap(candidate, table) >= 0.72), None)
+            if matched is None:
                 tables.append(candidate)
+            elif candidate.caption_bbox is not None:
+                matched.caption_bbox = candidate.caption_bbox
         return tables
 
     @staticmethod
@@ -461,7 +493,12 @@ class PyMuPDFParser:
             if not previous_candidates:
                 continue
             try:
-                detected = [snapshot_table(table) for table in pdf_page.find_tables().tables]
+                figure_boxes = PyMuPDFParser._table_figure_boxes(
+                    pdf_page, raw_pages[page_index], warnings,
+                )
+                detected = [snapshot_table(table) for table in pdf_page.find_tables(
+                    paths=PyMuPDFParser._table_paths(pdf_page, figure_boxes=figure_boxes),
+                ).tables]
             except Exception as exc:
                 warnings.append(f"第 {page_index + 1} 页跨页表格补检跳过：{type(exc).__name__}")
                 continue
@@ -476,6 +513,140 @@ class PyMuPDFParser:
                     for previous in previous_candidates
                 ):
                     page_tables[page_index].append(candidate)
+
+    @staticmethod
+    def _visit_visible_paths(page, callback) -> None:
+        """Stream native paths with nested clip bounds; retain no curve payloads.
+
+        Scissor rectangles bound visible geometry, not arbitrary clip shapes.
+        A sibling at the same/lower level restores its enclosing clip scope.
+        """
+        clips: dict[int, fitz.Rect] = {}
+
+        def visit(path):
+            level = int(path.get("level", 0))
+            for depth in list(clips):
+                if depth >= level:
+                    del clips[depth]
+            kind = path.get("type")
+            if kind == "clip":
+                clips[level] = fitz.Rect(path["scissor"])
+                return
+            if kind not in {"s", "f", "fs"}:
+                return
+            clip = fitz.Rect(page.rect)
+            for bound in clips.values():
+                clip = fitz.Rect(max(clip.x0, bound.x0), max(clip.y0, bound.y0),
+                                 min(clip.x1, bound.x1), min(clip.y1, bound.y1))
+            if clip.x0 >= clip.x1 or clip.y0 >= clip.y1:
+                return
+            rect = fitz.Rect(path["rect"])
+            visible = fitz.Rect(max(rect.x0, clip.x0), max(rect.y0, clip.y0),
+                                min(rect.x1, clip.x1), min(rect.y1, clip.y1))
+            # Zero-height/width rules are real geometry, not empty rectangles.
+            if visible.x0 > visible.x1 or visible.y0 > visible.y1:
+                return
+            callback({**path, "rect": visible, "source_rect": rect}, clip)
+
+        page.get_cdrawings(extended=True, callback=visit)
+
+    @staticmethod
+    def _clip_line(a, b, clip) -> tuple[fitz.Point, fitz.Point] | None:
+        """Clip an existing segment, without adding a line along the clip boundary."""
+        a, b = fitz.Point(a), fitz.Point(b)
+        dx, dy = b.x - a.x, b.y - a.y
+        lower, upper = 0.0, 1.0
+        for p, q in [(-dx, a.x - clip.x0), (dx, clip.x1 - a.x),
+                     (-dy, a.y - clip.y0), (dy, clip.y1 - a.y)]:
+            if p == 0:
+                if q < 0:
+                    return None
+                continue
+            ratio = q / p
+            if p < 0:
+                lower = max(lower, ratio)
+            else:
+                upper = min(upper, ratio)
+            if lower > upper:
+                return None
+        return (fitz.Point(a.x + lower * dx, a.y + lower * dy),
+                fitz.Point(a.x + upper * dx, a.y + upper * dy))
+
+    @staticmethod
+    def _table_paths(
+        page: fitz.Page, *, figure_boxes: list[list[float]] | None = None,
+    ) -> list[dict[str, Any]]:
+        """Stream graphics and retain only geometry used by default table detection.
+
+        PyMuPDF 1.26's make_edges ignores curves and non-axis-parallel lines
+        (default snap tolerance 3 pt). Keep every path's original rectangle for
+        its envelope detection, including paths with no retained line items.
+        Explicitly preserve visible closing lines; respect native clip bounds.
+        """
+        paths = []
+
+        def collect(path, clip):
+            rect = path["rect"]
+            if any(box[0] - 0.1 <= rect[0] and box[1] - 0.1 <= rect[1]
+                   and rect[2] <= box[2] + 0.1 and rect[3] <= box[3] + 0.1
+                   for box in figure_boxes or []):
+                return
+            original = path["items"]
+            items = []
+
+            def add_line(a, b):
+                if abs(a[0] - b[0]) <= 3 or abs(a[1] - b[1]) <= 3:
+                    segment = PyMuPDFParser._clip_line(a, b, clip)
+                    if segment is not None:
+                        items.append(("l", *segment))
+
+            for item in original:
+                if item[0] == "l":
+                    add_line(*item[1:])
+                elif item[0] == "re":
+                    box = fitz.Rect(item[1])
+                    if clip.contains(box):
+                        items.append(("re", box, item[2]))
+                    else:
+                        corners = [box.tl, box.tr, box.br, box.bl, box.tl]
+                        for a, b in zip(corners, corners[1:], strict=False):
+                            add_line(a, b)
+                elif item[0] == "qu":
+                    quad = fitz.Quad(item[1])
+                    if clip.contains(quad.rect):
+                        items.append(("qu", quad))
+                    else:
+                        corners = [quad.ul, quad.ur, quad.lr, quad.ll, quad.ul]
+                        for a, b in zip(corners, corners[1:], strict=False):
+                            add_line(a, b)
+            if (path.get("closePath") and original
+                    and original[0][0] == original[-1][0] == "l"):
+                a, b = original[-1][2], original[0][1]
+                add_line(a, b)
+            paths.append({"rect": fitz.Rect(path["rect"]), "type": path["type"],
+                          "width": path.get("width"), "color": path.get("color"),
+                          "fill": path.get("fill"), "closePath": False,
+                          "items": items or [("c",)]})
+
+        PyMuPDFParser._visit_visible_paths(page, collect)
+        return paths
+
+    @staticmethod
+    def _table_figure_boxes(page, raw_blocks, warnings) -> list[list[float]]:
+        """Exclude caption-supported charts, not ordinary table grid lines.
+
+        A body mention of 'Table 4' on a chart page must not turn every chart
+        trajectory into hundreds of thousands of table edges. Reuse the same
+        conservative figure/caption association as the reader; nearby table
+        captions disqualify a vector region from this exclusion.
+        """
+        vectors = PyMuPDFParser._extract_vector_info(page, raw_blocks, warnings)
+        blocks = [Block(block_id=f"native-{i}", type=classify_block(
+            raw, body_size=10, title=None)[0], text=raw.text, bbox=raw.bbox, reading_order=i)
+                  for i, raw in enumerate(raw_blocks)]
+        return [node.bbox for node in make_figure_nodes(
+            vectors, page_number=page.number + 1, page_area=page.rect.get_area(), blocks=blocks,
+        )]
 
     @staticmethod
     def _should_detect_tables(raw_blocks: list[RawTextBlock]) -> bool:
@@ -539,9 +710,33 @@ class PyMuPDFParser:
         ):
             return []
         try:
+            # Clustering only reads path rectangles. Stream and discard the
+            # hundreds of thousands of curve points in dense training charts.
+            paths = []
+
+            def collect(path, clip):
+                rect = path["rect"]
+                chart_like = any(
+                    item[0] == "c" or (item[0] == "l"
+                        and abs(item[1][0] - item[2][0]) > 3
+                        and abs(item[1][1] - item[2][1]) > 3)
+                    for item in path["items"]
+                ) or (path.get("fill") is not None and rect.width > 2
+                      and rect.height > rect.width * 1.2)
+                source = path["source_rect"]
+                clipped_bar = bool(path.get("fill") is not None and rect.width > 2
+                                   and rect.height > rect.width * 1.2
+                                   and source.y1 > rect.y1 + 4)
+                paths.append({"rect": fitz.Rect(rect), "chart_like": chart_like,
+                              "clipped_chart_like": clipped_bar})
+
+            PyMuPDFParser._visit_visible_paths(page, collect)
             return [
-                {"bbox": [round(float(v), 2) for v in rect], "vector": True}
-                for rect in page.cluster_drawings()
+                {"bbox": [round(float(v), 2) for v in rect], "vector": True,
+                 "chart_like": any(p["chart_like"] and rect.contains(p["rect"]) for p in paths),
+                 "clipped_chart_like": any(p["clipped_chart_like"] and rect.contains(p["rect"])
+                                           for p in paths)}
+                for rect in page.cluster_drawings(drawings=paths)
                 if rect.width >= 20 and rect.height >= 20
             ]
         except Exception as exc:
@@ -593,15 +788,3 @@ class PyMuPDFParser:
         if not candidates:
             return None
         return max(candidates, key=lambda item: (item.font_size, len(item.text))).text
-
-    @staticmethod
-    def _classify_block(text: str) -> tuple[str, int | None]:
-        """Backward-compatible helper retained for parser extension tests."""
-
-        raw = RawTextBlock(1, [0, 0, 0, 0], text, 10.0, 1, len(text))
-        return classify_block(raw, body_size=10.0, title=None)
-
-    @staticmethod
-    def _guess_title(first_page: fitz.Page, textpage: fitz.TextPage | None = None) -> str | None:
-        page_dict = first_page.get_text("dict", textpage=textpage)
-        return PyMuPDFParser._guess_title_from_blocks(extract_text_blocks(page_dict, 1))
