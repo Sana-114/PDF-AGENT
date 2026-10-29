@@ -35,7 +35,7 @@ import {
   adjacentCitationLocation,
   nearestCitationLocation,
 } from "../lib/readerNavigation";
-import { linkifyNumericCitations } from "../lib/referenceMarkup";
+import { linkifyNumericCitations, linkifyPageCitations } from "../lib/referenceMarkup";
 import {
   inferTranslationTarget,
   mapSynchronizedScroll,
@@ -197,6 +197,8 @@ export default function PdfReader({
   const [outlineError, setOutlineError] = useState<string | null>(null);
   const [references, setReferences] = useState<DocumentReference[]>([]);
   const [mentions, setMentions] = useState<CitationMention[]>([]);
+  const [citationTextItems, setCitationTextItems] = useState<{ page: number; items: string[] }>({ page: 0, items: [] });
+  const textContentRequest = useRef(0);
   const [referencesLoading, setReferencesLoading] = useState(true);
   const [referencesError, setReferencesError] = useState<string | null>(null);
   const [sidebarTab, setSidebarTab] = useState<SidebarTab>("outline");
@@ -263,9 +265,15 @@ export default function PdfReader({
       : null,
     [activePageTarget, pageSize],
   );
+  const pageCitationMarkup = useMemo(() => citationTextItems.page === pageNumber
+    ? linkifyPageCitations(citationTextItems.items,
+      mentions.filter(item => item.page_number === pageNumber), referenceLabels)
+    : [], [citationTextItems, pageNumber, mentions, referenceLabels]);
   const renderCitationText = useCallback(
-    ({ str }: { str: string }) => linkifyNumericCitations(str, referenceLabels),
-    [referenceLabels],
+    ({ str, itemIndex }: { str: string; itemIndex: number }) =>
+      citationTextItems.items[itemIndex] === str && pageCitationMarkup[itemIndex] !== undefined
+        ? pageCitationMarkup[itemIndex] : linkifyNumericCitations(str, referenceLabels),
+    [citationTextItems, pageCitationMarkup, referenceLabels],
   );
   const loadPageTranslation = useCallback(async (
     targetPage: number,
@@ -313,6 +321,8 @@ export default function PdfReader({
 
   useEffect(() => {
     setPeopleTarget(null);
+    setCitationTextItems({ page: 0, items: [] });
+    textContentRequest.current++;
   }, [documentId]);
 
   useEffect(() => {
@@ -552,12 +562,18 @@ export default function PdfReader({
 
   function handlePageClick(event: ReactMouseEvent<HTMLDivElement>) {
     if (!(event.target instanceof Element)) return;
-    const marker = event.target.closest<HTMLElement>("[data-reference-label]");
+    // Native PDF link annotations sit above the text layer. Resolve the marked
+    // text underneath before PDF.js handles that link, so the return origin is kept.
+    const marker = event.target.closest<HTMLElement>("[data-reference-label]")
+      || document.elementsFromPoint(event.clientX, event.clientY)
+        .map(element => element.closest<HTMLElement>("[data-reference-label]"))
+        .find(element => element && pageShellRef.current?.contains(element));
     const label = marker?.dataset.referenceLabel;
     if (!label) return;
     const reference = references.find((item) => item.label === label);
     if (!reference) return;
     event.preventDefault();
+    event.stopPropagation();
     const shell = pageShellRef.current;
     const shellRect = shell?.getBoundingClientRect();
     const pagePoint = shellRect && pageSize ? {
@@ -849,17 +865,24 @@ export default function PdfReader({
             >
               <div
                 className="pdf-page-shell"
-                onClick={handlePageClick}
+                onClickCapture={handlePageClick}
                 onMouseUp={captureTextSelection}
                 ref={pageShellRef}
               >
                 <Page
                   customTextRenderer={renderCitationText}
                   loading={<div className="pdf-page-loading">正在渲染第 {pageNumber} 页…</div>}
-                  onLoadSuccess={(page) => setPageSize({
-                    width: page.originalWidth,
-                    height: page.originalHeight,
-                  })}
+                  onLoadSuccess={(page) => {
+                    setPageSize({ width: page.originalWidth, height: page.originalHeight });
+                    const request = ++textContentRequest.current;
+                    void page.getTextContent().then(content => {
+                      if (request !== textContentRequest.current) return;
+                      setCitationTextItems({ page: page.pageNumber,
+                        items: content.items.map(item => "str" in item ? item.str : "") });
+                    }).catch(() => {
+                      if (request === textContentRequest.current) setCitationTextItems({ page: 0, items: [] });
+                    });
+                  }}
                   pageNumber={pageNumber}
                   renderAnnotationLayer
                   renderTextLayer
@@ -880,7 +903,8 @@ export default function PdfReader({
                   >
                     <span>{["evidence", "people"].includes(activePageTarget?.kind ?? "")
                       ? activePageTarget?.label
-                      : `[${activePageTarget?.label}]`}</span>
+                      : activePageTarget?.label.startsWith("author-year-")
+                        ? "引用" : `[${activePageTarget?.label}]`}</span>
                   </div>
                 )}
               </div>
@@ -1019,7 +1043,8 @@ export default function PdfReader({
               <>
                 <strong className={activePageTarget.kind}>{["evidence", "people"].includes(activePageTarget.kind)
                   ? activePageTarget.label
-                  : `[${activePageTarget.label}]`}</strong>
+                  : activePageTarget.label.startsWith("author-year-")
+                    ? "引用" : `[${activePageTarget.label}]`}</strong>
                 <span className="pdf-evidence-status">{highlightRect
                   ? activePageTarget.kind === "people"
                     ? "已定位署名与贡献原文"
@@ -1042,7 +1067,8 @@ export default function PdfReader({
                 {referenceTarget.kind === "reference"
                   && citationOrigin?.label === referenceTarget.label && (
                     <button onClick={returnToCitationOrigin} type="button">
-                      返回正文 [{referenceTarget.label}]
+                      {referenceTarget.label.startsWith("author-year-")
+                        ? "返回正文" : `返回正文 [${referenceTarget.label}]`}
                     </button>
                   )}
                 <button onClick={() => cycleCitation(-1)} type="button">上一处引用</button>

@@ -117,6 +117,9 @@ export interface CitationMention {
   block_id: string;
   bbox: number[] | null;
   context: string;
+  citation_text?: string | null;
+  start_offset?: number | null;
+  end_offset?: number | null;
 }
 
 interface DocumentReferencesResponse {

@@ -122,6 +122,9 @@ class CitationMentionRead(BaseModel):
     block_id: str
     bbox: list[float] | None = None
     context: str
+    citation_text: str | None = None
+    start_offset: int | None = Field(default=None, ge=0)
+    end_offset: int | None = Field(default=None, ge=0)
 
 
 class DocumentReferencesRead(BaseModel):

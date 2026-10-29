@@ -4,6 +4,7 @@ import json
 import re
 from typing import Any
 
+from app.services.author_year_citations import author_year_mentions, bibliography_keys
 from app.services.storage import storage
 
 CITATION_GROUP = re.compile(
@@ -55,6 +56,7 @@ def reference_links(
         str(block_id) for item in references for block_id in item.get("block_ids", [])
     }
     mentions: list[dict[str, Any]] = []
+    author_year_keys = bibliography_keys(references)
     for page in parsed.get("pages", []):
         page_number = int(page.get("page_number", 0))
         if page_number < 1:
@@ -81,8 +83,16 @@ def reference_links(
                             "context": text[:500],
                             "start_offset": match.start(),
                             "end_offset": match.end(),
+                            "citation_text": match.group(),
                         }
                     )
+            for index, item in enumerate(author_year_mentions(text, author_year_keys)):
+                mentions.append({
+                    **item,
+                    "citation_id": f"cite-ay-{page_number}-{block_id}-{index}-{item['label']}",
+                    "page_number": page_number, "block_id": block_id,
+                    "bbox": block.get("bbox"), "context": text[:500],
+                })
     return references, mentions
 
 
