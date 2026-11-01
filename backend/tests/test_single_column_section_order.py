@@ -57,7 +57,7 @@ def test_native_single_column_page_keeps_intro_in_its_actual_section(tmp_path):
     assert introduction.section == "1 Introduction"
     assert architecture.section == "2 Architecture"
     assert introduction.chunk_index < architecture.chunk_index
-    assert PyMuPDFParser.version.endswith("layout104")
+    assert PyMuPDFParser.version.endswith("layout105")
 
 
 def test_native_rule_footnote_does_not_interrupt_column_continuation(tmp_path):

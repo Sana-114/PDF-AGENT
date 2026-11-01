@@ -87,6 +87,7 @@ LATEX_GREEK = {
     "σ": r"\sigma",
     "τ": r"\tau",
     "φ": r"\phi",
+    "ϕ": r"\phi",
     "ω": r"\omega",
     "Γ": r"\Gamma",
     "Δ": r"\Delta",
@@ -122,6 +123,7 @@ class RawTextBlock:
     # Preserve front-matter line geometry, not the entire book's span payload.
     lines: list[dict[str, Any]] = field(default_factory=list)
     is_footnote: bool = False
+    formula_source: str | None = None
 
 
 @dataclass(slots=True)
@@ -213,6 +215,7 @@ def extract_text_blocks(page_dict: dict[str, Any], page_number: int) -> list[Raw
                 font_size=font_size,
                 line_count=max(1, len(lines)),
                 char_weight=max(1, len(text)),
+                formula_source=_scripted_formula_text(lines, text),
                 lines=[
                     {"text": value, "bbox": _round_bbox(line.get("bbox", bbox))}
                     for value, line in zip(line_texts, lines, strict=False)
@@ -223,6 +226,34 @@ def extract_text_blocks(page_dict: dict[str, Any], page_number: int) -> list[Raw
             )
         )
     return blocks
+
+
+def _scripted_formula_text(lines: list[dict], text: str) -> str | None:
+    """Use same-line typeset geometry only; preserve the original block text."""
+    if len(text) > 180 or "=" not in text:
+        return None
+    changed = False
+    rendered = []
+    for line in lines:
+        parts = []
+        previous = None
+        for span in line.get("spans", []):
+            token = str(span.get("text", ""))
+            if (previous and re.fullmatch(r"[0-9]+", token)
+                    and re.fullmatch(r"\s*[a-zA-Zα-ωϕ]\s*", previous.get("text", ""))
+                    and previous.get("origin") and previous.get("bbox") and span.get("origin")):
+                size = float(previous.get("size", 0))
+                shift = span["origin"][1] - previous["origin"][1]
+                gap = span["origin"][0] - previous["bbox"][2]
+                if (size > 0 and .45 * size <= span.get("size", 0) <= .85 * size
+                        and abs(gap) <= .15 * size and .08 * size <= abs(shift) <= .6 * size):
+                    digits = "₀₁₂₃₄₅₆₇₈₉" if shift > 0 else "⁰¹²³⁴⁵⁶⁷⁸⁹"
+                    token = token.translate(str.maketrans("0123456789", digits))
+                    changed = True
+            parts.append(token)
+            previous = span
+        rendered.append("".join(parts))
+    return " ".join(" ".join(rendered).split()) if changed else None
 
 
 def _normalize_text_spacing(text: str) -> str:
@@ -605,7 +636,8 @@ def extract_references(pages: list[Any]) -> list[ReferenceNode]:
     return references
 
 
-def extract_formulas(pages: list[Any]) -> list[FormulaNode]:
+def extract_formulas(pages: list[Any], *,
+                     scripted: dict[tuple, str] | None = None) -> list[FormulaNode]:
     formulas: list[FormulaNode] = []
     for page in pages:
         for block in page.blocks:
@@ -615,7 +647,8 @@ def extract_formulas(pages: list[Any]) -> list[FormulaNode]:
             if not FORMULA_CORE.search(block.text) and len(tokens) < 2:
                 continue
             block.type = "formula"
-            latex = formula_latex_candidate(block.text)
+            key = (page.page_number, tuple(block.bbox), block.text)
+            latex = formula_latex_candidate((scripted or {}).get(key, block.text))
             formulas.append(
                 FormulaNode(
                     formula_id=f"formula-{len(formulas) + 1}",
@@ -700,15 +733,19 @@ def make_table_node(
 def snapshot_table(table: Any) -> TableSnapshot:
     raw_rows = table.extract() or []
     rows = [["" if value is None else str(value).strip() for value in row] for row in raw_rows]
-    cells = [
-        _round_bbox(cell) if cell is not None else None
-        for cell in list(getattr(table, "cells", []))
-    ]
+    width = table.col_count
+    # extract() and our cell indices are row-major. The detector's flat
+    # table.cells list has no slots for cells covered by a merge.
+    cells = []
+    for geometry in table.rows:
+        for column in range(width):
+            cell = geometry.cells[column] if column < len(geometry.cells) else None
+            cells.append(_round_bbox(cell) if cell is not None else None)
     return TableSnapshot(
         bbox=_round_bbox(table.bbox),
         rows=rows,
         cells=cells,
-        column_count=int(getattr(table, "col_count", max((len(row) for row in rows), default=0))),
+        column_count=width,
     )
 
 

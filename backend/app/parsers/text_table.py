@@ -212,13 +212,18 @@ def _snapshot_from_words(words: list[PositionedWord]) -> TableSnapshot | None:
                 break
         values = [""] * column_count
         boxes: list[list[list[float]]] = [[] for _ in range(column_count)]
-        if len(row) == column_count:
-            assignments = list(range(column_count))
-        else:
-            assignments = [
-                min(range(column_count), key=lambda index: abs(cell.bbox[0] - anchors[index]))
-                for cell in row
-            ]
+        nearest = [min(range(column_count), key=lambda i: abs(cell.bbox[0] - anchors[i]))
+                   for cell in row]
+        # A blank metric and a fragmented last cell can cancel out in the cell
+        # count. Respect a number aligned to a different established column.
+        shifted_value = any(
+            expected != actual and CELL_VALUE.fullmatch(cell.text)
+            and abs(cell.bbox[0] - anchors[actual]) <= 6
+            and abs(cell.bbox[0] - anchors[expected]) > 12
+            for expected, (cell, actual) in enumerate(zip(row, nearest, strict=True))
+        ) if len(row) == column_count else False
+        assignments = (list(range(column_count)) if len(row) == column_count and not shifted_value
+                       else nearest)
         for cell, column in zip(row, assignments, strict=True):
             values[column] = " ".join(value for value in (values[column], cell.text) if value)
             boxes[column].append(cell.bbox)

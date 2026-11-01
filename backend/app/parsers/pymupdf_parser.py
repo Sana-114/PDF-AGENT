@@ -49,7 +49,7 @@ class PyMuPDFParser:
     """Layout-aware local parser with page and bounding-box provenance."""
 
     name = "pymupdf-layout"
-    version = f"{fitz.VersionBind}-layout104"
+    version = f"{fitz.VersionBind}-layout105"
 
     def parse(
         self,
@@ -197,7 +197,10 @@ class PyMuPDFParser:
                 pages=pages,
                 tables=tables,
                 figures=figures,
-                formulas=extract_formulas(pages),
+                formulas=extract_formulas(pages, scripted={
+                    (b.page_number, tuple(b.bbox), b.text): b.formula_source
+                    for raw_blocks in raw_pages for b in raw_blocks if b.formula_source
+                }),
                 references=extract_references(pages),
                 appendices=appendix_nodes(outline),
                 contributor_groups=contributor_groups,
