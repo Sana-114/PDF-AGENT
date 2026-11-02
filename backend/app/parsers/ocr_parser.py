@@ -1,5 +1,6 @@
 import hashlib
 import json
+import re
 from pathlib import Path
 
 import fitz
@@ -24,7 +25,7 @@ class SelectiveOcrParser(PyMuPDFParser):
     """Use native extraction when possible and Tesseract only for low-text pages."""
 
     name = "pymupdf+tesseract"
-    version = f"{fitz.VersionBind}-ocr-layout100"
+    version = f"{fitz.VersionBind}-ocr-layout101"
 
     def __init__(
         self,
@@ -172,6 +173,7 @@ class SelectiveOcrParser(PyMuPDFParser):
                 page,
                 textpage=textpage,
                 raw_blocks=raw_blocks,
+                band_reader=lambda rect, rules: self._read_table_band(page, rect, rules),
             )
             for candidate in extract_borderless_tables(page, raw_blocks, textpage=textpage):
                 overlaps = [index for index, table in enumerate(tables)
@@ -181,6 +183,10 @@ class SelectiveOcrParser(PyMuPDFParser):
                 elif candidate.column_count > 1 and tables[overlaps[0]].column_count == 1:
                     # Broken ruling lines may form a false single-column grid.
                     # Prefer independently aligned OCR columns in the same region.
+                    tables[overlaps[0]] = candidate
+                elif (candidate.column_count == tables[overlaps[0]].column_count
+                      and len(candidate.rows) > len(tables[overlaps[0]].rows)):
+                    self._locate_empty_cells(candidate, tables[overlaps[0]])
                     tables[overlaps[0]] = candidate
             self._fill_empty_table_cells(page, tables, warnings)
             if tables:
@@ -193,6 +199,77 @@ class SelectiveOcrParser(PyMuPDFParser):
                 f"第 {page.number + 1} 页扫描版式识别跳过：{type(exc).__name__}"
             )
             return [], []
+
+    def _read_table_band(self, page, rect, rules):
+        words = self._band_words(page, rect, rules, 300)
+        if rect.height <= 18 or not any(re.fullmatch(r"\d{3,}", w[4]) for w in words):
+            return words
+        # A small decimal point can disappear at one raster scale. Require the
+        # same digits and an overlapping, independently OCR'd decimal at 360 dpi.
+        result = self._restore_decimal_points(words, self._band_words(page, rect, rules, 360))
+        # Resampling thinner strokes can separate an otherwise fused point.
+        # Restrict a third read to integers sharing a column with actual decimals.
+        def suspect(word):
+            return re.fullmatch(r"\d{3,}", word[4]) and any(
+                re.fullmatch(r"\d+\.\d+", other[4])
+                and abs(word[0] + word[2] - other[0] - other[2]) <= 8 for other in result)
+
+        targets = [word for word in result if suspect(word)]
+        if targets:
+            alternate = self._band_words(page, rect, rules, 240)
+            verified = self._restore_decimal_points(targets, alternate)
+            replacements = dict(zip(targets, verified, strict=True))
+            return [replacements.get(word, word) for word in result]
+        return result
+
+    @staticmethod
+    def _restore_decimal_points(words, other_read):
+        decimals = [w for w in other_read if re.fullmatch(r"\d+\.\d+", w[4])]
+        result = []
+        for word in words:
+            box = fitz.Rect(word[:4])
+            matches = [w for w in decimals if w[4].replace(".", "") == word[4]
+                       and (box & fitz.Rect(w[:4])).get_area() >= .65 * box.get_area()]
+            result.append((*word[:4], matches[0][4]) if len(matches) == 1 else word)
+        return result
+
+    def _band_words(self, page, rect, rules, dpi):
+        clip = fitz.Rect(rect) + (0, .9, 0, -.9)
+        if clip.is_empty or clip.get_area() * (dpi / 72) ** 2 > 2_000_000:
+            return []
+        try:
+            pix = page.get_pixmap(clip=clip, dpi=dpi, colorspace=fitz.csRGB,
+                                  alpha=False, annots=False)
+            for x in rules:
+                px = round(x * dpi / 72)
+                pix.set_rect(fitz.IRect(px-2, pix.y, px+3, pix.y+pix.height), (255, 255, 255))
+            data = pix.pdfocr_tobytes(language=self.languages, tessdata=self.tessdata)
+            with fitz.open("pdf", data) as crop:
+                p = crop[0]
+                sx, sy = pix.width*72/dpi/p.rect.width, pix.height*72/dpi/p.rect.height
+                return [(pix.x*72/dpi+x0*sx, pix.y*72/dpi+y0*sy,
+                         pix.x*72/dpi+x1*sx, pix.y*72/dpi+y1*sy, text)
+                        for x0, y0, x1, y1, text, *_ in p.get_text("words")]
+        except RuntimeError:
+            return []
+
+    @staticmethod
+    def _locate_empty_cells(candidate, ruled):
+        n = candidate.column_count
+        for i, row in enumerate(candidate.rows):
+            boxes = [b for b in candidate.cells[i*n:(i+1)*n] if b]
+            if not boxes:
+                continue
+            top, bottom = min(b[1] for b in boxes), max(b[3] for b in boxes)
+            for j, text in enumerate(row):
+                if text or candidate.cells[i*n+j]:
+                    continue
+                for box in ruled.cells[j::n]:
+                    if (box and box[1]-1 <= top and bottom <= box[3]+1
+                            and box[3]-box[1] <= 1.8*(bottom-top)
+                            and all(b[2] <= box[0]+1 or b[0] >= box[2]-1 for b in boxes)):
+                        candidate.cells[i*n+j] = box
+                        break
 
     def _fill_empty_table_cells(
         self,
@@ -210,7 +287,8 @@ class SelectiveOcrParser(PyMuPDFParser):
                 row_index, column_index = divmod(index, table.column_count)
                 if table.rows[row_index][column_index].strip() or cell_bbox is None:
                     continue
-                rect = fitz.Rect(cell_bbox) + (2, 2, -2, -2)
+                inset = min(2.0, (cell_bbox[3] - cell_bbox[1]) * .09)
+                rect = fitz.Rect(cell_bbox) + (2, inset, -2, -inset)
                 if rect.is_empty or rect.width < 4 or rect.height < 4:
                     continue
                 try:

@@ -88,6 +88,20 @@ def book_checks(doc):
             t in f for t in ["(2.5)", "L[", r"\sum", "_{", "^{2}"]) for f in fragments)}}
 
 
+def dense_row_controls(doc):
+    """Separate from the original 32 gates: validate sparse rows away from the base row."""
+    rows = table_rows(doc, 9, "Table 3:")
+    checks = []
+    for heads, key_dim, ppl, bleu in [("1", "512", "5.29", "24.9"), ("4", "128", "5.00", "25.5"),
+                                      ("16", "32", "4.91", "25.8"), ("32", "16", "5.01", "25.4")]:
+        hits = [row for row in rows if len(row) == 13 and row[4:7] == [heads, key_dim, key_dim]]
+        for col, expected in [(10, ppl), (11, bleu)]:
+            actual = hits[0][col] if len(hits) == 1 else None
+            checks.append({"page": 9, "heads": heads, "metric": "PPL" if col == 10 else "BLEU",
+                           "expected": expected, "actual": actual, "passed": actual == expected})
+    return checks
+
+
 def vector_checks(doc, path):
     checks = []
     with fitz.open(path) as pdf:
@@ -128,6 +142,8 @@ def main():
         parsed = parser.parse(str(path), batch_size=25, source_fingerprint=sha,
                               checkpoint_dir=out / (path.stem + "-checkpoint"))
         doc = parsed.to_dict()
+        if filename == SCAN:
+            report["additional_sparse_cell_checks"] = dense_row_controls(doc)
         if filename == VECTOR:
             checks = vector_checks(doc, path)
         else:
@@ -140,6 +156,7 @@ def main():
     gates = [item["passed"] for f in report["files"] for group in f["checks"].values()
              for item in (group if isinstance(group, list) else [group])]
     ok = all(gates) and all(f["pages"] == f["expected_pages"] for f in report["files"])
+    ok = ok and all(c["passed"] for c in report["additional_sparse_cell_checks"])
     report["status"] = "passed" if ok else "partial"
     (out / "report.json").write_text(json.dumps(report, indent=2, ensure_ascii=False),
                                      encoding="utf-8")

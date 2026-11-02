@@ -2,8 +2,11 @@
 
 from __future__ import annotations
 
+import re
 from collections import deque
+from collections.abc import Callable
 from dataclasses import dataclass
+from statistics import median
 from typing import Any
 
 import fitz
@@ -32,6 +35,7 @@ def detect_raster_layout(
     *,
     textpage: fitz.TextPage,
     raw_blocks: list[RawTextBlock],
+    band_reader: Callable | None = None,
 ) -> tuple[list[TableSnapshot], list[dict[str, Any]]]:
     """Recover ruled tables and caption-adjacent figures from one OCR page.
 
@@ -59,7 +63,7 @@ def detect_raster_layout(
         for word in page.get_text("words", textpage=textpage, sort=True)
         if str(word[4]).strip()
     ]
-    tables = _detect_tables(page, pixmap, table_captions, words)
+    tables = _detect_tables(page, pixmap, table_captions, words, band_reader)
     figures = _detect_figures(page, pixmap, figure_captions)
     return tables, figures
 
@@ -69,6 +73,7 @@ def _detect_tables(
     pixmap: fitz.Pixmap,
     captions: list[RawTextBlock],
     words: list[dict[str, Any]],
+    band_reader: Callable | None = None,
 ) -> list[TableSnapshot]:
     horizontal = _horizontal_lines(pixmap)
     vertical = _vertical_lines(pixmap)
@@ -87,19 +92,85 @@ def _detect_tables(
             if index in used_components:
                 continue
             bbox = _component_bbox(rows, columns, scale_x, scale_y)
-            if bbox[1] + 3 < caption.bbox[3]:
+            merged_caption = (caption.line_count >= 4 and caption.bbox[1] < bbox[1]
+                              and bbox[1] < caption.bbox[3] <= bbox[3] + 3)
+            if bbox[1] + 3 < caption.bbox[3] and not merged_caption:
                 continue
             if bbox[1] - caption.bbox[3] > page.rect.height * 0.42:
                 continue
             if _horizontal_overlap(bbox, column) < 0.45:
                 continue
-            candidates.append((bbox[1] - caption.bbox[3], index, rows, columns))
+            candidates.append((max(0.0, bbox[1] - caption.bbox[3]), index, rows, columns))
         if not candidates:
             continue
         _, component_index, rows, columns = min(candidates, key=lambda item: item[0])
         used_components.add(component_index)
-        tables.append(_table_snapshot(rows, columns, words, scale_x, scale_y))
+        # Repeated horizontal rules extending past the outermost verticals
+        # identify open-sided tables. A single stray line is insufficient.
+        left = round(median(r.start for r in rows))
+        right = round(median(r.end for r in rows))
+        extended = (len(rows) >= 3 and columns[0].position - left >= 12
+                    and right - columns[-1].position >= 12
+                    and sum(abs(r.start-left) <= 3 and abs(r.end-right) <= 3
+                            for r in rows) >= len(rows) * 2 / 3)
+        internal = [v.position * scale_x for v in columns]
+        if extended:
+            columns = [RasterLine(left, 0, 0), *columns, RasterLine(right, 0, 0)]
+        grid = _table_snapshot(rows, columns, words, scale_x, scale_y)
+        if extended and band_reader and len(rows) <= 24:
+            grid = _dense_band_grid(grid, internal, band_reader) or grid
+        tables.append(grid)
     return tables
+
+
+def _dense_band_grid(grid, rules, read_band):
+    """Use a full numeric row as anchors only when another band confirms their positions."""
+    bands = [fitz.Rect(grid.bbox[0], row[1], grid.bbox[2], row[3])
+             for row in grid.cells[::grid.column_count]]
+    if len(bands) < 3 or any(r.height < 4 or r.height > 100 for r in bands):
+        return None
+    # Only refine a coarse grid that already contains a dense run of metrics.
+    if not any(sum(t[0].isdigit() for t in cell.split()) >= 5 for row in grid.rows for cell in row):
+        return None
+    numeric = re.compile(r"[-+]?\d+(?:\.\d+)?(?:[%kKMG])?")
+    content = [read_band(r, rules) for r in bands]
+    if any(not words and any(v.strip() for v in old)
+           for old, words in zip(grid.rows, content, strict=True)):
+        return None
+    candidates = []
+    for band in content[1:]:
+        words = sorted(band, key=lambda w: w[0])
+        numeric_count = sum(bool(numeric.fullmatch(w[4])) for w in words)
+        if 6 <= len(words) <= 24 and numeric_count >= len(words) - 1:
+            centers = [(w[0]+w[2])/2 for w in words]
+            if (max(w[3] for w in words) - min(w[1] for w in words) < 18
+                    and min(b - a for a, b in zip(centers, centers[1:], strict=False)) > 8):
+                candidates.append(centers)
+    if len(candidates) < 2:
+        return None
+    anchors = max(candidates, key=len)
+    def column(word):
+        return min(range(len(anchors)), key=lambda i: abs(anchors[i]-(word[0]+word[2])/2))
+    if not any(other is not anchors and len(other) >= 6 and all(
+        min(abs(x-a) for a in anchors) < 4 for x in other) for other in candidates):
+        return None
+    rows, cells = [], []
+    for index, words in enumerate(content):
+        lines = []
+        for w in sorted(words, key=lambda w: ((w[1]+w[3])/2, w[0])):
+            cy = (w[1]+w[3])/2
+            if not lines or (index and cy - lines[-1][0] > 4):
+                lines.append((cy, []))
+            lines[-1][1].append(w)
+        for _, line in lines:
+            buckets = [[] for _ in anchors]
+            for w in sorted(line, key=lambda w: (round(w[1]/4), w[0])):
+                buckets[column(w)].append(w)
+            rows.append([" ".join(w[4] for w in bucket) for bucket in buckets])
+            cells.extend([min(w[0] for w in b), min(w[1] for w in b),
+                          max(w[2] for w in b), max(w[3] for w in b)] if b else None
+                         for b in buckets)
+    return TableSnapshot(grid.bbox, rows, cells, len(anchors))
 
 
 def _horizontal_lines(pixmap: fitz.Pixmap) -> list[RasterLine]:
