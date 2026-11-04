@@ -144,6 +144,18 @@ def main():
         doc = parsed.to_dict()
         if filename == SCAN:
             report["additional_sparse_cell_checks"] = dense_row_controls(doc)
+            report["scientific_cell_refinements"] = parser.processing_metadata().get(
+                "scientific_cell_refinements", []
+            )
+            rows = table_rows(doc, 8, "Table 2:")
+            controls = []
+            for model, column, expected in [("MoE", 3, "2.0·10^{19}"),
+                                            ("GNMT + RL Ensemble", 3, "1.8·10^{20}")]:
+                candidates = [r[column] for r in rows if r and r[0].startswith(model)
+                              and len(r) > column]
+                controls.append({"model": model, "column": column, "expected": expected,
+                                 "actual": candidates, "passed": candidates == [expected]})
+            report["additional_cost_checks"] = controls
         if filename == VECTOR:
             checks = vector_checks(doc, path)
         else:
@@ -157,6 +169,7 @@ def main():
              for item in (group if isinstance(group, list) else [group])]
     ok = all(gates) and all(f["pages"] == f["expected_pages"] for f in report["files"])
     ok = ok and all(c["passed"] for c in report["additional_sparse_cell_checks"])
+    ok = ok and all(c["passed"] for c in report["additional_cost_checks"])
     report["status"] = "passed" if ok else "partial"
     (out / "report.json").write_text(json.dumps(report, indent=2, ensure_ascii=False),
                                      encoding="utf-8")

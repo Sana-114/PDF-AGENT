@@ -14,6 +14,7 @@ from app.parsers.front_matter_ocr import (
 from app.parsers.layout import RawTextBlock, TableSnapshot, extract_text_blocks
 from app.parsers.pymupdf_parser import PyMuPDFParser
 from app.parsers.raster_layout import detect_raster_layout
+from app.parsers.scientific_cells import refine_scientific_cells
 from app.parsers.text_table import extract_borderless_tables
 
 
@@ -25,7 +26,7 @@ class SelectiveOcrParser(PyMuPDFParser):
     """Use native extraction when possible and Tesseract only for low-text pages."""
 
     name = "pymupdf+tesseract"
-    version = f"{fitz.VersionBind}-ocr-layout101"
+    version = f"{fitz.VersionBind}-ocr-layout102"
 
     def __init__(
         self,
@@ -44,6 +45,7 @@ class SelectiveOcrParser(PyMuPDFParser):
         self.tessdata = tessdata or None
         self.front_matter_languages = front_matter_languages
         self.front_matter_refinements: list[dict] = []
+        self.scientific_cell_refinements: list[dict] = []
         signature = json.dumps([languages, dpi, min_text_chars, front_matter_languages])
         self.version += "-" + hashlib.sha256(signature.encode()).hexdigest()[:10]
         self.ocr_pages: list[int] = []
@@ -55,6 +57,7 @@ class SelectiveOcrParser(PyMuPDFParser):
         self.raster_table_pages = []
         self.raster_figure_pages = []
         self.front_matter_refinements = []
+        self.scientific_cell_refinements = []
         parsed = super().parse(path, **kwargs)
         if self.ocr_pages:
             parsed.warnings.append(
@@ -105,6 +108,7 @@ class SelectiveOcrParser(PyMuPDFParser):
             "raster_table_page_count": len(self.raster_table_pages),
             "raster_figure_pages": self.raster_figure_pages,
             "raster_figure_page_count": len(self.raster_figure_pages),
+            "scientific_cell_refinements": self.scientific_cell_refinements,
             "front_matter_refinements": self.front_matter_refinements,
         }
 
@@ -189,6 +193,9 @@ class SelectiveOcrParser(PyMuPDFParser):
                     self._locate_empty_cells(candidate, tables[overlaps[0]])
                     tables[overlaps[0]] = candidate
             self._fill_empty_table_cells(page, tables, warnings)
+            self.scientific_cell_refinements.extend(
+                refine_scientific_cells(page, tables, self.languages, self.tessdata)
+            )
             if tables:
                 self.raster_table_pages.append(page.number + 1)
             if figures:
@@ -315,6 +322,7 @@ class SelectiveOcrParser(PyMuPDFParser):
 
     def _checkpoint_metadata(self) -> dict:
         return {
+            "scientific_cell_refinements": self.scientific_cell_refinements,
             "ocr_pages": self.ocr_pages,
             "raster_table_pages": self.raster_table_pages,
             "raster_figure_pages": self.raster_figure_pages,
@@ -322,6 +330,7 @@ class SelectiveOcrParser(PyMuPDFParser):
         }
 
     def _restore_checkpoint_metadata(self, metadata: dict) -> None:
+        self.scientific_cell_refinements = list(metadata.get("scientific_cell_refinements", []))
         values = metadata.get("ocr_pages", [])
         if isinstance(values, list):
             self.ocr_pages = [int(value) for value in values]
