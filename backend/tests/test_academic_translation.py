@@ -107,6 +107,51 @@ async def test_translation_rejects_missing_protected_placeholder() -> None:
         await AcademicTranslationService(DroppingProvider()).translate(request)
 
 
+@pytest.mark.asyncio
+async def test_tokens_cannot_move_between_paragraphs_even_if_all_survive() -> None:
+    class SwappedProvider(AcademicTranslationProvider):
+        async def translate_segments(self, segments, *args):
+            (first, a), (second, b) = segments
+            return GeneratedSegmentTranslations(items={first: b, second: a})
+
+    request = AcademicTranslationRequest(text="初值为0.5148。\n\n阈值为0.55。")
+    with pytest.raises(LLMResponseError, match="本段"):
+        await AcademicTranslationService(SwappedProvider()).translate(request)
+
+
+@pytest.mark.asyncio
+async def test_source_limit_single_paragraph_respects_each_request_budget_and_token_boundary():
+    from app.services.academic_translation import MAX_CHARACTERS_PER_REQUEST
+
+    class Recorder(AcademicTranslationProvider):
+        async def translate_segments(self, segments, *args):
+            assert sum(len(text) for _, text in segments) <= MAX_CHARACTERS_PER_REQUEST
+            self.contexts.append(args[-1])
+            return GeneratedSegmentTranslations(items=dict(segments))
+
+    # The first 12k cut would fall inside the placeholder for this inline formula.
+    text = ("文" * 11995 + "$y=x$" + "字" * 12000)
+    provider = Recorder()
+    result = await AcademicTranslationService(provider).translate(
+        AcademicTranslationRequest(text=text, document_type="paper")
+    )
+    assert result.paragraph_count == 1 and result.request_count == len(provider.contexts) == 3
+    assert result.translation.replace(" ", "") == text
+
+
+@pytest.mark.asyncio
+async def test_chinese_numbers_and_short_glossary_do_not_corrupt_tokens():
+    provider = AcademicTranslationProvider()
+    text = "共39份，比例为91.5%。变量A见 `A = 1`。"
+    result = await AcademicTranslationService(provider).translate(
+        AcademicTranslationRequest(text=text, glossary=[{"source": "A", "target": "alpha"}])
+    )
+    assert result.translation == text.replace("变量A", "变量alpha")
+    assert result.glossary_applied[0].count == 1
+    assert {p.kind: p.count for p in result.preservation_checks} == {"number": 2, "code": 1}
+    assert "alpha" in provider.contexts[0]
+
+
 def test_academic_translation_api_returns_quality_report(monkeypatch) -> None:
     provider = AcademicTranslationProvider()
     monkeypatch.setattr(writing_routes, "get_llm_provider", lambda: provider)

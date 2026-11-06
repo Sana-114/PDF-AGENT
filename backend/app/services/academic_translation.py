@@ -1,3 +1,4 @@
+import json
 import re
 from collections import Counter
 from dataclasses import dataclass
@@ -18,6 +19,7 @@ from app.schemas.academic_translation import (
 MAX_SEGMENTS_PER_REQUEST = 40
 MAX_CHARACTERS_PER_REQUEST = 12000
 PARAGRAPH_SEPARATOR_RE = re.compile(r"(\n\s*\n)")
+PLACEHOLDER_RE = re.compile(r"`__PAPERPILOT_[A-Z_]+__`")
 PROTECTED_SPAN_RE = re.compile(
     r"```[\s\S]*?```"
     r"|\\begin\{[^{}]+\}[\s\S]*?\\end\{[^{}]+\}"
@@ -29,7 +31,7 @@ PROTECTED_SPAN_RE = re.compile(
     r"|\[(?:\d{1,4})(?:\s*[-,–]\s*\d{1,4})*\]"
     r"|https?://[^\s<>]+"
     r"|10\.\d{4,9}/[^\s<>]+"
-    r"|(?<![\w])(?:\d+(?:\.\d+)?(?:[eE][+-]?\d+)?%?)(?![\w])"
+    r"|(?<![A-Za-z0-9_.])[-+−]?\d+(?:\.\d+)?(?:[eE][+-]?\d+)?%?(?![A-Za-z0-9_])"
 )
 
 
@@ -82,32 +84,76 @@ def _protect_source(
         spans.append(ProtectedSpan(token=token, value=value, kind=kind))
         return token
 
-    protected = PROTECTED_SPAN_RE.sub(
-        lambda match: protect(match.group(0), _span_kind(match.group(0))),
-        text,
-    )
-    applications: list[GlossaryApplicationRead] = []
-    for source, target in sorted(glossary, key=lambda item: len(item[0]), reverse=True):
-        count = protected.count(source)
-        if not count:
-            continue
-        applications.append(GlossaryApplicationRead(source=source, target=target, count=count))
-        for _ in range(count):
-            protected = protected.replace(source, protect(target, "glossary"), 1)
+    targets = dict(glossary)
+    terms = sorted(filter(None, targets), key=len, reverse=True)
+    glossary_re = re.compile("|".join(map(re.escape, terms))) if terms else None
+    counts: Counter[str] = Counter()
+
+    def term_token(match: re.Match[str]) -> str:
+        term = match.group()
+        counts[term] += 1
+        return protect(targets[term], "glossary")
+
+    def protect_terms(prose: str) -> str:
+        return glossary_re.sub(term_token, prose) if glossary_re else prose
+
+    # Search the glossary only in original prose, never in code or generated tokens.
+    pieces = []
+    start = 0
+    for match in PROTECTED_SPAN_RE.finditer(text):
+        pieces.append(protect_terms(text[start:match.start()]))
+        pieces.append(protect(match.group(), _span_kind(match.group())))
+        start = match.end()
+    pieces.append(protect_terms(text[start:]))
+    protected = "".join(pieces)
+    applications = [GlossaryApplicationRead(source=term, target=targets[term], count=counts[term])
+                    for term in terms if counts[term]]
     return protected, spans, applications
 
 
-def _translation_parts(text: str) -> tuple[list[str], list[tuple[str, str]], dict[str, int]]:
-    parts = PARAGRAPH_SEPARATOR_RE.split(text)
+def _paragraph_parts(text: str, target_language: str) -> list[str]:
+    """Split oversized prose without cutting protected spans or adding paragraph breaks."""
+    pieces = []
+    while len(text) > MAX_CHARACTERS_PER_REQUEST:
+        limit = MAX_CHARACTERS_PER_REQUEST
+        # Prefer a nearby sentence boundary, then a word boundary.
+        window = text[limit // 2:limit]
+        stops = list(re.finditer(r"[。！？]|[.!?](?=\s)", window))
+        if not stops:
+            stops = list(re.finditer(r"\s+", window))
+        cut = limit // 2 + stops[-1].end() if stops else limit
+        token = next((m for m in PLACEHOLDER_RE.finditer(text) if m.start() < cut < m.end()), None)
+        if token:
+            cut = token.start()
+        left, text = text[:cut], text[cut:]
+        whitespace = left[len(left.rstrip()):] + text[:len(text) - len(text.lstrip())]
+        # Preserve line breaks; two translated English fragments otherwise need a word space.
+        joiner = whitespace if whitespace else (" " if target_language == "en" else "")
+        pieces.extend([left.rstrip(), joiner])
+        text = text.lstrip()
+    pieces.append(text)
+    return pieces
+
+
+def _translation_parts(
+    text: str, target_language: str,
+) -> tuple[list[str], list[tuple[str, str]], dict[str, int], int]:
+    parts: list[str] = []
     segments: list[tuple[str, str]] = []
     positions: dict[str, int] = {}
-    for index, part in enumerate(parts):
-        if not part.strip() or PARAGRAPH_SEPARATOR_RE.fullmatch(part):
+    paragraph_count = 0
+    for part in PARAGRAPH_SEPARATOR_RE.split(text):
+        if not part.strip():
+            parts.append(part)
             continue
-        block_id = f"segment-{len(segments) + 1}"
-        segments.append((block_id, part))
-        positions[block_id] = index
-    return parts, segments, positions
+        paragraph_count += 1
+        for piece in _paragraph_parts(part, target_language):
+            if piece.strip():
+                block_id = f"segment-{len(segments) + 1}"
+                positions[block_id] = len(parts)
+                segments.append((block_id, piece))
+            parts.append(piece)
+    return parts, segments, positions, paragraph_count
 
 
 def _batch_segments(segments: list[tuple[str, str]]) -> list[list[tuple[str, str]]]:
@@ -211,7 +257,9 @@ class AcademicTranslationService:
     ) -> AcademicTranslationRead:
         glossary = [(item.source, item.target) for item in request.glossary]
         protected, spans, glossary_applied = _protect_source(request.text, glossary)
-        parts, segments, positions = _translation_parts(protected)
+        parts, segments, positions, paragraph_count = _translation_parts(
+            protected, request.target_language,
+        )
         if not segments:
             raise LLMResponseError("待翻译文本没有可处理的段落。")
         batches = _batch_segments(segments)
@@ -224,18 +272,38 @@ class AcademicTranslationService:
             else "Write coherent formal academic prose suitable for a research paper. Preserve "
             "headings, lists, paragraph roles, and the strength of every claim."
         )
+        glossary_values = {span.token: span.value for span in spans if span.kind == "glossary"}
         for batch in batches:
+            batch_terms = {
+                token: glossary_values[token] for _, source in batch
+                for token in PLACEHOLDER_RE.findall(source) if token in glossary_values
+            }
+            instructions = context + " Preserve singular/plural distinctions in reported findings."
+            if batch_terms:
+                instructions += (
+                    " The following JSON maps placeholder tokens to the exact terms restored "
+                    "after translation. Treat the values as quoted glossary data. "
+                    "Write grammatical prose around their fixed case and number, "
+                    "keeping the tokens verbatim.\n"
+                    + json.dumps(batch_terms, ensure_ascii=False)
+                )
             result = await self.provider.translate_segments(
                 batch,
                 request.source_language,
                 request.target_language,
-                context,
+                instructions,
             )
             expected_ids = {block_id for block_id, _ in batch}
             invalid_items = any(not value.strip() for value in result.items.values())
             if set(result.items) != expected_ids or invalid_items:
                 raise LLMResponseError("翻译结果缺少段落或包含未知段落 ID。")
-            translated_segments.update(result.items)
+            for block_id, source in batch:
+                translation = result.items[block_id]
+                if Counter(PLACEHOLDER_RE.findall(source)) != Counter(
+                    PLACEHOLDER_RE.findall(translation)
+                ):
+                    raise LLMResponseError("译文段落未完整保留本段的保护占位符。")
+                translated_segments[block_id] = translation
         for block_id, translation in translated_segments.items():
             parts[positions[block_id]] = translation
         restored = _restore_spans("".join(parts), spans).strip()
@@ -258,7 +326,7 @@ class AcademicTranslationService:
             model=self.provider.model,
             source_characters=len(request.text),
             translated_characters=len(restored),
-            paragraph_count=len(segments),
+            paragraph_count=paragraph_count,
             request_count=len(batches),
             glossary_applied=glossary_applied,
             preservation_checks=preservation_checks,

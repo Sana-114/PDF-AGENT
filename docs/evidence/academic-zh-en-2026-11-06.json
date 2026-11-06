@@ -1,0 +1,66 @@
+{
+  "input_sha256": "529deb8a59ec358a84e663dea2c188f0e02b61b87f011263cf6cc1e47fb63774",
+  "evidence_sha256": "0258d2a9fdeac7b3e6e44bbf9688476ce2a155f8652fd751defe5676287c49ca",
+  "characters": 1988,
+  "paragraphs": 44,
+  "checks": {
+    "real_multibatch": true,
+    "paragraphs": true,
+    "english_prose": true,
+    "no_tokens": true,
+    "verbatim_code": true,
+    "glossary_counts": true,
+    "protected_per_paragraph": true,
+    "draft_roundtrip": true,
+    "markdown_roundtrip": true
+  },
+  "http": 200,
+  "provider": "deepseek",
+  "model": "deepseek-flash",
+  "batches": 2,
+  "mismatches": [],
+  "glossary": [
+    {
+      "source": "正文指纹",
+      "target": "text fingerprint",
+      "count": 5
+    },
+    {
+      "source": "原文锚点",
+      "target": "source anchor",
+      "count": 3
+    },
+    {
+      "source": "引用用途",
+      "target": "citation function",
+      "count": 5
+    }
+  ],
+  "protected": [
+    {
+      "kind": "number",
+      "count": 10
+    },
+    {
+      "kind": "formula",
+      "count": 2
+    },
+    {
+      "kind": "code",
+      "count": 2
+    },
+    {
+      "kind": "citation",
+      "count": 2
+    }
+  ],
+  "browser": {
+    "engine": "Edge",
+    "source": "saved draft from live-final",
+    "form_before_export": "en -> zh",
+    "exported_direction": "zh -> en",
+    "bilingual_body_exact": true,
+    "download_sha256": "bfb49c53082e055f21225061864ca373358048a63840c05bbbb764c41d7f2159"
+  },
+  "quality": "held: miss count plurality in one sentence; fixed-case glossary in headings"
+}

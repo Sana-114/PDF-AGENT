@@ -110,17 +110,16 @@ export default function AcademicTranslationWorkbench() {
   const [draftTitle, setDraftTitle] = useState("");
   const [draftStatus, setDraftStatus] = useState<"draft" | "reviewed">("draft");
   const [result, setResult] = useState<AcademicTranslationResponse | null>(null);
-  const [translatedSource, setTranslatedSource] = useState("");
+  const [submitted, setSubmitted] = useState<Pick<AcademicTranslationDraft,
+    "source_text" | "source_language" | "target_language" | "document_type" |
+    "glossary_id" | "provider" | "model"> | null>(null);
   const [editedTranslation, setEditedTranslation] = useState("");
-  const [translationProvider, setTranslationProvider] = useState<string | null>(null);
-  const [translationModel, setTranslationModel] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
   const [libraryAction, setLibraryAction] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [notice, setNotice] = useState<string | null>(null);
   const [copied, setCopied] = useState<"translation" | "bilingual" | null>(null);
   const glossary = useMemo(() => parseGlossary(glossaryText), [glossaryText]);
-  const hasTranslation = Boolean(translatedSource);
 
   useEffect(() => {
     let cancelled = false;
@@ -201,6 +200,8 @@ export default function AcademicTranslationWorkbench() {
       setDrafts((current) => current.map((item) => (
         item.glossary_id === selectedGlossaryId ? { ...item, glossary_id: null } : item
       )));
+      setSubmitted((current) => current?.glossary_id === selectedGlossaryId
+        ? { ...current, glossary_id: null } : current);
       startNewGlossary();
       setNotice("术语库已删除，已保存译稿仍然保留。");
     } catch (requestError) {
@@ -218,13 +219,11 @@ export default function AcademicTranslationWorkbench() {
     setDraftTitle(draft.title);
     setDraftStatus(draft.status);
     setSourceText(draft.source_text);
-    setTranslatedSource(draft.source_text);
+    setSubmitted(draft);
     setEditedTranslation(draft.translated_text);
     setSourceLanguage(draft.source_language);
     setTargetLanguage(draft.target_language);
     setDocumentType(draft.document_type);
-    setTranslationProvider(draft.provider);
-    setTranslationModel(draft.model);
     setResult(null);
     if (draft.glossary_id) chooseGlossary(draft.glossary_id);
     setNotice(`已载入${draft.status === "reviewed" ? "审校完成" : "待审校"}译稿。`);
@@ -242,7 +241,7 @@ export default function AcademicTranslationWorkbench() {
       setDraftId(null);
       setDraftTitle("");
       setDraftStatus("draft");
-      setTranslatedSource("");
+      setSubmitted(null);
       setEditedTranslation("");
       setResult(null);
       setNotice("译稿已删除。");
@@ -273,17 +272,23 @@ export default function AcademicTranslationWorkbench() {
         glossary: glossary.terms,
       });
       setResult(nextResult);
-      setTranslatedSource(submittedSource);
+      setSubmitted({
+        source_text: submittedSource,
+        source_language: nextResult.source_language,
+        target_language: nextResult.target_language,
+        document_type: nextResult.document_type,
+        glossary_id: selectedGlossaryId || null,
+        provider: nextResult.provider,
+        model: nextResult.model,
+      });
       setEditedTranslation(nextResult.translation);
-      setTranslationProvider(nextResult.provider);
-      setTranslationModel(nextResult.model);
       setDraftId(null);
       setDraftTitle(defaultDraftTitle(documentType));
       setDraftStatus("draft");
       setNotice("翻译完成，可继续编辑、保存或审校。");
     } catch (requestError) {
       setResult(null);
-      setTranslatedSource("");
+      setSubmitted(null);
       setEditedTranslation("");
       setError(readableRequestError(requestError, "学术翻译失败"));
     } finally {
@@ -292,7 +297,7 @@ export default function AcademicTranslationWorkbench() {
   }
 
   async function persistDraft(status: "draft" | "reviewed") {
-    if (!hasTranslation || !editedTranslation.trim() || !draftTitle.trim()) return;
+    if (!submitted || !editedTranslation.trim() || !draftTitle.trim()) return;
     setLibraryAction(true);
     setError(null);
     try {
@@ -304,15 +309,15 @@ export default function AcademicTranslationWorkbench() {
           })
         : await createTranslationDraft({
             title: draftTitle.trim(),
-            sourceText: translatedSource,
+            sourceText: submitted.source_text,
             translatedText: editedTranslation,
-            sourceLanguage,
-            targetLanguage,
-            documentType,
+            sourceLanguage: submitted.source_language,
+            targetLanguage: submitted.target_language,
+            documentType: submitted.document_type,
             status,
-            glossaryId: selectedGlossaryId || null,
-            provider: translationProvider,
-            model: translationModel,
+            glossaryId: submitted.glossary_id,
+            provider: submitted.provider,
+            model: submitted.model,
           });
       setDraftId(saved.id);
       setDraftStatus(saved.status);
@@ -326,10 +331,10 @@ export default function AcademicTranslationWorkbench() {
   }
 
   async function copyText(mode: "translation" | "bilingual") {
-    if (!hasTranslation || !editedTranslation.trim()) return;
+    if (!submitted || !editedTranslation.trim()) return;
     const content = mode === "translation"
       ? editedTranslation
-      : `原文\n\n${translatedSource}\n\nTranslation\n\n${editedTranslation}`;
+      : `原文\n\n${submitted.source_text}\n\nTranslation\n\n${editedTranslation}`;
     await navigator.clipboard.writeText(content);
     setCopied(mode);
     window.setTimeout(() => setCopied(null), 1600);
@@ -454,14 +459,14 @@ export default function AcademicTranslationWorkbench() {
       </form>
       {error && <p className="academic-translation-error">{error}</p>}
       {notice && <p className="academic-translation-notice">{notice}</p>}
-      {hasTranslation && (
+      {submitted && (
         <>
           {result?.warnings.map((warning) => <p className="citation-warning" key={warning}>{warning}</p>)}
           <div className="translation-quality-strip">
             <span className={draftStatus === "reviewed" ? "reviewed" : "draft"}>
               {draftStatus === "reviewed" ? "人工审校完成" : "待人工审校"}
             </span>
-            <span>{translationModel || translationProvider || "历史译稿"}</span>
+            <span>{submitted.model || submitted.provider || "历史译稿"}</span>
             {result && <span>{result.paragraph_count} 个段落 · {result.request_count} 次模型请求</span>}
             {result?.preservation_checks.map((check) => (
               <span key={check.kind}>已核验 {PRESERVATION_LABELS[check.kind]} × {check.count}</span>
@@ -476,7 +481,8 @@ export default function AcademicTranslationWorkbench() {
             <button disabled={!draftTitle.trim() || !editedTranslation.trim() || libraryAction} onClick={() => void persistDraft("reviewed")} type="button">完成审校</button>
             <button
               disabled={!editedTranslation.trim()}
-              onClick={() => downloadMarkdown(draftTitle || "translation", translatedSource, editedTranslation, draftStatus, sourceLanguage, targetLanguage)}
+              onClick={() => downloadMarkdown(draftTitle || "translation", submitted.source_text,
+                editedTranslation, draftStatus, submitted.source_language, submitted.target_language)}
               type="button"
             >
               导出 Markdown
@@ -484,8 +490,8 @@ export default function AcademicTranslationWorkbench() {
           </div>
           <div className="academic-translation-result">
             <article>
-              <header><span>原文</span><small>{translatedSource.length} 字符</small></header>
-              <p>{translatedSource}</p>
+              <header><span>原文</span><small>{submitted.source_text.length} 字符</small></header>
+              <p>{submitted.source_text}</p>
             </article>
             <article>
               <header>

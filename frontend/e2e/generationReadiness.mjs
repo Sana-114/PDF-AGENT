@@ -234,10 +234,13 @@ try {
     const editor = translation.locator(".academic-translation-result textarea");
     await editor.waitFor();
     assert.equal(await editor.inputValue(), payload.translation);
+    await translation.getByRole("combobox", { name: /^原文语言/ }).selectOption("en");
+    await translation.getByRole("combobox", { name: /^目标语言/ }).selectOption("zh");
     const [download] = await Promise.all([page.waitForEvent("download"), translation.getByRole("button", { name: "导出 Markdown", exact: true }).click()]);
     const exportedPath = path.join(screenshotDir, "synthetic-translation.md");
     await download.saveAs(exportedPath);
     const exported = await readFile(exportedPath, "utf8");
+    assert.ok(exported.includes("- Language: zh → en\n"));
     assert.ok(exported.includes(payload.translation) && exported.includes(sourceText));
     await translation.locator(".academic-translation-result").scrollIntoViewIfNeeded();
     result.screenshot = await capture("generated-translation");
