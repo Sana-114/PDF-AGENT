@@ -11,8 +11,12 @@ from typing import Any
 from app.schemas.discovery import CitationContextRead, CitationValueRead
 from app.services.document_content import reference_links
 
+USE_VERB = (
+    r"(?:adopt(?:ed)?|used?|follow(?:ed)?|extend(?:ed)?|build|built|implement(?:ed)?|"
+    r"apply|applied|employ(?:ed)?)"
+)
 METHOD = re.compile(
-    r"\bwe\s+(?:\w+\s+){0,2}(?:adopt|use|follow|extend|build|implement)\b|"
+    rf"\bwe\s+(?:\w+\s+){{0,2}}{USE_VERB}\b|"
     r"\b(?:based on|building on|following the|implementation of)\b|"
     r"(?:本文|我们)(?:采用|使用|沿用|扩展)|基于.{0,25}(?:方法|模型)",
     re.I,
@@ -27,13 +31,17 @@ BACKGROUND = re.compile(
     r"(?:相关工作|已有研究|先前研究|提出了)",
     re.I,
 )
+HISTORICAL_RESULT = re.compile(
+    r"\b(?:was developed in|(?:have|has) been shown to (?:\w+\s+)?outperform previous)\b",
+    re.I,
+)
 INCIDENTAL = re.compile(
     r"\b(?:for an? (?:overview|survey)|see also|for completeness|among others)\b|"
     r"(?:综述可参见|另见|为完整性)",
     re.I,
 )
 NEGATED_USE = re.compile(
-    r"\b(?:not|never|without|do not|don't)\b.{0,35}\b(?:adopt|use|follow|extend|compare)\b|"
+    rf"\b(?:not|never|without|don't)\b.{{0,35}}\b(?:{USE_VERB}|compare)\b|"
     r"(?:未|不)(?:采用|使用|沿用|比较)",
     re.I,
 )
@@ -46,18 +54,24 @@ REASONS = {
 }
 
 
-def _sentence(text: str, start: int, end: int) -> str:
+def _sentence(text: str, start: int, end: int) -> tuple[str, int]:
     # Restrict classification to this occurrence, never a different sentence
     # earlier in the same PDF block. Preserve the literal quote for verification.
-    boundaries = [m.end() for m in re.finditer(r"[.!?。！？](?:\s+|$)", text)]
+    boundaries = [m.end() for m in re.finditer(r"(?<!et al)[.!?。！？](?:\s+|$)", text, re.I)]
     left = max((offset for offset in boundaries if offset <= start), default=0)
     right = min((offset for offset in boundaries if offset >= end), default=len(text))
-    return text[left:right].strip()
+    return text[left:right], start - left
 
 
-def _role(quote: str) -> str:
+def _role(quote: str, offset: int) -> str:
+    # An aside applies to its own reference, not the reference before the parenthesis.
+    if re.search(r"\(\s*see also\s+[^()]*$", quote[:offset], re.I):
+        return "incidental"
+    quote = re.sub(r"\(\s*see also\s+[^()]*\)", "", quote, flags=re.I)
     if NEGATED_USE.search(quote):
         return "unknown"
+    if HISTORICAL_RESULT.search(quote) and not re.search(r"\bwe\b", quote, re.I):
+        return "background"
     if BASELINE.search(quote):
         return "baseline"
     if METHOD.search(quote):
@@ -80,16 +94,16 @@ def citation_values(parsed: dict[str, Any]) -> dict[str, CitationValueRead]:
     for mention in mentions:
         block = blocks.get((mention["page_number"], mention["block_id"]), {})
         text = str(block.get("text", ""))
-        quote = _sentence(text, mention["start_offset"], mention["end_offset"])
+        quote, offset = _sentence(text, mention["start_offset"], mention["end_offset"])
         # Very large run-on OCR text is not safe to attribute to one reference.
-        role = _role(quote) if len(quote) <= 1600 else "unknown"
+        role = _role(quote, offset) if len(quote) <= 1600 else "unknown"
         by_label.setdefault(mention["label"], []).append(
             CitationContextRead(
                 citation_id=mention["citation_id"],
                 page_number=mention["page_number"],
                 block_id=mention["block_id"],
                 bbox=mention.get("bbox"),
-                quote=quote[:1600],
+                quote=quote.strip()[:1600],
                 role=role,
             )
         )
@@ -101,8 +115,10 @@ def citation_values(parsed: dict[str, Any]) -> dict[str, CitationValueRead]:
             (item for item in ("method", "baseline", "background") if item in roles),
             "incidental" if roles == {"incidental"} else "unknown",
         )
-        # Keep substantive contexts first within the bounded response payload.
-        ordered = sorted(contexts, key=lambda item: item.role not in {"method", "baseline"})
+        # Show evidence for the displayed role even when a reference has many mentions.
+        ordered = sorted(contexts, key=lambda item: (
+            item.role != role, item.role not in {"method", "baseline"},
+        ))
         results[str(reference.get("reference_id", ""))] = CitationValueRead(
             role=role,
             recommended=role in {"method", "baseline"},

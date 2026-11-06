@@ -1,0 +1,256 @@
+{
+  "pairs": 741,
+  "positives": 4,
+  "expected_duplicate_pairs": [
+    {
+      "left": "1706.03762v1.pdf",
+      "right": "1706.03762v1_img.pdf",
+      "expected": true,
+      "same_arxiv": false,
+      "identity_score": 1.0,
+      "content_score": 0.641,
+      "combined_score": 0.8385,
+      "qualifies": true
+    },
+    {
+      "left": "1706.03762v1.pdf",
+      "right": "1706.03762v7.pdf",
+      "expected": true,
+      "same_arxiv": true,
+      "identity_score": 1.0,
+      "content_score": 0.6623,
+      "combined_score": 0.8481,
+      "qualifies": true
+    },
+    {
+      "left": "1706.03762v1_img.pdf",
+      "right": "1706.03762v7.pdf",
+      "expected": true,
+      "same_arxiv": false,
+      "identity_score": 1.0,
+      "content_score": 0.5148,
+      "combined_score": 0.7817,
+      "qualifies": false
+    },
+    {
+      "left": "209_Emergent_Abilities_of_Larg.pdf",
+      "right": "2206.07682v2.pdf",
+      "expected": true,
+      "same_arxiv": false,
+      "identity_score": 1.0,
+      "content_score": 0.9248,
+      "combined_score": 0.9662,
+      "qualifies": true
+    }
+  ],
+  "false_positives": [],
+  "false_negatives": [
+    {
+      "left": "1706.03762v1_img.pdf",
+      "right": "1706.03762v7.pdf",
+      "expected": true,
+      "same_arxiv": false,
+      "identity_score": 1.0,
+      "content_score": 0.5148,
+      "combined_score": 0.7817,
+      "qualifies": false
+    }
+  ],
+  "citation_occurrences": [
+    {
+      "filename": "1607.06450v1.pdf",
+      "page": 1,
+      "label": "author-year-1",
+      "source_phrase": "computer vision",
+      "expected": "background",
+      "observed": [
+        "background"
+      ],
+      "block_ids": [
+        "p1-b9"
+      ],
+      "passed": true
+    },
+    {
+      "filename": "1607.06450v1.pdf",
+      "page": 1,
+      "label": "author-year-2",
+      "source_phrase": "speech processing",
+      "expected": "background",
+      "observed": [
+        "background"
+      ],
+      "block_ids": [
+        "p1-b9"
+      ],
+      "passed": true
+    },
+    {
+      "filename": "1706.03762v1.pdf",
+      "page": 7,
+      "label": "18",
+      "source_phrase": "We used the Adam optimizer",
+      "expected": "method",
+      "observed": [
+        "method"
+      ],
+      "block_ids": [
+        "p7-b5"
+      ],
+      "passed": true
+    },
+    {
+      "filename": "1706.03762v1.pdf",
+      "page": 7,
+      "label": "30",
+      "source_phrase": "We apply dropout",
+      "expected": "method",
+      "observed": [
+        "method"
+      ],
+      "block_ids": [
+        "p7-b10"
+      ],
+      "passed": true
+    },
+    {
+      "filename": "1706.03762v1.pdf",
+      "page": 7,
+      "label": "32",
+      "source_phrase": "we employed label smoothing",
+      "expected": "method",
+      "observed": [
+        "method"
+      ],
+      "block_ids": [
+        "p7-b16"
+      ],
+      "passed": true
+    },
+    {
+      "filename": "2001.08361v1.pdf",
+      "page": 12,
+      "label": "SLA+18",
+      "source_phrase": "see also",
+      "expected": "incidental",
+      "observed": [
+        "incidental"
+      ],
+      "block_ids": [
+        "p12-b32"
+      ],
+      "passed": true
+    },
+    {
+      "filename": "2001.08361v1.pdf",
+      "page": 12,
+      "label": "ZLN+19",
+      "source_phrase": "see also",
+      "expected": "incidental",
+      "observed": [
+        "incidental"
+      ],
+      "block_ids": [
+        "p12-b32"
+      ],
+      "passed": true
+    },
+    {
+      "filename": "2001.08361v1.pdf",
+      "page": 12,
+      "label": "MKAT18",
+      "source_phrase": "was developed in",
+      "expected": "background",
+      "observed": [
+        "background"
+      ],
+      "block_ids": [
+        "p12-b32"
+      ],
+      "passed": true
+    }
+  ],
+  "roles_passed": 8,
+  "additional_pages": [
+    {
+      "filename": "2010.11929v2.pdf",
+      "page": 3,
+      "label": "author-year-47",
+      "source_phrase": "we follow the original Transformer",
+      "expected": "method",
+      "observed": [
+        "method"
+      ],
+      "block_ids": [
+        "p3-b27"
+      ],
+      "passed": true
+    },
+    {
+      "filename": "2010.11929v2.pdf",
+      "page": 5,
+      "label": "author-year-16",
+      "source_phrase": "For the baseline CNNs, we use ResNet",
+      "expected": "baseline",
+      "observed": [
+        "baseline"
+      ],
+      "block_ids": [
+        "p5-b7"
+      ],
+      "passed": true
+    },
+    {
+      "filename": "2205.14135v2.pdf",
+      "page": 7,
+      "label": "17",
+      "source_phrase": "we use the fixed butterfly sparsity pattern",
+      "expected": "method",
+      "observed": [
+        "method"
+      ],
+      "block_ids": [
+        "p7-b4"
+      ],
+      "passed": true
+    },
+    {
+      "filename": "2205.14135v2.pdf",
+      "page": 7,
+      "label": "16",
+      "source_phrase": "shown to be able to approximate arbitrary sparsity",
+      "expected": "background",
+      "observed": [
+        "method"
+      ],
+      "block_ids": [
+        "p7-b4"
+      ],
+      "passed": false
+    }
+  ],
+  "additional_passed": 3,
+  "subscription_feedback_probe": {
+    "backend": "in-memory SQLite, recorded titles, hash",
+    "b_before": {
+      "2106.09685": 0.5,
+      "2010.11929": 0.5
+    },
+    "b_after": {
+      "2106.09685": 0.9499,
+      "2010.11929": 0.4785
+    },
+    "b_feedback_all_neutral": true,
+    "b_scores_unaffected_by_a": false
+  },
+  "source_count": 39,
+  "pairs_sha256": "6b830ea610b41a24a1a74b67f0b6984410c9bb53791ad9ccbe258b8664f6161b",
+  "baseline_roles_passed": 0,
+  "regression": {
+    "tests": 1767,
+    "errors": 0,
+    "failures": 0,
+    "skipped": 0
+  },
+  "status": "partial"
+}

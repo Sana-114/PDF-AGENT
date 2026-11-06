@@ -72,6 +72,25 @@ def test_long_ocr_run_on_does_not_attribute_unrelated_use():
     assert values["ref-1"].role == "unknown"
 
 
+def test_grouped_reading_aside_does_not_change_primary_reference_role():
+    parsed = _parsed(
+        "We applied a method [A1] (see also [B+2, C3]). We never used [D4].",
+        labels=("A1", "B+2", "C3", "D4"),
+    )
+    values = citation_values(parsed)
+    assert values["ref-A1"].recommended
+    assert values["ref-B+2"].role == values["ref-C3"].role == "incidental"
+    assert values["ref-D4"].role == "unknown"
+
+
+def test_displayed_role_always_has_evidence_in_bounded_contexts():
+    parsed = _parsed("It was listed [1]. " * 6 + "A theory was developed in [1].")
+    result = citation_values(parsed)["ref-1"]
+    assert result.role == "background"
+    assert len(result.contexts) == 5 and result.mention_count == 7
+    assert result.contexts[0].role == result.role
+
+
 @pytest.mark.asyncio
 @pytest.mark.parametrize("mode,ids", [("recommended", ["ref-2"]), ("all", ["ref-1", "ref-2"])])
 async def test_endpoint_filters_before_search_and_explicit_ids_override(

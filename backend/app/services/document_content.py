@@ -7,8 +7,10 @@ from typing import Any
 from app.services.author_year_citations import author_year_mentions, bibliography_keys
 from app.services.storage import storage
 
+REFERENCE_KEY = r"[A-Za-z][A-Za-z0-9+._:-]{0,31}"
 CITATION_GROUP = re.compile(
-    r"\[(?:(\d{1,4}(?:\s*(?:,|;|[-–—])\s*\d{1,4})*)|([A-Za-z][A-Za-z0-9+._:-]{0,31}))\]"
+    rf"\[(?:(\d{{1,4}}(?:\s*(?:,|;|[-–—])\s*\d{{1,4}})*)|"
+    rf"({REFERENCE_KEY}(?:\s*[,;]\s*{REFERENCE_KEY})*))\]"
 )
 REFERENCE_RANGE = re.compile(r"^(\d{1,4})\s*[-–—]\s*(\d{1,4})$")
 
@@ -67,7 +69,10 @@ def reference_links(
                 continue
             text = str(block.get("text", ""))
             for match_index, match in enumerate(CITATION_GROUP.finditer(text), start=1):
-                labels = [match.group(2)] if match.group(2) else _citation_labels(match.group(1))
+                labels = (
+                    re.split(r"\s*[,;]\s*", match.group(2))
+                    if match.group(2) else _citation_labels(match.group(1))
+                )
                 for label in labels:
                     if label.startswith("author-year-"):
                         continue
