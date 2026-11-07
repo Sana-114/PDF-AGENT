@@ -15,6 +15,7 @@ import shutil
 from dataclasses import asdict
 from pathlib import Path
 from statistics import stdev
+from unittest.mock import patch
 
 from inspect_runtime_source import inspect_source
 from official_functional_inputs import TEMP_ROOT, digest, isolated_output, write_json
@@ -315,13 +316,15 @@ async def writing(args, root: Path) -> dict:
     if not args.allow_cloud:
         raise ValueError("Writing requires explicit --allow-cloud")
     import fitz
+    import httpx
 
-    from app.agent.harness import ResearchAgent
+    from app.agent import harness
     from app.core.database import SessionLocal, init_db
     from app.llm.factory import get_llm_provider
+    from app.main import app
     from app.models.document import Document, DocumentStatus
+    from app.schemas.writing import WritingOutlineRead
     from app.services.chunking import replace_document_chunks
-    from app.services.writing_outline import WritingOutlineService
 
     filenames = getattr(args, "writing_files", None) or [
         "2010.11929v2.pdf",
@@ -353,7 +356,6 @@ async def writing(args, root: Path) -> dict:
     provider._post_response = recorded
     native_front = {}
     with SessionLocal() as db:
-        documents = []
         for row in rows:
             doc_id = row["document_id"]
             source = args.fixture / "uploads" / (doc_id + ".pdf")
@@ -379,25 +381,26 @@ async def writing(args, root: Path) -> dict:
             db.add(document)
             db.flush()
             replace_document_chunks(db, doc_id, parsed)
-            documents.append(document)
             with fitz.open(source) as native:
                 native_front[doc_id] = " ".join(
                     (native[0].get_text() + native[1].get_text()).split()
                 ).casefold()
         db.commit()
-        result = await WritingOutlineService(
-            db, agent=ResearchAgent(db, provider=provider)
-        ).generate(
-            getattr(args, "writing_idea", None)
-            or (
-                "Investigate parameter-efficient adaptation of visual representations: "
-                "vision transformers, contrastive image-text pretraining, and low-rank adaptation. "
-                "No new experiments have been conducted."
-            ),
-            documents,
-            top_k=15,
-            language="en",
-        )
+    idea = getattr(args, "writing_idea", None) or (
+        "Investigate parameter-efficient adaptation of visual representations: "
+        "vision transformers, contrastive image-text pretraining, and low-rank adaptation. "
+        "No new experiments have been conducted."
+    )
+    with patch.object(harness, "get_llm_provider", return_value=provider):
+        async with httpx.AsyncClient(
+            transport=httpx.ASGITransport(app=app), base_url="http://acceptance.local"
+        ) as client:
+            response = await client.post("/api/v1/writing/outline", json={
+                "idea": idea, "document_ids": [row["document_id"] for row in rows],
+                "top_k": 15, "language": "en",
+            })
+            response.raise_for_status()
+            result = WritingOutlineRead.model_validate(response.json())
     write_json(root / "writing-outline.json", result.model_dump(mode="json"))
     evidence_ids = {x.evidence_id for x in result.evidence}
     claimed_ids = {x for claim in result.claims for x in claim.evidence_ids}
@@ -420,8 +423,11 @@ async def writing(args, root: Path) -> dict:
         reference_checks.append(
             {"citation_key": ref.citation_key, "document_id": ref.document_id, "checks": checks}
         )
+    main_calls = sum(c["request"].get("instructions", "").startswith(
+        "You are an evidence-grounded research assistant."
+    ) for c in calls)
     checks = {
-        "real_generation": result.provider == "deepseek" and len(calls) == 1,
+        "real_generation": result.provider == "deepseek" and main_calls == 1,
         "all_selected_papers_claimed": len(coverage) == len(rows),
         "grounded_claims": bool(result.claims)
         and all(c.evidence_ids and set(c.evidence_ids) <= evidence_ids for c in result.claims),
@@ -439,6 +445,8 @@ async def writing(args, root: Path) -> dict:
         "checks": checks,
         "references": reference_checks,
         "cloud_calls": len(calls),
+        "main_generation_calls": main_calls,
+        "additional_calls": len(calls) - main_calls,
         "automatic_retries": 0,
         "claims": len(result.claims),
         "evidence": len(result.evidence),
@@ -483,7 +491,6 @@ if __name__ == "__main__":
     parser.add_argument(
         "--writing-files",
         nargs="+",
-        choices=["2010.11929v2.pdf", "2103.00020v1.pdf", "2106.09685v2.pdf"],
-        help="Select only previously audited public writing sources; defaults to all three",
+        help="Select SHA-verified papers from the isolated official fixture",
     )
     raise SystemExit(asyncio.run(run(parser.parse_args())))

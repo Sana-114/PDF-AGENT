@@ -347,6 +347,18 @@ def test_related_work_never_republishes_withheld_or_uncertified_quote():
     assert "Unqualified experimental claim" not in related.content_markdown
     assert related.evidence_ids == []
 
+    second = reference.model_copy(update={"citation_key": "P2", "document_id": "other",
+                                          "title": "Other source", "evidence_ids": ["E2"]})
+    other = evidence[0].model_copy(update={"evidence_id": "E2", "document_id": "other"})
+    joint = AnswerClaim(text="Both works support this comparison.", evidence_ids=["E1", "E2"])
+    single = AnswerClaim(text="Only the first work supports this fact.", evidence_ids=["E1"])
+    related = _section_content("Study", [reference, second], [*evidence, other],
+                               [joint, single], "en")[2]
+    assert related.content_markdown.count(joint.text) == 1
+    assert related.content_markdown.count(single.text) == 1
+    assert "[P1] A real source / [P2] Other source" in related.content_markdown
+    assert set(related.evidence_ids) == {"E1", "E2"}
+
 
 def test_all_withheld_claims_mark_entire_outline_insufficient():
     engine = create_engine("sqlite://")

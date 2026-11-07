@@ -254,9 +254,6 @@ def _section_content(
     claims,
     language: str,
 ) -> list[WritingSectionRead]:
-    evidence_by_document: dict[str, list[EvidenceAnchor]] = defaultdict(list)
-    for item in evidence:
-        evidence_by_document[item.document_id].append(item)
     supported_claims = [f"- {item.text} [{' '.join(item.evidence_ids)}]" for item in claims[:6]]
     if language == "en":
         abstract_lines = [
@@ -287,9 +284,20 @@ def _section_content(
         titles = ("摘要", "引言", related_title)
     related_lines: list[str] = []
     related_evidence_ids: list[str] = []
-    for reference in references:
-        anchor_ids = {item.evidence_id for item in evidence_by_document[reference.document_id]}
-        items = [claim for claim in claims if anchor_ids.intersection(claim.evidence_ids)][:2]
+    evidence_documents = {item.evidence_id: item.document_id for item in evidence}
+    grouped_claims: dict[tuple[str, ...], list[AnswerClaim]] = {}
+    for claim in claims:
+        documents = {evidence_documents[key] for key in claim.evidence_ids
+                     if key in evidence_documents}
+        keys = tuple(ref.citation_key for ref in references if ref.document_id in documents)
+        if keys:
+            grouped_claims.setdefault(keys, []).append(claim)
+    covered = {key for keys in grouped_claims for key in keys}
+    for ref in references:
+        if ref.citation_key not in covered:
+            grouped_claims[(ref.citation_key,)] = []
+    by_key = {ref.citation_key: ref for ref in references}
+    for keys, items in grouped_claims.items():
         related_evidence_ids.extend(key for claim in items for key in claim.evidence_ids)
         snippets = " ".join(f"{claim.text} [{' '.join(claim.evidence_ids)}]" for claim in items)
         if not snippets:
@@ -298,7 +306,9 @@ def _section_content(
                 if language == "zh"
                 else "No reviewed related-work claim is available; inspect the original evidence."
             )
-        related_lines.append(f"- **[{reference.citation_key}] {reference.title}**：{snippets}")
+        heading = " / ".join(f"[{key}] {by_key[key].title}" for key in keys)
+        separator = ": " if language == "en" else "："
+        related_lines.append(f"- **{heading}**{separator}{snippets}")
     if not related_lines:
         related_lines.append(
             "- 当前文献库没有检索到可引用证据，请先补充相关论文。"

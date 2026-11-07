@@ -1,0 +1,73 @@
+{
+  "adaptation": {
+    "claims": 3,
+    "references": 2,
+    "source_checks": [
+      {
+        "evidence": "E5",
+        "page": 1,
+        "exact_normalized_source": true
+      },
+      {
+        "evidence": "E8",
+        "page": 1,
+        "exact_normalized_source": true
+      }
+    ],
+    "calls": 1,
+    "unique_related_claims": true,
+    "sections": [
+      "abstract",
+      "introduction",
+      "related_work"
+    ]
+  },
+  "vision": {
+    "claims": 3,
+    "references": 2,
+    "source_checks": [
+      {
+        "evidence": "E1",
+        "page": 1,
+        "exact_normalized_source": true
+      },
+      {
+        "evidence": "E2",
+        "page": 1,
+        "exact_normalized_source": true
+      },
+      {
+        "evidence": "E3",
+        "page": 5,
+        "exact_normalized_source": true
+      },
+      {
+        "evidence": "E4",
+        "page": 11,
+        "exact_normalized_source": true
+      },
+      {
+        "evidence": "E11",
+        "page": 6,
+        "exact_normalized_source": true
+      },
+      {
+        "evidence": "E18",
+        "page": 4,
+        "exact_normalized_source": true
+      },
+      {
+        "evidence": "E23",
+        "page": 7,
+        "exact_normalized_source": true
+      }
+    ],
+    "calls": 2,
+    "unique_related_claims": true,
+    "sections": [
+      "abstract",
+      "introduction",
+      "related_work"
+    ]
+  }
+}
