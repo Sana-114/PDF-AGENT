@@ -248,23 +248,25 @@ def _reference_records(
 
 
 def _section_content(
-    idea: str,
     references: Sequence[VerifiedReferenceRead],
     evidence: Sequence[EvidenceAnchor],
     claims,
     language: str,
+    *,
+    topic: str | None = None,
 ) -> list[WritingSectionRead]:
     supported_claims = [f"- {item.text} [{' '.join(item.evidence_ids)}]" for item in claims[:6]]
     if language == "en":
         abstract_lines = [
-            f"This proposed study investigates: {idea}",
+            f"Proposed research topic: {topic}." if topic else "Research topic: to be specified.",
             *[
                 f"Evidence basis: {item.text} [{' '.join(item.evidence_ids)}]"
                 for item in claims[:2]
             ],
         ]
         introduction_lines = [
-            f"- Define the research problem and scope around **{idea}**.",
+            (f"- Research scope: **{topic}**." if topic
+             else "- Define the research topic and scope."),
             "- Identify the evidence-supported gap and formulate testable research questions.",
             *supported_claims,
         ]
@@ -272,11 +274,11 @@ def _section_content(
         titles = ("Abstract", "Introduction", related_title)
     else:
         abstract_lines = [
-            f"本研究拟围绕“{idea}”展开。",
+            f"拟研究主题：{topic}。" if topic else "研究主题待明确。",
             *[f"证据基础：{item.text} [{' '.join(item.evidence_ids)}]" for item in claims[:2]],
         ]
         introduction_lines = [
-            f"- 界定“{idea}”对应的研究问题与适用范围。",
+            f"- 研究范围：**{topic}**。" if topic else "- 明确研究主题及适用范围。",
             "- 基于已有证据定位研究缺口，并形成可检验的研究问题。",
             *supported_claims,
         ]
@@ -382,10 +384,13 @@ class WritingOutlineService:
         *,
         top_k: int = 12,
         language: str = "zh",
+        topic: str | None = None,
     ) -> WritingOutlineRead:
         fact_budget = min(6, max(1, 2 * len(documents)))
+        research_brief = f"{topic}\n{idea}" if topic else idea
         question = (
-            f"围绕以下研究 idea 提取可用于论文框架的已有事实、研究缺口和相关工作：{idea}。"
+            "围绕以下研究 idea 提取可用于论文框架的已有事实、研究缺口和相关工作："
+            f"{research_brief}。"
             "请使用中文，只依据证据，不要生成或猜测参考文献。"
             "分别提取每篇所选论文相关的架构或方法事实，不把参考文献条目当作本文贡献。"
             "每篇选择一至两条直接相关事实；需要比较时引用各自来源。不要以证据编号开头，"
@@ -393,6 +398,9 @@ class WritingOutlineService:
             "将研究作者比较多个方法写成研究比较，不将被比较方法写成比较它自身的主语。"
             "涉及性能时明确下游任务、微调目标及比较对象；完整保留可能、可以、仅在等限定。"
             "还须保留评估方式，不能混用少样本线性评估与完整微调。"
+            "比较方法先说明共同机制，再说明新增差异，不将共同机制写成互斥选择。"
+            "每条比较或优势结论须在该句注明原文支持的评估数据集、训练设置和比较范围；"
+            "条件不全时改选方法事实，不补猜条件，也不省略条件发布性能结论。"
             "不要仅因检索到就加入未要求的实验、额外模型或旁支数值。"
             "引用必须指向实际陈述该事实的摘录，不能仅因摘录来自同篇论文或同一页就引用。"
             "不复制长段原文，不将摘录缺失当作创新性证明。保留初始尝试、调参及适用范围，"
@@ -401,7 +409,8 @@ class WritingOutlineService:
             "引用带有续页context_for的未完结来源时，在该条陈述内也列出对应续页引用。"
             if language == "zh"
             else "Extract evidence-supported facts, research gaps and related work for this "
-            f"writing idea: {idea}. Respond in English and use only the supplied evidence. "
+            f"writing idea: {research_brief}. "
+            "Respond in English and use only the supplied evidence. "
             "Do not generate or guess references. Extract relevant architecture or method "
             "facts from each selected paper separately, without attributing bibliography "
             "entries to that paper's contributions."
@@ -415,6 +424,11 @@ class WritingOutlineService:
             " model variants or incidental numbers merely because evidence mentions them."
             " Preserve modal qualifiers (can, may, under these conditions); do not turn a"
             " conditional result into an unconditional guarantee."
+            " For method comparisons state shared mechanisms before added differences;"
+            " do not present a shared mechanism as mutually exclusive alternatives."
+            " Each comparative performance claim must name its supported evaluation dataset,"
+            " training settings and comparison scope in that sentence. If conditions are"
+            " unavailable, select a method fact instead of guessing or dropping conditions."
             " Each citation must point to the excerpt stating that fact, not merely the same paper"
             " or page. A methodological overview may use the anchored abstract; it cannot prove"
             " unreported experiments or novelty."
@@ -430,7 +444,7 @@ class WritingOutlineService:
         request = AskRequest(
             question=question,
             document_ids=[item.id for item in documents],
-            retrieval_query=idea,
+            retrieval_query=research_brief,
             top_k=top_k,
         )
         grounded = await self.agent.ask(
@@ -481,14 +495,16 @@ class WritingOutlineService:
         claims, deferred = _compact_claims(claims, grounded.evidence, documents, fact_budget)
         references = _reference_records(self.session, grounded.evidence)
         sections = _section_content(
-            idea,
             references,
             grounded.evidence,
             claims,
             language,
+            topic=topic,
         )
-        proposed_title = idea[:120]
+        proposed_title = topic or ("Research outline" if language == "en" else "研究框架")
         warnings: list[str] = []
+        if not topic:
+            warnings.append("尚未填写研究主题，标题与研究范围保留待补；写作要求不写入正文。")
         audit = grounded.grounding_audit
         input_count = audit.input_claim_count if audit else len(grounded.claims)
         if input_count > fact_budget:
@@ -581,6 +597,7 @@ class WritingOutlineService:
         return WritingOutlineRead(
             proposed_title=proposed_title,
             idea=idea,
+            topic=topic,
             sections=sections,
             references=references,
             claims=claims,

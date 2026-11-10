@@ -83,6 +83,47 @@ class _FakeAgent:
 
 
 @pytest.mark.parametrize("language", ["en", "zh"])
+@pytest.mark.parametrize("topic", [None, "Memory-efficient model adaptation"])
+def test_writing_instructions_do_not_become_paper_prose(language, topic):
+    from app.schemas.writing import WritingOutlineRequest
+
+    instruction = "Compare these methods; do not invent experiments or references."
+    document = _document("topic", "Grounded methods")
+
+    class CapturingAgent(_FakeAgent):
+        async def ask(self, request, **kwargs):
+            assert instruction in request.question
+            assert instruction in request.retrieval_query
+            if topic:
+                assert topic in request.question
+                assert topic in request.retrieval_query
+            return await super().ask(request, **kwargs)
+
+    engine = create_engine("sqlite://")
+    Base.metadata.create_all(engine)
+    with Session(engine) as session:
+        session.add(document)
+        session.commit()
+        result = asyncio.run(WritingOutlineService(
+            session, agent=CapturingAgent(_answer(document)),
+        ).generate(instruction, [document], language=language, topic=topic))
+    assert result.idea == instruction
+    assert result.topic == topic
+    assert instruction not in result.proposed_title
+    assert all(instruction not in section.content_markdown for section in result.sections)
+    if topic:
+        assert result.proposed_title == topic
+        assert topic in result.sections[0].content_markdown
+    else:
+        assert any("尚未填写研究主题" in warning for warning in result.warnings)
+    # Whitespace is normalized before length checks, including legacy API inputs.
+    with pytest.raises(ValueError):
+        WritingOutlineRequest(idea=" " * 10, document_ids=["topic"])
+    with pytest.raises(ValueError):
+        WritingOutlineRequest(idea=instruction, topic="  ", document_ids=["topic"])
+
+
+@pytest.mark.parametrize("language", ["en", "zh"])
 def test_writing_prompt_preserves_comparison_subject_scope_and_modal_qualifiers(language):
     document = _document("cited", "Grounded methods")
 
@@ -341,7 +382,7 @@ def test_related_work_never_republishes_withheld_or_uncertified_quote():
             score=1,
         )
     ]
-    sections = _section_content("Proposed study", [reference], evidence, [], "en")
+    sections = _section_content([reference], evidence, [], "en")
     related = sections[2]
     assert "No reviewed related-work claim" in related.content_markdown
     assert "Unqualified experimental claim" not in related.content_markdown
@@ -352,7 +393,7 @@ def test_related_work_never_republishes_withheld_or_uncertified_quote():
     other = evidence[0].model_copy(update={"evidence_id": "E2", "document_id": "other"})
     joint = AnswerClaim(text="Both works support this comparison.", evidence_ids=["E1", "E2"])
     single = AnswerClaim(text="Only the first work supports this fact.", evidence_ids=["E1"])
-    related = _section_content("Study", [reference, second], [*evidence, other],
+    related = _section_content([reference, second], [*evidence, other],
                                [joint, single], "en")[2]
     assert related.content_markdown.count(joint.text) == 1
     assert related.content_markdown.count(single.text) == 1

@@ -12,6 +12,7 @@ interface WritingWorkbenchProps {
 
 export default function WritingWorkbench({ outline, onOpenEvidence }: WritingWorkbenchProps) {
   const [copied, setCopied] = useState(false);
+  const [copyError, setCopyError] = useState("");
   const evidenceById = useMemo(
     () => new Map(outline.evidence.map((item) => [item.evidence_id, item])),
     [outline.evidence],
@@ -19,9 +20,14 @@ export default function WritingWorkbench({ outline, onOpenEvidence }: WritingWor
   const markdown = useMemo(() => writingMarkdown(outline), [outline]);
 
   async function copyMarkdown() {
-    await navigator.clipboard.writeText(markdown);
-    setCopied(true);
-    window.setTimeout(() => setCopied(false), 1600);
+    setCopyError("");
+    try {
+      await navigator.clipboard.writeText(markdown);
+      setCopied(true);
+      window.setTimeout(() => setCopied(false), 1600);
+    } catch {
+      setCopyError("未能访问剪贴板，请允许浏览器复制，或手动选取正文。");
+    }
   }
 
   function evidenceButton(evidenceId: string) {
@@ -50,6 +56,7 @@ export default function WritingWorkbench({ outline, onOpenEvidence }: WritingWor
           {copied ? "已复制" : "复制框架 Markdown"}
         </button>
       </div>
+      {copyError && <p role="alert">{copyError}</p>}
       <div className="writing-grid">
         <article className="writing-draft">
           <h2>{outline.proposed_title}</h2>

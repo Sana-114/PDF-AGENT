@@ -184,6 +184,7 @@ export default function Home() {
   const [generatingResearchReview, setGeneratingResearchReview] = useState(false);
   const [extractiveReview, setExtractiveReview] = useState(false);
   const [writingIdea, setWritingIdea] = useState("");
+  const [writingTopic, setWritingTopic] = useState("");
   const [writingLanguage, setWritingLanguage] = useState<"zh" | "en">("zh");
   const [writingOutline, setWritingOutline] = useState<WritingOutlineResponse | null>(null);
   const [generatingWritingOutline, setGeneratingWritingOutline] = useState(false);
@@ -536,7 +537,7 @@ export default function Home() {
   async function generateOutline(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
     const idea = writingIdea.trim();
-    if (!idea) return;
+    if (idea.length < 8 || writingTopic.trim().length < 2) return;
     const readyDocumentIds = selectedReadyDocumentIds(documents, writingDocumentIds);
     if (!readyDocumentIds.length) {
       setError("请选择至少一篇与 idea 相关的已解析论文。");
@@ -547,6 +548,7 @@ export default function Home() {
     try {
       setWritingOutline(await generateWritingOutline({
         idea,
+        topic: writingTopic.trim(),
         documentIds: readyDocumentIds,
         language: writingLanguage,
       }));
@@ -1103,11 +1105,25 @@ export default function Home() {
           <form className="writing-idea-form" onSubmit={generateOutline}>
             <DocumentScopePicker documents={documents} selectedIds={writingDocumentIds}
               onChange={setWritingDocumentIds} label="写作文献范围" />
+            <label className="writing-topic-field">
+              研究主题
+              <input
+                onChange={(event) => setWritingTopic(event.target.value)}
+                placeholder="例如：低显存条件下的语言模型适配"
+                maxLength={160}
+                minLength={2}
+                required
+                value={writingTopic}
+              />
+            </label>
             <label>
-              研究 idea
+              写作要求
               <textarea
                 onChange={(event) => setWritingIdea(event.target.value)}
-                placeholder="例如：结合版式感知检索与引用约束，降低科研 PDF 问答中的事实幻觉"
+                placeholder="例如：比较两种方法的共同机制和差异，注明内存数据的实验条件。尚未开展新实验。"
+                maxLength={3000}
+                minLength={8}
+                required
                 rows={3}
                 value={writingIdea}
               />
@@ -1123,7 +1139,7 @@ export default function Home() {
               </select>
             </label>
             <button
-              disabled={generatingWritingOutline || writingIdea.trim().length < 8 || !selectedReadyDocumentIds(documents, writingDocumentIds).length}
+              disabled={generatingWritingOutline || writingIdea.trim().length < 8 || writingTopic.trim().length < 2 || !selectedReadyDocumentIds(documents, writingDocumentIds).length}
               type="submit"
             >
               {generatingWritingOutline ? "正在检索证据…" : "整理论文框架"}

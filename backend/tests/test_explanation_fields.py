@@ -61,6 +61,19 @@ def test_slots_are_question_derived_not_a_method_answer_bank():
     assert requested_explanation_fields("比较 Alpha 与 Alpha：如何处理输入？", evidence()) == {}
 
 
+def test_comparison_subjects_survive_writing_preface_and_line_break():
+    from app.llm.explanation_fields import explanation_fields_schema
+
+    fields = requested_explanation_fields(
+        "Extract facts for this writing idea: Research topic\n"
+        "Compare Alpha and Beta using their common mechanism and differences.", evidence(),
+    )
+    schema = explanation_fields_schema(fields, compose_comparison=True)
+    units = schema["properties"]["comparison"]["properties"]["source_statements"]
+    subjects = units["items"]["properties"]["subject"]["enum"]
+    assert subjects == ["Alpha", "Beta"]
+
+
 def test_comparison_focus_keeps_user_workflow_instead_of_only_subject_names():
     question = "比较 Alpha 与 Beta 的偏好学习流程：闭式结果是什么对象？"
     fields = requested_explanation_fields(question, evidence())

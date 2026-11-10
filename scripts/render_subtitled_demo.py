@@ -45,6 +45,7 @@ def main():
     parser.add_argument('--label', default='review-v1')
     parser.add_argument('--root', type=Path, default=ROOT)
     parser.add_argument('--date', default='2026-10-26')
+    parser.add_argument('--caption-label', default='本地演示')
     args = parser.parse_args()
     assert args.label.replace('-', '').isalnum()
     assert re.fullmatch(r'\d{4}-\d{2}-\d{2}', args.date)
@@ -78,7 +79,7 @@ Style: Chapter,Microsoft YaHei,22,&H00C3D5CA,&H00FFFFFF,&H00101010,&H00101010,0,
 [Events]
 Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text
 '''
-        ass += f"Dialogue: 0,0:00:00.00,{timestamp(duration)},Chapter,,0,0,0,,{scene['title']} · 本地审阅版\n"
+        ass += f"Dialogue: 0,0:00:00.00,{timestamp(duration)},Chapter,,0,0,0,,{scene['title']} · {args.caption_label}\n"
         for c in scene['captions']:
             text = c['text']
             wrapped = wrap_caption(text)
@@ -90,7 +91,7 @@ Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text
         filters = ("tpad=stop_mode=clone:stop_duration=600,"
                    f"pad=1920:1080:0:0:color=0x101510,setsar=1,ass={args.label}/{scene['id']}.ass")
         run(['-ss',str(start),'-i',report['video'],'-i',scene['audio'],
-             '-vf',filters,'-af',f"atempo={scene.get('audio_speed',1)},apad",'-t',str(duration),
+             '-vf',filters,'-af',f"atempo={scene.get('audio_speed',1)},loudnorm=I=-18:TP=-1.5:LRA=9,apad",'-t',str(duration),
              '-r','25','-c:v','libx264','-preset','veryfast','-crf','20','-pix_fmt','yuv420p',
              '-c:a','aac','-b:a','160k','-movflags','+faststart',str(encoded)], output/(scene['id']+'.log'))
         segments.append(encoded)

@@ -38,7 +38,6 @@ import {
 import { linkifyNumericCitations, linkifyPageCitations } from "../lib/referenceMarkup";
 import {
   inferTranslationTarget,
-  mapSynchronizedScroll,
   MAX_TRANSLATION_CHARS,
 } from "../lib/translation";
 import DocumentPeoplePanel from "./DocumentPeoplePanel";
@@ -215,6 +214,11 @@ export default function PdfReader({
   const [translationError, setTranslationError] = useState<string | null>(null);
   const [bilingualOpen, setBilingualOpen] = useState(false);
   const [synchronizedScroll, setSynchronizedScroll] = useState(true);
+  const [activeTranslationBlock, setActiveTranslationBlock] = useState<string | null>(null);
+  const [translationFontSize, setTranslationFontSize] = useState(16);
+  const [viewportWidth, setViewportWidth] = useState(0);
+  const scrollLockRef = useRef(false);
+  const sourceColumnRef = useRef<number | null>(null);
   const [bilingualTarget, setBilingualTarget] = useState<"zh" | "en">("zh");
   const [pageTranslation, setPageTranslation] = useState<DocumentPageTranslation | null>(null);
   const [pageTranslationLoading, setPageTranslationLoading] = useState(false);
@@ -462,40 +466,73 @@ export default function PdfReader({
   ]);
 
   useEffect(() => {
+    const viewport = viewportRef.current;
+    if (!viewport) return;
+    const measure = () => setViewportWidth(viewport.clientWidth);
+    const observer = new ResizeObserver(measure);
+    observer.observe(viewport);
+    const settled = window.setTimeout(measure, 300);
+    return () => { observer.disconnect(); window.clearTimeout(settled); };
+  }, [bilingualOpen, outlineOpen]);
+
+  useEffect(() => {
+    setActiveTranslationBlock(null);
+    sourceColumnRef.current = null;
+  }, [pageNumber, bilingualTarget]);
+
+  function focusTranslation(blockId: string, origin: "pdf" | "translation", manual = false) {
+    const segment = pageTranslation?.segments.find(item => item.block_id === blockId);
     const source = viewportRef.current;
     const target = bilingualRef.current;
-    if (!bilingualOpen || !synchronizedScroll || !source || !target) return;
-    let locked = false;
-    let animationFrame = 0;
-
-    function synchronize(from: HTMLElement, to: HTMLElement) {
-      if (locked) return;
-      const targetTop = mapSynchronizedScroll(
-        from.scrollTop,
-        from.scrollHeight,
-        from.clientHeight,
-        to.scrollHeight,
-        to.clientHeight,
-      );
-      if (targetTop === null) return;
-      locked = true;
-      to.scrollTop = targetTop;
-      window.cancelAnimationFrame(animationFrame);
-      animationFrame = window.requestAnimationFrame(() => {
-        locked = false;
-      });
+    const shell = pageShellRef.current;
+    if (!segment || !source || !target || !shell || !pageSize) return;
+    setActiveTranslationBlock(blockId);
+    scrollLockRef.current = true;
+    if (origin === "translation" && segment.bbox) {
+      sourceColumnRef.current = segment.bbox[0];
+      const rect = shell.getBoundingClientRect();
+      const viewport = source.getBoundingClientRect();
+      source.scrollTop += rect.top - viewport.top + segment.bbox[1] / pageSize.height * rect.height - 60;
+      source.scrollLeft += rect.left - viewport.left + segment.bbox[0] / pageSize.width * rect.width - 24;
     }
+    if (origin === "pdf" || manual) {
+      const article = Array.from(target.querySelectorAll<HTMLElement>("[data-block-id]"))
+        .find(item => item.dataset.blockId === blockId);
+      if (article) target.scrollTop += article.getBoundingClientRect().top
+        - target.getBoundingClientRect().top - 110;
+    }
+    requestAnimationFrame(() => requestAnimationFrame(() => { scrollLockRef.current = false; }));
+  }
 
-    const fromPdf = () => synchronize(source, target);
-    const fromTranslation = () => synchronize(target, source);
+  useEffect(() => {
+    const source = viewportRef.current;
+    const target = bilingualRef.current;
+    if (!bilingualOpen || !synchronizedScroll || !source || !target || !pageSize) return;
+    const fromPdf = () => {
+      if (scrollLockRef.current || !pageShellRef.current) return;
+      const rect = pageShellRef.current.getBoundingClientRect();
+      const y = (source.getBoundingClientRect().top + 60 - rect.top) / rect.height * pageSize.height;
+      const candidates = pageTranslation?.segments.filter(item => item.bbox
+        && (sourceColumnRef.current === null || Math.abs(item.bbox[0] - sourceColumnRef.current) < pageSize.width * .25)) ?? [];
+      const nearest = candidates.reduce<typeof candidates[number] | null>((best, item) =>
+        !best || Math.abs(item.bbox![1] - y) < Math.abs(best.bbox![1] - y) ? item : best, null);
+      if (nearest) focusTranslation(nearest.block_id, "pdf");
+    };
+    const fromTranslation = () => {
+      if (scrollLockRef.current) return;
+      const top = target.getBoundingClientRect().top + 110;
+      const articles = Array.from(target.querySelectorAll<HTMLElement>("[data-block-id]"));
+      const nearest = articles.reduce<HTMLElement | null>((best, item) =>
+        !best || Math.abs(item.getBoundingClientRect().top - top) < Math.abs(best.getBoundingClientRect().top - top) ? item : best, null);
+      if (nearest?.dataset.blockId) focusTranslation(nearest.dataset.blockId, "translation");
+    };
     source.addEventListener("scroll", fromPdf, { passive: true });
     target.addEventListener("scroll", fromTranslation, { passive: true });
     return () => {
-      window.cancelAnimationFrame(animationFrame);
       source.removeEventListener("scroll", fromPdf);
       target.removeEventListener("scroll", fromTranslation);
     };
-  }, [bilingualOpen, pageTranslation, synchronizedScroll]);
+  }, [bilingualOpen, pageTranslation, synchronizedScroll, pageSize]);
 
   function goToPage(target: number) {
     const roundedTarget = Math.max(1, Math.round(target));
@@ -569,7 +606,20 @@ export default function PdfReader({
         .map(element => element.closest<HTMLElement>("[data-reference-label]"))
         .find(element => element && pageShellRef.current?.contains(element));
     const label = marker?.dataset.referenceLabel;
-    if (!label) return;
+    if (!label) {
+      const rect = pageShellRef.current?.getBoundingClientRect();
+      if (bilingualOpen && rect && pageSize && !window.getSelection()?.toString()) {
+        const x = (event.clientX - rect.left) / rect.width * pageSize.width;
+        const y = (event.clientY - rect.top) / rect.height * pageSize.height;
+        const segment = pageTranslation?.segments.find(item => item.bbox
+          && x >= item.bbox[0] && x <= item.bbox[2] && y >= item.bbox[1] && y <= item.bbox[3]);
+        if (segment) {
+          sourceColumnRef.current = segment.bbox![0];
+          focusTranslation(segment.block_id, "pdf");
+        }
+      }
+      return;
+    }
     const reference = references.find((item) => item.label === label);
     if (!reference) return;
     event.preventDefault();
@@ -653,6 +703,7 @@ export default function PdfReader({
   }
 
   function toggleBilingualReader() {
+    if (!bilingualOpen) { setOutlineOpen(false); setScale(1); }
     setBilingualOpen((current) => !current);
   }
 
@@ -886,8 +937,14 @@ export default function PdfReader({
                   pageNumber={pageNumber}
                   renderAnnotationLayer
                   renderTextLayer
+                  width={bilingualOpen && viewportWidth ? Math.max(240, viewportWidth - 48) : undefined}
                   scale={scale}
                 />
+                {bilingualOpen && pageSize && pageTranslation?.segments.filter(item => item.block_id === activeTranslationBlock && item.bbox).map(item => {
+                  const rect = bboxToPercentRect(item.bbox, pageSize.width, pageSize.height);
+                  return rect && <div key={item.block_id} className="pdf-translation-highlight" aria-label="当前译文对应原文"
+                    style={{ left: `${rect.left}%`, top: `${rect.top}%`, width: `${rect.width}%`, height: `${rect.height}%` }} />;
+                })}
                 {highlightRect && (
                   <div
                     aria-label={`${activePageTarget?.kind === "people" ? "署名与贡献" : activePageTarget?.kind === "evidence" ? "证据" : "引用"} ${activePageTarget?.label} 的原文位置`}
@@ -950,6 +1007,12 @@ export default function PdfReader({
                 <button aria-label="关闭双语对照" onClick={() => setBilingualOpen(false)} type="button">×</button>
               </div>
             </header>
+            <div className="pdf-reading-preferences">
+              <label>译文字号 <select aria-label="译文字号" value={translationFontSize} onChange={event => setTranslationFontSize(Number(event.target.value))}>
+                {[14, 16, 18, 20].map(size => <option key={size} value={size}>{size}</option>)}
+              </select></label>
+              <span>点击段落可核对原文</span>
+            </div>
             {translationJob && (
               <div className={`pdf-translation-job ${translationJob.status}`}>
                 <div>
@@ -986,10 +1049,11 @@ export default function PdfReader({
               <div className="pdf-bilingual-state error">{pageTranslationError}</div>
             )}
             {pageTranslation && (
-              <div className="pdf-bilingual-segments">
+              <div className="pdf-bilingual-segments" style={{ fontSize: translationFontSize }}>
                 {pageTranslation.segments.map((segment, index) => (
-                  <article data-block-id={segment.block_id} key={segment.block_id}>
-                    <small>{String(index + 1).padStart(2, "0")} · {segment.block_id}</small>
+                  <article data-block-id={segment.block_id} key={segment.block_id} className={activeTranslationBlock === segment.block_id ? "active" : ""}>
+                    <button type="button" className="pdf-locate-translation" disabled={!segment.bbox}
+                      onClick={() => focusTranslation(segment.block_id, "translation", true)}>段落 {index + 1} · {segment.bbox ? "定位原文" : "暂无坐标"}</button>
                     <p>{segment.translation}</p>
                     <details>
                       <summary>查看原文</summary>

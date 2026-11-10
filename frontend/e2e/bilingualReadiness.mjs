@@ -57,10 +57,10 @@ const scrollState = () => page.evaluate(() => {
 });
 async function waitForScrollPair() {
   await page.waitForFunction(() => {
-    const a = document.querySelector(".pdf-reader-viewport");
-    const b = document.querySelector(".pdf-bilingual-pane");
-    const ar = a.scrollHeight - a.clientHeight, br = b.scrollHeight - b.clientHeight;
-    return ar > 50 && br > 50 && Math.abs(a.scrollTop / ar - b.scrollTop / br) < .025;
+    const a = document.querySelector(".pdf-reader-viewport").getBoundingClientRect();
+    const mark = document.querySelector(".pdf-translation-highlight")?.getBoundingClientRect();
+    return !!document.querySelector(".pdf-bilingual-segments article.active")
+      && mark && mark.bottom > a.top && mark.top < a.bottom;
   });
   return scrollState();
 }
@@ -115,7 +115,7 @@ try {
   pageCase.status = "passed";
   await persist();
 
-  // Test real wheel events in both directions, not only mapSynchronizedScroll math.
+  // Check source anchors after actual wheel events, not equal scroll percentages.
   for (let i = 0; i < 2; i++) await reader.getByRole("button", { name: "放大", exact: true }).click();
   await waitForPaintedPdfPage(reader, 1);
   await page.waitForFunction(() => [".pdf-reader-viewport", ".pdf-bilingual-pane"].every((selector) => {

@@ -28,6 +28,10 @@ def requested_explanation_fields(question: str, evidence: list[EvidenceAnchor]) 
     # Keep the user's actual comparison focus (e.g. learning workflow), not
     # only the two names. This is query text, never an expected-answer fact.
     intro = re.split(r"[：:？?。；;\n]", current, maxsplit=1)[0].strip()
+    # Drafting instructions may put the actual pair after a colon or newline.
+    # Preserve the already parsed subjects in the slot used by schema/validation.
+    if len(requested_comparison_pair(intro)) != 2:
+        intro = f"Compare {pair[0]} and {pair[1]}: {intro}"
     fields = {"comparison": intro + "；对照两篇原文在该机制上的共同点或差异"}
     facets = requested_mechanisms(current)
     questions = []

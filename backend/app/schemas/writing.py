@@ -7,14 +7,15 @@ from app.schemas.agent import AnswerClaim, EvidenceAnchor, GroundingAudit
 
 class WritingOutlineRequest(BaseModel):
     idea: str = Field(min_length=8, max_length=3000)
+    topic: str | None = Field(default=None, min_length=2, max_length=160)
     document_ids: list[str] = Field(min_length=1, max_length=100)
     top_k: int = Field(default=12, ge=4, le=20)
     language: Literal["zh", "en"] = "zh"
 
-    @field_validator("idea")
+    @field_validator("idea", "topic", mode="before")
     @classmethod
-    def clean_idea(cls, value: str) -> str:
-        return " ".join(value.split())
+    def clean_idea(cls, value):
+        return " ".join(value.split()) if isinstance(value, str) else value
 
     @field_validator("document_ids")
     @classmethod
@@ -49,6 +50,7 @@ class VerifiedReferenceRead(BaseModel):
 class WritingOutlineRead(BaseModel):
     proposed_title: str
     idea: str
+    topic: str | None = None
     sections: list[WritingSectionRead]
     references: list[VerifiedReferenceRead]
     claims: list[AnswerClaim]

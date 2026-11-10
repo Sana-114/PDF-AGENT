@@ -165,7 +165,8 @@ try {
   await page.getByLabel("工作区导航").getByRole("button", { name: /研究产出/ }).click();
   await page.getByRole("button", { name: "论文框架", exact: true }).click();
   const writing = page.locator("#writing-workbench");
-  await writing.getByLabel("研究 idea").fill(idea);
+  await writing.getByLabel("研究主题", { exact: true }).fill("Transformer and BERT architecture");
+  await writing.getByLabel("写作要求", { exact: true }).fill(idea);
   assert.ok(await writing.getByRole("button", { name: "整理论文框架", exact: true }).isDisabled());
   await chooseScope("#writing-workbench", "写作文献范围");
   await writing.getByLabel("输出语言").selectOption("en");

@@ -461,6 +461,7 @@ export interface VerifiedReference {
 export interface WritingOutlineResponse {
   proposed_title: string;
   idea: string;
+  topic?: string | null;
   sections: WritingSection[];
   references: VerifiedReference[];
   claims: Array<{ text: string; evidence_ids: string[] }>;
@@ -951,6 +952,7 @@ export async function generateResearchReview(
 
 export async function generateWritingOutline(input: {
   idea: string;
+  topic?: string;
   documentIds: string[];
   language?: "zh" | "en";
 }): Promise<WritingOutlineResponse> {
@@ -960,6 +962,7 @@ export async function generateWritingOutline(input: {
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
         idea: input.idea,
+        topic: input.topic,
         document_ids: input.documentIds || [],
         top_k: 12,
         language: input.language || "zh",

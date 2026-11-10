@@ -5,7 +5,7 @@ import path from 'node:path';
 import { pathToFileURL } from 'node:url';
 import { chromium } from 'playwright-core';
 
-const root = path.resolve('../backend/tmp/subtitled-demo-2026-10-27');
+const root = path.resolve(process.env.PDFAGENT_MEDIA_ROOT || '../backend/tmp/subtitled-demo-2026-10-27');
 const output = path.join(root, 'take1/closing');
 await mkdir(output, { recursive: true });
 try { await readFile(path.join(output, 'capture.json')); throw new Error('Take already exists'); }

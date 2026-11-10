@@ -277,4 +277,5 @@ async def generate_writing_outline(
         documents,
         top_k=request.top_k,
         language=request.language,
+        topic=request.topic,
     )

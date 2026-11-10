@@ -321,6 +321,30 @@ def _comparison_subject_mentioned(name: str, text: str) -> bool:
     )
 
 
+def _reversed_model_count_bound(text: str, evidence: Sequence[EvidenceAnchor]) -> bool:
+    """Reject an explicit reversed bound on model counts; not general entailment.
+
+    Require the same count and unit. Ambiguous source bounds are left to review.
+    """
+    pattern = re.compile(
+        r"(?P<operator>more than|over|less than|fewer than|超过|多于|少于|低于)\s*"
+        r"(?P<count>\d[\d,]*)\s*(?:个|种)?\s*(?:models?\b|模型)", re.I,
+    )
+
+    def bounds(value):
+        result: dict[str, set[bool]] = {}
+        for match in pattern.finditer(value):
+            key = match["count"].replace(",", "")
+            result.setdefault(key, set()).add(
+                match["operator"].casefold() in {"more than", "over", "超过", "多于"}
+            )
+        return result
+
+    sources = bounds("\n".join(item.quote for item in evidence))
+    return any(len(sources.get(key, set())) == 1 and values.isdisjoint(sources[key])
+               for key, values in bounds(text).items())
+
+
 def audit_grounded_claims(
     claims: Sequence[GeneratedClaim], evidence: Sequence[EvidenceAnchor], *, question: str = "",
 ) -> tuple[list[AnswerClaim], GroundingAudit]:
@@ -345,6 +369,8 @@ def audit_grounded_claims(
             reasons.append("inline_citation_outside_declared_sources")
         cited = [anchors[item] for item in ids]
         if text and ids:
+            if _reversed_model_count_bound(text, cited):
+                reasons.append("semantic_conflict:reversed_model_count_bound")
             if (len(compared) == 2 and len(originals) == 2
                     and all(_comparison_subject_mentioned(name, text) for name in compared)
                     and {item.document_id for item in cited if item.source_type != "reference"}
@@ -395,6 +421,7 @@ def grounding_rejection_warnings(audit: GroundingAudit) -> list[str]:
         "shared_constraint_missing_from_each_original": "共同约束的声明未得到每份原文分别支持",
         "performance_gain_not_memory_gain": "准确率增益的大小不能转述成内存节省幅度",
         "comparison_original_source_omitted": "该跨文声明未分别引用两份所选原文",
+        "reversed_model_count_bound": "模型数量的超过／少于方向与所引原文相反",
     }
 
     def describe(reason: str) -> str:

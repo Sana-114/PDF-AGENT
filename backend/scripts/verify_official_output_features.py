@@ -397,6 +397,7 @@ async def writing(args, root: Path) -> dict:
         ) as client:
             response = await client.post("/api/v1/writing/outline", json={
                 "idea": idea, "document_ids": [row["document_id"] for row in rows],
+                "topic": getattr(args, "writing_topic", None),
                 "top_k": 15, "language": "en",
             })
             response.raise_for_status()
@@ -487,6 +488,9 @@ if __name__ == "__main__":
     parser.add_argument("--allow-cloud", action="store_true")
     parser.add_argument(
         "--writing-idea", help="Fixed, recorded writing question for a scoped check"
+    )
+    parser.add_argument(
+        "--writing-topic", help="Research topic, separate from drafting instructions"
     )
     parser.add_argument(
         "--writing-files",
