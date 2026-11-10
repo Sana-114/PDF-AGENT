@@ -30,6 +30,8 @@ output/evals/*.json
 
 # Submission artifacts and demo media stay outside the source repository.
 /output/pre-submission/
+/output/final-submission/
 /output/video/
 /output/translations/
 /output/pdf/PaperPilot-pre-submission-introduction-*.pdf
+/output/pdf/PaperPilot-formal-introduction-technical-*.pdf
