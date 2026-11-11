@@ -1,5 +1,7 @@
 # PaperPilot 正式提交材料使用说明
 
+2026-11-11 更新：以下保留旧包的归档说明。实际提交请改用 `PaperPilot-formal-submission-clean-2026-11-11.zip`，包内只有 `PaperPilot-introduction.pdf`、`PaperPilot-source.zip`、`PaperPilot-demo.mp4` 和 `提交说明.txt`。原 VERSION、清单、验收摘要、独立字幕及发布文案均不再随包提交；版本号已并入提交说明与源码 README。
+
 日期：2026-11-10。此包为当前正式提交候选材料，尚未代为上传比赛网站、网盘或视频平台。公网演示仍待上线。请以本包版本为准，避免混用 10 月预指导材料。
 
 ## 按提交界面填写
